@@ -1,5 +1,5 @@
 ---
-// A recipe excerpt from a fixture file, with a link to the complete published file (4.5, 4.7).
+// An excerpt from an example file, with a link to the whole file.
 import { Code } from "@astrojs/starlight/components";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -25,6 +25,6 @@ if (end) {
 const code = lines.slice(s[0], e + 1).join("\n");
 ---
 <div class="recipe" id={`recipe-${id}`}>
-  <Code code={code} lang={lang} title={path} />
-  <p class="recipe-source">Complete, tested file: <a href={`/${path}/`}>{path}</a></p>
+  <Code code={code} lang={lang} title={path.split("/").pop()} />
+  <p class="recipe-source"><a href={`/${path}/`}>See the whole file</a></p>
 </div>

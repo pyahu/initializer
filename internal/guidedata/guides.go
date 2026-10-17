@@ -42,6 +42,9 @@ var CardParts = []string{"What's going on", "Do this", "When this is not for you
 // InShort starts the paragraph that opens every card.
 const InShort = "**In short:**"
 
+// CheckIt starts the paragraph that follows an example's code.
+const CheckIt = "**Check it:**"
+
 // ApplyHeading is the section after the cards: the recipes, put together.
 const ApplyHeading = "Put it all together"
 
@@ -353,33 +356,38 @@ func ParseGuide(path string, s *Schemas, retiredCards map[string]string) (*Guide
 		return g, errs
 	}
 	p++
-	for t := peek(); t != nil && t.kind == "h3"; t = peek() {
+	// Each example: a short explanation first, then any number of <Recipe />, then a paragraph
+	// starting **Check it:** when there is code. An example may be prose only.
+	if t := peek(); t == nil || t.kind != "text" {
+		fail(lineAt(t), "## %s opens with a sentence on where the steps land", ApplyHeading)
+	}
+	for t := peek(); t != nil && t.kind == "text"; t = peek() {
 		p++
-		r := peek()
-		if r == nil || r.kind != "tag" || r.name != "Recipe" {
-			fail(t.line, "recipe %q: expected <Recipe />", t.text)
-			return g, errs
-		}
-		g.Recipes = append(g.Recipes, Recipe{ID: r.attr["id"], Path: r.attr["path"], Start: r.attr["start"], End: r.attr["end"], Lang: r.attr["lang"], Line: r.line})
-		if r.attr["id"] == "" || r.attr["path"] == "" || r.attr["start"] == "" || r.attr["lang"] == "" {
-			fail(r.line, "Recipe needs id, path, start, lang")
-		}
+	}
+	for h := peek(); h != nil && h.kind == "h3"; h = peek() {
 		p++
-		gotExpected, gotFails := false, false
+		if t := peek(); t == nil || t.kind != "text" {
+			fail(h.line, "example %q: explain it in a sentence before the code", h.text)
+		}
+		recipes, checked := 0, false
 		for t := peek(); t != nil && t.kind != "h3" && t.kind != "h2"; t = peek() {
-			if t.kind == "text" && strings.HasPrefix(t.text, "**Expected:**") {
-				gotExpected = true
-			}
-			if t.kind == "text" && strings.HasPrefix(t.text, "**If it fails:**") && gotExpected {
-				gotFails = true
-			}
-			if t.kind == "tag" {
-				fail(t.line, "one component per recipe")
+			switch {
+			case t.kind == "tag" && t.name == "Recipe":
+				g.Recipes = append(g.Recipes, Recipe{ID: t.attr["id"], Path: t.attr["path"], Start: t.attr["start"], End: t.attr["end"], Lang: t.attr["lang"], Line: t.line})
+				if t.attr["id"] == "" || t.attr["path"] == "" || t.attr["start"] == "" || t.attr["lang"] == "" {
+					fail(t.line, "Recipe needs id, path, start, lang")
+				}
+				recipes++
+				checked = false
+			case t.kind == "tag":
+				fail(t.line, "%s does not belong in an example", t.name)
+			case t.kind == "text" && strings.HasPrefix(t.text, CheckIt):
+				checked = true
 			}
 			p++
 		}
-		if !gotExpected || !gotFails {
-			fail(t.line, "recipe %q needs **Expected:** then **If it fails:**", t.text)
+		if recipes > 0 && !checked {
+			fail(h.line, "example %q needs a paragraph starting %s after its code", h.text, CheckIt)
 		}
 	}
 	for _, sec := range []struct{ h, tag string }{{"Checklist", "Checklist"}, {"References", "GuideReferences"}} {

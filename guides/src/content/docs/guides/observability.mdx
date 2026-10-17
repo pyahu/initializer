@@ -310,41 +310,45 @@ Boot solves both: it serves `/livez` and `/readyz` on the main port as well, whe
 
 ## Put it all together
 
-### Starter and log bridge dependencies
+Three files wire the whole pipeline. The Deployment only says where to send the data.
 
-<Recipe id="obs-dependencies" path="fixtures/single-hexagonal/build.gradle.kts" start="implementation(libs.spring.boot.starter.webmvc)" end="implementation(libs.opentelemetry.logback.appender)" lang="kotlin" />
+### The dependencies
 
-**Expected:** `./gradlew dependencies --configuration runtimeClasspath` lists `opentelemetry-api` 1.62.0 and
-`opentelemetry-logback-appender-1.0` 2.28.1-alpha and the container command line has no `-javaagent`.
+The starter brings traces, metrics and the OTLP export (step 1). The appender is the log bridge from step 3. The
+Boot BOM sets every version except the appender's.
 
-**If it fails:**
+<Recipe id="obs-dependencies" path="fixtures/single-hexagonal/build.gradle.kts" start="implementation(libs.spring.boot.starter.opentelemetry)" end="implementation(libs.opentelemetry.logback.appender)" lang="kotlin" />
 
-- Two OpenTelemetry SDK versions on the class path: the appender release was built on another SDK. Pick the
-  release whose BOM imports the SDK Boot manages.
+**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `opentelemetry-api` 1.62.0 and
+`opentelemetry-logback-appender-1.0` 2.28.1-alpha.
 
-### Observability settings
+### The settings
+
+`application.yaml` holds steps 2, 4, 5 and 8: the service attributes, the sampling ratio, metrics in seconds with
+histograms and Actuator on its own port.
 
 <Recipe id="obs-application-yaml" path="fixtures/single-hexagonal/src/main/resources/application.yaml" start="management:" end="http.server.requests: true" lang="yaml" />
 
-**Expected:** with `OTEL_EXPORTER_OTLP_ENDPOINT` set, a request produces a trace in the backend, a
-`http_server_requests_seconds_count` series with `service_name` and log lines with its `trace_id`.
+**Check it:** with `OTEL_EXPORTER_OTLP_ENDPOINT` set, one request gives a trace, a
+`http_server_requests_seconds_count` series and log lines with its `trace_id`.
 
-**If it fails:**
+### The log bridge
 
-- No telemetry at all: a Boot 3 property name. Use the Boot 4 names from step 2.
-- Metrics in milliseconds: `base-time-unit` is missing.
+Two pieces from step 3: the appender in `logback-spring.xml`, next to the console, and a bean that connects it to
+Boot's OpenTelemetry.
 
-### Installing the Logback appender
+<Recipe id="obs-logback-xml" path="fixtures/single-hexagonal/src/main/resources/logback-spring.xml" start="<configuration>" end="</configuration>" lang="xml" />
 
 <Recipe id="obs-appender-bean" path="fixtures/single-hexagonal/src/main/java/io/pyahu/fixture/hexagonal/config/OpenTelemetryLoggingConfig.java" start="@Bean" end="}" lang="java" />
 
-**Expected:** a log line written while handling a request appears in Loki with the request's `trace_id` as
-structured metadata.
+**Check it:** a log line written during a request shows up in Loki with that request's `trace_id`.
 
-**If it fails:**
+### In the Deployment
 
-- Logs reach stdout but not the backend: `logback-spring.xml` lacks the `OTEL` appender reference or the bean is
-  missing.
+- `OTEL_EXPORTER_OTLP_ENDPOINT` pointing at the collector (steps 2 and 6).
+- `TRACING_SAMPLING_PROBABILITY` set to 1.0 when the collector does tail sampling (step 4).
+- Probes on `/livez` and `/readyz` on the main port (step 8).
+- No NetworkPolicy rule that allows port 8081 (step 8).
 
 ## Checklist
 

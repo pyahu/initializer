@@ -27,6 +27,13 @@
       "baseline": "v0.1-b1",
       "lang": "yaml",
       "sha256": "32b88849cb7e0d731641101e440e42f909881fd9a5c80df4bb57909b455176af"
+    },
+    {
+      "path": "fixtures/single-hexagonal/src/main/resources/logback-spring.xml",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "xml",
+      "sha256": "32a8db5b0c579cbf3f76ad95dda755b1211b286d52da0092119e8736de8cb88b"
     }
   ],
   "generatedBy": "guidekit generate"

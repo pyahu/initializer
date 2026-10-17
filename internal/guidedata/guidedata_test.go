@@ -123,15 +123,19 @@ w
 
 ## Put it all together
 
+Where the steps land.
+
 ### R
+
+What this file does.
 
 <Recipe id="r" path="fixtures/x/f" start="a" lang="text" />
 
-**Expected:** e
+**Check it:** e
 
-**If it fails:**
+### In the Deployment
 
-- f
+- d
 
 ## Checklist
 
@@ -179,7 +183,8 @@ func TestParseGuideRejects(t *testing.T) {
 		"em dash":              {"Text with `{braces}` in code.", "Text \u2014 dash."},
 		"mermaid":              {"Text with `{braces}` in code.", "```mermaid\ngraph TD\n```"},
 		"starlight draft":      {"title: T\n", "title: T\ndraft: true\n"},
-		"no expected":          {"**Expected:** e", "e"},
+		"no check":             {"**Check it:** e", "e"},
+		"no explanation":       {"What this file does.\n\n<Recipe", "<Recipe"},
 		"evidence on the page": {"- n\n", "- n\n\n<Evidence card=\"gg-one\" />\n"},
 		"wrong prefix":         {"<a id=\"gg-one\"></a>", "<a id=\"xx-one\"></a>"},
 		"no intro":             {"Text with `{braces}` in code.\n\n", ""},

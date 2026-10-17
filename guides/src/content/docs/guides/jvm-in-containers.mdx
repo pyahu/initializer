@@ -330,43 +330,26 @@ hides a pod that hangs forever.
 
 ## Put it all together
 
-### The image entrypoint
+Everything above lands in two places: the image and the Deployment.
 
-<Recipe id="jvm-entrypoint" path="fixtures/single-hexagonal/Dockerfile" start="ENTRYPOINT [" lang="dockerfile" />
+### The image
 
-**Expected:** `docker exec <container> cat /proc/1/cmdline | tr '\0' ' '` shows `-XX:+UseG1GC` and
-`-XX:AOTCache=/app/app.aot`, even when the Deployment replaces `JAVA_TOOL_OPTIONS`.
+The last stage of the Dockerfile applies steps 1, 2, 5 and 6. It sets the sizing defaults, trains the AOT cache
+and starts the JVM with G1 and the cache.
 
-**If it fails:**
+<Recipe id="jvm-runtime-stage" path="fixtures/single-hexagonal/Dockerfile" start="FROM eclipse-temurin:25.0.4.1_1-jre-noble" end="ENTRYPOINT [" lang="dockerfile" />
 
-- The flags are missing: a Kubernetes `command:` replaced the image `ENTRYPOINT`. Use `args:` or nothing.
+**Check it:** run the image with `-e JDK_JAVA_OPTIONS=-Xlog:aot`. The log shows `Opened AOT cache /app/app.aot`,
+so the cache is in use.
 
-### Sizing defaults in the image
+### In the Deployment
 
-<Recipe id="jvm-tool-options" path="fixtures/single-hexagonal/Dockerfile" start="ENV JAVA_TOOL_OPTIONS=" lang="dockerfile" />
-
-**Expected:** the JVM prints `Picked up JAVA_TOOL_OPTIONS:` with these flags at start and under a 1 GiB limit
-`java -XX:+PrintFlagsFinal -version` reports a `MaxHeapSize` of 805306368 (768 MiB).
-
-**If it fails:**
-
-- The heap is 25% of the limit: the Deployment replaced `JAVA_TOOL_OPTIONS` without the sizing flags. Put them in
-  the Deployment's value too.
-
-### The AOT training run
-
-<Recipe id="jvm-aot-training" path="fixtures/single-hexagonal/Dockerfile" start="RUN java -XX:+UseG1GC -XX:AOTCacheOutput" end="&& chmod 0444 /app/app.aot" lang="dockerfile" />
-
-**Expected:** the image build logs `AOTCache creation is complete` and
-`docker run --rm --entrypoint java <image> -XX:+UseG1GC -XX:AOTMode=on -XX:AOTCache=/app/app.aot -cp /app/application.jar -version`
-exits 0.
-
-**If it fails:**
-
-- Exit 1 with `AOTMode=on`: the JDK build, the GC flag or the class path differs from the training run. Train in
-  the runtime stage, with the same flags.
-- The training run fails with connection errors: a bean talks to a remote system while starting. Switch it off
-  with a `-D` property in the training run.
+- Memory request equal to the limit (step 1).
+- A CPU request and no CPU limit (step 3).
+- `JAVA_TOOL_OPTIONS` with the memory flags and `-XX:ActiveProcessorCount` (steps 1, 3 and 5). It replaces the
+  image's value, so repeat the memory flags there.
+- A `startupProbe` on `/livez`, sized from measured startup (step 8).
+- No `command:`, so the image's `ENTRYPOINT` stays (step 5).
 
 ## Checklist
 

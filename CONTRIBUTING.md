@@ -107,8 +107,10 @@ Body, in this order:
    - `### When this is not for you`: two or three bullets.
 
    The heading text may change with the question; the anchor may not.
-4. `## Put it all together`: per recipe a `###` heading, one `<Recipe />`, a paragraph starting
-   `**Expected:**` and a list starting `**If it fails:**`.
+4. `## Put it all together`: one sentence on where the steps land, then one `###` per example:
+   a sentence or two on what it does and which steps it applies, one or more `<Recipe />`, and
+   a paragraph starting `**Check it:**` with one way to see it work. An example may be a short
+   list instead of code, such as what goes in the Deployment.
 5. `## Checklist` with `<Checklist guide="..." />` and `## References` with
    `<GuideReferences guide="..." />`.
 
