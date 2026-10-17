@@ -43,7 +43,6 @@ guide:
       license: CC BY 4.0
 ---
 import GuideStatus from '../../../components/GuideStatus.astro';
-import Evidence from '../../../components/Evidence.astro';
 import Recipe from '../../../components/Recipe.astro';
 import Checklist from '../../../components/Checklist.astro';
 import GuideReferences from '../../../components/GuideReferences.astro';
@@ -90,8 +89,6 @@ with the same tags and the versions come from the Boot BOM.
   then remove the starter, so only one tool records each signal.
 - Libraries without Micrometer support produce no spans with the starter. The agent covers more of them.
 
-<Evidence card="obs-starter-not-agent" />
-
 <a id="obs-otlp-config"></a>
 
 ## 2. How do I tell the app where to send telemetry?
@@ -134,8 +131,6 @@ Metrics keep the `management.otlp.metrics.export.*` prefix.
 - It always applies. One surprise to expect: when a value in `application.yaml` seems ignored, check the
   environment, because the variable wins.
 
-<Evidence card="obs-otlp-config" />
-
 <a id="obs-logs-otlp"></a>
 
 ## 3. How do my logs get the trace ID?
@@ -164,8 +159,6 @@ that wrote it.
   line arrives twice.
 - Lines logged before the bean runs, early in startup, only reach stdout.
 - The appender is versioned outside the Boot BOM and marked alpha. Move it with Boot's SDK version.
-
-<Evidence card="obs-logs-otlp" />
 
 <a id="obs-sampling"></a>
 
@@ -197,8 +190,6 @@ the end: keep every error and every slow trace, plus a sample of the rest. That 
 - Sending everything costs CPU and network and tail sampling across several collector replicas needs a
   load balancer that routes by trace ID.
 
-<Evidence card="obs-sampling" />
-
 <a id="obs-metric-shape"></a>
 
 ## 5. How do I make metrics useful without a huge bill?
@@ -228,8 +219,6 @@ Three small mistakes make metrics wrong or expensive.
 - Buckets cost series: about 55 per timer for each tag combination in the source guide's measurement. Native
   histograms cut that but need support along the whole path. Verify before switching.
 
-<Evidence card="obs-metric-shape" />
-
 <a id="obs-collector"></a>
 
 ## 6. Do I need a collector in the middle?
@@ -258,8 +247,6 @@ and fans out to each backend. Your apps never hold backend credentials.
 - A local loop or a single service where losing telemetry during a backend outage is acceptable.
 - A single gateway replica is a single point of failure and tail sampling at scale needs two tiers.
 
-<Evidence card="obs-collector" />
-
 <a id="obs-correlation"></a>
 
 ## 7. How do I go from a slow request to its logs?
@@ -285,8 +272,6 @@ With the links set up, you click the spike, open the trace and jump to that requ
 ### When this is not for you
 
 - It always applies, the first time someone asks why one request was slow.
-
-<Evidence card="obs-correlation" />
 
 <a id="obs-actuator"></a>
 
@@ -322,8 +307,6 @@ Boot solves both: it serves `/livez` and `/readyz` on the main port as well, whe
 
 - With Spring Security, give the management endpoints their own filter chain: health open, the rest authenticated.
 - Debugging now needs a port-forward to 8081 instead of a URL. That is the point.
-
-<Evidence card="obs-actuator" />
 
 ## Put it all together
 

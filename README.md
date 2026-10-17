@@ -12,8 +12,8 @@ every decision is a card with the failure it prevents and every claim carries th
 
 A fixture in `fixtures/` is a real service built with the exact versions of a baseline in
 `data/versions.yaml`. CI builds it, runs the Go acceptance tests in `acceptance/` against its image and
-writes an evidence report. Each guide card lists the records that report backs, with the run and commit
-and a claim nothing proves yet says so.
+writes an evidence report. Every claim a guide makes has a record in `data/evidence/` with its test, run and
+commit. A claim nothing proves yet says why.
 
 ## Layout
 

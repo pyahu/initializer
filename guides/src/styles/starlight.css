@@ -122,7 +122,7 @@ body:has(.dg-dialog[open]) { overflow: hidden; }
 .dg-legend-optional .dg-swatch { border-top: 2px dashed var(--sl-color-gray-3); }
 .dg-legend-failure .dg-swatch { border-top: 2px dotted var(--sl-color-red); }
 
-/* Guide status, evidence, checklist. */
+/* Guide map, checklist. */
 .guide-map { margin-block: 1.5rem 2.5rem; display: grid; gap: 1rem; }
 .guide-map p { margin: 0; }
 .guide-map-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
@@ -136,21 +136,8 @@ body:has(.dg-dialog[open]) { overflow: hidden; }
 .guide-qid { display: inline-block; min-width: 3.6rem; font-family: var(--sl-font-mono); font-size: 0.75rem; color: var(--sl-color-gray-3); }
 .guide-more { margin-top: 0.7rem !important; font-size: 0.85rem; color: var(--sl-color-gray-2); }
 .guide-proof, .guide-sources { font-size: 0.85rem; color: var(--sl-color-gray-2); }
-.evidence-badge { display: inline-block; padding: 0.05rem 0.45rem; border-radius: 999px; font-family: var(--sl-font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid var(--sl-color-accent); color: var(--sl-color-accent); }
-.evidence { margin-top: 1.75rem; padding: 0.65rem 0.95rem; border: 1px solid var(--sl-color-hairline); border-radius: 8px; }
-.evidence > summary { cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--sl-color-white); }
-.evidence[open] > summary { margin-bottom: 0.8rem; }
-.evidence > .evidence-record + .evidence-record { margin-top: 0.7rem; }
 .guide-references > summary { cursor: pointer; font-weight: 600; }
 .guide-references[open] > summary { margin-bottom: 0.6rem; }
-.evidence p { margin: 0; }
-.evidence-coverage { margin-left: 0.4rem; font-size: 0.82rem; font-weight: 400; color: var(--sl-color-gray-2); }
-.evidence-record { padding: 0.7rem 0.9rem; border-left: 3px solid var(--sl-color-accent); background: var(--sl-color-gray-6); border-radius: 0 6px 6px 0; font-size: 0.9rem; }
-.evidence-record.badge-not-exercised { border-left: 0; background: none; padding: 0; }
-.evidence-record details { margin-top: 0.5rem; }
-.evidence-record dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 0.8rem; margin: 0.5rem 0 0; font-size: 0.82rem; }
-.evidence-record dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
-.evidence-command { display: block; white-space: pre-wrap; }
 .checklist ul { list-style: none; padding: 0; }
 .checklist li { margin-block: 0.6rem; }
 .checklist p { margin: 0; }

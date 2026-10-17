@@ -96,7 +96,7 @@ Body, in this order:
 1. A short opening, prose only: a scene the reader recognises, then what the guide fixes. Two
    short paragraphs.
 2. `<GuideStatus guide="..." />`. It renders "What you'll learn" (the questions, in order, each
-   linking to its step) and one line on versions and how claims are checked.
+   linking to its step) and one line on versions and how the guides are proven.
 3. Steps, one per question: an anchor line, a blank line and `## <n>. <question text>`, so the
    heading is the question, numbered. Each `questions` entry answers exactly one step. Then:
    - a paragraph starting `**In short:**`: the answer in one sentence, optionally followed by
@@ -104,8 +104,7 @@ Body, in this order:
    - `### What's going on`: the mechanism in plain words, with an analogy when it helps and
      the step's diagram;
    - `### Do this`: numbered actions, with the code;
-   - `### When this is not for you`: two or three bullets;
-   - `<Evidence card="..." />` last. It renders "How we checked this", collapsed.
+   - `### When this is not for you`: two or three bullets.
 
    The heading text may change with the question; the anchor may not.
 4. `## Put it all together`: per recipe a `###` heading, one `<Recipe />`, a paragraph starting
@@ -152,8 +151,9 @@ One record states one claim, in `data/evidence/<guide>.yaml`:
 | `cluster-run` | `cluster`; needs `cluster` |
 | `not-exercised` | nothing; needs `reason` and has no run fields |
 
-`result` is the decisive output, inline, because run logs expire. Every card has at least one
-record. A record counts toward qualification only when its test is in the fixture's
+`result` is the decisive output, inline, because run logs expire. Every step has at least one
+record. Records are not shown on the site; the landing page explains the method. Readers
+who want the detail read these files. A record counts toward qualification only when its test is in the fixture's
 `requiredTests` and passed in the latest completed fixture run on `main`.
 
 ## Baselines

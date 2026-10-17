@@ -43,7 +43,6 @@ guide:
       license: CC BY 4.0
 ---
 import GuideStatus from '../../../components/GuideStatus.astro';
-import Evidence from '../../../components/Evidence.astro';
 import Recipe from '../../../components/Recipe.astro';
 import Checklist from '../../../components/Checklist.astro';
 import GuideReferences from '../../../components/GuideReferences.astro';
@@ -97,8 +96,6 @@ The JVM default makes the opposite mistake: it uses only 25%, so a 1 GiB pod get
 - Pods under 1 GiB: the "rest" is a bigger share, so go down to 50 or 60%. At 4 GiB and up, 75 to 80% is fine.
 - You want the JVM to give memory back when idle: drop `InitialRAMPercentage` and see step 4 for ZGC.
 
-<Evidence card="jvm-heap-sizing" />
-
 <a id="jvm-gc-explicit"></a>
 
 ## 2. Why did my pod get the slow garbage collector?
@@ -133,8 +130,6 @@ A pod with `cpu: 1` or with a 1 GiB limit, falls into this. Nothing in the logs 
 
 - Your workload needs another collector: pick it in step 4 and make that choice explicit too.
 
-<Evidence card="jvm-gc-explicit" />
-
 <a id="jvm-cpu-count"></a>
 
 ## 3. How many CPUs does the JVM think it has?
@@ -166,8 +161,6 @@ The flag fixes the count without the throttling.
 ### When this is not for you
 
 - Your cluster requires CPU limits: drop the flag. The JVM reads the limit and you accept the throttling.
-
-<Evidence card="jvm-cpu-count" />
 
 <a id="jvm-gc-choice"></a>
 
@@ -203,8 +196,6 @@ the three by paying with the rest.
 - Compact object headers (`-XX:+UseCompactObjectHeaders`) save heap in services that allocate a lot. Turn them on
   only after a load test and in the training run too.
 
-<Evidence card="jvm-gc-choice" />
-
 <a id="jvm-flag-placement"></a>
 
 ## 5. Where do JVM flags go: the image or the Deployment?
@@ -237,8 +228,6 @@ So a GC flag kept in `JAVA_TOOL_OPTIONS` disappears the day someone adds a sizin
 
 - It always applies. The cost: changing the collector needs a new image. That is the point, because the AOT cache
   was trained with that collector.
-
-<Evidence card="jvm-flag-placement" />
 
 <a id="jvm-aot-cache"></a>
 
@@ -282,8 +271,6 @@ exactly like no cache, so you have to test for it.
 - A new JDK build, collector or class path needs a new cache. Training in the image build handles that.
 - The cache speeds up startup only. It does not make requests faster.
 
-<Evidence card="jvm-aot-cache" />
-
 <a id="jvm-startup-options"></a>
 
 ## 7. What about native image, CRaC and Spring AOT?
@@ -314,8 +301,6 @@ follow at runtime. Teams often pick the most impressive number and pay for it fo
 
 - Startup is not a problem for you: stop at step 6. Every option beyond it adds cost.
 
-<Evidence card="jvm-startup-options" />
-
 <a id="jvm-startup-probe"></a>
 
 ## 8. How long should Kubernetes wait for startup?
@@ -342,8 +327,6 @@ hides a pod that hangs forever.
 ### When this is not for you
 
 - You must detect a stuck pod within seconds: keep the budget tight and accept a few restarts on slow nodes.
-
-<Evidence card="jvm-startup-probe" />
 
 ## Put it all together
 

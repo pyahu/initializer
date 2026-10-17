@@ -260,11 +260,6 @@ func checkGuides(r *guidedata.Repo, dist string, pages map[string]*page) []error
 					break
 				}
 			}
-			for _, e := range r.Evidence {
-				if e.Card == c.ID && pg.ids[e.ID] == 0 {
-					add("guide %s: evidence block %s missing in HTML", g.Meta.ID, e.ID)
-				}
-			}
 		}
 		for _, c := range r.Checklist {
 			if c.Guide == g.Meta.ID && !strings.Contains(pg.text, normalize(c.ID+" "+c.Text)) {
@@ -375,22 +370,6 @@ func checkExports(r *guidedata.Repo, dist, site string) []error {
 			for _, items := range g.Legends {
 				for _, it := range items {
 					need(seg, "legend "+it, guidedata.LegendText[it])
-				}
-			}
-			for _, e := range r.Evidence {
-				if e.Guide != g.Meta.ID {
-					continue
-				}
-				need(seg, "evidence "+e.ID, guidedata.CanonicalLine(e))
-				if e.Exercised() {
-					need(seg, "evidence test "+e.ID, e.Test)
-					for _, c := range e.Commands {
-						need(seg, "evidence command "+e.ID, c)
-					}
-					need(seg, "evidence environment "+e.ID, e.Environment)
-					need(seg, "evidence run "+e.ID, guidedata.RunText(e.Run, e.Commit))
-				} else {
-					need(seg, "evidence reason "+e.ID, e.Reason)
 				}
 			}
 			for _, c := range r.Checklist {

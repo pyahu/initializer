@@ -36,7 +36,7 @@ type Recipe struct {
 }
 
 // CardParts is the fixed order of a card's ### sections. A card opens with an "**In short:**"
-// paragraph and closes with <Evidence />, after the last part.
+// paragraph. Its evidence lives in data/evidence, not on the page.
 var CardParts = []string{"What's going on", "Do this", "When this is not for you"}
 
 // InShort starts the paragraph that opens every card.
@@ -47,7 +47,7 @@ const ApplyHeading = "Put it all together"
 
 // GuideComponents are the components a guide may use besides diagrams.
 var GuideComponents = map[string]bool{
-	"GuideStatus": true, "Evidence": true, "Recipe": true, "Checklist": true,
+	"GuideStatus": true, "Recipe": true, "Checklist": true,
 	"GuideReferences": true, "DiagramLegend": true,
 }
 
@@ -323,34 +323,25 @@ func ParseGuide(path string, s *Schemas, retiredCards map[string]string) (*Guide
 			}
 			p++
 		}
-		for i, part := range CardParts {
+		for _, part := range CardParts {
 			t := peek()
 			if t == nil || t.kind != "h3" || normalizeQuotes(t.text) != part {
 				fail(lineAt(t), "card %s: expected ### %s", card.name, part)
 				return g, errs
 			}
 			p++
-			last := i == len(CardParts)-1
 			for t := peek(); t != nil && t.kind != "h3" && t.kind != "h2" && t.kind != "anchor"; t = peek() {
 				if t.kind == "tag" {
 					if strings.HasSuffix(t.name, "Diagram") {
 						g.Diagrams = append(g.Diagrams, t.name)
 					} else if t.name == "DiagramLegend" {
 						g.Legends = append(g.Legends, parseItems(t.attr["items"]))
-					} else if last && t.name == "Evidence" {
-						break
 					} else {
 						fail(t.line, "%s does not belong in a card", t.name)
 					}
 				}
 				p++
 			}
-		}
-		if !expectTag("Evidence", "card", card.name) {
-			return g, errs
-		}
-		if t := peek(); t != nil && t.kind != "anchor" && t.kind != "h2" {
-			fail(t.line, "card %s: <Evidence /> closes the card", card.name)
 		}
 	}
 	if len(g.Cards) == 0 {

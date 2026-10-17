@@ -95,7 +95,6 @@ guide:
       answeredIn: gg-one
 ---
 import GuideStatus from '../../../components/GuideStatus.astro';
-import Evidence from '../../../components/Evidence.astro';
 import Recipe from '../../../components/Recipe.astro';
 import Checklist from '../../../components/Checklist.astro';
 import GuideReferences from '../../../components/GuideReferences.astro';
@@ -121,8 +120,6 @@ w
 ### When this is not for you
 
 - n
-
-<Evidence card="gg-one" />
 
 ## Put it all together
 
@@ -174,21 +171,20 @@ func TestParseGuideAcceptsTheFormat(t *testing.T) {
 
 func TestParseGuideRejects(t *testing.T) {
 	cases := map[string][2]string{
-		"missing part":        {"### Do this\n\n1. d\n\n", ""},
-		"parts out of order":  {"### What's going on\n\nw\n\n### Do this", "### Do this\n\nw\n\n### What's going on"},
-		"no in short":         {"**In short:** a.", "a."},
-		"brace in prose":      {"Text with `{braces}` in code.", "Text with {braces} outside."},
-		"raw html":            {"Text with `{braces}` in code.", "Text <b>bold</b>."},
-		"em dash":             {"Text with `{braces}` in code.", "Text \u2014 dash."},
-		"mermaid":             {"Text with `{braces}` in code.", "```mermaid\ngraph TD\n```"},
-		"starlight draft":     {"title: T\n", "title: T\ndraft: true\n"},
-		"no expected":         {"**Expected:** e", "e"},
-		"evidence extra text": {"<Evidence card=\"gg-one\" />\n", "<Evidence card=\"gg-one\" />\n\nMore text.\n"},
-		"no evidence":         {"<Evidence card=\"gg-one\" />\n", ""},
-		"wrong prefix":        {"<a id=\"gg-one\"></a>", "<a id=\"xx-one\"></a>"},
-		"no intro":            {"Text with `{braces}` in code.\n\n", ""},
-		"heading in intro":    {"Text with `{braces}` in code.", "## Decision summary\n\nText."},
-		"old recipes heading": {"## Put it all together", "## Recipes"},
+		"missing part":         {"### Do this\n\n1. d\n\n", ""},
+		"parts out of order":   {"### What's going on\n\nw\n\n### Do this", "### Do this\n\nw\n\n### What's going on"},
+		"no in short":          {"**In short:** a.", "a."},
+		"brace in prose":       {"Text with `{braces}` in code.", "Text with {braces} outside."},
+		"raw html":             {"Text with `{braces}` in code.", "Text <b>bold</b>."},
+		"em dash":              {"Text with `{braces}` in code.", "Text \u2014 dash."},
+		"mermaid":              {"Text with `{braces}` in code.", "```mermaid\ngraph TD\n```"},
+		"starlight draft":      {"title: T\n", "title: T\ndraft: true\n"},
+		"no expected":          {"**Expected:** e", "e"},
+		"evidence on the page": {"- n\n", "- n\n\n<Evidence card=\"gg-one\" />\n"},
+		"wrong prefix":         {"<a id=\"gg-one\"></a>", "<a id=\"xx-one\"></a>"},
+		"no intro":             {"Text with `{braces}` in code.\n\n", ""},
+		"heading in intro":     {"Text with `{braces}` in code.", "## Decision summary\n\nText."},
+		"old recipes heading":  {"## Put it all together", "## Recipes"},
 	}
 	for name, c := range cases {
 		src := strings.Replace(goodGuide, c[0], c[1], 1)
