@@ -93,18 +93,29 @@ The MDX is restricted so `guidekit` can read its structure:
 
 Body, in this order:
 
-1. A short description, prose only: what the guide covers and what changes for the reader.
-   Two short paragraphs at most.
-2. `<GuideStatus guide="..." />`. It renders the contents (a link to each card and section),
-   the questions the guide answers, and one line on the baseline and how claims are checked.
-3. Cards: an anchor line, a blank line, a `##` heading, then exactly `### Problem`,
-   `### Solution`, `### Use cases`, `### Trade-offs`, `### Evidence`. Evidence holds only
-   `<Evidence card="..." />`. The heading may change; the anchor may not. Diagrams go inside
-   the card they explain.
-4. `## Recipes`: per recipe a `###` heading, one `<Recipe />`, a paragraph starting
+1. A short opening, prose only: a scene the reader recognises, then what the guide fixes. Two
+   short paragraphs.
+2. `<GuideStatus guide="..." />`. It renders "What you'll learn" (the questions, in order, each
+   linking to its step) and one line on versions and how claims are checked.
+3. Steps, one per question: an anchor line, a blank line, and `## <n>. <question text>`, so the
+   heading is the question, numbered. Each `questions` entry answers exactly one step. Then:
+   - a paragraph starting `**In short:**`: the answer in one sentence, optionally followed by
+     the one line of config;
+   - `### What's going on`: the mechanism in plain words, with an analogy when it helps, and
+     the step's diagram;
+   - `### Do this`: numbered actions, with the code;
+   - `### When this is not for you`: two or three bullets;
+   - `<Evidence card="..." />` last. It renders "How we checked this", collapsed.
+
+   The heading text may change with the question; the anchor may not.
+4. `## Put it all together`: per recipe a `###` heading, one `<Recipe />`, a paragraph starting
    `**Expected:**`, and a list starting `**If it fails:**`.
 5. `## Checklist` with `<Checklist guide="..." />`, and `## References` with
    `<GuideReferences guide="..." />`.
+
+Write for someone meeting the topic for the first time: simple words, short sentences, the
+problem before the jargon. Detail that does not change what the reader does goes into the
+evidence or out.
 
 `<Recipe id path start end lang />` shows a fixture file from the first line starting with
 `start` through the first later line starting with `end` (one line without `end`). `start`

@@ -100,6 +100,22 @@ func (r *Repo) Check() []error {
 				add("%s: question %s answeredIn %s is not a card on the page", g.Path, q.ID, q.AnsweredIn)
 			}
 		}
+		// Each card answers one question, and its heading is that question, numbered.
+		for i, c := range g.Cards {
+			var qs []Question
+			for _, q := range m.Questions {
+				if q.AnsweredIn == c.ID {
+					qs = append(qs, q)
+				}
+			}
+			if len(qs) != 1 {
+				add("%s: card %s must answer exactly one question, %d do", g.Path, c.ID, len(qs))
+				continue
+			}
+			if want := fmt.Sprintf("%d. %s", i+1, qs[0].Text); normalizeQuotes(c.Title) != want {
+				add("%s: card %s heading %q must be %q", g.Path, c.ID, c.Title, want)
+			}
+		}
 		if want, pilot := PilotQuestions[m.ID]; pilot {
 			got := make([]string, 0, len(m.Questions))
 			for _, q := range m.Questions {

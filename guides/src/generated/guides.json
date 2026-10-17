@@ -27,56 +27,56 @@
       "questions": [
         {
           "id": "JVM-Q1",
-          "text": "How much of the memory limit can the heap take, and how do I prove it?",
+          "text": "How much memory can the heap take?",
           "answeredIn": "jvm-heap-sizing",
-          "cardTitle": "Size the heap from the memory limit"
+          "cardTitle": "1. How much memory can the heap take?"
         },
         {
           "id": "JVM-Q2",
-          "text": "Why did my pod get SerialGC, and how do I stop it?",
+          "text": "Why did my pod get the slow garbage collector?",
           "answeredIn": "jvm-gc-explicit",
-          "cardTitle": "Set the garbage collector explicitly"
+          "cardTitle": "2. Why did my pod get the slow garbage collector?"
         },
         {
           "id": "JVM-Q3",
-          "text": "CPU limit or not, and what does ActiveProcessorCount change?",
+          "text": "How many CPUs does the JVM think it has?",
           "answeredIn": "jvm-cpu-count",
-          "cardTitle": "Size the JVM for the CPUs it gets"
+          "cardTitle": "3. How many CPUs does the JVM think it has?"
         },
         {
           "id": "JVM-Q4",
-          "text": "Which garbage collector for which workload?",
+          "text": "Which garbage collector should I use?",
           "answeredIn": "jvm-gc-choice",
-          "cardTitle": "Choose G1 unless pauses are what you sell"
+          "cardTitle": "4. Which garbage collector should I use?"
         },
         {
           "id": "JVM-Q5",
-          "text": "Which flags go in the ENTRYPOINT and which in JAVA_TOOL_OPTIONS?",
+          "text": "Where do JVM flags go: the image or the Deployment?",
           "answeredIn": "jvm-flag-placement",
-          "cardTitle": "Put image flags in the ENTRYPOINT, sizing in JAVA_TOOL_OPTIONS"
+          "cardTitle": "5. Where do JVM flags go: the image or the Deployment?"
         },
         {
           "id": "JVM-Q6",
-          "text": "How do I build the AOT cache and know it is used?",
+          "text": "How do I make the service start faster?",
           "answeredIn": "jvm-aot-cache",
-          "cardTitle": "Build the AOT cache in the image and prove it is used"
+          "cardTitle": "6. How do I make the service start faster?"
         },
         {
           "id": "JVM-Q7",
-          "text": "AOT cache, Spring AOT, native image, or CRaC: which and when?",
+          "text": "What about native image, CRaC, and Spring AOT?",
           "answeredIn": "jvm-startup-options",
-          "cardTitle": "Pick the startup optimisation by workload"
+          "cardTitle": "7. What about native image, CRaC, and Spring AOT?"
         },
         {
           "id": "JVM-Q8",
-          "text": "How large should the startupProbe budget be?",
+          "text": "How long should Kubernetes wait for startup?",
           "answeredIn": "jvm-startup-probe",
-          "cardTitle": "Size the startupProbe from measured startup"
+          "cardTitle": "8. How long should Kubernetes wait for startup?"
         }
       ],
       "cards": {
         "jvm-aot-cache": {
-          "title": "Build the AOT cache in the image and prove it is used",
+          "title": "6. How do I make the service start faster?",
           "coverage": "3 claims: 1 measured, 2 reproduced",
           "records": [
             {
@@ -125,7 +125,7 @@
           ]
         },
         "jvm-cpu-count": {
-          "title": "Size the JVM for the CPUs it gets",
+          "title": "3. How many CPUs does the JVM think it has?",
           "coverage": "2 claims: 1 reproduced, 1 not exercised",
           "records": [
             {
@@ -151,7 +151,7 @@
           ]
         },
         "jvm-flag-placement": {
-          "title": "Put image flags in the ENTRYPOINT, sizing in JAVA_TOOL_OPTIONS",
+          "title": "5. Where do JVM flags go: the image or the Deployment?",
           "coverage": "2 claims: 1 reproduced, 1 not exercised",
           "records": [
             {
@@ -177,7 +177,7 @@
           ]
         },
         "jvm-gc-choice": {
-          "title": "Choose G1 unless pauses are what you sell",
+          "title": "4. Which garbage collector should I use?",
           "coverage": "1 claim: 1 not exercised",
           "records": [
             {
@@ -189,7 +189,7 @@
           ]
         },
         "jvm-gc-explicit": {
-          "title": "Set the garbage collector explicitly",
+          "title": "2. Why did my pod get the slow garbage collector?",
           "coverage": "4 claims: 4 reproduced",
           "records": [
             {
@@ -251,7 +251,7 @@
           ]
         },
         "jvm-heap-sizing": {
-          "title": "Size the heap from the memory limit",
+          "title": "1. How much memory can the heap take?",
           "coverage": "2 claims: 1 reproduced, 1 not exercised",
           "records": [
             {
@@ -277,7 +277,7 @@
           ]
         },
         "jvm-startup-options": {
-          "title": "Pick the startup optimisation by workload",
+          "title": "7. What about native image, CRaC, and Spring AOT?",
           "coverage": "1 claim: 1 not exercised",
           "records": [
             {
@@ -289,7 +289,7 @@
           ]
         },
         "jvm-startup-probe": {
-          "title": "Size the startupProbe from measured startup",
+          "title": "8. How long should Kubernetes wait for startup?",
           "coverage": "1 claim: 1 not exercised",
           "records": [
             {
@@ -304,35 +304,35 @@
       "contents": [
         {
           "id": "jvm-heap-sizing",
-          "title": "Size the heap from the memory limit"
+          "title": "1. How much memory can the heap take?"
         },
         {
           "id": "jvm-gc-explicit",
-          "title": "Set the garbage collector explicitly"
+          "title": "2. Why did my pod get the slow garbage collector?"
         },
         {
           "id": "jvm-cpu-count",
-          "title": "Size the JVM for the CPUs it gets"
+          "title": "3. How many CPUs does the JVM think it has?"
         },
         {
           "id": "jvm-gc-choice",
-          "title": "Choose G1 unless pauses are what you sell"
+          "title": "4. Which garbage collector should I use?"
         },
         {
           "id": "jvm-flag-placement",
-          "title": "Put image flags in the ENTRYPOINT, sizing in JAVA_TOOL_OPTIONS"
+          "title": "5. Where do JVM flags go: the image or the Deployment?"
         },
         {
           "id": "jvm-aot-cache",
-          "title": "Build the AOT cache in the image and prove it is used"
+          "title": "6. How do I make the service start faster?"
         },
         {
           "id": "jvm-startup-options",
-          "title": "Pick the startup optimisation by workload"
+          "title": "7. What about native image, CRaC, and Spring AOT?"
         },
         {
           "id": "jvm-startup-probe",
-          "title": "Size the startupProbe from measured startup"
+          "title": "8. How long should Kubernetes wait for startup?"
         }
       ],
       "checklist": [
@@ -688,56 +688,56 @@
       "questions": [
         {
           "id": "OBS-Q1",
-          "text": "Boot's OpenTelemetry starter or the Java agent?",
+          "text": "Should I use Boot's starter or the OpenTelemetry agent?",
           "answeredIn": "obs-starter-not-agent",
-          "cardTitle": "Use Boot's OpenTelemetry starter, not the agent"
+          "cardTitle": "1. Should I use Boot's starter or the OpenTelemetry agent?"
         },
         {
           "id": "OBS-Q2",
-          "text": "Which Boot 4.1 properties send traces, metrics, and logs over OTLP, and what moved from 3.x?",
+          "text": "How do I tell the app where to send telemetry?",
           "answeredIn": "obs-otlp-config",
-          "cardTitle": "Configure OTLP the Boot 4.1 way"
+          "cardTitle": "2. How do I tell the app where to send telemetry?"
         },
         {
           "id": "OBS-Q3",
-          "text": "How do logs reach OTLP with the trace ID, and why does Boot not do it alone?",
+          "text": "How do my logs get the trace ID?",
           "answeredIn": "obs-logs-otlp",
-          "cardTitle": "Install the Logback appender so logs carry the trace"
+          "cardTitle": "3. How do my logs get the trace ID?"
         },
         {
           "id": "OBS-Q4",
-          "text": "Where and how much to sample?",
+          "text": "How many traces should I keep?",
           "answeredIn": "obs-sampling",
-          "cardTitle": "Sample parent-based in the app, tail-sample in the collector"
+          "cardTitle": "4. How many traces should I keep?"
         },
         {
           "id": "OBS-Q5",
-          "text": "What makes a metric useful and cheap: unit, histograms, SLO buckets, cardinality?",
+          "text": "How do I make metrics useful without a huge bill?",
           "answeredIn": "obs-metric-shape",
-          "cardTitle": "Shape metrics: seconds, buckets, SLOs, bounded tags"
+          "cardTitle": "5. How do I make metrics useful without a huge bill?"
         },
         {
           "id": "OBS-Q6",
-          "text": "Why a collector between the app and the backends, and when to skip it?",
+          "text": "Do I need a collector in the middle?",
           "answeredIn": "obs-collector",
-          "cardTitle": "Put a collector between the app and the backends"
+          "cardTitle": "6. Do I need a collector in the middle?"
         },
         {
           "id": "OBS-Q7",
-          "text": "How do I go from a latency spike to the trace to its log lines?",
+          "text": "How do I go from a slow request to its logs?",
           "answeredIn": "obs-correlation",
-          "cardTitle": "Correlate metric, trace, and log with one trace ID"
+          "cardTitle": "7. How do I go from a slow request to its logs?"
         },
         {
           "id": "OBS-Q8",
-          "text": "What does Actuator expose, and on which port?",
+          "text": "What should Actuator expose, and where?",
           "answeredIn": "obs-actuator",
-          "cardTitle": "Keep Actuator on its own port"
+          "cardTitle": "8. What should Actuator expose, and where?"
         }
       ],
       "cards": {
         "obs-actuator": {
-          "title": "Keep Actuator on its own port",
+          "title": "8. What should Actuator expose, and where?",
           "coverage": "2 claims: 1 reproduced, 1 not exercised",
           "records": [
             {
@@ -763,7 +763,7 @@
           ]
         },
         "obs-collector": {
-          "title": "Put a collector between the app and the backends",
+          "title": "6. Do I need a collector in the middle?",
           "coverage": "1 claim: 1 not exercised",
           "records": [
             {
@@ -775,7 +775,7 @@
           ]
         },
         "obs-correlation": {
-          "title": "Correlate metric, trace, and log with one trace ID",
+          "title": "7. How do I go from a slow request to its logs?",
           "coverage": "2 claims: 1 reproduced, 1 not exercised",
           "records": [
             {
@@ -801,7 +801,7 @@
           ]
         },
         "obs-logs-otlp": {
-          "title": "Install the Logback appender so logs carry the trace",
+          "title": "3. How do my logs get the trace ID?",
           "coverage": "1 claim: 1 reproduced",
           "records": [
             {
@@ -821,7 +821,7 @@
           ]
         },
         "obs-metric-shape": {
-          "title": "Shape metrics: seconds, buckets, SLOs, bounded tags",
+          "title": "5. How do I make metrics useful without a huge bill?",
           "coverage": "2 claims: 1 reproduced, 1 not exercised",
           "records": [
             {
@@ -847,7 +847,7 @@
           ]
         },
         "obs-otlp-config": {
-          "title": "Configure OTLP the Boot 4.1 way",
+          "title": "2. How do I tell the app where to send telemetry?",
           "coverage": "1 claim: 1 reproduced",
           "records": [
             {
@@ -867,7 +867,7 @@
           ]
         },
         "obs-sampling": {
-          "title": "Sample parent-based in the app, tail-sample in the collector",
+          "title": "4. How many traces should I keep?",
           "coverage": "2 claims: 1 reproduced, 1 not exercised",
           "records": [
             {
@@ -893,7 +893,7 @@
           ]
         },
         "obs-starter-not-agent": {
-          "title": "Use Boot's OpenTelemetry starter, not the agent",
+          "title": "1. Should I use Boot's starter or the OpenTelemetry agent?",
           "coverage": "1 claim: 1 compiled",
           "records": [
             {
@@ -915,35 +915,35 @@
       "contents": [
         {
           "id": "obs-starter-not-agent",
-          "title": "Use Boot's OpenTelemetry starter, not the agent"
+          "title": "1. Should I use Boot's starter or the OpenTelemetry agent?"
         },
         {
           "id": "obs-otlp-config",
-          "title": "Configure OTLP the Boot 4.1 way"
+          "title": "2. How do I tell the app where to send telemetry?"
         },
         {
           "id": "obs-logs-otlp",
-          "title": "Install the Logback appender so logs carry the trace"
+          "title": "3. How do my logs get the trace ID?"
         },
         {
           "id": "obs-sampling",
-          "title": "Sample parent-based in the app, tail-sample in the collector"
+          "title": "4. How many traces should I keep?"
         },
         {
           "id": "obs-metric-shape",
-          "title": "Shape metrics: seconds, buckets, SLOs, bounded tags"
+          "title": "5. How do I make metrics useful without a huge bill?"
         },
         {
           "id": "obs-collector",
-          "title": "Put a collector between the app and the backends"
+          "title": "6. Do I need a collector in the middle?"
         },
         {
           "id": "obs-correlation",
-          "title": "Correlate metric, trace, and log with one trace ID"
+          "title": "7. How do I go from a slow request to its logs?"
         },
         {
           "id": "obs-actuator",
-          "title": "Keep Actuator on its own port"
+          "title": "8. What should Actuator expose, and where?"
         }
       ],
       "checklist": [

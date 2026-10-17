@@ -35,8 +35,15 @@ type Recipe struct {
 	Line                       int
 }
 
-// CardParts is the fixed order of a card's sections.
-var CardParts = []string{"Problem", "Solution", "Use cases", "Trade-offs", "Evidence"}
+// CardParts is the fixed order of a card's ### sections. A card opens with an "**In short:**"
+// paragraph and closes with <Evidence />, after the last part.
+var CardParts = []string{"What's going on", "Do this", "When this is not for you"}
+
+// InShort starts the paragraph that opens every card.
+const InShort = "**In short:**"
+
+// ApplyHeading is the section after the cards: the recipes, put together.
+const ApplyHeading = "Put it all together"
 
 // GuideComponents are the components a guide may use besides diagrams.
 var GuideComponents = map[string]bool{
@@ -307,28 +314,31 @@ func ParseGuide(path string, s *Schemas, retiredCards map[string]string) (*Guide
 		}
 		g.Cards = append(g.Cards, Card{ID: card.name, Title: h.text, Line: h.line})
 		p++
+		if t := peek(); t == nil || t.kind != "text" || !strings.HasPrefix(t.text, InShort) {
+			fail(lineAt(t), "card %s: the heading is followed by a paragraph starting %s", card.name, InShort)
+		}
+		for t := peek(); t != nil && t.kind != "h3" && t.kind != "h2" && t.kind != "anchor"; t = peek() {
+			if t.kind == "tag" {
+				fail(t.line, "card %s: no component before ### %s", card.name, CardParts[0])
+			}
+			p++
+		}
 		for i, part := range CardParts {
 			t := peek()
-			if t == nil || t.kind != "h3" || t.text != part {
+			if t == nil || t.kind != "h3" || normalizeQuotes(t.text) != part {
 				fail(lineAt(t), "card %s: expected ### %s", card.name, part)
 				return g, errs
 			}
 			p++
-			if i == len(CardParts)-1 {
-				if !expectTag("Evidence", "card", card.name) {
-					return g, errs
-				}
-				if t := peek(); t != nil && t.kind != "anchor" && t.kind != "h2" {
-					fail(t.line, "card %s: the Evidence section holds only <Evidence />", card.name)
-				}
-				break
-			}
+			last := i == len(CardParts)-1
 			for t := peek(); t != nil && t.kind != "h3" && t.kind != "h2" && t.kind != "anchor"; t = peek() {
 				if t.kind == "tag" {
 					if strings.HasSuffix(t.name, "Diagram") {
 						g.Diagrams = append(g.Diagrams, t.name)
 					} else if t.name == "DiagramLegend" {
 						g.Legends = append(g.Legends, parseItems(t.attr["items"]))
+					} else if last && t.name == "Evidence" {
+						break
 					} else {
 						fail(t.line, "%s does not belong in a card", t.name)
 					}
@@ -336,13 +346,19 @@ func ParseGuide(path string, s *Schemas, retiredCards map[string]string) (*Guide
 				p++
 			}
 		}
+		if !expectTag("Evidence", "card", card.name) {
+			return g, errs
+		}
+		if t := peek(); t != nil && t.kind != "anchor" && t.kind != "h2" {
+			fail(t.line, "card %s: <Evidence /> closes the card", card.name)
+		}
 	}
 	if len(g.Cards) == 0 {
 		fail(len(lines), "a guide needs at least one card")
 	}
 	// Recipes.
-	if t := peek(); t == nil || t.kind != "h2" || t.text != "Recipes" {
-		fail(lineAt(t), "expected ## Recipes after the cards")
+	if t := peek(); t == nil || t.kind != "h2" || t.text != ApplyHeading {
+		fail(lineAt(t), "expected ## %s after the cards", ApplyHeading)
 		return g, errs
 	}
 	p++
@@ -408,3 +424,6 @@ func GuideFiles(root string) ([]string, error) {
 	sort.Strings(files)
 	return files, err
 }
+
+// normalizeQuotes turns typographic apostrophes into ASCII ones.
+func normalizeQuotes(s string) string { return strings.ReplaceAll(s, "\u2019", "'") }

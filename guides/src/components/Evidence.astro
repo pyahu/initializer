@@ -13,8 +13,8 @@ for (const g of Object.values(data.guides) as any[]) {
 }
 if (!found) throw new Error(`Evidence: unknown card ${card}`);
 ---
-<div class="evidence not-content">
-  <p class="evidence-coverage">{found.coverage}</p>
+<details class="evidence not-content">
+  <summary>How we checked this <span class="evidence-coverage">{found.coverage}</span></summary>
   {found.records.map((r) => (
     <div class={`evidence-record badge-${r.badge}`} id={r.id}>
       {r.badge === "not-exercised" ? (
@@ -26,7 +26,7 @@ if (!found) throw new Error(`Evidence: unknown card ${card}`);
         <>
           <p><span class="evidence-badge">{r.badge}</span> {r.canonical}</p>
           <details>
-            <summary>How it was proven</summary>
+            <summary>Test, command, and run</summary>
             <dl>
               <dt>Test</dt><dd><code>{r.test}</code></dd>
               <dt>Commands</dt><dd>{r.commands?.map((c) => <code class="evidence-command">{c}</code>)}</dd>
@@ -40,4 +40,4 @@ if (!found) throw new Error(`Evidence: unknown card ${card}`);
       )}
     </div>
   ))}
-</div>
+</details>

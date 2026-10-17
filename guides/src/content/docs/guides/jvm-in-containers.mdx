@@ -11,28 +11,28 @@ guide:
   verification: null
   questions:
     - id: JVM-Q1
-      text: How much of the memory limit can the heap take, and how do I prove it?
+      text: "How much memory can the heap take?"
       answeredIn: jvm-heap-sizing
     - id: JVM-Q2
-      text: Why did my pod get SerialGC, and how do I stop it?
+      text: "Why did my pod get the slow garbage collector?"
       answeredIn: jvm-gc-explicit
     - id: JVM-Q3
-      text: CPU limit or not, and what does ActiveProcessorCount change?
+      text: "How many CPUs does the JVM think it has?"
       answeredIn: jvm-cpu-count
     - id: JVM-Q4
-      text: Which garbage collector for which workload?
+      text: "Which garbage collector should I use?"
       answeredIn: jvm-gc-choice
     - id: JVM-Q5
-      text: Which flags go in the ENTRYPOINT and which in JAVA_TOOL_OPTIONS?
+      text: "Where do JVM flags go: the image or the Deployment?"
       answeredIn: jvm-flag-placement
     - id: JVM-Q6
-      text: How do I build the AOT cache and know it is used?
+      text: "How do I make the service start faster?"
       answeredIn: jvm-aot-cache
     - id: JVM-Q7
-      text: "AOT cache, Spring AOT, native image, or CRaC: which and when?"
+      text: "What about native image, CRaC, and Spring AOT?"
       answeredIn: jvm-startup-options
     - id: JVM-Q8
-      text: How large should the startupProbe budget be?
+      text: "How long should Kubernetes wait for startup?"
       answeredIn: jvm-startup-probe
   sources:
     - title: "01 · The JVM in containers: memory, CPU, GC and startup"
@@ -52,286 +52,302 @@ import ContainerMemoryDiagram from '../../../components/diagrams/ContainerMemory
 import ImageBuildTimelineDiagram from '../../../components/diagrams/ImageBuildTimelineDiagram.astro';
 import PodTopologyDiagram from '../../../components/diagrams/PodTopologyDiagram.astro';
 
-How to size a JVM for the pod it runs in: memory, CPU, garbage collector, and startup. Follow it and pods stop
-being OOMKilled with a half-empty heap, the JVM uses the CPUs it really gets, and new pods start fast enough for
-smooth rollouts.
+Your Spring Boot service runs fine on your laptop. In Kubernetes it restarts every few hours, takes ages to start,
+and pauses for no reason. Usually the code is fine: the JVM is guessing the size of a machine it cannot see.
 
-Written for Java 25 and Spring Boot 4.1 on Kubernetes. Each card says when its advice is wrong for you.
+This guide walks through the eight decisions that stop the guessing: memory, CPU, garbage collector, and startup.
+Each one takes a few minutes, and the last section gives you the files to copy.
 
 <GuideStatus guide="jvm-in-containers" />
 
 <a id="jvm-heap-sizing"></a>
 
-## Size the heap from the memory limit
+## 1. How much memory can the heap take?
 
-### Problem
+**In short:** give the heap 75% of the pod's memory limit, and leave the rest for everything else the JVM needs.
 
-Exit code 137 and `Reason: OOMKilled`, with the heap at 60%. The kernel charges the container for every resident
-page: heap, metaspace, code cache, thread stacks, direct buffers, GC structures, and malloc arenas. A heap sized
-close to the limit leaves too little for the rest. There is no `OutOfMemoryError` and no heap dump, just SIGKILL.
+```text
+-XX:MaxRAMPercentage=75 -XX:InitialRAMPercentage=75
+```
 
-The JVM default is the opposite mistake: `MaxRAMPercentage` is 25, so a 1 GiB pod gets a 256 MiB heap.
+### What's going on
+
+Your pod restarts with `OOMKilled`, yet the heap graph never passed 60%. How?
+
+Think of the memory limit as a suitcase. The heap is the biggest thing you pack, but not the only one: the JVM
+also carries compiled code, class metadata, one stack per thread, and network buffers. Kubernetes weighs the whole
+suitcase. If the heap takes almost all the space, the rest does not fit, and the kernel kills the pod. No error, no
+heap dump, just a restart.
 
 <ContainerMemoryDiagram />
 <DiagramLegend items={['recommended', 'context', 'failure']} />
 
-### Solution
+The JVM default makes the opposite mistake: it uses only 25%, so a 1 GiB pod gets a 256 MiB heap.
 
-Set `-XX:MaxRAMPercentage=75` and `-XX:InitialRAMPercentage=75`, with memory request equal to limit. In a 1 GiB
-container that is a 768 MiB heap and 256 MiB for everything else. Then measure: run a load test with
-`-XX:NativeMemoryTracking=summary` and compare NMT's committed total with the container working set. Add
-`-XX:+ExitOnOutOfMemoryError`, so a Java OOM restarts the pod instead of leaving a half-dead JVM.
+### Do this
 
-| Memory limit | `MaxRAMPercentage` | Leaves for non-heap |
-| ------------ | ------------------ | ------------------- |
-| 512 MiB | 50 to 60 | 200 to 256 MiB; tight for a Boot service |
-| 1 GiB | 70 to 75 | 256 to 300 MiB |
-| 2 GiB | 75 | about 512 MiB |
-| 4 GiB and up | 75 to 80 | 800 MiB and up |
+1. Set the memory request equal to the limit in the Deployment.
+2. Add the two flags above. In a 1 GiB pod that is a 768 MiB heap and 256 MiB for the rest.
+3. Add `-XX:+ExitOnOutOfMemoryError`, so a real Java out-of-memory error restarts the pod cleanly.
+4. Under a load test, confirm the rest fits: start with `-XX:NativeMemoryTracking=summary` and compare its total
+   with the container's memory use.
 
-These are starting points from the source guide; NMT under your load decides.
+### When this is not for you
 
-### Use cases
-
-Request and response services from 1 GiB up, the shape most Spring Boot services have. Initial equal to max is
-right when request equals limit: the memory is reserved for the pod anyway, and a pod that is too small fails the
-first load test instead of failing at night.
-
-### Trade-offs
-
-A fixed heap gives no memory back. Drop `InitialRAMPercentage` only for ZGC with `-XX:SoftMaxHeapSize`, or if you
-deliberately rely on G1 uncommit, which is rare in Kubernetes. Below 1 GiB the non-heap share dominates, so the
-percentage has to fall and the margin gets thin.
-
-### Evidence
+- Pods under 1 GiB: the "rest" is a bigger share, so go down to 50 or 60%. At 4 GiB and up, 75 to 80% is fine.
+- You want the JVM to give memory back when idle: drop `InitialRAMPercentage` and see step 4 for ZGC.
 
 <Evidence card="jvm-heap-sizing" />
 
 <a id="jvm-gc-explicit"></a>
 
-## Set the garbage collector explicitly
+## 2. Why did my pod get the slow garbage collector?
 
-### Problem
+**In short:** the JVM picked it because the pod looked small. Always name the collector yourself.
 
-The JVM picks G1 only on a server-class machine: at least 2 CPUs and about 1792 MB of memory. Below either, it
-silently picks SerialGC: one GC thread, long pauses, and nothing in the logs. A pod with `cpu: 1`, or with a 1 GiB
-limit, gets it.
+```text
+-XX:+UseG1GC
+```
 
-### Solution
+### What's going on
 
-Put `-XX:+UseG1GC` on the image `ENTRYPOINT`, and keep it identical in the AOT training run. Check what a pod got
-with `java -XX:+PrintFlagsFinal -version` inside the container: `UseG1GC` must be `true`.
+The JVM chooses its garbage collector when it starts, based on the machine it thinks it is on. With fewer than
+2 CPUs, or less than about 1792 MB of memory, it decides the machine is small and picks SerialGC: a single thread
+does all the cleanup, and your app stops while it works.
 
-### Use cases
+A pod with `cpu: 1`, or with a 1 GiB limit, falls into this. Nothing in the logs tells you.
 
-Every service image, whatever the pod size. Explicit is the only way the GC does not change when someone lowers a
-limit.
+### Do this
 
-### Trade-offs
+1. Put `-XX:+UseG1GC` in the image `ENTRYPOINT` (step 5 explains why there).
+2. Use the same flag in the AOT training run (step 6), or the cache is rejected.
+3. Check what a running pod got:
 
-None for a request and response service. If the workload needs another collector, the next card says which; make
-that choice explicit too.
+   ```sh
+   java -XX:+PrintFlagsFinal -version | grep -E 'UseG1GC|UseSerialGC'
+   ```
 
-### Evidence
+   `UseG1GC` must be `true`.
+
+### When this is not for you
+
+- Your workload needs another collector: pick it in step 4, and make that choice explicit too.
 
 <Evidence card="jvm-gc-explicit" />
 
 <a id="jvm-cpu-count"></a>
 
-## Size the JVM for the CPUs it gets
+## 3. How many CPUs does the JVM think it has?
 
-### Problem
+**In short:** set no CPU limit, and tell the JVM its CPU count: the CPU request rounded up, at least 2.
 
-Since JDK 19 the JVM ignores CPU shares (the request) and reads only the CPU quota (the limit). With no CPU limit,
-it sees the whole node: a 64-core node gives 13 GC threads, a 63-thread `commonPool`, and as many virtual thread
-carriers. With a CPU limit, CFS throttling slows startup and GC pauses instead.
+```text
+-XX:ActiveProcessorCount=2
+```
 
-### Solution
+### What's going on
 
-No CPU limit, and `-XX:ActiveProcessorCount` equal to the CPU request rounded up, at least 2. The flag overrides
-what the JVM detects, so GC threads, JIT threads, the common pool, and the virtual thread scheduler follow the
-pod. If you do set a CPU limit, drop the flag: the JVM reads the quota.
+The JVM sizes a lot by CPU count: garbage collector threads, compiler threads, the common thread pool, and the
+carriers for virtual threads. Since JDK 19 it reads only the CPU limit, never the request.
 
-### Use cases
+So with no limit, it sees the whole node. On a 64-core node, a pod that asked for 2 CPUs gets 13 GC threads and a
+common pool of 63. With a limit, the count is right, but Kubernetes throttles the pod whenever it bursts, and
+startup and GC pauses slow down.
 
-Clusters that schedule by request and allow bursting, the common setup for JVM services. The minimum of 2 also
-keeps the server-class GC choice.
+The flag fixes the count without the throttling.
 
-### Trade-offs
+### Do this
 
-The flag is a number in the Deployment that must move with the CPU request. A forgotten change leaves pools sized
-for the old request. With a CPU limit you trade this upkeep for throttling.
+1. Remove the CPU limit from the Deployment; keep the request.
+2. Set `-XX:ActiveProcessorCount` to the request rounded up, at least 2, in the Deployment's
+   `JAVA_TOOL_OPTIONS`. The minimum of 2 also keeps G1 from step 2.
+3. When you change the CPU request, change the flag with it.
 
-### Evidence
+### When this is not for you
+
+- Your cluster requires CPU limits: drop the flag. The JVM reads the limit, and you accept the throttling.
 
 <Evidence card="jvm-cpu-count" />
 
 <a id="jvm-gc-choice"></a>
 
-## Choose G1 unless pauses are what you sell
+## 4. Which garbage collector should I use?
 
-### Problem
+**In short:** G1 for almost every Spring Boot service. Choose another only for a reason you can measure.
 
-Teams copy a collector from a benchmark or an old talk. Non-generational ZGC no longer exists (removed in JDK 24),
-and a ZGC switch also changes how the AOT cache must be trained in JDK 25.
+### What's going on
 
-### Solution
+A garbage collector balances three things: how long the app pauses, how much work gets done, and how much extra
+CPU and memory it needs. G1 balances them well for request and response services. Each of the others wins one of
+the three by paying with the rest.
 
 | Collector | Flag | Choose it for |
 | --------- | ---- | ------------- |
-| G1 | `-XX:+UseG1GC` | Request and response services, heaps from 512 MB to 32 GB, p99 goals around 100 to 200 ms |
-| Generational ZGC | `-XX:+UseZGC` | p99 or p999 latency SLOs, large heaps, pauses under 1 ms |
-| Generational Shenandoah | `-XX:+UseShenandoahGC -XX:ShenandoahGCMode=generational` | A low-pause alternative; a product feature in JDK 25 (JEP 521) |
-| Parallel | `-XX:+UseParallelGC` | Batch and ETL: throughput over pauses |
+| G1 | `-XX:+UseG1GC` | Request and response services, heaps from 512 MB to 32 GB |
+| Generational ZGC | `-XX:+UseZGC` | Latency targets where pauses must stay under 1 ms |
+| Generational Shenandoah | `-XX:+UseShenandoahGC -XX:ShenandoahGCMode=generational` | A low-pause alternative, a product feature since JDK 25 |
+| Parallel | `-XX:+UseParallelGC` | Batch jobs, where throughput matters and pauses do not |
 | Serial | `-XX:+UseSerialGC` | Tiny sidecars and CLIs, by choice, never by accident |
 
-### Use cases
+### Do this
 
-G1 for almost every Spring Boot service. ZGC when a latency SLO is the product. Parallel for Spring Batch jobs.
+1. Start with G1.
+2. Switch only when a load test shows the need: pauses that break your latency target (ZGC), or a batch job that
+   should finish sooner (Parallel).
+3. When you switch, retrain the AOT cache with the new collector (step 6). In JDK 25, a ZGC service must train
+   its cache with ZGC.
 
-### Trade-offs
+### When this is not for you
 
-ZGC buys low pauses with more CPU and memory headroom, and in JDK 25 its AOT cache must be trained with ZGC
-(object caching with any GC arrives in JDK 26, JEP 516). Compact object headers (`-XX:+UseCompactObjectHeaders`,
-JEP 519) cut heap use for allocation-heavy services; enable them only after a load test, and in the training run
-too, or the cache is rejected.
-
-### Evidence
+- Old advice about ZGC without generations: that mode was removed in JDK 24.
+- Compact object headers (`-XX:+UseCompactObjectHeaders`) save heap for allocation-heavy services. Turn them on
+  only after a load test, and in the training run too.
 
 <Evidence card="jvm-gc-choice" />
 
 <a id="jvm-flag-placement"></a>
 
-## Put image flags in the ENTRYPOINT, sizing in JAVA_TOOL_OPTIONS
+## 5. Where do JVM flags go: the image or the Deployment?
 
-### Problem
+**In short:** flags that belong to the image go in the `ENTRYPOINT`. Sizing goes in `JAVA_TOOL_OPTIONS` from the
+Deployment.
 
-A Deployment that sets `JAVA_TOOL_OPTIONS` replaces the image's value; it never merges. If the GC flag or the AOT
-cache lives there, one environment change drops it. The default crash log goes to the working directory, which is
-read-only in a hardened pod.
+### What's going on
 
-### Solution
+There are two places to put JVM flags, and they behave differently. The `ENTRYPOINT` is baked into the image.
+`JAVA_TOOL_OPTIONS` is an environment variable, and when a Deployment sets it, it replaces the image's value
+completely. It never merges.
+
+So a GC flag kept in `JAVA_TOOL_OPTIONS` disappears the day someone adds a sizing flag to the Deployment.
 
 | Where | What | Why |
 | ----- | ---- | --- |
-| `ENTRYPOINT` | `-XX:+UseG1GC`, `-XX:AOTCache=/app/app.aot`, `-XX:ErrorFile=/tmp/hs_err_pid%p.log` | They must match the image; a Deployment cannot drop them |
-| `JAVA_TOOL_OPTIONS` | `MaxRAMPercentage`, `InitialRAMPercentage`, `ActiveProcessorCount`, `ExitOnOutOfMemoryError`, `java.io.tmpdir=/tmp` | Per-environment sizing |
-| `JDK_JAVA_OPTIONS` | Flags only the `java` launcher should see | `jcmd` and other tools do not inherit them |
+| `ENTRYPOINT` | `-XX:+UseG1GC`, `-XX:AOTCache=/app/app.aot`, `-XX:ErrorFile=/tmp/hs_err_pid%p.log` | They must match the image, and a Deployment cannot drop them |
+| `JAVA_TOOL_OPTIONS` | Memory percentages, `ActiveProcessorCount`, `ExitOnOutOfMemoryError`, `java.io.tmpdir=/tmp` | They change per environment |
 
-Mount `/tmp` as an `emptyDir` and run with a read-only root filesystem.
+### Do this
 
-### Use cases
+1. Put the image flags in the Dockerfile `ENTRYPOINT`.
+2. Put sizing in the Deployment's `JAVA_TOOL_OPTIONS`.
+3. Mount `/tmp` as an `emptyDir` and run with a read-only root filesystem. The crash log goes to `/tmp`, because
+   the default location is read-only.
+4. Never set `command:` in the Deployment: it replaces the `ENTRYPOINT`. Use `args:`, or nothing.
 
-Every service. The split also makes reviews simple: anything in the Deployment is sizing.
+### When this is not for you
 
-### Trade-offs
-
-Changing the GC needs a new image. That is the point: the cache was trained with that GC.
-
-### Evidence
+- It always applies. The cost: changing the collector needs a new image. That is the point, because the AOT cache
+  was trained with that collector.
 
 <Evidence card="jvm-flag-placement" />
 
 <a id="jvm-aot-cache"></a>
 
-## Build the AOT cache in the image and prove it is used
+## 6. How do I make the service start faster?
 
-### Problem
+**In short:** train an AOT cache while building the image, and check in CI that the JVM really uses it.
 
-A Boot service spends its first seconds loading, verifying and linking thousands of classes. Under a small CPU
-request that makes rollouts slow and autoscaling late. An AOT cache that the JVM silently rejects looks exactly
-like no cache at all.
+```text
+-XX:AOTCache=/app/app.aot
+```
 
-### Solution
+### What's going on
 
-JDK 25 builds the cache in one step (JEP 483, 514, 515). In the image's runtime stage, on the same JRE build that
-production runs, start the app once with `-XX:AOTCacheOutput=/app/app.aot -Dspring.context.exit=onRefresh`: it
-stops after bean creation and writes the cache. Run it from the extracted layout
-(`-Djarmode=tools extract --layers`, without `--launcher`). Then prove it in CI twice: `-XX:AOTMode=on` exits 0
-only if the cache is usable, and the unchanged `ENTRYPOINT` with `-Xlog:aot` logs `Opened AOT cache`.
+When a Spring Boot service starts, the JVM spends its first seconds loading and linking thousands of classes, the
+same ones every time. JDK 25 can record that work once, during the image build, and reuse it on every start. In
+this repository's test service, startup on 2 CPUs drops from about 4.7 to 2.6 seconds.
+
+The catch: if the cache does not match the JVM that runs it, the JVM quietly ignores it. A rejected cache looks
+exactly like no cache, so you have to test for it.
 
 <ImageBuildTimelineDiagram />
 <DiagramLegend items={['recommended', 'context', 'failure']} />
 
-### Use cases
+### Do this
 
-Every JDK 25 service: it is the cheapest large startup gain on the JVM. Training only covers startup; it does not
-profile request handling.
+1. In the image's runtime stage, extract the jar with `-Djarmode=tools extract --layers` (without `--launcher`).
+2. Run the app once to train the cache. It stops by itself after creating its beans:
 
-### Trade-offs
+   ```sh
+   java -XX:+UseG1GC -XX:AOTCacheOutput=/app/app.aot -Dspring.context.exit=onRefresh -jar /app/application.jar
+   ```
 
-A training run in every image build and a larger image layer. The cache binds the image to one JDK build, one GC,
-and one class path, so any of those changing means retraining. Beans that touch a database or broker during
-creation must be switched off for the training run with `-D` properties.
+3. Add `-XX:AOTCache=/app/app.aot` to the `ENTRYPOINT`.
+4. In CI, prove it is used: `-XX:AOTMode=on` exits with an error if the cache is unusable, and `-Xlog:aot` prints
+   `Opened AOT cache` when it loads.
 
-### Evidence
+### When this is not for you
+
+- Beans that connect to a database or broker while starting: switch them off for the training run with a `-D`
+  property, or training fails.
+- A new JDK build, collector, or class path needs a new cache. Training in the image build handles that.
+- The cache speeds up startup only. It does not make requests faster.
 
 <Evidence card="jvm-aot-cache" />
 
 <a id="jvm-startup-options"></a>
 
-## Pick the startup optimisation by workload
+## 7. What about native image, CRaC, and Spring AOT?
 
-### Problem
+**In short:** use the AOT cache by default. The other options start faster still, but cost much more.
 
-Native image, CRaC, Spring AOT and the AOT cache all promise faster startup, with very different costs. Teams pick
-the most impressive number and pay for it in build time and runtime constraints.
+### What's going on
 
-### Solution
+Every option here promises faster startup. They differ in what you pay: build time, and rules your app must
+follow at runtime. Teams often pick the most impressive number and pay for it for years.
 
-| Option | Build cost | Runtime constraints | Use when |
-| ------ | ---------- | ------------------- | -------- |
-| JDK AOT cache | A training run in the image build | Same JDK build, class path and GC as training | The default for every JDK 25 service |
-| Spring AOT on the JVM | `processAot` at build | Profiles and conditions frozen at build | Already native-compatible and every millisecond counts |
-| AOT cache plus Spring AOT | Both | Both | Scale-to-zero or burst autoscaling on the JVM |
-| GraalVM native image | Minutes and gigabytes of RAM per build, reachability metadata | Closed world, no JIT, no JVMTI agents | Functions, CLIs, sidecars |
-| CRaC | A checkpoint in the pipeline | A CRaC JDK, Linux capabilities, secrets in the snapshot | Specialist cases with vendor support |
+| Option | What you pay | Use it for |
+| ------ | ------------ | ---------- |
+| JDK AOT cache | A training run in the image build | Every JDK 25 service, by default |
+| Spring AOT on the JVM | Profiles and conditions fixed at build time | Services already compatible with native image |
+| AOT cache plus Spring AOT | Both of the above | Scale-to-zero or burst autoscaling on the JVM |
+| GraalVM native image | Minutes and gigabytes per build, no JIT, no agents | Functions, CLIs, sidecars |
+| CRaC | A special JDK, Linux capabilities, secrets inside the snapshot | Specialist cases with vendor support |
 
-### Use cases
+### Do this
 
-Long-running services: the AOT cache. Functions and sidecars: native image. Everything else is a special case
-that needs a measurement first.
+1. Long-running services: the AOT cache from step 6.
+2. Scale-to-zero on the JVM: add Spring AOT.
+3. Functions, CLIs, and sidecars: native image.
+4. Anything else: measure first, then decide.
 
-### Trade-offs
+### When this is not for you
 
-The table is the trade-off. Native image and CRaC give the largest gains and the largest constraints.
-
-### Evidence
+- Startup is not a problem for you: stop at step 6. Every option beyond it adds cost.
 
 <Evidence card="jvm-startup-options" />
 
 <a id="jvm-startup-probe"></a>
 
-## Size the startupProbe from measured startup
+## 8. How long should Kubernetes wait for startup?
 
-### Problem
+**In short:** measure startup on your smallest node, and give the `startupProbe` about three times that.
 
-A `startupProbe` budget guessed from a laptop kills pods on the smallest node type, where startup is slowest. A
-huge budget hides a service that hangs on start.
+### What's going on
 
-### Solution
-
-Measure p99 startup with the AOT cache on the smallest node type you run, and set the budget to about three times
-that: `periodSeconds: 5` with a `failureThreshold` that covers it. Probe `/livez`, which never checks dependencies.
+Kubernetes kills a pod that does not start within the `startupProbe` budget. A budget guessed on a laptop is too
+short for the smallest node in production, where startup is slowest. A huge budget has the opposite problem: it
+hides a pod that hangs forever.
 
 <PodTopologyDiagram />
 <DiagramLegend items={['recommended', 'context', 'optional']} />
 
-### Use cases
+### Do this
 
-Every Deployment. Remeasure after a JDK, Boot, or node type change.
+1. Measure the slowest normal startup (p99), with the AOT cache, on the smallest node type you run.
+2. Set `periodSeconds: 5` and a `failureThreshold` that covers about three times that. For 10 seconds, that is
+   30 seconds, so `failureThreshold: 6`.
+3. Probe `/livez`, which never checks the database or other dependencies.
+4. Measure again after a JDK, Spring Boot, or node type change.
 
-### Trade-offs
+### When this is not for you
 
-A generous budget delays the detection of a pod that never starts. Three times p99 keeps that delay bounded.
-
-### Evidence
+- You must detect a stuck pod within seconds: keep the budget tight, and accept a few restarts on slow nodes.
 
 <Evidence card="jvm-startup-probe" />
 
-## Recipes
+## Put it all together
 
-### GC and cache flags in the image entrypoint
+### The image entrypoint
 
 <Recipe id="jvm-entrypoint" path="fixtures/single-hexagonal/Dockerfile" start="ENTRYPOINT [" lang="dockerfile" />
 
@@ -346,9 +362,8 @@ A generous budget delays the detection of a pod that never starts. Three times p
 
 <Recipe id="jvm-tool-options" path="fixtures/single-hexagonal/Dockerfile" start="ENV JAVA_TOOL_OPTIONS=" lang="dockerfile" />
 
-**Expected:** the JVM prints `Picked up JAVA_TOOL_OPTIONS:` with these flags at start, and
-`java -XX:MaxRAMPercentage=75 -XX:+PrintFlagsFinal -version` under a 1 GiB limit reports `MaxHeapSize` of
-805306368.
+**Expected:** the JVM prints `Picked up JAVA_TOOL_OPTIONS:` with these flags at start, and under a 1 GiB limit
+`java -XX:+PrintFlagsFinal -version` reports a `MaxHeapSize` of 805306368 (768 MiB).
 
 **If it fails:**
 
@@ -367,8 +382,8 @@ exits 0.
 
 - Exit 1 with `AOTMode=on`: the JDK build, the GC flag, or the class path differs from the training run. Train in
   the runtime stage, with the same flags.
-- The training run fails with connection errors: a bean talks to a remote system during creation. Disable it with a
-  `-D` property in the training run.
+- The training run fails with connection errors: a bean talks to a remote system while starting. Switch it off
+  with a `-D` property in the training run.
 
 ## Checklist
 

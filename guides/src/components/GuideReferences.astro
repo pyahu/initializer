@@ -8,11 +8,12 @@ const { guide } = Astro.props;
 const g = (data.guides as any)[guide];
 if (!g) throw new Error(`GuideReferences: unknown guide ${guide}`);
 ---
-<div class="not-content guide-references">
-  <p>Baseline {g.baseline}. The full list is on <a href="/reference/docs/">Reference docs</a>.</p>
+<details class="not-content guide-references">
+  <summary>{g.references.length} official documents for baseline {g.baseline}</summary>
+  <p>The full list is on <a href="/reference/docs/">Reference docs</a>.</p>
   <ul>
     {g.references.map((r: any) => (
       <li><a href={r.url}>{r.title}</a> ({r.version}{r.pinned ? "" : ", not version-pinned"}). {r.purpose}</li>
     ))}
   </ul>
-</div>
+</details>

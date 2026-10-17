@@ -255,7 +255,7 @@ func checkGuides(r *guidedata.Repo, dist string, pages map[string]*page) []error
 			}
 			for n, part := range guidedata.CardParts {
 				j := k + 1 + n
-				if j >= len(ev) || ev[j].kind != "h3" || ev[j].value != part {
+				if j >= len(ev) || ev[j].kind != "h3" || normalize(ev[j].value) != normalize(part) {
 					add("guide %s: card %s: ### %s missing or out of order in HTML", g.Meta.ID, c.ID, part)
 					break
 				}
@@ -272,8 +272,8 @@ func checkGuides(r *guidedata.Repo, dist string, pages map[string]*page) []error
 			}
 		}
 		for _, q := range g.Meta.Questions {
-			if !strings.Contains(pg.text, normalize(q.ID+" "+q.Text)) {
-				add("guide %s: question %s not on the page as \"ID text\"", g.Meta.ID, q.ID)
+			if !strings.Contains(pg.text, normalize(q.Text)) {
+				add("guide %s: question %s not on the page", g.Meta.ID, q.ID)
 			}
 		}
 	}
@@ -399,7 +399,7 @@ func checkExports(r *guidedata.Repo, dist, site string) []error {
 				}
 			}
 			for _, q := range g.Meta.Questions {
-				need(seg, "question "+q.ID, q.ID+" "+q.Text)
+				need(seg, "question "+q.ID, q.Text)
 			}
 		}
 		seg, ok := segs["Reference docs"]
