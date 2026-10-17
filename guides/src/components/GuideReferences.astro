@@ -1,5 +1,5 @@
 ---
-// The official documents a guide relies on, for its baseline.
+// The official documents a guide relies on.
 import data from "../generated/guides.json";
 interface Props {
   guide: string;
@@ -9,7 +9,7 @@ const g = (data.guides as any)[guide];
 if (!g) throw new Error(`GuideReferences: unknown guide ${guide}`);
 ---
 <details class="not-content guide-references">
-  <summary>{g.references.length} official documents for baseline {g.baseline}</summary>
+  <summary>Official documentation</summary>
   <p>The full list is on <a href="/reference/docs/">Reference docs</a>.</p>
   <ul>
     {g.references.map((r: any) => (

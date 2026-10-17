@@ -25,10 +25,4 @@ if (!g) throw new Error(`GuideStatus: unknown guide ${guide}`);
       Then <a href="#put-it-all-together">put it all together</a> with tested files and review a service with the <a href="#checklist">checklist</a>.
     </p>
   </nav>
-  <p class="guide-proof">Written for baseline <a href="/reference/docs/">{g.baseline}</a>. {g.verification && <>Last full check: {g.verification}. </>}Tests run this advice on every change: <a href="/#proof">how the guides are proven</a>.</p>
-  {g.sources.length > 0 && (
-    <p class="guide-sources">
-      {g.sources.map((s: any) => <>Adapted from “{s.title}” by {s.author} ({s.date}), {s.license}. </>)}
-    </p>
-  )}
 </div>

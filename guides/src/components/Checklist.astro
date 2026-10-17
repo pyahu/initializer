@@ -7,6 +7,7 @@ interface Props {
 const { guide } = Astro.props;
 const g = (data.guides as any)[guide];
 if (!g) throw new Error(`Checklist: unknown guide ${guide}`);
+const stepOf: Record<string, number> = Object.fromEntries(g.contents.map((c: any, i: number) => [c.id, i + 1]));
 const types: [string, string][] = [
   ["generated-config", "Generated configuration"],
   ["verified-behaviour", "Verified behaviour"],
@@ -25,7 +26,7 @@ const types: [string, string][] = [
             <li id={c.id}>
               <p><strong>{c.id}</strong> {c.text}</p>
               <p class="checklist-meta">
-                <a href={`#${c.card}`}>Card</a> · {c.claim === "enforced" ? `Enforced by ${c.tests.join(", ")}` : "Documented, not yet enforced by a generated test"}
+                <a href={`#${c.card}`}>Step {stepOf[c.card]}</a>
                 {c.tags.length > 0 && <> · When {c.tags.join("; ")}</>}
               </p>
             </li>

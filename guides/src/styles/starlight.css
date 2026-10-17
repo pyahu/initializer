@@ -135,7 +135,6 @@ body:has(.dg-dialog[open]) { overflow: hidden; }
 .guide-map a:hover { text-decoration: underline; }
 .guide-qid { display: inline-block; min-width: 3.6rem; font-family: var(--sl-font-mono); font-size: 0.75rem; color: var(--sl-color-gray-3); }
 .guide-more { margin-top: 0.7rem !important; font-size: 0.85rem; color: var(--sl-color-gray-2); }
-.guide-proof, .guide-sources { font-size: 0.85rem; color: var(--sl-color-gray-2); }
 .guide-references > summary { cursor: pointer; font-weight: 600; }
 .guide-references[open] > summary { margin-bottom: 0.6rem; }
 .checklist ul { list-style: none; padding: 0; }
