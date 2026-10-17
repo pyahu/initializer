@@ -12,8 +12,8 @@
     - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
     - "go test -tags acceptance -count=1 -run '^TestHeapIsSeventyFivePercent$' ./acceptance/jvm"
   environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
-  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
-  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
   date: "2026-10-17"
   result: "--memory=1g -XX:MaxRAMPercentage=75: MaxHeapSize = 805306368"
   limitations: "Flags only. Native memory under load is not measured here."
@@ -37,8 +37,8 @@
     - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
     - "go test -tags acceptance -count=1 -run '^TestSerialGCOneCPU$' ./acceptance/jvm"
   environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
-  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
-  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
   date: "2026-10-17"
   result: "--cpus=1 --memory=4g, no GC flag: UseSerialGC = true, UseG1GC = false"
   limitations: "Docker CPU and memory limits on one runner, not a Kubernetes node."
@@ -55,8 +55,8 @@
     - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
     - "go test -tags acceptance -count=1 -run '^TestSerialGCLowMemory$' ./acceptance/jvm"
   environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
-  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
-  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
   date: "2026-10-17"
   result: "--cpus=2 --memory=1700m, no GC flag: UseSerialGC = true"
   limitations: "1700 MiB and 2048 MiB bracket the threshold of about 1792 MiB; they do not locate it."
@@ -73,8 +73,8 @@
     - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
     - "go test -tags acceptance -count=1 -run '^TestG1AboveThresholds$' ./acceptance/jvm"
   environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
-  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
-  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
   date: "2026-10-17"
   result: "--cpus=2 --memory=2048m, no GC flag: UseG1GC = true"
   limitations: "None known."
@@ -91,8 +91,8 @@
     - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
     - "go test -tags acceptance -count=1 -run '^TestExplicitG1$' ./acceptance/jvm"
   environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
-  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
-  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
   date: "2026-10-17"
   result: "-XX:+UseG1GC at 1 CPU / 4 GiB and at 2 CPUs / 1700 MiB: UseG1GC = true"
   limitations: "None known."
@@ -109,8 +109,8 @@
     - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
     - "go test -tags acceptance -count=1 -run '^TestActiveProcessorCountOverride$' ./acceptance/jvm"
   environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
-  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
-  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
   date: "2026-10-17"
   result: "no CPU limit, nproc 2; -XX:ActiveProcessorCount=1 reports Effective CPU Count: 1"
   limitations: "Proves the override only, not the resulting pool sizes."
@@ -141,8 +141,8 @@
     - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
     - "go test -tags acceptance -count=1 -run '^TestHardenedStartup$' ./acceptance/jvm"
   environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
-  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
-  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
   date: "2026-10-17"
   result: "read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s"
   limitations: "Docker flags stand in for the pod security context; no cluster run yet."
@@ -166,8 +166,8 @@
     - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
     - "go test -tags acceptance -count=1 -run '^TestAOTCacheFailFast$' ./acceptance/jvm"
   environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
-  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
-  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
   date: "2026-10-17"
   result: "AOTMode=on with the image's GC and class path: exit 0 (openjdk version \"25.0.4.1\" 2026-08-18 LTS)"
   limitations: "The training run warns that a few Spring ClassFile reader classes cannot be archived; the cache is still used."
@@ -184,8 +184,8 @@
     - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
     - "go test -tags acceptance -count=1 -run '^TestAOTCacheLoadedOnLaunch$' ./acceptance/jvm"
   environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
-  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
-  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
   date: "2026-10-17"
   result: "unchanged ENTRYPOINT with -Xlog:aot logs \"Opened AOT cache /app/app.aot.\""
   limitations: "The log text was read from the first run on 25.0.4.1+1 and may change with the JDK."
@@ -202,10 +202,10 @@
     - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
     - "go test -tags acceptance -count=1 -run '^TestAOTStartupDelta$' ./acceptance/jvm"
   environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
-  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
-  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
   date: "2026-10-17"
-  result: "process running for (s), --cpus=2 --memory=1g, 10 alternating rounds. AOT off [4.64 4.79 4.82 4.54 4.64 4.63 4.45 4.56 4.57 4.52] median 4.599; AOT on [2.56 2.60 2.66 2.52 2.55 2.49 2.53 2.50 2.48 2.59] median 2.539; delta 2.060 s (1.81x)"
+  result: "process running for (s), --cpus=2 --memory=1g, 10 alternating rounds. AOT off [4.74 4.72 4.87 4.86 4.67 4.66 4.59 4.62 4.71 4.59] median 4.688; AOT on [2.40 2.62 2.55 2.62 2.60 2.43 2.42 2.50 2.55 2.56] median 2.550; delta 2.137 s (1.84x)"
   measurement:
     samples: 20
     statistic: "median per mode"
