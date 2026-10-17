@@ -1,6 +1,6 @@
 # Contributing
 
-The guides are the product. Every decision is a card with the failure it prevents, and every
+The guides are the product. Every decision is a card with the failure it prevents and every
 claim carries the test that proves it. `guidekit` enforces the rules below; CI runs it on every
 change.
 
@@ -50,8 +50,8 @@ go test -tags acceptance -count=1 -p 1 ./acceptance/...
 | `data/evidence/<guide>.yaml` | Evidence records, one claim each |
 | `data/invalidations.yaml`, `retired.yaml` | Open invalidations; retired stable IDs |
 | `data/link-exceptions.yaml`, `audit-exceptions.yaml` | Expiring exceptions for the link check and `npm audit` |
-| `data/schemas/` | JSON Schema 2020-12 for every data file, the guide frontmatter, and fixtures |
-| `fixtures/<name>/` | Hand-written services that prove the guides |
+| `data/schemas/` | JSON Schema 2020-12 for every data file, the guide frontmatter and fixtures |
+| `fixtures/<name>/` | Services written by hand that prove the guides |
 | `acceptance/` | Go behavioural tests against the fixture images (build tag `acceptance`) |
 | `cmd/guidekit/`, `internal/` | The Go tooling |
 
@@ -73,7 +73,7 @@ go test -tags acceptance -count=1 -p 1 ./acceptance/...
   | baseline revision | `<release>-b<n>` | `v0.1-b1` |
 
 - Removing or renaming an ID fails unless `data/retired.yaml` gains a record in the same change
-  (`id`, `kind`, `retired`, `reason`, and `replacedBy` for a guide or card). A retired card keeps
+  (`id`, `kind`, `retired`, `reason` and `replacedBy` for a guide or card). A retired card keeps
   `<a id="<old>"></a>` before its replacement's anchor, so deep links keep working.
 - No em or en dashes anywhere in guides or data.
 
@@ -81,7 +81,7 @@ go test -tags acceptance -count=1 -p 1 ./acceptance/...
 
 A guide is `guides/src/content/docs/guides/<guide-id>.mdx`. Its frontmatter `guide` block has
 `id`, `prefix`, `state` (`draft` or `explanatory`), `baseline`, `components`, `verification`
-(`null` until a complete run is recorded), `questions` (`id`, `text`, `answeredIn`), and
+(`null` until a complete run is recorded), `questions` (`id`, `text`, `answeredIn`) and
 `sources` for ported text. `tableOfContents` is `{ maxHeadingLevel: 2 }`.
 
 The MDX is restricted so `guidekit` can read its structure:
@@ -97,11 +97,11 @@ Body, in this order:
    short paragraphs.
 2. `<GuideStatus guide="..." />`. It renders "What you'll learn" (the questions, in order, each
    linking to its step) and one line on versions and how claims are checked.
-3. Steps, one per question: an anchor line, a blank line, and `## <n>. <question text>`, so the
+3. Steps, one per question: an anchor line, a blank line and `## <n>. <question text>`, so the
    heading is the question, numbered. Each `questions` entry answers exactly one step. Then:
    - a paragraph starting `**In short:**`: the answer in one sentence, optionally followed by
      the one line of config;
-   - `### What's going on`: the mechanism in plain words, with an analogy when it helps, and
+   - `### What's going on`: the mechanism in plain words, with an analogy when it helps and
      the step's diagram;
    - `### Do this`: numbered actions, with the code;
    - `### When this is not for you`: two or three bullets;
@@ -109,8 +109,8 @@ Body, in this order:
 
    The heading text may change with the question; the anchor may not.
 4. `## Put it all together`: per recipe a `###` heading, one `<Recipe />`, a paragraph starting
-   `**Expected:**`, and a list starting `**If it fails:**`.
-5. `## Checklist` with `<Checklist guide="..." />`, and `## References` with
+   `**Expected:**` and a list starting `**If it fails:**`.
+5. `## Checklist` with `<Checklist guide="..." />` and `## References` with
    `<GuideReferences guide="..." />`.
 
 Write for someone meeting the topic for the first time: simple words, short sentences, the
@@ -160,7 +160,7 @@ record. A record counts toward qualification only when its test is in the fixtur
 
 `data/versions.yaml` holds revisions, oldest first; `active` is the one the site and new
 fixtures use. A revision is frozen once it is on `main`: a bump is a new revision appended to
-the list. Only each component's `qualification` block changes, and only through
+the list. Only each component's `qualification` block changes and only through
 `guidekit qualify --report <evidence-report.json>`, which sets `qualified` when every claim has
 an eligible record, `partial` when some do, `provisional` when none do.
 
@@ -168,21 +168,21 @@ A pin with `managedBy` must equal what the managing BOM gives its `coordinates`;
 checks this weekly.
 
 A guide shows "Re-verify" when a later revision changed one of its components or an open
-invalidation names it, and "Stale" when its baseline is more than two revisions behind
+invalidation names it and "Stale" when its baseline is more than two revisions behind
 `active`. Clear it by moving `baseline` forward after a passing run and recording
 `verification`.
 
 ## References
 
-Each entry in `data/references.yaml` names a `component`, the `docVersion` it covers, and how
-that must `match` the pin (`exact`, `minor`, `major`, or `none` with a `pinNote` stating the
+Each entry in `data/references.yaml` names a `component`, the `docVersion` it covers and how
+that must `match` the pin (`exact`, `minor`, `major` or `none` with a `pinNote` stating the
 skew), for every revision in `baselines`. A new revision that breaks the match gets a new entry;
 the old one keeps its list. `baselines: []` marks documents for later releases.
 
 ## Checklist
 
 Items in `data/checklist.yaml` have a `type` (`generated-config`, `verified-behaviour`,
-`deployment-prerequisite`, `operator-task`) and a `claim`: `documented`, or `enforced` with the
+`deployment-prerequisite`, `operator-task`) and a `claim`: `documented` or `enforced` with the
 required tests that fail when the behaviour breaks. `appliesWhen` filters by project options:
 keys combine with AND, values with OR, `{}` means always.
 
@@ -197,13 +197,13 @@ keys combine with AND, values with OR, `{}` means always.
 ## Fixtures
 
 `fixtures/<name>/fixture.yaml` sets the baseline, the project options, the components the
-fixture `exercises`, and its `requiredTests`. The fixture workflow builds it inside the pinned
-JDK image, builds the image, runs the acceptance tests, and runs `guidekit evidence verify`,
-which fails when a required test is missing, skipped, or failed, or when a resolved version,
-image digest, or `java -version` differs from the baseline. It uploads `evidence-report` even
+fixture `exercises` and its `requiredTests`. The fixture workflow builds it inside the pinned
+JDK image, builds the image, runs the acceptance tests and runs `guidekit evidence verify`,
+which fails when a required test is missing, skipped or failed or when a resolved version,
+image digest or `java -version` differs from the baseline. It uploads `evidence-report` even
 when it fails.
 
-To add a claim: write the test, add it to `requiredTests`, push, and record the run in the
+To add a claim: write the test, add it to `requiredTests`, push and record the run in the
 evidence file from the report.
 
 ## Exceptions

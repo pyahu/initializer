@@ -148,7 +148,7 @@
   guide: observability
   card: obs-logs-otlp
   type: generated-config
-  text: Logback OpenTelemetry appender installed, or stdout JSON collected by an agent, not both.
+  text: Logback OpenTelemetry appender installed or stdout JSON collected by an agent, not both.
   claim: documented
   tests: []
   appliesWhen: {}
@@ -164,7 +164,7 @@
   guide: observability
   card: obs-correlation
   type: deployment-prerequisite
-  text: Grafana data sources linked from exemplars to traces, traces to logs and metrics, and logs back to traces.
+  text: Grafana data sources linked from exemplars to traces, traces to logs and metrics and logs back to traces.
   claim: documented
   tests: []
   appliesWhen: {}

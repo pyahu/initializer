@@ -7,7 +7,7 @@ const parts = [
     icon: "layers",
     status: "Available",
     title: "A knowledge base",
-    text: "Guides for building Java applications with Spring Boot, and later Next.js. Each decision explains the failure it prevents, the fix, where it fits, and what it costs.",
+    text: "Guides for building Java applications with Spring Boot and later Next.js. Each decision explains the failure it prevents, the fix, where it fits and what it costs.",
     href: "#guides",
     link: "See the guides",
   },
@@ -22,16 +22,16 @@ const parts = [
 ] as const;
 
 const guides = [
-  { href: "/guides/jvm-in-containers/", title: "The JVM in containers", text: "Memory, CPU, garbage collector, and startup for a JVM in a pod. Stops OOMKills with a half-empty heap and slow rollouts." },
-  { href: "/guides/observability/", title: "Observability", text: "Traces, metrics, and logs over OTLP from Spring Boot 4.1, joined by one trace ID, so a slow request leads to its logs." },
+  { href: "/guides/jvm-in-containers/", title: "The JVM in containers", text: "Memory, CPU, garbage collector and startup for a JVM in a pod. Stops slow rollouts and OOMKills that hit while the heap is half empty." },
+  { href: "/guides/observability/", title: "Observability", text: "Traces, metrics and logs over OTLP from Spring Boot 4.1, joined by one trace ID, so a slow request leads to its logs." },
 ];
 
 const planned = [
   { name: "Architecture", text: "Hexagonal and DDD layered, with module rules tested" },
-  { name: "REST APIs", text: "Contract-first with OpenAPI" },
+  { name: "REST APIs", text: "Start from the OpenAPI contract" },
   { name: "PostgreSQL", text: "Spring Data JDBC and Liquibase migrations" },
   { name: "Security", text: "OIDC login and resource servers" },
-  { name: "Kubernetes", text: "Deployments, probes, and Kustomize overlays" },
+  { name: "Kubernetes", text: "Deployments, probes and Kustomize overlays" },
   { name: "CI and supply chain", text: "GitHub Actions, SBOM, signed images" },
   { name: "Messaging", text: "Kafka with an outbox, RabbitMQ" },
   { name: "Next.js", text: "A frontend next to the service, typed from its API" },
@@ -39,7 +39,7 @@ const planned = [
 
 const anatomy = [
   { title: "Questions first", text: "The top of each guide lists the questions it answers. Click one and you land on the answer." },
-  { title: "Decision cards", text: "One decision per card: the problem, the solution, where it fits, and the trade-offs, including when to choose differently." },
+  { title: "Decision cards", text: "One decision per card: the problem, the solution, where it fits and what it costs, including when to choose differently." },
   { title: "Recipes", text: "Files to copy, cut from a real service that is built and run on every change." },
   { title: "Checklist", text: "Short items with stable IDs, to review a service against the guide." },
 ];
@@ -47,24 +47,24 @@ const anatomy = [
 const proof = [
   { title: "Exact versions", text: "Each guide is written for one baseline: a frozen list of versions, such as Java 25 and Spring Boot 4.1.1. The reference page lists them with the official docs for each." },
   { title: "A real service behind the code", text: "Code in a guide comes from a small service in the repository. CI builds it and runs it on every change, so an upgrade that breaks the advice turns CI red first." },
-  { title: "A test behind each claim", text: "Under every card you can open how a claim was checked: the test, the command, and the result, for example a 768 MiB heap in a 1 GiB pod." },
+  { title: "A test behind each claim", text: "Under every card you can open how a claim was checked: the test, the command and the result, for example a 768 MiB heap in a 1 GiB pod." },
   { title: "Gaps said out loud", text: "Some claims need a cluster or a load test that has not run yet. They are marked \"Not exercised\" with the reason, never shown as proven." },
 ];
 
 const roadmap = [
   { when: "Now", text: "The first guides: the JVM in containers and observability." },
-  { when: "Next", text: "Generator v0.1: one service, hexagonal or DDD layered, REST with PostgreSQL, OIDC, OpenTelemetry, Kustomize, and CI." },
-  { when: "Later", text: "Monorepos with several services, JPA and jOOQ, gRPC, Kafka, RabbitMQ and Valkey, and Next.js frontends." },
+  { when: "Next", text: "Generator v0.1: one service, hexagonal or DDD layered, REST with PostgreSQL, OIDC, OpenTelemetry, Kustomize and CI." },
+  { when: "Later", text: "Monorepos with several services, JPA and jOOQ, gRPC, Kafka, RabbitMQ and Valkey and Next.js frontends." },
 ];
 ---
 
-<LandingLayout title="Pyahu Initializer" description="A knowledge base for production Java with Spring Boot and Next.js, and a generator for production-ready projects.">
+<LandingLayout title="Pyahu Initializer" description="A knowledge base for production Java with Spring Boot and Next.js and a generator for production-ready projects.">
   <section class="hero">
     <div class="hero-grid">
       <div class="hero-content">
         <p class="eyebrow"><span class="signal"></span>Java · Spring Boot · Next.js · Kubernetes</p>
         <h1>Production Java, explained. <span>Then generated.</span></h1>
-        <p class="hero-copy">Pyahu Initializer is a modern knowledge base for building applications with Spring Boot and Next.js, and a generator that starts new projects at production quality, following the same guides.</p>
+        <p class="hero-copy">Pyahu Initializer is a modern knowledge base for building applications with Spring Boot and Next.js and a generator that starts new projects at production quality, following the same guides.</p>
         <div class="hero-actions">
           <a class="button primary" href="#guides">Read the guides <Icon name="arrow" size={18} /></a>
           <a class="button quiet" href="#what">What it is</a>
@@ -143,7 +143,7 @@ const roadmap = [
     <div class="section-heading">
       <p class="eyebrow">How the guides are proven</p>
       <h2 id="proof-title">Advice you can check.</h2>
-      <p class="section-lead">Most production advice is copied from somewhere. Here every claim shows where it was checked, or says that it was not.</p>
+      <p class="section-lead">Most production advice is copied from somewhere. Here every claim shows where it was checked or says that it was not.</p>
     </div>
     <div class="proof-grid">
       {proof.map((p) => (

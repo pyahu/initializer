@@ -63,9 +63,9 @@
         },
         {
           "id": "JVM-Q7",
-          "text": "What about native image, CRaC, and Spring AOT?",
+          "text": "What about native image, CRaC and Spring AOT?",
           "answeredIn": "jvm-startup-options",
-          "cardTitle": "7. What about native image, CRaC, and Spring AOT?"
+          "cardTitle": "7. What about native image, CRaC and Spring AOT?"
         },
         {
           "id": "JVM-Q8",
@@ -157,7 +157,7 @@
             {
               "id": "ev-jvm-flag-placement-1",
               "badge": "reproduced",
-              "canonical": "Evidence ev-jvm-flag-placement-1 · reproduced · baseline v0.1-b1 · 2026-10-17. The image starts with a read-only root filesystem, /tmp as tmpfs, as UID 10001, and with an unreachable OTLP endpoint: /readyz answers 200 within 60 s. Result: read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s. Limitations: Docker flags stand in for the pod security context; no cluster run yet.",
+              "canonical": "Evidence ev-jvm-flag-placement-1 · reproduced · baseline v0.1-b1 · 2026-10-17. The image starts with a read-only root filesystem, /tmp as tmpfs, as UID 10001 and with an unreachable OTLP endpoint: /readyz answers 200 within 60 s. Result: read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s. Limitations: Docker flags stand in for the pod security context; no cluster run yet.",
               "test": "acceptance/jvm::TestHardenedStartup",
               "commands": [
                 "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
@@ -183,7 +183,7 @@
             {
               "id": "ev-jvm-gc-choice-1",
               "badge": "not-exercised",
-              "canonical": "Evidence ev-jvm-gc-choice-1 · not exercised · baseline v0.1-b1. G1 suits request and response services, generational ZGC sub-millisecond pause targets, and Parallel batch jobs. Limitations: No workload comparison in this repository.",
+              "canonical": "Evidence ev-jvm-gc-choice-1 · not exercised · baseline v0.1-b1. G1 suits request and response services, generational ZGC sub-millisecond pause targets and Parallel batch jobs. Limitations: No workload comparison in this repository.",
               "reason": "Reasoned from the JEPs and the HotSpot GC tuning guide. No collector comparison is run."
             }
           ]
@@ -277,7 +277,7 @@
           ]
         },
         "jvm-startup-options": {
-          "title": "7. What about native image, CRaC, and Spring AOT?",
+          "title": "7. What about native image, CRaC and Spring AOT?",
           "coverage": "1 claim: 1 not exercised",
           "records": [
             {
@@ -328,7 +328,7 @@
         },
         {
           "id": "jvm-startup-options",
-          "title": "7. What about native image, CRaC, and Spring AOT?"
+          "title": "7. What about native image, CRaC and Spring AOT?"
         },
         {
           "id": "jvm-startup-probe",
@@ -730,14 +730,14 @@
         },
         {
           "id": "OBS-Q8",
-          "text": "What should Actuator expose, and where?",
+          "text": "What should Actuator expose and where?",
           "answeredIn": "obs-actuator",
-          "cardTitle": "8. What should Actuator expose, and where?"
+          "cardTitle": "8. What should Actuator expose and where?"
         }
       ],
       "cards": {
         "obs-actuator": {
-          "title": "8. What should Actuator expose, and where?",
+          "title": "8. What should Actuator expose and where?",
           "coverage": "2 claims: 1 reproduced, 1 not exercised",
           "records": [
             {
@@ -943,7 +943,7 @@
         },
         {
           "id": "obs-actuator",
-          "title": "8. What should Actuator expose, and where?"
+          "title": "8. What should Actuator expose and where?"
         }
       ],
       "checklist": [
@@ -1014,7 +1014,7 @@
           "id": "OBS-08",
           "type": "generated-config",
           "card": "obs-logs-otlp",
-          "text": "Logback OpenTelemetry appender installed, or stdout JSON collected by an agent, not both.",
+          "text": "Logback OpenTelemetry appender installed or stdout JSON collected by an agent, not both.",
           "claim": "documented",
           "tests": [],
           "tags": []
@@ -1032,7 +1032,7 @@
           "id": "OBS-10",
           "type": "deployment-prerequisite",
           "card": "obs-correlation",
-          "text": "Grafana data sources linked from exemplars to traces, traces to logs and metrics, and logs back to traces.",
+          "text": "Grafana data sources linked from exemplars to traces, traces to logs and metrics and logs back to traces.",
           "claim": "documented",
           "tests": [],
           "tags": []

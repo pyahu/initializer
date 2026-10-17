@@ -123,14 +123,14 @@
   reason: "The fixture proves only that the flag overrides the detected count. Thread pool sizes are not measured."
 - id: ev-jvm-gc-choice-1
   card: jvm-gc-choice
-  claim: "G1 suits request and response services, generational ZGC sub-millisecond pause targets, and Parallel batch jobs."
+  claim: "G1 suits request and response services, generational ZGC sub-millisecond pause targets and Parallel batch jobs."
   badge: not-exercised
   baseline: v0.1-b1
   limitations: "No workload comparison in this repository."
   reason: "Reasoned from the JEPs and the HotSpot GC tuning guide. No collector comparison is run."
 - id: ev-jvm-flag-placement-1
   card: jvm-flag-placement
-  claim: "The image starts with a read-only root filesystem, /tmp as tmpfs, as UID 10001, and with an unreachable OTLP endpoint: /readyz answers 200 within 60 s."
+  claim: "The image starts with a read-only root filesystem, /tmp as tmpfs, as UID 10001 and with an unreachable OTLP endpoint: /readyz answers 200 within 60 s."
   badge: reproduced
   capabilities: [image, runtime]
   components: [java, temurin-jre-image, spring-boot, spring-framework]

@@ -1,10 +1,10 @@
 ---
-// Flow: one request's three signals from the app to the backends, and the correlation path.
+// Flow: one request's three signals from the app to the backends and the correlation path.
 import Diagram from "../Diagram.astro";
 ---
 <Diagram id="obs-otlp-flow"
   caption="One request, three signals, one trace ID: from Spring Boot over OTLP to the backends."
-  description="Five numbered stages from left to right. 1, request: a client calls the service and may send a W3C traceparent header. 2, app: Spring Boot with spring-boot-starter-opentelemetry and no Java agent; Micrometer Observation turns the request into a server span, the OTLP meter registry exports metrics in seconds with histogram buckets and exemplars, and the OpenTelemetry Logback appender sends log records that carry the trace ID. 3, collector: the app sends all three signals over OTLP/HTTP on port 4318 to a collector, recommended in production as a gateway that enriches, scrubs, samples and retries; locally the otel-lgtm image includes one. 4, backends: traces go to Tempo, metrics to a Prometheus-compatible store, logs to Loki. 5, correlate in Grafana, dashed: a latency bucket's exemplar links to the trace, and the trace links to its log lines by trace_id.">
+  description="Five numbered stages from left to right. 1, request: a client calls the service and may send a W3C traceparent header. 2, app: Spring Boot with spring-boot-starter-opentelemetry and no Java agent; Micrometer Observation turns the request into a server span, the OTLP meter registry exports metrics in seconds with histogram buckets and exemplars and the OpenTelemetry Logback appender sends log records that carry the trace ID. 3, collector: the app sends all three signals over OTLP/HTTP on port 4318 to a collector, recommended in production as a gateway that enriches, scrubs, samples and retries; locally the otel-lgtm image includes one. 4, backends: traces go to Tempo, metrics to a Prometheus-compatible store, logs to Loki. 5, correlate in Grafana, dashed: a latency bucket's exemplar links to the trace and the trace links to its log lines by trace_id.">
   <svg viewBox="0 0 1000 460">
     <defs>
       <marker id="obs-otlp-flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>

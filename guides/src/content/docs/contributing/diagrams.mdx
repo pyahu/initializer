@@ -9,7 +9,7 @@ import HexagonalGraphDiagram from '../../../components/diagrams/HexagonalGraphDi
 import ImageBuildTimelineDiagram from '../../../components/diagrams/ImageBuildTimelineDiagram.astro';
 import PodTopologyDiagram from '../../../components/diagrams/PodTopologyDiagram.astro';
 
-Every guide has a diagram of its core mechanism. Diagrams are hand-positioned SVG, one Astro component per
+Every guide has a diagram of its core mechanism. Diagrams are SVG positioned by hand, one Astro component per
 diagram in `src/components/diagrams/`, never a generated layout. Positioning by hand is what makes them readable.
 
 ## The frame
@@ -20,20 +20,20 @@ Wrap the SVG in `Diagram` with three props:
 | ---- | ---- |
 | `id` | Unique in the site; every `id` inside the SVG starts with it |
 | `caption` | One sentence, shown under the figure |
-| `description` | The whole diagram in words: every box, arrow, stage, and notation |
+| `description` | The whole diagram in words: every box, arrow, stage and notation |
 
-The description is shown under "Diagram in words", read by screen readers, and copied into the llms exports.
-Clicking the diagram, or pressing Enter or Space on it, opens an enlarged copy; Escape closes it.
+The description is shown under "Diagram in words", read by screen readers and copied into the llms exports.
+Clicking the diagram or pressing Enter or Space on it, opens an enlarged copy; Escape closes it.
 
 ## Notation
 
 | Class | Meaning |
 | ----- | ------- |
-| `dg-box dg-emphasis`, `dg-line dg-accent` | What the guide recommends, or what changed |
+| `dg-box dg-emphasis`, `dg-line dg-accent` | What the guide recommends or what changed |
 | `dg-box`, `dg-line` | Context: parts that already exist |
-| `dg-line dg-dash` | Optional, or a later step |
+| `dg-line dg-dash` | Optional or a later step |
 | `dg-box dg-fail`, `dg-line dg-fail` | What breaks; the label also carries a cross |
-| `dg-frame`, `dg-group` | A group, or a numbered stage such as `1 · REQUEST` |
+| `dg-frame`, `dg-group` | A group or a numbered stage such as `1 · REQUEST` |
 | `dg-title`, `dg-detail`, `dg-note` | Box title, box line, free note |
 
 Colour is never the only signal: emphasis is heavier, optional is dashed, failure is dotted and marked. Put a

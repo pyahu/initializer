@@ -6,4 +6,4 @@ https://creativecommons.org/licenses/by/4.0/
 
 Credit: Terson Rigaud, Pyahu Initializer, https://initializer.pyahu.io
 
-Code, data files, and fixtures are licensed under the MIT License in `LICENSE`.
+Code, data files and fixtures are licensed under the MIT License in `LICENSE`.

@@ -1,10 +1,10 @@
 ---
-// Before and after: a 1 GiB container where the heap takes too much of the limit, and the fix.
+// Before and after: a 1 GiB container where the heap takes too much of the limit and the fix.
 // Numbers are computed from the flags, not measured: 90% of 1024 MiB is 922 MiB, 75% is 768 MiB.
 import Diagram from "../Diagram.astro";
 ---
 <Diagram id="jvm-container-memory"
-  caption="Why a pod is killed while the heap graph looks fine, and how the limit is split instead."
+  caption="Why a pod is killed while the heap graph looks fine and how the limit is split instead."
   description="Two containers with a 1 GiB memory limit, drawn as bars with the limit as a dashed line at the top. Left, the failure, marked with a cross: MaxRAMPercentage=90 lets the heap reach 922 MiB, leaving 102 MiB for everything else; metaspace, code cache, thread stacks, direct buffers, GC structures and malloc need more, so resident memory crosses the limit and the kernel kills the container with exit code 137, even though the heap graph shows 60% used. Right, the recommendation: MaxRAMPercentage=75 with InitialRAMPercentage equal to it and memory request equal to limit; the heap gets 768 MiB and 256 MiB stay for non-heap memory, which you confirm with Native Memory Tracking under load.">
   <svg viewBox="0 0 1000 430">
     <rect x="16" y="16" width="476" height="398" rx="8" class="dg-frame" />
@@ -38,7 +38,7 @@ import Diagram from "../Diagram.astro";
     <rect x="602" y="180" width="120" height="210" rx="4" class="dg-box dg-emphasis" />
     <text x="662" y="276" text-anchor="middle" class="dg-title">heap</text>
     <text x="662" y="296" text-anchor="middle" class="dg-detail">max 768 MiB</text>
-    <text x="754" y="128" class="dg-title">Fits, and you prove it</text>
+    <text x="754" y="128" class="dg-title">Fits and you prove it</text>
     <text x="754" y="152" class="dg-detail">Heap 75% of the limit, initial</text>
     <text x="754" y="172" class="dg-detail">equal to max, request = limit.</text>
     <text x="754" y="202" class="dg-detail">Confirm the non-heap share</text>

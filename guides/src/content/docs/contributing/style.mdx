@@ -1,9 +1,9 @@
 ---
 title: Style guide
-description: How the guides are written, structured, and proven.
+description: How the guides are written, structured and proven.
 ---
 
-The guides are the product. They hold current, correct, production-tested practice, and every claim says how it
+The guides are the product. They hold current and correct practice, tested in production and every claim says how it
 was proven. This page is the short version; the full rules, which `guidekit check` enforces, are in
 [CONTRIBUTING.md](https://github.com/pyahu/initializer/blob/main/CONTRIBUTING.md).
 
@@ -11,7 +11,7 @@ was proven. This page is the short version; the full rules, which `guidekit chec
 
 - English. Short sentences, tables and code before prose.
 - If a paragraph does not change a decision or prevent a failure, cut it.
-- Teach, do not just prescribe: explain what is going on before saying what to do, and say when the advice is wrong.
+- Teach, do not just prescribe: explain what is going on before saying what to do and say when the advice is wrong.
 - Write for someone meeting the topic for the first time: the problem before the jargon.
 - One canonical place per decision; other pages link to it.
 - Primary sources only. Versions stated. Anything not proven carries a `not exercised` record.
@@ -22,12 +22,12 @@ was proven. This page is the short version; the full rules, which `guidekit chec
 1. **Opening**: a scene the reader recognises, then what the guide fixes. Two short paragraphs.
 2. **What you'll learn**: the questions the guide answers, in order, each linking to its step.
 3. **Steps**, one per question, headed by the question itself:
-   - **In short**: the answer in one sentence, and the one line of config when there is one;
+   - **In short**: the answer in one sentence and the one line of config when there is one;
    - **What's going on**: the mechanism in plain words, with an analogy and a diagram;
    - **Do this**: numbered actions with the code;
    - **When this is not for you**: two or three bullets;
    - **How we checked this**, collapsed: the evidence for each claim.
-4. **Put it all together**: excerpts from tested files, a link to each complete file, the expected result, and
+4. **Put it all together**: excerpts from tested files, a link to each complete file, the expected result and
    what to do when it fails.
 5. **Checklist** and **References**, rendered from the data files.
 
@@ -45,13 +45,13 @@ Each record states one claim and carries one badge:
 | `cluster-run` | Applied and exercised on a real cluster |
 | `not exercised` | Reasoned from documentation only, shown prominently |
 
-A card lists every record; there is no single badge per card. The fixture workflow re-runs every named test on
+A card lists every record; there is no single badge per card. The fixture workflow runs every named test again on
 each change, so a claim that stops being true turns CI red.
 
 ## Checklist items
 
 Each item has a stable ID such as `JVM-03` and one type: generated configuration, verified behaviour,
-deployment prerequisite, or recurring operator task. An item is "enforced" only when a test fails if the behaviour
+deployment prerequisite or recurring operator task. An item is "enforced" only when a test fails if the behaviour
 breaks.
 
 ## License

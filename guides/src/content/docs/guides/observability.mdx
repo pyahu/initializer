@@ -32,7 +32,7 @@ guide:
       text: "How do I go from a slow request to its logs?"
       answeredIn: obs-correlation
     - id: OBS-Q8
-      text: "What should Actuator expose, and where?"
+      text: "What should Actuator expose and where?"
       answeredIn: obs-actuator
   sources:
     - title: "05 · Observability with OpenTelemetry and the Grafana LGTM stack"
@@ -51,10 +51,10 @@ import DiagramLegend from '../../../components/DiagramLegend.astro';
 import OtlpFlowDiagram from '../../../components/diagrams/OtlpFlowDiagram.astro';
 
 A customer says checkout is slow. The dashboard agrees: latency is up. But which request? The logs have no request
-ID, and the trace you need was never kept. Three tools, and no thread to pull.
+ID and the trace you need was never kept. Three tools and no thread to pull.
 
-This guide builds one pipeline where every trace, metric, and log line carries the same trace ID, so a slow request
-on a graph leads to its trace, and the trace to its logs. It uses Spring Boot 4.1's own OpenTelemetry support, with
+This guide builds one pipeline where every trace, metric and log line carries the same trace ID, so a slow request
+on a graph leads to its trace and the trace to its logs. It uses Spring Boot 4.1's own OpenTelemetry support, with
 no Java agent.
 
 <GuideStatus guide="observability" />
@@ -63,16 +63,16 @@ no Java agent.
 
 ## 1. Should I use Boot's starter or the OpenTelemetry agent?
 
-**In short:** use `spring-boot-starter-opentelemetry`, and no Java agent.
+**In short:** use `spring-boot-starter-opentelemetry` and no Java agent.
 
 ### What's going on
 
 There are two ways to instrument a Spring Boot app. The OpenTelemetry Java agent rewrites classes while the app
 runs. Boot's starter uses Micrometer, which Spring already calls on every request.
 
-Use both and every request is recorded twice: two server spans, sometimes in two different traces, and two sets of
+Use both and every request is recorded twice: two server spans, sometimes in two different traces and two sets of
 HTTP metrics with different names. With the starter alone, one Micrometer observation produces a span and a timer
-with the same tags, and the versions come from the Boot BOM.
+with the same tags and the versions come from the Boot BOM.
 
 <OtlpFlowDiagram />
 <DiagramLegend items={['recommended', 'context', 'optional']} />
@@ -82,7 +82,7 @@ with the same tags, and the versions come from the Boot BOM.
 1. Add `spring-boot-starter-opentelemetry`. No version: the Boot BOM sets it.
 2. Make sure nothing adds `-javaagent` behind your back, such as a base image or a platform setting
    `JAVA_TOOL_OPTIONS`.
-3. Add `datasource-micrometer` if you want JDBC spans, and the log bridge from step 3.
+3. Add `datasource-micrometer` if you want JDBC spans and the log bridge from step 3.
 
 ### When this is not for you
 
@@ -96,7 +96,7 @@ with the same tags, and the versions come from the Boot BOM.
 
 ## 2. How do I tell the app where to send telemetry?
 
-**In short:** set `OTEL_EXPORTER_OTLP_ENDPOINT` in the Deployment, and use the Boot 4 property names.
+**In short:** set `OTEL_EXPORTER_OTLP_ENDPOINT` in the Deployment and use the Boot 4 property names.
 
 ```yaml
 env:
@@ -106,11 +106,11 @@ env:
 
 ### What's going on
 
-Boot 4 renamed its OTLP properties. Advice written for Boot 3 uses names that no longer work, and the app quietly
+Boot 4 renamed its OTLP properties. Advice written for Boot 3 uses names that no longer work and the app quietly
 exports nothing.
 
-The good news: Boot 4.1 reads the standard OpenTelemetry variable `OTEL_EXPORTER_OTLP_ENDPOINT`, and adds
-`/v1/traces`, `/v1/metrics`, and `/v1/logs` for each signal. The variable wins over `application.yaml`, so the same
+The good news: Boot 4.1 reads the standard OpenTelemetry variable `OTEL_EXPORTER_OTLP_ENDPOINT` and adds
+`/v1/traces`, `/v1/metrics` and `/v1/logs` for each signal. The variable wins over `application.yaml`, so the same
 image talks to a local backend on your laptop and to the collector in the cluster.
 
 | Boot 3.x | Boot 4.x |
@@ -144,8 +144,8 @@ Metrics keep the `management.otlp.metrics.export.*` prefix.
 
 ### What's going on
 
-Boot sets up the log exporter, but nothing feeds it: Boot does not connect Logback to OpenTelemetry. So your logs
-either stay on stdout, or reach the backend without the trace ID.
+Boot sets up the log exporter but nothing feeds it: Boot does not connect Logback to OpenTelemetry. So your logs
+either stay on stdout or reach the backend without the trace ID.
 
 The appender is the missing bridge. It sends each log record over OTLP, stamped with the trace ID of the request
 that wrote it.
@@ -160,7 +160,7 @@ that wrote it.
 
 ### When this is not for you
 
-- You collect JSON logs from stdout with an agent on the node: that works too, but pick one path. With both, every
+- You collect JSON logs from stdout with an agent on the node: that works too but pick one path. With both, every
   line arrives twice.
 - Lines logged before the bean runs, early in startup, only reach stdout.
 - The appender is versioned outside the Boot BOM and marked alpha. Move it with Boot's SDK version.
@@ -179,7 +179,7 @@ management.tracing.sampling.probability: 1.0
 
 ### What's going on
 
-Boot keeps 10% of traces by default. Nine out of ten errors vanish, and the links from metrics and logs point to
+Boot keeps 10% of traces by default. Nine out of ten errors vanish and the links from metrics and logs point to
 traces that were never stored.
 
 The app has to decide at the start of a request, before it knows the request will fail. A collector can decide at
@@ -189,13 +189,13 @@ the end: keep every error and every slow trace, plus a sample of the rest. That 
 
 1. Keep the parent-based sampler, so a trace an upstream service decided to keep stays whole.
 2. Set `management.tracing.sampling.probability` on purpose, never by default.
-3. With a collector that tail-samples, set it to 1.0 and let the collector choose.
+3. With a collector that does tail sampling, set it to 1.0 and let the collector choose.
 
 ### When this is not for you
 
-- Very high request rates without a collector: keep a ratio below 1.0, and accept that dropped errors are gone.
-- Sending everything costs CPU and network, and tail sampling across several collector replicas needs a
-  load-balancing tier that routes by trace ID.
+- Very high request rates without a collector: keep a ratio below 1.0 and accept that dropped errors are gone.
+- Sending everything costs CPU and network and tail sampling across several collector replicas needs a
+  load balancer that routes by trace ID.
 
 <Evidence card="obs-sampling" />
 
@@ -203,16 +203,16 @@ the end: keep every error and every slow trace, plus a sample of the rest. That 
 
 ## 5. How do I make metrics useful without a huge bill?
 
-**In short:** export in seconds, turn on histogram buckets, add buckets for your SLOs, and keep tag values bounded.
+**In short:** export in seconds, turn on histogram buckets, add buckets for your SLOs and keep tag values bounded.
 
 ### What's going on
 
 Three small mistakes make metrics wrong or expensive.
 
-- **Milliseconds** break Prometheus conventions, and dashboards show the wrong unit.
+- **Milliseconds** break Prometheus conventions and dashboards show the wrong unit.
 - **Percentiles computed in each pod** cannot be combined, so the p99 of three replicas is wrong. Histogram buckets
   can be combined.
-- **A tag with unbounded values**, like a raw URL with IDs in it, creates a new series per value, and the bill
+- **A tag with unbounded values**, like a raw URL with IDs in it, creates a new series per value and the bill
   follows.
 
 ### Do this
@@ -220,13 +220,13 @@ Three small mistakes make metrics wrong or expensive.
 1. Set `management.otlp.metrics.export.base-time-unit: seconds`.
 2. Turn on histogram buckets for `http.server.requests` and `http.client.requests`.
 3. Add SLO buckets at the thresholds your alerts use, such as 500 ms.
-4. Make HTTP clients use URI templates, and build them from Boot's auto-configured builders, which are the ones
+4. Make HTTP clients use URI templates and build them from Boot's auto-configured builders, which are the ones
    instrumented.
 
 ### When this is not for you
 
 - Buckets cost series: about 55 per timer for each tag combination in the source guide's measurement. Native
-  histograms cut that, but need support along the whole path. Verify before switching.
+  histograms cut that but need support along the whole path. Verify before switching.
 
 <Evidence card="obs-metric-shape" />
 
@@ -239,24 +239,24 @@ backend.
 
 ### What's going on
 
-Sending from the app straight to the backends works until a backend is down, a field needs scrubbing, or you
+Sending from the app straight to the backends works until a backend is down, a field needs scrubbing or you
 change backends. Then every service has to change, in Java, with a redeploy.
 
-A collector sits in between and takes those jobs: it buffers and retries, removes personal data, tail-samples,
+A collector sits in between and takes those jobs: it buffers and retries, removes personal data, does tail sampling
 and fans out to each backend. Your apps never hold backend credentials.
 
 ### Do this
 
 1. Run Grafana Alloy or the OpenTelemetry Collector as a gateway.
 2. Order its steps: memory limiter first, then Kubernetes metadata, personal data scrubbing, tail sampling,
-   batching, and retries, then the exporters.
+   batching and retries, then the exporters.
 3. On your laptop and in tests, use the `grafana/otel-lgtm` image: a collector and all three backends in one
    container. It is for development only.
 
 ### When this is not for you
 
-- A local loop, or a single service where losing telemetry during a backend outage is acceptable.
-- A single gateway replica is a single point of failure, and tail sampling at scale needs two tiers.
+- A local loop or a single service where losing telemetry during a backend outage is acceptable.
+- A single gateway replica is a single point of failure and tail sampling at scale needs two tiers.
 
 <Evidence card="obs-collector" />
 
@@ -264,21 +264,21 @@ and fans out to each backend. Your apps never hold backend credentials.
 
 ## 7. How do I go from a slow request to its logs?
 
-**In short:** let the trace ID travel with every signal, and link the data sources in Grafana.
+**In short:** let the trace ID travel with every signal and link the data sources in Grafana.
 
 ### What's going on
 
 A latency spike tells you something is slow, not what. Boot 4.1 attaches an exemplar to latency histograms: the
-trace ID of one real request in that bucket. Spans carry the same ID, and log records carry it as `trace_id` once
+trace ID of one real request in that bucket. Spans carry the same ID and log records carry it as `trace_id` once
 the appender from step 3 is installed.
 
-With the links set up, you click the spike, open the trace, and jump to that request's logs.
+With the links set up, you click the spike, open the trace and jump to that request's logs.
 
 ### Do this
 
 1. Install the log appender (step 3) and keep enough traces (step 4). Exemplars only point to traces that were
    kept.
-2. In Grafana, link exemplars to the trace backend, traces to their logs and metrics, and add a derived field on
+2. In Grafana, link exemplars to the trace backend, traces to their logs and metrics and add a derived field on
    `trace_id` from logs back to traces.
 3. Provision those links with the stack. They are configuration, not code.
 
@@ -290,9 +290,9 @@ With the links set up, you click the spike, open the trace, and jump to that req
 
 <a id="obs-actuator"></a>
 
-## 8. What should Actuator expose, and where?
+## 8. What should Actuator expose and where?
 
-**In short:** run Actuator on port 8081, expose only `health` and `info`, and serve the probes on the main port
+**In short:** run Actuator on port 8081, expose only `health` and `info` and serve the probes on the main port
 too.
 
 ```yaml
@@ -304,8 +304,8 @@ management:
 
 ### What's going on
 
-Actuator on the public port leaks health details, and an endpoint like `env` or `heapdump` turns into an incident.
-Moving it to its own port fixes that, but creates a new problem: a probe that checks only the management port
+Actuator on the public port leaks health details and an endpoint like `env` or `heapdump` turns into an incident.
+Moving it to its own port fixes that but creates a new problem: a probe that checks only the management port
 misses a stuck main connector.
 
 Boot solves both: it serves `/livez` and `/readyz` on the main port as well, where Kubernetes probes them.
@@ -315,7 +315,7 @@ Boot solves both: it serves `/livez` and `/readyz` on the main port as well, whe
 1. Set `management.server.port: 8081`.
 2. Expose `health,info`, plus `prometheus` only when something scrapes it.
 3. Hide health details in production.
-4. Turn on `add-additional-paths`, and point the probes at `/livez` and `/readyz` on the main port.
+4. Turn on `add-additional-paths` and point the probes at `/livez` and `/readyz` on the main port.
 5. Metrics leave over OTLP, so nothing outside the pod needs 8081: no NetworkPolicy rule should allow it.
 
 ### When this is not for you
@@ -332,7 +332,7 @@ Boot solves both: it serves `/livez` and `/readyz` on the main port as well, whe
 <Recipe id="obs-dependencies" path="fixtures/single-hexagonal/build.gradle.kts" start="implementation(libs.spring.boot.starter.webmvc)" end="implementation(libs.opentelemetry.logback.appender)" lang="kotlin" />
 
 **Expected:** `./gradlew dependencies --configuration runtimeClasspath` lists `opentelemetry-api` 1.62.0 and
-`opentelemetry-logback-appender-1.0` 2.28.1-alpha, and the container command line has no `-javaagent`.
+`opentelemetry-logback-appender-1.0` 2.28.1-alpha and the container command line has no `-javaagent`.
 
 **If it fails:**
 
@@ -344,7 +344,7 @@ Boot solves both: it serves `/livez` and `/readyz` on the main port as well, whe
 <Recipe id="obs-application-yaml" path="fixtures/single-hexagonal/src/main/resources/application.yaml" start="management:" end="http.server.requests: true" lang="yaml" />
 
 **Expected:** with `OTEL_EXPORTER_OTLP_ENDPOINT` set, a request produces a trace in the backend, a
-`http_server_requests_seconds_count` series with `service_name`, and log lines with its `trace_id`.
+`http_server_requests_seconds_count` series with `service_name` and log lines with its `trace_id`.
 
 **If it fails:**
 
@@ -360,7 +360,7 @@ structured metadata.
 
 **If it fails:**
 
-- Logs reach stdout but not the backend: `logback-spring.xml` lacks the `OTEL` appender reference, or the bean is
+- Logs reach stdout but not the backend: `logback-spring.xml` lacks the `OTEL` appender reference or the bean is
   missing.
 
 ## Checklist

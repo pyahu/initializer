@@ -3,8 +3,8 @@
 import Diagram from "../Diagram.astro";
 ---
 <Diagram id="jvm-pod-topology"
-  caption="One pod: what the JVM sees, where flags come from, and which ports answer whom."
-  description="A pod drawn as a dashed frame holding one container, app, which runs as UID 10001 with a read-only root filesystem. A /tmp emptyDir volume is mounted into it and holds java.io.tmpdir and the JVM crash log. Two sources of flags feed the container: the image ENTRYPOINT, highlighted, carries the GC flag, the AOT cache and the ErrorFile path, which a Deployment cannot drop; the Deployment's JAVA_TOOL_OPTIONS carries sizing such as MaxRAMPercentage and ActiveProcessorCount, and replaces the image's value entirely. Port 8080 serves the API and the livez and readyz probes, which the kubelet calls. Port 8081 serves Actuator and no NetworkPolicy rule admits it. The app sends OTLP to a collector outside the pod, drawn dashed because its address comes from the environment.">
+  caption="One pod: what the JVM sees, where flags come from and which ports answer whom."
+  description="A pod drawn as a dashed frame holding one container, app, which runs as UID 10001 with a read-only root filesystem. A /tmp emptyDir volume is mounted into it and holds java.io.tmpdir and the JVM crash log. Two sources of flags feed the container: the image ENTRYPOINT, highlighted, carries the GC flag, the AOT cache and the ErrorFile path, which a Deployment cannot drop; the Deployment's JAVA_TOOL_OPTIONS carries sizing such as MaxRAMPercentage and ActiveProcessorCount and replaces the image's value entirely. Port 8080 serves the API and the livez and readyz probes, which the kubelet calls. Port 8081 serves Actuator and no NetworkPolicy rule admits it. The app sends OTLP to a collector outside the pod, drawn dashed because its address comes from the environment.">
   <svg viewBox="0 0 1000 420">
     <defs>
       <marker id="jvm-pod-topology-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
