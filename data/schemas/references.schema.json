@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://initializer.pyahu.io/schemas/references.schema.json",
+  "title": "Official documentation entries",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "entries"
+  ],
+  "properties": {
+    "schema": {
+      "const": "initializer.pyahu.io/references/v1"
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "component",
+        "docVersion",
+        "match",
+        "kind",
+        "area",
+        "url",
+        "pinned",
+        "purpose",
+        "guides",
+        "appliesWhen",
+        "jep",
+        "llms",
+        "baselines"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "docVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "match": {
+          "enum": [
+            "exact",
+            "minor",
+            "major",
+            "none"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "reference",
+            "api",
+            "spec",
+            "release-notes",
+            "migration",
+            "guide",
+            "jep",
+            "policy",
+            "release"
+          ]
+        },
+        "area": {
+          "enum": [
+            "java",
+            "jeps",
+            "spring-boot",
+            "spring-framework",
+            "spring-data",
+            "spring-security",
+            "spring-modulith",
+            "architecture",
+            "database",
+            "testing",
+            "observability",
+            "build",
+            "kubernetes",
+            "api",
+            "identity",
+            "ci",
+            "supply-chain",
+            "dependencies",
+            "static-analysis",
+            "messaging",
+            "cache"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "pinned": {
+          "type": "boolean"
+        },
+        "pinNote": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expect": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "guides": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/guideId"
+          },
+          "uniqueItems": true
+        },
+        "appliesWhen": {
+          "$ref": "common.schema.json#/$defs/filter"
+        },
+        "jep": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "number",
+                "title",
+                "status",
+                "release"
+              ],
+              "properties": {
+                "number": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "status": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "release": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          ]
+        },
+        "llms": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "txt"
+              ],
+              "properties": {
+                "txt": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "full": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          ]
+        },
+        "baselines": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/revisionId"
+          },
+          "uniqueItems": true
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "match": {
+                "const": "none"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "pinNote"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "jep"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "jep": {
+                "type": "object"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "jep": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

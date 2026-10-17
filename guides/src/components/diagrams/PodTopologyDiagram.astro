@@ -1,0 +1,47 @@
+---
+// Topology: one pod of the service and what reaches it.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="jvm-pod-topology"
+  caption="One pod: what the JVM sees, where flags come from, and which ports answer whom."
+  description="A pod drawn as a dashed frame holding one container, app, which runs as UID 10001 with a read-only root filesystem. A /tmp emptyDir volume is mounted into it and holds java.io.tmpdir and the JVM crash log. Two sources of flags feed the container: the image ENTRYPOINT, highlighted, carries the GC flag, the AOT cache and the ErrorFile path, which a Deployment cannot drop; the Deployment's JAVA_TOOL_OPTIONS carries sizing such as MaxRAMPercentage and ActiveProcessorCount, and replaces the image's value entirely. Port 8080 serves the API and the livez and readyz probes, which the kubelet calls. Port 8081 serves Actuator and no NetworkPolicy rule admits it. The app sends OTLP to a collector outside the pod, drawn dashed because its address comes from the environment.">
+  <svg viewBox="0 0 1000 420">
+    <defs>
+      <marker id="jvm-pod-topology-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="jvm-pod-topology-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+    </defs>
+    <rect x="300" y="20" width="420" height="380" rx="8" class="dg-frame" />
+    <text x="316" y="46" class="dg-group">POD</text>
+    <rect x="330" y="66" width="360" height="190" rx="6" class="dg-box" />
+    <text x="346" y="94" class="dg-title">container app</text>
+    <text x="346" y="118" class="dg-detail">UID 10001, read-only root</text>
+    <text x="346" y="138" class="dg-detail">memory request = limit</text>
+    <text x="346" y="158" class="dg-detail">no CPU limit</text>
+    <text x="346" y="196" class="dg-note">:8080 API, /livez, /readyz</text>
+    <text x="346" y="218" class="dg-note">:8081 Actuator, no rule admits it</text>
+    <rect x="330" y="290" width="360" height="86" rx="6" class="dg-box" />
+    <text x="346" y="318" class="dg-title">/tmp emptyDir</text>
+    <text x="346" y="342" class="dg-detail">java.io.tmpdir, hs_err crash log</text>
+    <path d="M510 256 V288" class="dg-line" marker-end="url(#jvm-pod-topology-arrow)" />
+
+    <rect x="20" y="66" width="250" height="100" rx="6" class="dg-box dg-emphasis" />
+    <text x="36" y="94" class="dg-title">Image ENTRYPOINT</text>
+    <text x="36" y="118" class="dg-detail">GC, AOT cache, ErrorFile</text>
+    <text x="36" y="138" class="dg-detail">a Deployment cannot drop them</text>
+    <path d="M270 116 H328" class="dg-line dg-accent" marker-end="url(#jvm-pod-topology-accent)" />
+    <rect x="20" y="196" width="250" height="100" rx="6" class="dg-box" />
+    <text x="36" y="224" class="dg-title">JAVA_TOOL_OPTIONS</text>
+    <text x="36" y="248" class="dg-detail">sizing, from the Deployment;</text>
+    <text x="36" y="268" class="dg-detail">replaces, never merges</text>
+    <path d="M270 246 H328" class="dg-line" marker-end="url(#jvm-pod-topology-arrow)" />
+
+    <rect x="750" y="66" width="230" height="86" rx="6" class="dg-box" />
+    <text x="766" y="94" class="dg-title">kubelet</text>
+    <text x="766" y="118" class="dg-detail">probes on :8080</text>
+    <path d="M750 109 H692" class="dg-line" marker-end="url(#jvm-pod-topology-arrow)" />
+    <rect x="750" y="196" width="230" height="86" rx="6" class="dg-box" />
+    <text x="766" y="224" class="dg-title">OTLP collector</text>
+    <text x="766" y="248" class="dg-detail">address from the env</text>
+    <path d="M692 239 H748" class="dg-line dg-dash" marker-end="url(#jvm-pod-topology-arrow)" />
+  </svg>
+</Diagram>

@@ -1,0 +1,37 @@
+---
+// State, baseline, verification, coverage, sources, and questions of a guide.
+import { Aside } from "@astrojs/starlight/components";
+import data from "../generated/guides.json";
+interface Props {
+  guide: string;
+}
+const { guide } = Astro.props;
+const g = (data.guides as any)[guide];
+if (!g) throw new Error(`GuideStatus: unknown guide ${guide}`);
+const stateText: Record<string, string> = {
+  draft: "Draft: decided, being proven by a fixture.",
+  released: "Released: applies to a released template.",
+  explanatory: "Explanatory: a comparison that is never generated.",
+};
+---
+<div class="guide-status not-content">
+  <p class="guide-status-line">
+    <span class={`guide-state state-${g.state}`}>{g.state}</span>{" "}
+    {stateText[g.state]} Baseline {g.baseline}. {g.verification ? `Verified: ${g.verification}.` : "No complete verification run recorded yet."} {g.coverage}.
+  </p>
+  {g.status.reverify && (
+    <Aside type="caution" title="Re-verify">
+      <ul>{g.status.reverifyReasons.map((r: string) => <li>{r}</li>)}</ul>
+    </Aside>
+  )}
+  {g.status.stale && <Aside type="caution" title="Stale">This guide was last verified more than two baseline revisions ago.</Aside>}
+  <details class="guide-questions" open>
+    <summary>Questions this guide answers</summary>
+    <ul>{g.questions.map((q: any) => <li><a href={`#${q.answeredIn}`}>{q.id} {q.text}</a></li>)}</ul>
+  </details>
+  {g.sources.length > 0 && (
+    <p class="guide-sources">
+      {g.sources.map((s: any) => <>Adapted from “{s.title}” by {s.author} ({s.date}), {s.license}. </>)}
+    </p>
+  )}
+</div>

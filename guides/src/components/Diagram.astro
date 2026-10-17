@@ -1,0 +1,68 @@
+---
+// Ported from the Pyahu Operator site (Diagram.astro at 27984be): hand-positioned inline SVG,
+// a theme-aware frame, and a native dialog that shows an enlarged copy. See /contributing/diagrams/.
+interface Props {
+  id: string;
+  caption: string;
+  description: string;
+}
+const { id, caption, description } = Astro.props;
+const textId = `${id}-text`;
+---
+<figure class="dg not-content" id={id} data-dg-caption={caption}>
+  <button class="dg-open" type="button" aria-haspopup="dialog" aria-label={`${caption} Enlarge diagram.`} aria-describedby={textId}>
+    <slot />
+  </button>
+  <figcaption>{caption} <span class="dg-hint" hidden>Click to enlarge.</span></figcaption>
+  <details class="dg-text"><summary>Diagram in words</summary><p id={textId}>{description}</p></details>
+  <dialog class="dg-dialog" aria-label={caption}>
+    <div class="dg-bar">
+      <span class="dg-hint">Press Esc or click outside to close.</span>
+      <button class="dg-close" type="button" aria-label="Close">✕</button>
+    </div>
+    <div class="dg-canvas"></div>
+  </dialog>
+</figure>
+<script>
+  document.querySelectorAll<HTMLElement>("figure.dg").forEach((figure) => {
+    const open = figure.querySelector<HTMLButtonElement>(".dg-open");
+    const dialog = figure.querySelector<HTMLDialogElement>(".dg-dialog");
+    const canvas = figure.querySelector<HTMLElement>(".dg-canvas");
+    const close = figure.querySelector<HTMLButtonElement>(".dg-close");
+    const svg = open?.querySelector("svg");
+    if (!open || !dialog || !canvas || !close || !svg) return;
+    figure.querySelector<HTMLElement>("figcaption .dg-hint")?.removeAttribute("hidden");
+    open.addEventListener("click", () => {
+      const clone = svg.cloneNode(true) as SVGSVGElement;
+      // Markers and labels keep unique ids in the enlarged copy.
+      const ids = new Map([...clone.querySelectorAll("[id]")].map((node) => [node.id, `${node.id}-zoom`]));
+      clone.querySelectorAll("*").forEach((node) => {
+        for (const attr of [...node.attributes]) {
+          let value = attr.value;
+          for (const [from, to] of ids) {
+            if (attr.name === "id" && value === from) value = to;
+            value = value.replaceAll(`url(#${from})`, `url(#${to})`);
+            if (["aria-labelledby", "aria-describedby"].includes(attr.name)) value = value.split(" ").map((t) => (t === from ? to : t)).join(" ");
+          }
+          if (value !== attr.value) node.setAttribute(attr.name, value);
+        }
+      });
+      clone.removeAttribute("aria-hidden");
+      clone.setAttribute("role", "img");
+      clone.setAttribute("aria-label", figure.dataset.dgCaption ?? "");
+      clone.setAttribute("aria-describedby", `${figure.id}-text`);
+      canvas.replaceChildren(clone);
+      dialog.showModal();
+      close.focus();
+    });
+    close.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => {
+      const { left, right, top, bottom } = dialog.getBoundingClientRect();
+      if (event.target === dialog && (event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom)) dialog.close();
+    });
+    dialog.addEventListener("close", () => {
+      canvas.replaceChildren();
+      open.focus();
+    });
+  });
+</script>

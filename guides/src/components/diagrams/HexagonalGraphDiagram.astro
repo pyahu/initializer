@@ -1,0 +1,39 @@
+---
+// Dependency graph of the single-hexagonal fixture's ping capability (stage 1).
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="fixture-hexagonal-graph"
+  caption="The ping capability of the hexagonal fixture: every arrow points from a class to what it depends on."
+  description="One Spring Modulith module, ping, drawn as a dashed frame. Inside it, four boxes. The web adapter PingController, a jMolecules primary adapter, depends on the primary port Ping. The application service PingService, annotated as application, implements Ping, so it depends on the port too. Both the port and the service depend on the domain record Pong. The domain box is highlighted: it depends only on the JDK, JSpecify and itself, a rule ArchitectureTest adds because ensureHexagonal in STRICT mode does not let ports reference the application layer, so the domain is left unannotated. A note states the second added rule: nothing outside adapters depends on adapters.">
+  <svg viewBox="0 0 1000 400">
+    <defs>
+      <marker id="fixture-hexagonal-graph-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+    </defs>
+    <rect x="20" y="20" width="960" height="360" rx="8" class="dg-frame" />
+    <text x="36" y="46" class="dg-group">MODULE ping</text>
+    <rect x="48" y="80" width="250" height="92" rx="6" class="dg-box" />
+    <text x="64" y="108" class="dg-title">PingController</text>
+    <text x="64" y="132" class="dg-detail">adapter.in.web</text>
+    <text x="64" y="152" class="dg-detail">@PrimaryAdapter</text>
+    <rect x="374" y="80" width="250" height="92" rx="6" class="dg-box" />
+    <text x="390" y="108" class="dg-title">Ping</text>
+    <text x="390" y="132" class="dg-detail">application.port.in</text>
+    <text x="390" y="152" class="dg-detail">@PrimaryPort</text>
+    <rect x="700" y="80" width="250" height="92" rx="6" class="dg-box" />
+    <text x="716" y="108" class="dg-title">PingService</text>
+    <text x="716" y="132" class="dg-detail">application.service</text>
+    <text x="716" y="152" class="dg-detail">@Application, implements Ping</text>
+    <rect x="374" y="240" width="250" height="100" rx="6" class="dg-box dg-emphasis" />
+    <text x="390" y="268" class="dg-title">Pong</text>
+    <text x="390" y="292" class="dg-detail">domain, unannotated</text>
+    <text x="390" y="312" class="dg-detail">JDK, JSpecify and itself only</text>
+    <path d="M298 126 H372" class="dg-line" marker-end="url(#fixture-hexagonal-graph-arrow)" />
+    <path d="M700 126 H626" class="dg-line" marker-end="url(#fixture-hexagonal-graph-arrow)" />
+    <path d="M499 172 V238" class="dg-line" marker-end="url(#fixture-hexagonal-graph-arrow)" />
+    <path d="M825 172 V290 H626" class="dg-line" marker-end="url(#fixture-hexagonal-graph-arrow)" />
+    <text x="48" y="250" class="dg-note">ensureHexagonal(STRICT), plus:</text>
+    <text x="48" y="270" class="dg-note">domain depends on nothing else</text>
+    <text x="48" y="290" class="dg-note">nothing outside adapters</text>
+    <text x="48" y="310" class="dg-note">depends on adapters</text>
+  </svg>
+</Diagram>

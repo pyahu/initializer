@@ -1,0 +1,101 @@
+# Data, guides, the built site, and its llms exports.
+name: Guides
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - guides/**
+      - data/**
+      - fixtures/**
+      - cmd/**
+      - internal/**
+      - acceptance/**
+      - go.mod
+      - go.sum
+      - .github/workflows/guides.yml
+  pull_request:
+    paths:
+      - guides/**
+      - data/**
+      - fixtures/**
+      - cmd/**
+      - internal/**
+      - acceptance/**
+      - go.mod
+      - go.sum
+      - .github/workflows/guides.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: guides-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  GOTOOLCHAIN: go1.27.2
+
+jobs:
+  guides:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: 1.27.2
+          cache: true
+      - name: Go toolchain
+        run: test "$(go version | cut -d' ' -f3)" = go1.27.2
+      - name: Go tests
+        run: go test -count=1 ./cmd/... ./internal/...
+      - name: Data and guides
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          FORCED: ${{ github.event.forced }}
+        run: |
+          base="${PR_BASE:-$PUSH_BEFORE}"
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            base="$(git merge-base HEAD origin/main)"
+          fi
+          # A forced push replaces history: compare with the new parent, or with nothing for a root commit.
+          if [ "$FORCED" = "true" ] && ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            base="$(git rev-parse -q --verify HEAD~1 || true)"
+          fi
+          if [ -n "$base" ]; then
+            go run ./cmd/guidekit check --base "$base"
+          else
+            go run ./cmd/guidekit check
+          fi
+      - name: Generated outputs
+        run: go run ./cmd/guidekit generate --check
+      - name: Evidence report
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: go run ./cmd/guidekit report fetch --workflow fixture-single-hexagonal.yml --branch main --out out/evidence-report.json
+      - name: Qualification
+        run: go run ./cmd/guidekit qualify --check --report out/evidence-report.json
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: guides/.node-version
+          cache: npm
+          cache-dependency-path: guides/package-lock.json
+      - name: Node toolchain and install
+        working-directory: guides
+        run: |
+          npm run toolchain
+          npm ci
+          cd .. && go run ./cmd/guidekit audit --dir guides
+      - name: Site
+        working-directory: guides
+        run: |
+          npm run check
+          npm run build
+      - name: Built site and exports
+        run: go run ./cmd/guidekit site --dist guides/dist

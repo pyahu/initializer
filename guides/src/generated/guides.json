@@ -1,0 +1,1186 @@
+{
+  "active": "v0.1-b1",
+  "generatedBy": "guidekit generate",
+  "guides": {
+    "jvm-in-containers": {
+      "id": "jvm-in-containers",
+      "title": "The JVM in containers",
+      "state": "draft",
+      "baseline": "v0.1-b1",
+      "status": {
+        "reverify": false,
+        "reverifyReasons": [],
+        "stale": false
+      },
+      "verification": "",
+      "coverage": "16 claims: 1 measured, 9 reproduced, 6 not exercised",
+      "sources": [
+        {
+          "title": "01 · The JVM in containers: memory, CPU, GC and startup",
+          "origin": "spring-boot-production-guides/01-jvm-in-containers.md",
+          "revision": "sha256:3e67aacaf056953efeabb3d1ecf1298f2b03d6f570f877970f4259ee5cef05e9",
+          "date": "2026-10-04",
+          "author": "Terson Rigaud",
+          "license": "CC BY 4.0"
+        }
+      ],
+      "questions": [
+        {
+          "id": "JVM-Q1",
+          "text": "How much of the memory limit can the heap take, and how do I prove it?",
+          "answeredIn": "jvm-heap-sizing",
+          "cardTitle": "Size the heap from the memory limit"
+        },
+        {
+          "id": "JVM-Q2",
+          "text": "Why did my pod get SerialGC, and how do I stop it?",
+          "answeredIn": "jvm-gc-explicit",
+          "cardTitle": "Set the garbage collector explicitly"
+        },
+        {
+          "id": "JVM-Q3",
+          "text": "CPU limit or not, and what does ActiveProcessorCount change?",
+          "answeredIn": "jvm-cpu-count",
+          "cardTitle": "Size the JVM for the CPUs it gets"
+        },
+        {
+          "id": "JVM-Q4",
+          "text": "Which garbage collector for which workload?",
+          "answeredIn": "jvm-gc-choice",
+          "cardTitle": "Choose G1 unless pauses are what you sell"
+        },
+        {
+          "id": "JVM-Q5",
+          "text": "Which flags go in the ENTRYPOINT and which in JAVA_TOOL_OPTIONS?",
+          "answeredIn": "jvm-flag-placement",
+          "cardTitle": "Put image flags in the ENTRYPOINT, sizing in JAVA_TOOL_OPTIONS"
+        },
+        {
+          "id": "JVM-Q6",
+          "text": "How do I build the AOT cache and know it is used?",
+          "answeredIn": "jvm-aot-cache",
+          "cardTitle": "Build the AOT cache in the image and prove it is used"
+        },
+        {
+          "id": "JVM-Q7",
+          "text": "AOT cache, Spring AOT, native image, or CRaC: which and when?",
+          "answeredIn": "jvm-startup-options",
+          "cardTitle": "Pick the startup optimisation by workload"
+        },
+        {
+          "id": "JVM-Q8",
+          "text": "How large should the startupProbe budget be?",
+          "answeredIn": "jvm-startup-probe",
+          "cardTitle": "Size the startupProbe from measured startup"
+        }
+      ],
+      "cards": {
+        "jvm-aot-cache": {
+          "title": "Build the AOT cache in the image and prove it is used",
+          "coverage": "3 claims: 1 measured, 2 reproduced",
+          "records": [
+            {
+              "id": "ev-jvm-aot-cache-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-jvm-aot-cache-1 · reproduced · baseline v0.1-b1 · 2026-10-17. The AOT cache built in the image is usable with the image's GC and class path: -XX:AOTMode=on exits 0. Result: AOTMode=on with the image's GC and class path: exit 0 (openjdk version \"25.0.4.1\" 2026-08-18 LTS). Limitations: The training run warns that a few Spring ClassFile reader classes cannot be archived; the cache is still used.",
+              "test": "acceptance/jvm::TestAOTCacheFailFast",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestAOTCacheFailFast$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            },
+            {
+              "id": "ev-jvm-aot-cache-2",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-jvm-aot-cache-2 · reproduced · baseline v0.1-b1 · 2026-10-17. The unchanged ENTRYPOINT opens the cache: with -Xlog:aot the JVM logs Opened AOT cache /app/app.aot. Result: unchanged ENTRYPOINT with -Xlog:aot logs \"Opened AOT cache /app/app.aot.\". Limitations: The log text was read from the first run on 25.0.4.1+1 and may change with the JDK.",
+              "test": "acceptance/jvm::TestAOTCacheLoadedOnLaunch",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestAOTCacheLoadedOnLaunch$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            },
+            {
+              "id": "ev-jvm-aot-cache-3",
+              "badge": "measured",
+              "canonical": "Evidence ev-jvm-aot-cache-3 · measured · baseline v0.1-b1 · 2026-10-17. The AOT cache shortens startup of the stage 1 fixture on two CPUs and 1 GiB. Result: process running for (s), --cpus=2 --memory=1g, 10 alternating rounds. AOT off [4.64 4.79 4.82 4.54 4.64 4.63 4.45 4.56 4.57 4.52] median 4.599; AOT on [2.56 2.60 2.66 2.52 2.55 2.49 2.53 2.50 2.48 2.59] median 2.539; delta 2.060 s (1.81x). Limitations: A one-endpoint service; a real service loads more classes. x64 only; arm64 is not exercised.",
+              "test": "acceptance/jvm::TestAOTStartupDelta",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestAOTStartupDelta$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833",
+              "measurement": "20 samples, median per mode, in seconds (Boot's process running for). One discarded warm-up per mode, then 10 rounds alternating -XX:AOTMode=off and the default, --cpus=2 --memory=1g."
+            }
+          ]
+        },
+        "jvm-cpu-count": {
+          "title": "Size the JVM for the CPUs it gets",
+          "coverage": "2 claims: 1 reproduced, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-jvm-cpu-count-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-jvm-cpu-count-1 · reproduced · baseline v0.1-b1 · 2026-10-17. With no CPU limit, -XX:ActiveProcessorCount=1 overrides the CPU count the JVM detects. Result: no CPU limit, nproc 2; -XX:ActiveProcessorCount=1 reports Effective CPU Count: 1. Limitations: Proves the override only, not the resulting pool sizes.",
+              "test": "acceptance/jvm::TestActiveProcessorCountOverride",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestActiveProcessorCountOverride$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            },
+            {
+              "id": "ev-jvm-cpu-count-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-jvm-cpu-count-2 · not exercised · baseline v0.1-b1. With ActiveProcessorCount set, GC threads, JIT threads, the common pool and the virtual thread scheduler size themselves for the pod. Limitations: Pool sizes per CPU count come from the source guide's measurements.",
+              "reason": "The fixture proves only that the flag overrides the detected count. Thread pool sizes are not measured."
+            }
+          ]
+        },
+        "jvm-flag-placement": {
+          "title": "Put image flags in the ENTRYPOINT, sizing in JAVA_TOOL_OPTIONS",
+          "coverage": "2 claims: 1 reproduced, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-jvm-flag-placement-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-jvm-flag-placement-1 · reproduced · baseline v0.1-b1 · 2026-10-17. The image starts with a read-only root filesystem, /tmp as tmpfs, as UID 10001, and with an unreachable OTLP endpoint: /readyz answers 200 within 60 s. Result: read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s. Limitations: Docker flags stand in for the pod security context; no cluster run yet.",
+              "test": "acceptance/jvm::TestHardenedStartup",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestHardenedStartup$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            },
+            {
+              "id": "ev-jvm-flag-placement-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-jvm-flag-placement-2 · not exercised · baseline v0.1-b1. A Deployment's JAVA_TOOL_OPTIONS replaces the image's value instead of merging, so flags placed there disappear. Limitations: Documented Kubernetes and launcher behaviour.",
+              "reason": "Not exercised in a cluster yet. A cluster end-to-end test will cover the Deployment."
+            }
+          ]
+        },
+        "jvm-gc-choice": {
+          "title": "Choose G1 unless pauses are what you sell",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-jvm-gc-choice-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-jvm-gc-choice-1 · not exercised · baseline v0.1-b1. G1 suits request and response services, generational ZGC sub-millisecond pause targets, and Parallel batch jobs. Limitations: No workload comparison in this repository.",
+              "reason": "Reasoned from the JEPs and the HotSpot GC tuning guide. No collector comparison is run."
+            }
+          ]
+        },
+        "jvm-gc-explicit": {
+          "title": "Set the garbage collector explicitly",
+          "coverage": "4 claims: 4 reproduced",
+          "records": [
+            {
+              "id": "ev-jvm-gc-explicit-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-jvm-gc-explicit-1 · reproduced · baseline v0.1-b1 · 2026-10-17. With one CPU and 4 GiB and no GC flag, the JVM picks SerialGC. Result: --cpus=1 --memory=4g, no GC flag: UseSerialGC = true, UseG1GC = false. Limitations: Docker CPU and memory limits on one runner, not a Kubernetes node.",
+              "test": "acceptance/jvm::TestSerialGCOneCPU",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestSerialGCOneCPU$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            },
+            {
+              "id": "ev-jvm-gc-explicit-2",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-jvm-gc-explicit-2 · reproduced · baseline v0.1-b1 · 2026-10-17. With two CPUs and 1700 MiB and no GC flag, the JVM picks SerialGC. Result: --cpus=2 --memory=1700m, no GC flag: UseSerialGC = true. Limitations: 1700 MiB and 2048 MiB bracket the threshold of about 1792 MiB; they do not locate it.",
+              "test": "acceptance/jvm::TestSerialGCLowMemory",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestSerialGCLowMemory$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            },
+            {
+              "id": "ev-jvm-gc-explicit-3",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-jvm-gc-explicit-3 · reproduced · baseline v0.1-b1 · 2026-10-17. With two CPUs and 2048 MiB and no GC flag, the JVM picks G1. Result: --cpus=2 --memory=2048m, no GC flag: UseG1GC = true. Limitations: None known.",
+              "test": "acceptance/jvm::TestG1AboveThresholds",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestG1AboveThresholds$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            },
+            {
+              "id": "ev-jvm-gc-explicit-4",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-jvm-gc-explicit-4 · reproduced · baseline v0.1-b1 · 2026-10-17. -XX:+UseG1GC selects G1 in both cases where the JVM would pick SerialGC. Result: -XX:+UseG1GC at 1 CPU / 4 GiB and at 2 CPUs / 1700 MiB: UseG1GC = true. Limitations: None known.",
+              "test": "acceptance/jvm::TestExplicitG1",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestExplicitG1$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            }
+          ]
+        },
+        "jvm-heap-sizing": {
+          "title": "Size the heap from the memory limit",
+          "coverage": "2 claims: 1 reproduced, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-jvm-heap-sizing-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-jvm-heap-sizing-1 · reproduced · baseline v0.1-b1 · 2026-10-17. With -XX:MaxRAMPercentage=75 and a 1 GiB memory limit, MaxHeapSize is 805306368 bytes, 75% of the limit. Result: --memory=1g -XX:MaxRAMPercentage=75: MaxHeapSize = 805306368. Limitations: Flags only. Native memory under load is not measured here.",
+              "test": "acceptance/jvm::TestHeapIsSeventyFivePercent",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestHeapIsSeventyFivePercent$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            },
+            {
+              "id": "ev-jvm-heap-sizing-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-jvm-heap-sizing-2 · not exercised · baseline v0.1-b1. The remaining 256 MiB of a 1 GiB pod covers metaspace, code cache, thread stacks, GC structures and buffers of a Spring Boot service under load. Limitations: The table's starting points come from the source guide's measurements, not from a run in this repository.",
+              "reason": "Native Memory Tracking under load is not run yet. A cluster load test will measure it."
+            }
+          ]
+        },
+        "jvm-startup-options": {
+          "title": "Pick the startup optimisation by workload",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-jvm-startup-options-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-jvm-startup-options-1 · not exercised · baseline v0.1-b1. Native image, CRaC and Spring AOT trade build cost and runtime constraints for startup as the table shows. Limitations: Only the AOT cache is measured in this repository.",
+              "reason": "Comparison from the source guide and upstream documentation. Only the AOT cache is exercised."
+            }
+          ]
+        },
+        "jvm-startup-probe": {
+          "title": "Size the startupProbe from measured startup",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-jvm-startup-probe-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-jvm-startup-probe-1 · not exercised · baseline v0.1-b1. A startupProbe budget of about three times p99 startup on the smallest node type avoids killing healthy pods. Limitations: Engineering judgment from the source guide.",
+              "reason": "Needs a cluster and the smallest node type. A cluster end-to-end test will measure it."
+            }
+          ]
+        }
+      },
+      "checklist": [
+        {
+          "id": "JVM-01",
+          "type": "generated-config",
+          "card": "jvm-heap-sizing",
+          "text": "Memory request equals memory limit.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "JVM-02",
+          "type": "generated-config",
+          "card": "jvm-heap-sizing",
+          "text": "MaxRAMPercentage set from the table, InitialRAMPercentage equal to it.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "JVM-03",
+          "type": "generated-config",
+          "card": "jvm-gc-explicit",
+          "text": "GC flag explicit in the ENTRYPOINT (-XX:+UseG1GC unless ZGC or Parallel is documented).",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "JVM-04",
+          "type": "generated-config",
+          "card": "jvm-cpu-count",
+          "text": "No CPU limit and ActiveProcessorCount equal to the CPU request rounded up, at least 2; with a CPU limit, no ActiveProcessorCount.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "JVM-05",
+          "type": "generated-config",
+          "card": "jvm-heap-sizing",
+          "text": "ExitOnOutOfMemoryError set; heap dumps only to a volume larger than the heap.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "JVM-06",
+          "type": "generated-config",
+          "card": "jvm-flag-placement",
+          "text": "java.io.tmpdir and ErrorFile point at the writable /tmp volume, with ErrorFile on the ENTRYPOINT.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "JVM-07",
+          "type": "generated-config",
+          "card": "jvm-aot-cache",
+          "text": "AOT cache built in the image from the extracted layout, without --launcher, with remote calls disabled in the training run.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "JVM-08",
+          "type": "verified-behaviour",
+          "card": "jvm-aot-cache",
+          "text": "CI fails the build if the cache is rejected (-XX:AOTMode=on check).",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "JVM-09",
+          "type": "generated-config",
+          "card": "jvm-aot-cache",
+          "text": "Flags that affect the cache (GC, compact headers) are identical in training and production.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "JVM-10",
+          "type": "deployment-prerequisite",
+          "card": "jvm-startup-probe",
+          "text": "startupProbe budget about three times measured p99 startup on the smallest node type, measured with the AOT cache.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "JVM-11",
+          "type": "operator-task",
+          "card": "jvm-heap-sizing",
+          "text": "Confirm the heap percentage with Native Memory Tracking under load after each JDK or Boot upgrade.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        }
+      ],
+      "references": [
+        {
+          "id": "java-launcher-tool-reference",
+          "title": "java launcher tool reference",
+          "url": "https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html",
+          "version": "25.0.4.1+1 (docs 25)",
+          "pinned": true,
+          "purpose": "java launcher tool reference."
+        },
+        {
+          "id": "java-virtual-threads-guide",
+          "title": "Virtual threads guide (Core Libraries)",
+          "url": "https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html",
+          "version": "25.0.4.1+1 (docs 25)",
+          "pinned": true,
+          "purpose": "Virtual threads guide (Core Libraries)."
+        },
+        {
+          "id": "java-hotspot-gc-tuning-guide",
+          "title": "HotSpot GC tuning guide",
+          "url": "https://docs.oracle.com/en/java/javase/25/gctuning/index.html",
+          "version": "25.0.4.1+1 (docs 25)",
+          "pinned": true,
+          "purpose": "HotSpot GC tuning guide."
+        },
+        {
+          "id": "java-class-data-sharing-aot-cache",
+          "title": "Class Data Sharing / AOT cache (VM guide)",
+          "url": "https://docs.oracle.com/en/java/javase/25/vm/class-data-sharing.html",
+          "version": "25.0.4.1+1 (docs 25)",
+          "pinned": true,
+          "purpose": "Class Data Sharing / AOT cache (VM guide)."
+        },
+        {
+          "id": "java-openjdk-builds-page",
+          "title": "OpenJDK builds page",
+          "url": "https://jdk.java.net/25/",
+          "version": "25.0.4.1+1 (docs 25)",
+          "pinned": true,
+          "purpose": "OpenJDK builds page."
+        },
+        {
+          "id": "jep-483",
+          "title": "JEP 483: Ahead-of-Time Class Loading & Linking",
+          "url": "https://openjdk.org/jeps/483",
+          "version": "JDK 24",
+          "pinned": true,
+          "purpose": "What JEP 483 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "jep-514",
+          "title": "JEP 514: Ahead-of-Time Command-Line Ergonomics",
+          "url": "https://openjdk.org/jeps/514",
+          "version": "JDK 25",
+          "pinned": true,
+          "purpose": "What JEP 514 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "jep-515",
+          "title": "JEP 515: Ahead-of-Time Method Profiling",
+          "url": "https://openjdk.org/jeps/515",
+          "version": "JDK 25",
+          "pinned": true,
+          "purpose": "What JEP 515 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "jep-516",
+          "title": "JEP 516: Ahead-of-Time Object Caching with Any GC (context, not in 25)",
+          "url": "https://openjdk.org/jeps/516",
+          "version": "JDK 26",
+          "pinned": true,
+          "purpose": "What JEP 516 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "jep-519",
+          "title": "JEP 519: Compact Object Headers (product feature, opt-in)",
+          "url": "https://openjdk.org/jeps/519",
+          "version": "JDK 25",
+          "pinned": true,
+          "purpose": "What JEP 519 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "jep-248",
+          "title": "JEP 248: Make G1 the Default Garbage Collector (default-GC context)",
+          "url": "https://openjdk.org/jeps/248",
+          "version": "JDK 9",
+          "pinned": true,
+          "purpose": "What JEP 248 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "jep-439",
+          "title": "JEP 439: Generational ZGC",
+          "url": "https://openjdk.org/jeps/439",
+          "version": "JDK 21",
+          "pinned": true,
+          "purpose": "What JEP 439 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "jep-474",
+          "title": "JEP 474: ZGC: Generational Mode by Default",
+          "url": "https://openjdk.org/jeps/474",
+          "version": "JDK 23",
+          "pinned": true,
+          "purpose": "What JEP 474 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "jep-490",
+          "title": "JEP 490: ZGC: Remove the Non-Generational Mode",
+          "url": "https://openjdk.org/jeps/490",
+          "version": "JDK 24",
+          "pinned": true,
+          "purpose": "What JEP 490 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "jep-521",
+          "title": "JEP 521: Generational Shenandoah",
+          "url": "https://openjdk.org/jeps/521",
+          "version": "JDK 25",
+          "pinned": true,
+          "purpose": "What JEP 521 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "spring-boot-actuator-endpoints",
+          "title": "Actuator endpoints (incl. Kubernetes probes anchor, verified)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Actuator endpoints (incl. Kubernetes probes anchor, verified)."
+        },
+        {
+          "id": "spring-boot-container-images",
+          "title": "Container images",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Container images."
+        },
+        {
+          "id": "spring-boot-efficient-container-images",
+          "title": "Efficient container images (layering)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Efficient container images (layering)."
+        },
+        {
+          "id": "spring-boot-dockerfiles",
+          "title": "Dockerfiles",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Dockerfiles."
+        },
+        {
+          "id": "spring-boot-cloud-native-buildpacks",
+          "title": "Cloud Native Buildpacks",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Cloud Native Buildpacks."
+        },
+        {
+          "id": "spring-boot-efficient-deployments",
+          "title": "Efficient deployments",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Efficient deployments."
+        },
+        {
+          "id": "spring-boot-aot-cache-and-cds",
+          "title": "AOT cache and CDS (reference, sections #packaging.aot-cache.aot-cache and #packaging.aot-cache.cds)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/aot-cache.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "AOT cache and CDS (reference, sections #packaging.aot-cache.aot-cache and #packaging.aot-cache.cds)."
+        },
+        {
+          "id": "spring-boot-aot-cache",
+          "title": "AOT cache (how-to)",
+          "url": "https://docs.spring.io/spring-boot/4.1/how-to/aot-cache.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "AOT cache (how-to)."
+        },
+        {
+          "id": "spring-boot-virtual-threads",
+          "title": "Virtual threads (anchor verified)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Virtual threads (anchor verified)."
+        },
+        {
+          "id": "kubernetes-probes",
+          "title": "Probes (concept)",
+          "url": "https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Probes (concept)."
+        },
+        {
+          "id": "kubernetes-configure-liveness-readiness-startup-probes",
+          "title": "Configure liveness/readiness/startup probes (task)",
+          "url": "https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Configure liveness/readiness/startup probes (task)."
+        },
+        {
+          "id": "kubernetes-pod-lifecycle",
+          "title": "Pod lifecycle (graceful termination)",
+          "url": "https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Pod lifecycle (graceful termination)."
+        },
+        {
+          "id": "kubernetes-resource-management",
+          "title": "Resource management",
+          "url": "https://v1-36.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Resource management."
+        }
+      ]
+    },
+    "observability": {
+      "id": "observability",
+      "title": "Observability",
+      "state": "draft",
+      "baseline": "v0.1-b1",
+      "status": {
+        "reverify": false,
+        "reverifyReasons": [],
+        "stale": false
+      },
+      "verification": "",
+      "coverage": "12 claims: 6 reproduced, 1 compiled, 5 not exercised",
+      "sources": [
+        {
+          "title": "05 · Observability with OpenTelemetry and the Grafana LGTM stack",
+          "origin": "spring-boot-production-guides/05-observability-opentelemetry-grafana-lgtm.md",
+          "revision": "sha256:65f809ccd122053638f3bb14e6c790e2650bc44e5ead455667ab4a76e626591f",
+          "date": "2026-10-04",
+          "author": "Terson Rigaud",
+          "license": "CC BY 4.0"
+        }
+      ],
+      "questions": [
+        {
+          "id": "OBS-Q1",
+          "text": "Boot's OpenTelemetry starter or the Java agent?",
+          "answeredIn": "obs-starter-not-agent",
+          "cardTitle": "Use Boot's OpenTelemetry starter, not the agent"
+        },
+        {
+          "id": "OBS-Q2",
+          "text": "Which Boot 4.1 properties send traces, metrics, and logs over OTLP, and what moved from 3.x?",
+          "answeredIn": "obs-otlp-config",
+          "cardTitle": "Configure OTLP the Boot 4.1 way"
+        },
+        {
+          "id": "OBS-Q3",
+          "text": "How do logs reach OTLP with the trace ID, and why does Boot not do it alone?",
+          "answeredIn": "obs-logs-otlp",
+          "cardTitle": "Install the Logback appender so logs carry the trace"
+        },
+        {
+          "id": "OBS-Q4",
+          "text": "Where and how much to sample?",
+          "answeredIn": "obs-sampling",
+          "cardTitle": "Sample parent-based in the app, tail-sample in the collector"
+        },
+        {
+          "id": "OBS-Q5",
+          "text": "What makes a metric useful and cheap: unit, histograms, SLO buckets, cardinality?",
+          "answeredIn": "obs-metric-shape",
+          "cardTitle": "Shape metrics: seconds, buckets, SLOs, bounded tags"
+        },
+        {
+          "id": "OBS-Q6",
+          "text": "Why a collector between the app and the backends, and when to skip it?",
+          "answeredIn": "obs-collector",
+          "cardTitle": "Put a collector between the app and the backends"
+        },
+        {
+          "id": "OBS-Q7",
+          "text": "How do I go from a latency spike to the trace to its log lines?",
+          "answeredIn": "obs-correlation",
+          "cardTitle": "Correlate metric, trace, and log with one trace ID"
+        },
+        {
+          "id": "OBS-Q8",
+          "text": "What does Actuator expose, and on which port?",
+          "answeredIn": "obs-actuator",
+          "cardTitle": "Keep Actuator on its own port"
+        }
+      ],
+      "cards": {
+        "obs-actuator": {
+          "title": "Keep Actuator on its own port",
+          "coverage": "2 claims: 1 reproduced, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-obs-actuator-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-obs-actuator-1 · reproduced · baseline v0.1-b1 · 2026-10-17. /readyz answers on the main port 8080 with add-additional-paths, while Actuator itself runs on 8081. Result: read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s. Limitations: Checks /readyz on 8080; it does not probe that 8080 refuses /actuator.",
+              "test": "acceptance/jvm::TestHardenedStartup",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestHardenedStartup$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            },
+            {
+              "id": "ev-obs-actuator-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-obs-actuator-2 · not exercised · baseline v0.1-b1. No NetworkPolicy rule admits port 8081, so nothing outside the pod reaches Actuator. Limitations: A deployment prerequisite.",
+              "reason": "Needs a cluster with a NetworkPolicy-enforcing CNI. A cluster end-to-end test will cover it."
+            }
+          ]
+        },
+        "obs-collector": {
+          "title": "Put a collector between the app and the backends",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-obs-collector-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-obs-collector-1 · not exercised · baseline v0.1-b1. A collector gateway batches, retries, scrubs PII and fans out without changes to the app. Limitations: Reasoned from the collector documentation and the source guide.",
+              "reason": "No collector gateway in the fixture yet."
+            }
+          ]
+        },
+        "obs-correlation": {
+          "title": "Correlate metric, trace, and log with one trace ID",
+          "coverage": "2 claims: 1 reproduced, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-obs-correlation-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-obs-correlation-1 · reproduced · baseline v0.1-b1 · 2026-10-17. A latency bucket's exemplar carries the trace_id of a request in it. Result: Prometheus exemplar on http_server_requests_seconds_bucket{service_name=\"single-hexagonal\",uri=\"/ping\"} carries trace_id a87487d2e46b7ead0a4ef841e9c8087a. Limitations: Against grafana/otel-lgtm with exemplar storage on.",
+              "test": "acceptance/observability::TestExemplarLinksTrace",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestExemplarLinksTrace$' ./acceptance/observability"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            },
+            {
+              "id": "ev-obs-correlation-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-obs-correlation-2 · not exercised · baseline v0.1-b1. Grafana data source links take you from exemplar to trace to log lines in two clicks. Limitations: Grafana provisioning is configuration, not code in this repository.",
+              "reason": "Data source links are not provisioned or tested yet."
+            }
+          ]
+        },
+        "obs-logs-otlp": {
+          "title": "Install the Logback appender so logs carry the trace",
+          "coverage": "1 claim: 1 reproduced",
+          "records": [
+            {
+              "id": "ev-obs-logs-otlp-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-obs-logs-otlp-1 · reproduced · baseline v0.1-b1 · 2026-10-17. A log line written while handling a request reaches Loki with that request's trace_id. Result: Loki {service_name=\"single-hexagonal\"} | trace_id=\"43bd1deb6fbcb58d485a55292aa464fb\" returned \"ping\". Limitations: Against grafana/otel-lgtm.",
+              "test": "acceptance/observability::TestLogCarriesTraceID",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestLogCarriesTraceID$' ./acceptance/observability"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            }
+          ]
+        },
+        "obs-metric-shape": {
+          "title": "Shape metrics: seconds, buckets, SLOs, bounded tags",
+          "coverage": "2 claims: 1 reproduced, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-obs-metric-shape-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-obs-metric-shape-1 · reproduced · baseline v0.1-b1 · 2026-10-17. With base-time-unit seconds, the request timer arrives as http_server_requests_seconds_count with service_name and uri labels. Result: Tempo trace 415fb63f01a593e5177c27a22b7659e6 has server span \"http get /ping\" with uri /ping; Prometheus sum(http_server_requests_seconds_count{service_name=\"single-hexagonal\",uri=\"/ping\"}) = 1; Loki {service_name=\"single-hexagonal\"} | trace_id=\"415fb63f01a593e5177c27a22b7659e6\" returned \"ping\"; 4 more sampled parents at probability 0.1, all 5 traces in Tempo. Limitations: Series names in a Prometheus-compatible store; no SLO buckets are configured in the fixture yet.",
+              "test": "acceptance/observability::TestSignalsArrive",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestSignalsArrive$' ./acceptance/observability"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            },
+            {
+              "id": "ev-obs-metric-shape-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-obs-metric-shape-2 · not exercised · baseline v0.1-b1. Explicit SLO buckets and bounded tags keep the series count predictable. Limitations: The series count per timer comes from the source guide.",
+              "reason": "The stage 1 fixture defines no SLO buckets and has one route. A later sample service will prove it."
+            }
+          ]
+        },
+        "obs-otlp-config": {
+          "title": "Configure OTLP the Boot 4.1 way",
+          "coverage": "1 claim: 1 reproduced",
+          "records": [
+            {
+              "id": "ev-obs-otlp-config-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-obs-otlp-config-1 · reproduced · baseline v0.1-b1 · 2026-10-17. With only OTEL_EXPORTER_OTLP_ENDPOINT set, one request's trace, metric and log reach the backend. Result: Tempo trace 415fb63f01a593e5177c27a22b7659e6 has server span \"http get /ping\" with uri /ping; Prometheus sum(http_server_requests_seconds_count{service_name=\"single-hexagonal\",uri=\"/ping\"}) = 1; Loki {service_name=\"single-hexagonal\"} | trace_id=\"415fb63f01a593e5177c27a22b7659e6\" returned \"ping\"; 4 more sampled parents at probability 0.1, all 5 traces in Tempo. Limitations: Against grafana/otel-lgtm, not a production collector.",
+              "test": "acceptance/observability::TestSignalsArrive",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestSignalsArrive$' ./acceptance/observability"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            }
+          ]
+        },
+        "obs-sampling": {
+          "title": "Sample parent-based in the app, tail-sample in the collector",
+          "coverage": "2 claims: 1 reproduced, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-obs-sampling-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-obs-sampling-1 · reproduced · baseline v0.1-b1 · 2026-10-17. At sampling probability 0.1, five requests with sampled parents all produce stored traces, so the sampler is parent-based. Result: Tempo trace 415fb63f01a593e5177c27a22b7659e6 has server span \"http get /ping\" with uri /ping; Prometheus sum(http_server_requests_seconds_count{service_name=\"single-hexagonal\",uri=\"/ping\"}) = 1; Loki {service_name=\"single-hexagonal\"} | trace_id=\"415fb63f01a593e5177c27a22b7659e6\" returned \"ping\"; 4 more sampled parents at probability 0.1, all 5 traces in Tempo. Limitations: A ratio-only sampler would pass this with probability 1e-5.",
+              "test": "acceptance/observability::TestSignalsArrive",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestSignalsArrive$' ./acceptance/observability"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            },
+            {
+              "id": "ev-obs-sampling-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-obs-sampling-2 · not exercised · baseline v0.1-b1. A collector's tail sampling keeps error and slow traces with a baseline of healthy ones. Limitations: The source guide verified a policy against Alloy; this repository has no Alloy pin yet.",
+              "reason": "No collector gateway in the fixture yet. A later fixture with an Alloy pin and a test backend will prove it."
+            }
+          ]
+        },
+        "obs-starter-not-agent": {
+          "title": "Use Boot's OpenTelemetry starter, not the agent",
+          "coverage": "1 claim: 1 compiled",
+          "records": [
+            {
+              "id": "ev-obs-starter-not-agent-1",
+              "badge": "compiled",
+              "canonical": "Evidence ev-obs-starter-not-agent-1 · compiled · baseline v0.1-b1 · 2026-10-17. The stage 1 build succeeds with spring-boot-starter-opentelemetry and the OpenTelemetry Logback appender, no Java agent, together with Error Prone, NullAway, Spotless, CycloneDX, Spring Modulith and jMolecules. Result: io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped. Limitations: Compiling proves the pins work together, not their runtime behaviour; the other cards prove that.",
+              "test": "gradle/single-hexagonal::ApplicationTest",
+              "commands": [
+                "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39055415247 attempt 1, commit 91cc032",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/91cc032efb55dc1cc050624eba1e77896f59e833"
+            }
+          ]
+        }
+      },
+      "checklist": [
+        {
+          "id": "OBS-01",
+          "type": "generated-config",
+          "card": "obs-starter-not-agent",
+          "text": "spring-boot-starter-opentelemetry on the classpath; no -javaagent and no agent injected through JAVA_TOOL_OPTIONS.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "OBS-02",
+          "type": "generated-config",
+          "card": "obs-otlp-config",
+          "text": "spring.application.name, service.version and deployment.environment.name set.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "OBS-03",
+          "type": "deployment-prerequisite",
+          "card": "obs-otlp-config",
+          "text": "OTEL_EXPORTER_OTLP_ENDPOINT points at the collector in each environment.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "OBS-04",
+          "type": "generated-config",
+          "card": "obs-sampling",
+          "text": "management.tracing.sampling.probability chosen deliberately (1.0 with tail sampling).",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "OBS-05",
+          "type": "generated-config",
+          "card": "obs-metric-shape",
+          "text": "management.otlp.metrics.export.base-time-unit is seconds.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "OBS-06",
+          "type": "generated-config",
+          "card": "obs-metric-shape",
+          "text": "Histograms on http.server.requests and http.client.requests; explicit SLO buckets for SLI thresholds.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "OBS-07",
+          "type": "verified-behaviour",
+          "card": "obs-metric-shape",
+          "text": "No unbounded tag values; HTTP clients use URI templates and auto-configured builders only.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "OBS-08",
+          "type": "generated-config",
+          "card": "obs-logs-otlp",
+          "text": "Logback OpenTelemetry appender installed, or stdout JSON collected by an agent, not both.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "OBS-09",
+          "type": "deployment-prerequisite",
+          "card": "obs-collector",
+          "text": "A collector gateway with memory limiter first, Kubernetes metadata, PII transform, tail sampling, batch and retry.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "OBS-10",
+          "type": "deployment-prerequisite",
+          "card": "obs-correlation",
+          "text": "Grafana data sources linked from exemplars to traces, traces to logs and metrics, and logs back to traces.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "OBS-11",
+          "type": "generated-config",
+          "card": "obs-actuator",
+          "text": "Actuator on port 8081, exposure limited to health and info (plus prometheus when scraped), health details hidden.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "OBS-12",
+          "type": "deployment-prerequisite",
+          "card": "obs-actuator",
+          "text": "No NetworkPolicy rule admits port 8081.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        }
+      ],
+      "references": [
+        {
+          "id": "spring-boot-actuator",
+          "title": "Actuator (production-ready features)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/index.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Actuator (production-ready features)."
+        },
+        {
+          "id": "spring-boot-actuator-endpoints",
+          "title": "Actuator endpoints (incl. Kubernetes probes anchor, verified)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Actuator endpoints (incl. Kubernetes probes anchor, verified)."
+        },
+        {
+          "id": "spring-boot-actuator-rest-api",
+          "title": "Actuator REST API",
+          "url": "https://docs.spring.io/spring-boot/4.1/api/rest/actuator/index.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Actuator REST API."
+        },
+        {
+          "id": "spring-boot-observability-opentelemetry-section",
+          "title": "Observability, OpenTelemetry section (anchor verified)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/observability.html#actuator.observability.opentelemetry",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Observability, OpenTelemetry section (anchor verified)."
+        },
+        {
+          "id": "spring-boot-tracing",
+          "title": "Tracing (names spring-boot-starter-opentelemetry, OTLP export)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Tracing (names spring-boot-starter-opentelemetry, OTLP export)."
+        },
+        {
+          "id": "spring-boot-metrics",
+          "title": "Metrics (incl. #actuator.metrics.export.otlp)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Metrics (incl. #actuator.metrics.export.otlp)."
+        },
+        {
+          "id": "observability-otel-java-docs",
+          "title": "OTel Java docs",
+          "url": "https://opentelemetry.io/docs/languages/java/",
+          "version": "1.62.0",
+          "pinned": false,
+          "purpose": "OTel Java docs."
+        },
+        {
+          "id": "observability-otel-java-sdk-management",
+          "title": "OTel Java SDK management",
+          "url": "https://opentelemetry.io/docs/languages/java/sdk/",
+          "version": "1.62.0",
+          "pinned": false,
+          "purpose": "OTel Java SDK management."
+        },
+        {
+          "id": "observability-otel-java-sdk-configuration",
+          "title": "OTel Java SDK configuration",
+          "url": "https://opentelemetry.io/docs/languages/java/configuration/",
+          "version": "1.62.0",
+          "pinned": false,
+          "purpose": "OTel Java SDK configuration."
+        },
+        {
+          "id": "observability-otel-java-release-1-62-0",
+          "title": "OTel Java release 1.62.0 (Boot-managed)",
+          "url": "https://github.com/open-telemetry/opentelemetry-java/releases/tag/v1.62.0",
+          "version": "1.62.0",
+          "pinned": true,
+          "purpose": "OTel Java release 1.62.0 (Boot-managed)."
+        },
+        {
+          "id": "observability-otlp-specification",
+          "title": "OTLP specification",
+          "url": "https://opentelemetry.io/docs/specs/otlp/",
+          "version": "1.11.1",
+          "pinned": false,
+          "purpose": "OTLP specification."
+        },
+        {
+          "id": "observability-otlp-specification-at-tag",
+          "title": "OTLP specification at tag",
+          "url": "https://github.com/open-telemetry/opentelemetry-proto/blob/v1.11.1/docs/specification.md",
+          "version": "1.11.1",
+          "pinned": true,
+          "purpose": "OTLP specification at tag."
+        },
+        {
+          "id": "observability-semantic-conventions",
+          "title": "Semantic conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/",
+          "version": "1.44.0",
+          "pinned": false,
+          "purpose": "Semantic conventions."
+        },
+        {
+          "id": "observability-semantic-conventions-at-tag",
+          "title": "Semantic conventions at tag",
+          "url": "https://github.com/open-telemetry/semantic-conventions/tree/v1.44.0/docs",
+          "version": "1.44.0",
+          "pinned": true,
+          "purpose": "Semantic conventions at tag."
+        },
+        {
+          "id": "observability-semconv-http-spans",
+          "title": "Semconv HTTP spans",
+          "url": "https://opentelemetry.io/docs/specs/semconv/http/http-spans/",
+          "version": "1.44.0",
+          "pinned": false,
+          "purpose": "Semconv HTTP spans."
+        },
+        {
+          "id": "observability-semconv-db-client-spans",
+          "title": "Semconv DB client spans",
+          "url": "https://opentelemetry.io/docs/specs/semconv/database/database-spans/",
+          "version": "1.44.0",
+          "pinned": false,
+          "purpose": "Semconv DB client spans."
+        },
+        {
+          "id": "observability-semconv-jvm-metrics",
+          "title": "Semconv JVM metrics",
+          "url": "https://opentelemetry.io/docs/specs/semconv/runtime/jvm-metrics/",
+          "version": "1.44.0",
+          "pinned": false,
+          "purpose": "Semconv JVM metrics."
+        },
+        {
+          "id": "observability-otel-specification",
+          "title": "OTel specification",
+          "url": "https://opentelemetry.io/docs/specs/otel/",
+          "version": "1.61.0",
+          "pinned": false,
+          "purpose": "OTel specification."
+        },
+        {
+          "id": "observability-otel-s-own-spring-boot-starter",
+          "title": "OTel's own Spring Boot starter (a different artifact from Boot's starter; listed to avoid confusion)",
+          "url": "https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/",
+          "version": "latest",
+          "pinned": false,
+          "purpose": "OTel's own Spring Boot starter (a different artifact from Boot's starter; listed to avoid confusion)."
+        },
+        {
+          "id": "observability-micrometer-reference",
+          "title": "Micrometer reference",
+          "url": "https://docs.micrometer.io/micrometer/reference/1.17/index.html",
+          "version": "1.17.1 (docs 1.17)",
+          "pinned": true,
+          "purpose": "Micrometer reference."
+        },
+        {
+          "id": "observability-micrometer-otlp-registry",
+          "title": "Micrometer OTLP registry",
+          "url": "https://docs.micrometer.io/micrometer/reference/1.17/implementations/otlp.html",
+          "version": "1.17.1 (docs 1.17)",
+          "pinned": true,
+          "purpose": "Micrometer OTLP registry."
+        },
+        {
+          "id": "observability-micrometer-observation",
+          "title": "Micrometer Observation",
+          "url": "https://docs.micrometer.io/micrometer/reference/observation.html",
+          "version": "1.17.1 (docs 1.17)",
+          "pinned": false,
+          "purpose": "Micrometer Observation."
+        },
+        {
+          "id": "observability-micrometer-tracing-reference",
+          "title": "Micrometer Tracing reference",
+          "url": "https://docs.micrometer.io/tracing/reference/1.7/index.html",
+          "version": "1.7.1 (docs 1.7)",
+          "pinned": true,
+          "purpose": "Micrometer Tracing reference."
+        }
+      ]
+    }
+  },
+  "legend": {
+    "context": "Context: existing parts.",
+    "dependency": "Dependency: the arrow points from the dependent to its dependency.",
+    "failure": "Failure: what breaks (red, short dash, marked ✕).",
+    "optional": "Optional: an optional or later step (dashed).",
+    "recommended": "Recommended: what the guide recommends, or what changed."
+  }
+}

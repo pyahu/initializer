@@ -1,0 +1,374 @@
+---
+title: Observability
+description: Traces, metrics and logs over OTLP with Spring Boot 4.1, correlated by one trace ID.
+tableOfContents: { maxHeadingLevel: 2 }
+guide:
+  id: observability
+  prefix: OBS
+  state: draft
+  baseline: v0.1-b1
+  components: [spring-boot, micrometer, micrometer-tracing, opentelemetry-java, opentelemetry-logback-appender, otel-lgtm-image]
+  verification: null
+  questions:
+    - id: OBS-Q1
+      text: Boot's OpenTelemetry starter or the Java agent?
+      answeredIn: obs-starter-not-agent
+    - id: OBS-Q2
+      text: Which Boot 4.1 properties send traces, metrics, and logs over OTLP, and what moved from 3.x?
+      answeredIn: obs-otlp-config
+    - id: OBS-Q3
+      text: How do logs reach OTLP with the trace ID, and why does Boot not do it alone?
+      answeredIn: obs-logs-otlp
+    - id: OBS-Q4
+      text: Where and how much to sample?
+      answeredIn: obs-sampling
+    - id: OBS-Q5
+      text: "What makes a metric useful and cheap: unit, histograms, SLO buckets, cardinality?"
+      answeredIn: obs-metric-shape
+    - id: OBS-Q6
+      text: Why a collector between the app and the backends, and when to skip it?
+      answeredIn: obs-collector
+    - id: OBS-Q7
+      text: How do I go from a latency spike to the trace to its log lines?
+      answeredIn: obs-correlation
+    - id: OBS-Q8
+      text: What does Actuator expose, and on which port?
+      answeredIn: obs-actuator
+  sources:
+    - title: "05 · Observability with OpenTelemetry and the Grafana LGTM stack"
+      origin: spring-boot-production-guides/05-observability-opentelemetry-grafana-lgtm.md
+      revision: sha256:65f809ccd122053638f3bb14e6c790e2650bc44e5ead455667ab4a76e626591f
+      date: "2026-10-04"
+      author: Terson Rigaud
+      license: CC BY 4.0
+---
+import GuideStatus from '../../../components/GuideStatus.astro';
+import Evidence from '../../../components/Evidence.astro';
+import Recipe from '../../../components/Recipe.astro';
+import Checklist from '../../../components/Checklist.astro';
+import GuideReferences from '../../../components/GuideReferences.astro';
+import DiagramLegend from '../../../components/DiagramLegend.astro';
+import OtlpFlowDiagram from '../../../components/diagrams/OtlpFlowDiagram.astro';
+
+<GuideStatus guide="observability" />
+
+## Decision summary
+
+A customer says checkout is slow. Without correlated telemetry you open three tools: a latency graph with no
+route, logs with no request ID, and no trace, because Boot samples 10% by default and the one you need was
+dropped. This guide builds one pipeline in which every span, metric series, and log line carries the same service
+identity, and a latency spike leads to its trace and then to that request's log lines.
+
+The choices:
+
+- `spring-boot-starter-opentelemetry`, OTLP/HTTP for all three signals, and no Java agent.
+- The OTLP endpoint from `OTEL_EXPORTER_OTLP_ENDPOINT`, which Boot 4.1 maps to its own properties.
+- The OpenTelemetry Logback appender, installed by a bean, so log records carry the trace ID.
+- Parent-based sampling in the app; tail sampling, PII scrubbing and retries in a collector.
+- Metrics in seconds with histogram buckets, SLO buckets, and bounded tags.
+- Actuator on its own port, exposing only what probes and humans need.
+
+When they are wrong: many existing services that nobody will touch (the agent), or a scrape-based Prometheus
+setup that already works (keep it, and read the trade-offs before mixing).
+
+<OtlpFlowDiagram />
+<DiagramLegend items={['recommended', 'context', 'optional']} />
+
+Copy the tested files from the [recipes](#recipes); review a service against the [checklist](#checklist).
+
+<a id="obs-starter-not-agent"></a>
+
+## Use Boot's OpenTelemetry starter, not the agent
+
+### Problem
+
+Teams attach the OpenTelemetry Java agent and keep `spring-boot-starter-opentelemetry` on the classpath. The agent
+instruments Spring MVC and the HTTP clients, and Micrometer creates its own spans through Boot's SDK: two server
+spans per request, possibly in two traces, double the span volume, and two sets of HTTP metrics with different
+names.
+
+### Solution
+
+Use `spring-boot-starter-opentelemetry`. It brings Micrometer Observation, Micrometer Tracing over the
+OpenTelemetry SDK, and the Micrometer OTLP registry, all with versions from the Boot BOM. One Observation yields a
+span and a timer with the same tags. Check that no base image or platform injects `-javaagent` through
+`JAVA_TOOL_OPTIONS`.
+
+### Use cases
+
+New Boot 4 services and teams that own their code. It also works with native images, where the agent cannot.
+
+### Trade-offs
+
+Boot's HTTP spans use Spring's conventions (`uri`, `method`, `status`), not the OpenTelemetry semantic convention
+names. JDBC spans need datasource-micrometer, the log bridge is manual (next cards), and libraries without
+Observation support produce no spans. The agent is the better choice for a zero-code rollout over many existing
+services; then remove the starter so one owner handles each signal.
+
+### Evidence
+
+<Evidence card="obs-starter-not-agent" />
+
+<a id="obs-otlp-config"></a>
+
+## Configure OTLP the Boot 4.1 way
+
+### Problem
+
+Advice written for Boot 3 uses `management.otlp.tracing.endpoint` and `management.otlp.logging.endpoint`. In Boot
+4 those names no longer bind, so the app silently exports nothing.
+
+### Solution
+
+In Kubernetes, set the standard `OTEL_EXPORTER_OTLP_ENDPOINT`. Boot 4.1 maps it at startup and appends
+`/v1/traces`, `/v1/metrics` and `/v1/logs` per signal; mapped values take precedence over `application.yaml`.
+Name the service with `spring.application.name`, and add `service.version` and `deployment.environment.name` as
+resource attributes.
+
+| Boot 3.x | Boot 4.x |
+| -------- | -------- |
+| `management.otlp.tracing.endpoint` | `management.opentelemetry.tracing.export.otlp.endpoint` |
+| `management.otlp.logging.endpoint` | `management.opentelemetry.logging.export.otlp.endpoint` |
+| `management.otlp.tracing.export.enabled` | `management.tracing.export.otlp.enabled` |
+| `management.tracing.enabled` | `management.tracing.export.enabled` |
+
+Metrics keep the `management.otlp.metrics.export.*` prefix.
+
+### Use cases
+
+Every environment. The same image runs locally against otel-lgtm and in the cluster against a collector; only the
+environment variable changes.
+
+### Trade-offs
+
+Environment variables win over the file, which surprises people debugging `application.yaml`. That precedence is
+what lets one image serve every environment.
+
+### Evidence
+
+<Evidence card="obs-otlp-config" />
+
+<a id="obs-logs-otlp"></a>
+
+## Install the Logback appender so logs carry the trace
+
+### Problem
+
+Boot configures the OpenTelemetry log exporter, but nothing feeds it: Boot does not bridge Logback to
+OpenTelemetry. Logs either stay on stdout without a trace ID in the backend, or never leave the pod.
+
+### Solution
+
+Add `opentelemetry-logback-appender-1.0`, at the release built on the SDK Boot manages (2.28.1-alpha for SDK
+1.62.0). Reference it in `logback-spring.xml` next to Boot's structured console appender, and install it with an
+`InitializingBean` that calls `OpenTelemetryAppender.install(openTelemetry)`. Records logged before the bean runs
+are dropped. Keep `trace_id` out of Loki's index labels: it travels as structured metadata.
+
+### Use cases
+
+Services that push all three signals over OTLP. The alternative is ECS JSON on stdout collected by an agent on
+the node; choose one, never both, or every line arrives twice.
+
+### Trade-offs
+
+The appender artifact is versioned outside the Boot BOM and is marked alpha, so its version must move with Boot's
+OpenTelemetry SDK. Startup log lines before the install are only on stdout.
+
+### Evidence
+
+<Evidence card="obs-logs-otlp" />
+
+<a id="obs-sampling"></a>
+
+## Sample parent-based in the app, tail-sample in the collector
+
+### Problem
+
+Boot samples 10% of traces by default. The error you need is gone, and exemplars and log links point at traces
+that were never stored. A ratio-only sampler also breaks traces that an upstream service decided to keep.
+
+### Solution
+
+Keep Boot's parent-based sampler, so a sampled parent is always honoured. Choose the ratio for new traces
+deliberately with `management.tracing.sampling.probability`. With a collector that tail-samples (keeps errors and
+slow traces, plus a baseline), set the ratio to 1.0 and let the collector decide.
+
+### Use cases
+
+Ratio 1.0 plus tail sampling for services with a collector gateway. A ratio below 1.0 for very high request rates,
+accepting that dropped errors are gone for good.
+
+### Trade-offs
+
+Head sampling at 1.0 sends every span to the gateway, which costs CPU, network, and gateway memory. Tail sampling
+needs every span of a trace on one collector replica, so several replicas need a load-balancing tier routed by
+trace ID.
+
+### Evidence
+
+<Evidence card="obs-sampling" />
+
+<a id="obs-metric-shape"></a>
+
+## Shape metrics: seconds, buckets, SLOs, bounded tags
+
+### Problem
+
+Metrics exported in milliseconds break Prometheus conventions and dashboards. Client-side percentiles cannot be
+aggregated across pods, so the p99 of three replicas is wrong. A tag with unbounded values, such as a raw URL,
+explodes the series count and the bill.
+
+### Solution
+
+Set `management.otlp.metrics.export.base-time-unit: seconds`. Enable histogram buckets for
+`http.server.requests` and `http.client.requests`, and add explicit SLO buckets for the thresholds your SLIs use.
+Keep tag values bounded: HTTP clients must use URI templates, and only auto-configured client builders are
+instrumented.
+
+### Use cases
+
+Every HTTP service. SLO buckets matter as soon as an alert computes "share of requests faster than 500 ms".
+
+### Trade-offs
+
+Buckets cost series: about 55 per timer per tag combination in the source guide's measurement. Native histograms
+cut that, but need support along the whole path; verify it before switching.
+
+### Evidence
+
+<Evidence card="obs-metric-shape" />
+
+<a id="obs-collector"></a>
+
+## Put a collector between the app and the backends
+
+### Problem
+
+Exporting from the app straight to each backend works until a backend is down, a field needs scrubbing, or the
+backend changes. Then every concern lives in every service, in Java, and each change needs a redeploy.
+
+### Solution
+
+Send OTLP to a collector gateway, such as Grafana Alloy or the OpenTelemetry Collector. Put a memory limiter
+first, then Kubernetes metadata, PII scrubbing, tail sampling, batching, and retries, and fan out to the backends.
+Apps never hold backend credentials. Locally, the `grafana/otel-lgtm` image includes a collector and all three
+backends in one container, for development and tests only.
+
+### Use cases
+
+Any cluster with more than one service. Skip the gateway only for a local loop or a single service where losing
+telemetry during a backend outage is acceptable.
+
+### Trade-offs
+
+One more component to run and size. A single gateway replica is a single point of failure, and tail sampling at
+scale needs two tiers.
+
+### Evidence
+
+<Evidence card="obs-collector" />
+
+<a id="obs-correlation"></a>
+
+## Correlate metric, trace, and log with one trace ID
+
+### Problem
+
+A latency spike on a dashboard says something is slow, not what. Without a link to a trace, and from the trace to
+its log lines, an engineer greps three tools by timestamp.
+
+### Solution
+
+Boot 4.1 attaches OTLP exemplars to Micrometer histograms, so a latency bucket carries the trace ID of a request
+in it. Spans carry the same ID, and log records carry it as `trace_id` once the appender is installed. Link the
+data sources in Grafana: exemplars to the trace backend, traces to their logs and metrics, and a derived field on
+`trace_id` from logs back to traces.
+
+### Use cases
+
+Every service, the moment someone has to answer "why was this request slow".
+
+### Trade-offs
+
+Exemplars point only at traces that were kept, which is another reason for the sampling card. Data source links
+are Grafana configuration, so they have to be provisioned with the stack.
+
+### Evidence
+
+<Evidence card="obs-correlation" />
+
+<a id="obs-actuator"></a>
+
+## Keep Actuator on its own port
+
+### Problem
+
+Actuator on the public port exposes health details, and an endpoint like `env` or `heapdump` turns into an
+incident. Probes that only check `/actuator/health` on a separate port miss a wedged main connector.
+
+### Solution
+
+`management.server.port: 8081`, exposure limited to `health,info` (plus `prometheus` only when something
+scrapes it), health details hidden in production. Set
+`management.endpoint.health.probes.add-additional-paths: true` so `/livez` and `/readyz` are also served on the
+main port, where the kubelet probes them. With metrics pushed over OTLP, nothing outside the pod needs 8081, so no
+NetworkPolicy rule admits it.
+
+### Use cases
+
+Every service. With Spring Security, give the management endpoints their own filter chain: health open, the rest
+authenticated.
+
+### Trade-offs
+
+Debugging needs a port-forward to 8081 instead of a URL. That is the point.
+
+### Evidence
+
+<Evidence card="obs-actuator" />
+
+## Recipes
+
+### Starter and log bridge dependencies
+
+<Recipe id="obs-dependencies" path="fixtures/single-hexagonal/build.gradle.kts" start="implementation(libs.spring.boot.starter.webmvc)" end="implementation(libs.opentelemetry.logback.appender)" lang="kotlin" />
+
+**Expected:** `./gradlew dependencies --configuration runtimeClasspath` lists `opentelemetry-api` 1.62.0 and
+`opentelemetry-logback-appender-1.0` 2.28.1-alpha, and the container command line has no `-javaagent`.
+
+**If it fails:**
+
+- Two OpenTelemetry SDK versions on the classpath: the appender release was built on another SDK. Pick the release
+  whose BOM imports the SDK Boot manages.
+
+### Observability settings
+
+<Recipe id="obs-application-yaml" path="fixtures/single-hexagonal/src/main/resources/application.yaml" start="management:" end="http.server.requests: true" lang="yaml" />
+
+**Expected:** with `OTEL_EXPORTER_OTLP_ENDPOINT` set, a request produces a trace in the backend, a
+`http_server_requests_seconds_count` series with `service_name`, and log lines with its `trace_id`.
+
+**If it fails:**
+
+- No telemetry at all: a Boot 3 property name. Use the 4.x names in the table above.
+- Metrics in milliseconds: `base-time-unit` is missing.
+
+### Installing the Logback appender
+
+<Recipe id="obs-appender-bean" path="fixtures/single-hexagonal/src/main/java/io/pyahu/fixture/hexagonal/config/OpenTelemetryLoggingConfig.java" start="@Bean" end="}" lang="java" />
+
+**Expected:** a log line written while handling a request appears in Loki with the request's `trace_id` as
+structured metadata.
+
+**If it fails:**
+
+- Logs reach stdout but not the backend: `logback-spring.xml` lacks the `OTEL` appender reference, or the bean is
+  missing.
+
+## Checklist
+
+<Checklist guide="observability" />
+
+## References
+
+<GuideReferences guide="observability" />

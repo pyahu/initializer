@@ -1,0 +1,42 @@
+# Stage 1 of the single-hexagonal fixture.
+spring:
+  application:
+    name: single-hexagonal
+  threads:
+    virtual:
+      enabled: true
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+logging:
+  structured:
+    format:
+      console: ecs
+
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        add-additional-paths: true
+  opentelemetry:
+    resource-attributes:
+      service.version: ${APP_VERSION:dev}
+      deployment.environment.name: ${DEPLOYMENT_ENVIRONMENT:local}
+  otlp:
+    metrics:
+      export:
+        base-time-unit: seconds
+        step: 30s
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLING_PROBABILITY:0.1}
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true

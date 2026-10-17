@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://initializer.pyahu.io/schemas/invalidations.schema.json",
+  "title": "Known invalidations",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "guides", "components", "reason", "opened", "closed"],
+    "properties": {
+      "id": {"type": "string", "pattern": "^inv-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$"},
+      "guides": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/guideId"}},
+      "components": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/componentKey"}},
+      "reason": {"type": "string", "minLength": 1},
+      "opened": {"$ref": "common.schema.json#/$defs/date"},
+      "closed": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/date"}]}
+    }
+  }
+}

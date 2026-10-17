@@ -1,0 +1,7 @@
+# npm audit exceptions for guides/ (high and critical only). Same rules as link exceptions:
+# a reason, and an expiry at most 30 days after the record was added.
+- advisory: GHSA-vfj7-8cjw-p6xm
+  package: braces
+  reason: "braces 3.0.3, the latest release, has no fix (advisory of 2026-09-18). It reaches the site only through micromatch in starlight-llms-txt at build time, where every glob pattern comes from our own astro.config.mjs, never from user input; the built site is static."
+  added: "2026-10-17"
+  expires: "2026-11-16"

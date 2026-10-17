@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://initializer.pyahu.io/schemas/checklist.schema.json",
+  "title": "Checklist records",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "guide", "card", "type", "text", "claim", "tests", "appliesWhen"],
+    "properties": {
+      "id": {"$ref": "common.schema.json#/$defs/checklistId"},
+      "guide": {"$ref": "common.schema.json#/$defs/guideId"},
+      "card": {"$ref": "common.schema.json#/$defs/cardId"},
+      "type": {"enum": ["generated-config", "verified-behaviour", "deployment-prerequisite", "operator-task"]},
+      "text": {"type": "string", "minLength": 1},
+      "claim": {"enum": ["documented", "enforced"]},
+      "tests": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/testRef"}, "uniqueItems": true},
+      "appliesWhen": {"$ref": "common.schema.json#/$defs/filter"}
+    },
+    "if": {"properties": {"claim": {"const": "enforced"}}},
+    "then": {"properties": {"tests": {"minItems": 1}}}
+  }
+}

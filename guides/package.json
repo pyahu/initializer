@@ -1,0 +1,26 @@
+{
+  "name": "@pyahu/initializer-guides",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "toolchain": "test \"$(node --version)\" = v24.22.0 && test \"$(npm --version)\" = 11.19.1",
+    "dev": "astro dev",
+    "check": "astro check",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@astrojs/starlight": "0.42.0",
+    "@fontsource-variable/space-grotesk": "5.3.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "astro": "7.3.2",
+    "starlight-llms-txt": "0.12.0",
+    "typescript": "6.0.3",
+    "wrangler": "4.151.1"
+  }
+}

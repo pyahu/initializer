@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://initializer.pyahu.io/schemas/guide-frontmatter.schema.json",
+  "title": "The guide block of a guide page's frontmatter",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "prefix", "state", "baseline", "components", "verification", "questions"],
+  "properties": {
+    "id": {"$ref": "common.schema.json#/$defs/guideId"},
+    "prefix": {"type": "string", "pattern": "^[A-Z]{2,5}$"},
+    "state": {"enum": ["draft", "released", "explanatory"]},
+    "baseline": {"$ref": "common.schema.json#/$defs/revisionId"},
+    "components": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/componentKey"}, "uniqueItems": true},
+    "verification": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["run", "commit", "date", "baseline"],
+          "properties": {
+            "run": {"type": "string", "pattern": "^https://github\\.com/pyahu/initializer/actions/runs/[0-9]+/attempts/[0-9]+$"},
+            "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+            "date": {"$ref": "common.schema.json#/$defs/date"},
+            "baseline": {"$ref": "common.schema.json#/$defs/revisionId"}
+          }
+        }
+      ]
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "text", "answeredIn"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Z]{2,5}-Q[0-9]+$"},
+          "text": {"type": "string", "minLength": 1},
+          "answeredIn": {"$ref": "common.schema.json#/$defs/cardId"}
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "origin", "revision", "date", "author", "license"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "origin": {"type": "string", "minLength": 1},
+          "revision": {"type": "string", "pattern": "^(sha256:[0-9a-f]{64}|[0-9a-f]{40})$"},
+          "date": {"$ref": "common.schema.json#/$defs/date"},
+          "author": {"type": "string", "minLength": 1},
+          "license": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

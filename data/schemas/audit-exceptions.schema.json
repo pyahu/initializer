@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://initializer.pyahu.io/schemas/audit-exceptions.schema.json",
+  "title": "Expiring npm audit exceptions for the site",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["advisory", "package", "reason", "added", "expires"],
+    "properties": {
+      "advisory": {"type": "string", "pattern": "^GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}$"},
+      "package": {"type": "string", "minLength": 1},
+      "reason": {"type": "string", "minLength": 1},
+      "added": {"$ref": "common.schema.json#/$defs/date"},
+      "expires": {"$ref": "common.schema.json#/$defs/date"}
+    }
+  }
+}

@@ -1,0 +1,57 @@
+# External links and BOM-managed pins, online.
+name: Links
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - data/**
+      - guides/**
+      - cmd/**
+      - internal/**
+      - .github/workflows/links.yml
+  pull_request:
+    paths:
+      - data/**
+      - guides/**
+      - cmd/**
+      - internal/**
+      - .github/workflows/links.yml
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GOTOOLCHAIN: go1.27.2
+
+jobs:
+  links:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: 1.27.2
+          cache: true
+      - name: Go toolchain
+        run: test "$(go version | cut -d' ' -f3)" = go1.27.2
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: guides/.node-version
+          cache: npm
+          cache-dependency-path: guides/package-lock.json
+      - name: Build the site
+        working-directory: guides
+        run: |
+          npm run toolchain
+          npm ci
+          npm run build
+          test -s dist/index.html
+      - name: External links
+        run: go run ./cmd/guidekit links --dist guides/dist
+      - name: BOM-managed pins
+        run: go run ./cmd/guidekit boms

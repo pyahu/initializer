@@ -1,0 +1,186 @@
+# Checklist records. See CONTRIBUTING.md, "Checklist". Ported from the source guides'
+# checklists; every item is documented, none is enforced by a generated test yet.
+- id: JVM-01
+  guide: jvm-in-containers
+  card: jvm-heap-sizing
+  type: generated-config
+  text: Memory request equals memory limit.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: JVM-02
+  guide: jvm-in-containers
+  card: jvm-heap-sizing
+  type: generated-config
+  text: MaxRAMPercentage set from the table, InitialRAMPercentage equal to it.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: JVM-03
+  guide: jvm-in-containers
+  card: jvm-gc-explicit
+  type: generated-config
+  text: GC flag explicit in the ENTRYPOINT (-XX:+UseG1GC unless ZGC or Parallel is documented).
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: JVM-04
+  guide: jvm-in-containers
+  card: jvm-cpu-count
+  type: generated-config
+  text: No CPU limit and ActiveProcessorCount equal to the CPU request rounded up, at least 2; with a CPU limit, no ActiveProcessorCount.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: JVM-05
+  guide: jvm-in-containers
+  card: jvm-heap-sizing
+  type: generated-config
+  text: ExitOnOutOfMemoryError set; heap dumps only to a volume larger than the heap.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: JVM-06
+  guide: jvm-in-containers
+  card: jvm-flag-placement
+  type: generated-config
+  text: java.io.tmpdir and ErrorFile point at the writable /tmp volume, with ErrorFile on the ENTRYPOINT.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: JVM-07
+  guide: jvm-in-containers
+  card: jvm-aot-cache
+  type: generated-config
+  text: AOT cache built in the image from the extracted layout, without --launcher, with remote calls disabled in the training run.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: JVM-08
+  guide: jvm-in-containers
+  card: jvm-aot-cache
+  type: verified-behaviour
+  text: CI fails the build if the cache is rejected (-XX:AOTMode=on check).
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: JVM-09
+  guide: jvm-in-containers
+  card: jvm-aot-cache
+  type: generated-config
+  text: Flags that affect the cache (GC, compact headers) are identical in training and production.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: JVM-10
+  guide: jvm-in-containers
+  card: jvm-startup-probe
+  type: deployment-prerequisite
+  text: startupProbe budget about three times measured p99 startup on the smallest node type, measured with the AOT cache.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: JVM-11
+  guide: jvm-in-containers
+  card: jvm-heap-sizing
+  type: operator-task
+  text: Confirm the heap percentage with Native Memory Tracking under load after each JDK or Boot upgrade.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: OBS-01
+  guide: observability
+  card: obs-starter-not-agent
+  type: generated-config
+  text: spring-boot-starter-opentelemetry on the classpath; no -javaagent and no agent injected through JAVA_TOOL_OPTIONS.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: OBS-02
+  guide: observability
+  card: obs-otlp-config
+  type: generated-config
+  text: spring.application.name, service.version and deployment.environment.name set.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: OBS-03
+  guide: observability
+  card: obs-otlp-config
+  type: deployment-prerequisite
+  text: OTEL_EXPORTER_OTLP_ENDPOINT points at the collector in each environment.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: OBS-04
+  guide: observability
+  card: obs-sampling
+  type: generated-config
+  text: management.tracing.sampling.probability chosen deliberately (1.0 with tail sampling).
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: OBS-05
+  guide: observability
+  card: obs-metric-shape
+  type: generated-config
+  text: management.otlp.metrics.export.base-time-unit is seconds.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: OBS-06
+  guide: observability
+  card: obs-metric-shape
+  type: generated-config
+  text: Histograms on http.server.requests and http.client.requests; explicit SLO buckets for SLI thresholds.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: OBS-07
+  guide: observability
+  card: obs-metric-shape
+  type: verified-behaviour
+  text: No unbounded tag values; HTTP clients use URI templates and auto-configured builders only.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: OBS-08
+  guide: observability
+  card: obs-logs-otlp
+  type: generated-config
+  text: Logback OpenTelemetry appender installed, or stdout JSON collected by an agent, not both.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: OBS-09
+  guide: observability
+  card: obs-collector
+  type: deployment-prerequisite
+  text: A collector gateway with memory limiter first, Kubernetes metadata, PII transform, tail sampling, batch and retry.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: OBS-10
+  guide: observability
+  card: obs-correlation
+  type: deployment-prerequisite
+  text: Grafana data sources linked from exemplars to traces, traces to logs and metrics, and logs back to traces.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: OBS-11
+  guide: observability
+  card: obs-actuator
+  type: generated-config
+  text: Actuator on port 8081, exposure limited to health and info (plus prometheus when scraped), health details hidden.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: OBS-12
+  guide: observability
+  card: obs-actuator
+  type: deployment-prerequisite
+  text: No NetworkPolicy rule admits port 8081.
+  claim: documented
+  tests: []
+  appliesWhen: {}

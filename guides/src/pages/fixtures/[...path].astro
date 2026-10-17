@@ -1,0 +1,18 @@
+---
+// Every fixture file a recipe references, published complete next to the guides,
+// so the excerpt, the full file, and the llms exports stay on one site.
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import data from "../../generated/fixture-files.json";
+
+export function getStaticPaths() {
+  return data.files.map((f) => ({ params: { path: f.path.replace(/^fixtures\//, "") }, props: f }));
+}
+const f = Astro.props as (typeof data.files)[number];
+const content = readFileSync(resolve(process.cwd(), "..", f.path), "utf8");
+---
+<StarlightPage frontmatter={{ title: f.path, description: `Fixture file from ${f.fixture}, baseline ${f.baseline}.`, tableOfContents: false }}>
+  <p>From the <code>{f.fixture}</code> fixture, baseline {f.baseline}. It builds and runs in CI on every change. sha256 <code>{f.sha256}</code>. <a href={`https://github.com/pyahu/initializer/blob/main/${f.path}`}>View on GitHub</a>.</p>
+  <pre class="fixture-file"><code>{content}</code></pre>
+</StarlightPage>

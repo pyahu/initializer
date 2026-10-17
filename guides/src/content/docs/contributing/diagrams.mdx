@@ -1,0 +1,66 @@
+---
+title: Diagram kit
+description: How diagrams are drawn in the guides, with one complete example of each type.
+---
+import DiagramLegend from '../../../components/DiagramLegend.astro';
+import OtlpFlowDiagram from '../../../components/diagrams/OtlpFlowDiagram.astro';
+import ContainerMemoryDiagram from '../../../components/diagrams/ContainerMemoryDiagram.astro';
+import HexagonalGraphDiagram from '../../../components/diagrams/HexagonalGraphDiagram.astro';
+import ImageBuildTimelineDiagram from '../../../components/diagrams/ImageBuildTimelineDiagram.astro';
+import PodTopologyDiagram from '../../../components/diagrams/PodTopologyDiagram.astro';
+
+Every guide has a diagram of its core mechanism. Diagrams are hand-positioned SVG, one Astro component per
+diagram in `src/components/diagrams/`, never a generated layout. Positioning by hand is what makes them readable.
+
+## The frame
+
+Wrap the SVG in `Diagram` with three props:
+
+| Prop | Rule |
+| ---- | ---- |
+| `id` | Unique in the site; every `id` inside the SVG starts with it |
+| `caption` | One sentence, shown under the figure |
+| `description` | The whole diagram in words: every box, arrow, stage, and notation |
+
+The description is shown under "Diagram in words", read by screen readers, and copied into the llms exports.
+Clicking the diagram, or pressing Enter or Space on it, opens an enlarged copy; Escape closes it.
+
+## Notation
+
+| Class | Meaning |
+| ----- | ------- |
+| `dg-box dg-emphasis`, `dg-line dg-accent` | What the guide recommends, or what changed |
+| `dg-box`, `dg-line` | Context: parts that already exist |
+| `dg-line dg-dash` | Optional, or a later step |
+| `dg-box dg-fail`, `dg-line dg-fail` | What breaks; the label also carries a cross |
+| `dg-frame`, `dg-group` | A group, or a numbered stage such as `1 · REQUEST` |
+| `dg-title`, `dg-detail`, `dg-note` | Box title, box line, free note |
+
+Colour is never the only signal: emphasis is heavier, optional is dashed, failure is dotted and marked. Put a
+`DiagramLegend` under any diagram that uses more than one notation. Arrows in dependency graphs point from the
+dependent to its dependency.
+
+## Flow
+
+<OtlpFlowDiagram />
+<DiagramLegend items={['recommended', 'context', 'optional']} />
+
+## Before and after
+
+<ContainerMemoryDiagram />
+<DiagramLegend items={['recommended', 'context', 'failure']} />
+
+## Dependency graph
+
+<HexagonalGraphDiagram />
+<DiagramLegend items={['recommended', 'context', 'dependency']} />
+
+## Timeline
+
+<ImageBuildTimelineDiagram />
+<DiagramLegend items={['recommended', 'context', 'failure']} />
+
+## Topology
+
+<PodTopologyDiagram />
+<DiagramLegend items={['recommended', 'context', 'optional']} />

@@ -1,0 +1,52 @@
+---
+// Timeline: the image build with the JDK 25 AOT cache, and the two CI checks.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="jvm-image-build"
+  caption="Image build with the AOT cache: train in the runtime stage, then prove the cache is used."
+  description="Five numbered steps on a line from left to right. 1, compile: the Temurin JDK image builds the Boot jar. 2, extract: jarmode tools extract with layers and without the launcher, so the application jar and its libraries sit on a plain class path. 3, train, highlighted: in the runtime stage, on the same JRE build that will run in production, java with AOTCacheOutput and spring.context.exit=onRefresh creates the cache after bean creation. 4, check, highlighted: CI runs the image with AOTMode=on, which exits 0 only if the cache is usable, and starts the unchanged entrypoint with Xlog:aot to see the cache opened. 5, run: the entrypoint passes the same GC flag and AOTCache. Below, the failure path: a different JDK build, GC, or class path makes the JVM reject the cache; in the default auto mode it starts silently without it.">
+  <svg viewBox="0 0 1000 330">
+    <defs>
+      <marker id="jvm-image-build-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="jvm-image-build-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-fail" /></marker>
+    </defs>
+    <text x="20" y="34" class="dg-group">1 · COMPILE</text>
+    <text x="216" y="34" class="dg-group">2 · EXTRACT</text>
+    <text x="412" y="34" class="dg-group">3 · TRAIN</text>
+    <text x="608" y="34" class="dg-group">4 · CHECK</text>
+    <text x="804" y="34" class="dg-group">5 · RUN</text>
+    <rect x="20" y="50" width="176" height="120" rx="6" class="dg-box" />
+    <text x="34" y="78" class="dg-title">bootJar</text>
+    <text x="34" y="102" class="dg-detail">JDK image</text>
+    <text x="34" y="122" class="dg-detail">by digest</text>
+    <rect x="216" y="50" width="176" height="120" rx="6" class="dg-box" />
+    <text x="230" y="78" class="dg-title">Layers</text>
+    <text x="230" y="102" class="dg-detail">jarmode=tools</text>
+    <text x="230" y="122" class="dg-detail">--layers, no</text>
+    <text x="230" y="142" class="dg-detail">--launcher</text>
+    <rect x="412" y="50" width="176" height="120" rx="6" class="dg-box dg-emphasis" />
+    <text x="426" y="78" class="dg-title">Training run</text>
+    <text x="426" y="102" class="dg-detail">AOTCacheOutput</text>
+    <text x="426" y="122" class="dg-detail">exit=onRefresh</text>
+    <text x="426" y="142" class="dg-detail">same JRE as prod</text>
+    <rect x="608" y="50" width="176" height="120" rx="6" class="dg-box dg-emphasis" />
+    <text x="622" y="78" class="dg-title">CI proves it</text>
+    <text x="622" y="102" class="dg-detail">AOTMode=on: exit 0</text>
+    <text x="622" y="122" class="dg-detail">Xlog:aot: cache</text>
+    <text x="622" y="142" class="dg-detail">opened on launch</text>
+    <rect x="804" y="50" width="176" height="120" rx="6" class="dg-box" />
+    <text x="818" y="78" class="dg-title">ENTRYPOINT</text>
+    <text x="818" y="102" class="dg-detail">-XX:+UseG1GC</text>
+    <text x="818" y="122" class="dg-detail">-XX:AOTCache</text>
+    <path d="M196 110 H214" class="dg-line" marker-end="url(#jvm-image-build-arrow)" />
+    <path d="M392 110 H410" class="dg-line" marker-end="url(#jvm-image-build-arrow)" />
+    <path d="M588 110 H606" class="dg-line" marker-end="url(#jvm-image-build-arrow)" />
+    <path d="M784 110 H802" class="dg-line" marker-end="url(#jvm-image-build-arrow)" />
+    <path d="M892 170 V230 H700" class="dg-line dg-fail" marker-end="url(#jvm-image-build-fail)" />
+    <rect x="412" y="200" width="286" height="106" rx="6" class="dg-box dg-fail" />
+    <text x="426" y="228" class="dg-title">✕ Cache rejected</text>
+    <text x="426" y="252" class="dg-detail">other JDK build, GC, or class path</text>
+    <text x="426" y="272" class="dg-detail">auto mode: starts without it,</text>
+    <text x="426" y="292" class="dg-detail">silently slower</text>
+  </svg>
+</Diagram>

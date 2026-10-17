@@ -1,0 +1,161 @@
+# Evidence records for the observability guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-obs-starter-not-agent-1
+  card: obs-starter-not-agent
+  claim: "The stage 1 build succeeds with spring-boot-starter-opentelemetry and the OpenTelemetry Logback appender, no Java agent, together with Error Prone, NullAway, Spotless, CycloneDX, Spring Modulith and jMolecules."
+  badge: compiled
+  capabilities: [compile]
+  components: [java, temurin-jdk-image, gradle, spring-boot, spring-framework, jspecify, error-prone, errorprone-gradle-plugin, nullaway, spotless-gradle-plugin, palantir-java-format, cyclonedx-gradle-plugin, spring-modulith, jmolecules-bom, opentelemetry-logback-appender]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ApplicationTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "Compiling proves the pins work together, not their runtime behaviour; the other cards prove that."
+- id: ev-obs-otlp-config-1
+  card: obs-otlp-config
+  claim: "With only OTEL_EXPORTER_OTLP_ENDPOINT set, one request's trace, metric and log reach the backend."
+  badge: reproduced
+  capabilities: [runtime, test]
+  components: [spring-boot, spring-framework, micrometer, micrometer-tracing, opentelemetry-java, opentelemetry-logback-appender, otel-lgtm-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/observability::TestSignalsArrive
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestSignalsArrive$' ./acceptance/observability"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "Tempo trace 415fb63f01a593e5177c27a22b7659e6 has server span \"http get /ping\" with uri /ping; Prometheus sum(http_server_requests_seconds_count{service_name=\"single-hexagonal\",uri=\"/ping\"}) = 1; Loki {service_name=\"single-hexagonal\"} | trace_id=\"415fb63f01a593e5177c27a22b7659e6\" returned \"ping\"; 4 more sampled parents at probability 0.1, all 5 traces in Tempo"
+  limitations: "Against grafana/otel-lgtm, not a production collector."
+- id: ev-obs-logs-otlp-1
+  card: obs-logs-otlp
+  claim: "A log line written while handling a request reaches Loki with that request's trace_id."
+  badge: reproduced
+  capabilities: [runtime, test]
+  components: [spring-boot, spring-framework, micrometer, micrometer-tracing, opentelemetry-java, opentelemetry-logback-appender, otel-lgtm-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/observability::TestLogCarriesTraceID
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestLogCarriesTraceID$' ./acceptance/observability"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "Loki {service_name=\"single-hexagonal\"} | trace_id=\"43bd1deb6fbcb58d485a55292aa464fb\" returned \"ping\""
+  limitations: "Against grafana/otel-lgtm."
+- id: ev-obs-sampling-1
+  card: obs-sampling
+  claim: "At sampling probability 0.1, five requests with sampled parents all produce stored traces, so the sampler is parent-based."
+  badge: reproduced
+  capabilities: [runtime, test]
+  components: [spring-boot, spring-framework, micrometer, micrometer-tracing, opentelemetry-java, opentelemetry-logback-appender, otel-lgtm-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/observability::TestSignalsArrive
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestSignalsArrive$' ./acceptance/observability"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "Tempo trace 415fb63f01a593e5177c27a22b7659e6 has server span \"http get /ping\" with uri /ping; Prometheus sum(http_server_requests_seconds_count{service_name=\"single-hexagonal\",uri=\"/ping\"}) = 1; Loki {service_name=\"single-hexagonal\"} | trace_id=\"415fb63f01a593e5177c27a22b7659e6\" returned \"ping\"; 4 more sampled parents at probability 0.1, all 5 traces in Tempo"
+  limitations: "A ratio-only sampler would pass this with probability 1e-5."
+- id: ev-obs-sampling-2
+  card: obs-sampling
+  claim: "A collector's tail sampling keeps error and slow traces with a baseline of healthy ones."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "The source guide verified a policy against Alloy; this repository has no Alloy pin yet."
+  reason: "No collector gateway in the fixture yet. A later fixture with an Alloy pin and a test backend will prove it."
+- id: ev-obs-metric-shape-1
+  card: obs-metric-shape
+  claim: "With base-time-unit seconds, the request timer arrives as http_server_requests_seconds_count with service_name and uri labels."
+  badge: reproduced
+  capabilities: [runtime, test]
+  components: [spring-boot, spring-framework, micrometer, micrometer-tracing, opentelemetry-java, opentelemetry-logback-appender, otel-lgtm-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/observability::TestSignalsArrive
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestSignalsArrive$' ./acceptance/observability"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "Tempo trace 415fb63f01a593e5177c27a22b7659e6 has server span \"http get /ping\" with uri /ping; Prometheus sum(http_server_requests_seconds_count{service_name=\"single-hexagonal\",uri=\"/ping\"}) = 1; Loki {service_name=\"single-hexagonal\"} | trace_id=\"415fb63f01a593e5177c27a22b7659e6\" returned \"ping\"; 4 more sampled parents at probability 0.1, all 5 traces in Tempo"
+  limitations: "Series names in a Prometheus-compatible store; no SLO buckets are configured in the fixture yet."
+- id: ev-obs-metric-shape-2
+  card: obs-metric-shape
+  claim: "Explicit SLO buckets and bounded tags keep the series count predictable."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "The series count per timer comes from the source guide."
+  reason: "The stage 1 fixture defines no SLO buckets and has one route. A later sample service will prove it."
+- id: ev-obs-collector-1
+  card: obs-collector
+  claim: "A collector gateway batches, retries, scrubs PII and fans out without changes to the app."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the collector documentation and the source guide."
+  reason: "No collector gateway in the fixture yet."
+- id: ev-obs-correlation-1
+  card: obs-correlation
+  claim: "A latency bucket's exemplar carries the trace_id of a request in it."
+  badge: reproduced
+  capabilities: [runtime, test]
+  components: [spring-boot, spring-framework, micrometer, micrometer-tracing, opentelemetry-java, opentelemetry-logback-appender, otel-lgtm-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/observability::TestExemplarLinksTrace
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestExemplarLinksTrace$' ./acceptance/observability"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "Prometheus exemplar on http_server_requests_seconds_bucket{service_name=\"single-hexagonal\",uri=\"/ping\"} carries trace_id a87487d2e46b7ead0a4ef841e9c8087a"
+  limitations: "Against grafana/otel-lgtm with exemplar storage on."
+- id: ev-obs-correlation-2
+  card: obs-correlation
+  claim: "Grafana data source links take you from exemplar to trace to log lines in two clicks."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Grafana provisioning is configuration, not code in this repository."
+  reason: "Data source links are not provisioned or tested yet."
+- id: ev-obs-actuator-1
+  card: obs-actuator
+  claim: "/readyz answers on the main port 8080 with add-additional-paths, while Actuator itself runs on 8081."
+  badge: reproduced
+  capabilities: [runtime]
+  components: [spring-boot]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestHardenedStartup
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestHardenedStartup$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s"
+  limitations: "Checks /readyz on 8080; it does not probe that 8080 refuses /actuator."
+- id: ev-obs-actuator-2
+  card: obs-actuator
+  claim: "No NetworkPolicy rule admits port 8081, so nothing outside the pod reaches Actuator."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "A deployment prerequisite."
+  reason: "Needs a cluster with a NetworkPolicy-enforcing CNI. A cluster end-to-end test will cover it."

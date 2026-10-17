@@ -1,0 +1,30 @@
+---
+// A recipe excerpt from a fixture file, with a link to the complete published file (4.5, 4.7).
+import { Code } from "@astrojs/starlight/components";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+interface Props {
+  id: string;
+  path: string;
+  start: string;
+  end?: string;
+  lang: string;
+}
+const { id, path, start, end, lang } = Astro.props;
+// astro build runs in guides/, so the repository root is its parent.
+const lines = readFileSync(resolve(process.cwd(), "..", path), "utf8").replace(/\n$/, "").split("\n");
+const find = (prefix: string, from: number) => lines.map((l, i) => (i >= from && l.trim().startsWith(prefix) ? i : -1)).filter((i) => i >= 0);
+const s = find(start, 0);
+if (s.length !== 1) throw new Error(`Recipe ${id}: start matches ${s.length} lines`);
+let e = s[0];
+if (end) {
+  const ends = find(end, s[0] + 1);
+  if (ends.length === 0) throw new Error(`Recipe ${id}: end matches no later line`);
+  e = ends[0];
+}
+const code = lines.slice(s[0], e + 1).join("\n");
+---
+<div class="recipe" id={`recipe-${id}`}>
+  <Code code={code} lang={lang} title={path} />
+  <p class="recipe-source">Complete, tested file: <a href={`/${path}/`}>{path}</a></p>
+</div>

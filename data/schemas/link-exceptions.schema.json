@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://initializer.pyahu.io/schemas/link-exceptions.schema.json",
+  "title": "Expiring external link exceptions",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["url", "reason", "added", "expires"],
+    "properties": {
+      "url": {"type": "string", "format": "uri"},
+      "reason": {"type": "string", "minLength": 1},
+      "added": {"$ref": "common.schema.json#/$defs/date"},
+      "expires": {"$ref": "common.schema.json#/$defs/date"}
+    }
+  }
+}

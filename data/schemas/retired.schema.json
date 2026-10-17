@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://initializer.pyahu.io/schemas/retired.schema.json",
+  "title": "Retired stable IDs",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "kind", "retired", "reason"],
+    "properties": {
+      "id": {"type": "string", "minLength": 1},
+      "kind": {"enum": ["guide", "question", "card", "checklist", "evidence", "reference", "diagram"]},
+      "retired": {"$ref": "common.schema.json#/$defs/date"},
+      "reason": {"type": "string", "minLength": 1},
+      "replacedBy": {"type": "string", "minLength": 1}
+    },
+    "if": {"properties": {"kind": {"enum": ["guide", "card"]}}},
+    "then": {"required": ["replacedBy"]}
+  }
+}

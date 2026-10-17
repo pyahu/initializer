@@ -1,0 +1,228 @@
+# Evidence records for the jvm-in-containers guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-jvm-heap-sizing-1
+  card: jvm-heap-sizing
+  claim: "With -XX:MaxRAMPercentage=75 and a 1 GiB memory limit, MaxHeapSize is 805306368 bytes, 75% of the limit."
+  badge: reproduced
+  capabilities: [runtime]
+  components: [java, temurin-jre-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestHeapIsSeventyFivePercent
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestHeapIsSeventyFivePercent$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "--memory=1g -XX:MaxRAMPercentage=75: MaxHeapSize = 805306368"
+  limitations: "Flags only. Native memory under load is not measured here."
+- id: ev-jvm-heap-sizing-2
+  card: jvm-heap-sizing
+  claim: "The remaining 256 MiB of a 1 GiB pod covers metaspace, code cache, thread stacks, GC structures and buffers of a Spring Boot service under load."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "The table's starting points come from the source guide's measurements, not from a run in this repository."
+  reason: "Native Memory Tracking under load is not run yet. A cluster load test will measure it."
+- id: ev-jvm-gc-explicit-1
+  card: jvm-gc-explicit
+  claim: "With one CPU and 4 GiB and no GC flag, the JVM picks SerialGC."
+  badge: reproduced
+  capabilities: [runtime]
+  components: [java, temurin-jre-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestSerialGCOneCPU
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestSerialGCOneCPU$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "--cpus=1 --memory=4g, no GC flag: UseSerialGC = true, UseG1GC = false"
+  limitations: "Docker CPU and memory limits on one runner, not a Kubernetes node."
+- id: ev-jvm-gc-explicit-2
+  card: jvm-gc-explicit
+  claim: "With two CPUs and 1700 MiB and no GC flag, the JVM picks SerialGC."
+  badge: reproduced
+  capabilities: [runtime]
+  components: [java, temurin-jre-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestSerialGCLowMemory
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestSerialGCLowMemory$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "--cpus=2 --memory=1700m, no GC flag: UseSerialGC = true"
+  limitations: "1700 MiB and 2048 MiB bracket the threshold of about 1792 MiB; they do not locate it."
+- id: ev-jvm-gc-explicit-3
+  card: jvm-gc-explicit
+  claim: "With two CPUs and 2048 MiB and no GC flag, the JVM picks G1."
+  badge: reproduced
+  capabilities: [runtime]
+  components: [java, temurin-jre-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestG1AboveThresholds
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestG1AboveThresholds$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "--cpus=2 --memory=2048m, no GC flag: UseG1GC = true"
+  limitations: "None known."
+- id: ev-jvm-gc-explicit-4
+  card: jvm-gc-explicit
+  claim: "-XX:+UseG1GC selects G1 in both cases where the JVM would pick SerialGC."
+  badge: reproduced
+  capabilities: [runtime]
+  components: [java, temurin-jre-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestExplicitG1
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestExplicitG1$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "-XX:+UseG1GC at 1 CPU / 4 GiB and at 2 CPUs / 1700 MiB: UseG1GC = true"
+  limitations: "None known."
+- id: ev-jvm-cpu-count-1
+  card: jvm-cpu-count
+  claim: "With no CPU limit, -XX:ActiveProcessorCount=1 overrides the CPU count the JVM detects."
+  badge: reproduced
+  capabilities: [runtime]
+  components: [java, temurin-jre-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestActiveProcessorCountOverride
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestActiveProcessorCountOverride$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "no CPU limit, nproc 2; -XX:ActiveProcessorCount=1 reports Effective CPU Count: 1"
+  limitations: "Proves the override only, not the resulting pool sizes."
+- id: ev-jvm-cpu-count-2
+  card: jvm-cpu-count
+  claim: "With ActiveProcessorCount set, GC threads, JIT threads, the common pool and the virtual thread scheduler size themselves for the pod."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Pool sizes per CPU count come from the source guide's measurements."
+  reason: "The fixture proves only that the flag overrides the detected count. Thread pool sizes are not measured."
+- id: ev-jvm-gc-choice-1
+  card: jvm-gc-choice
+  claim: "G1 suits request and response services, generational ZGC sub-millisecond pause targets, and Parallel batch jobs."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "No workload comparison in this repository."
+  reason: "Reasoned from the JEPs and the HotSpot GC tuning guide. No collector comparison is run."
+- id: ev-jvm-flag-placement-1
+  card: jvm-flag-placement
+  claim: "The image starts with a read-only root filesystem, /tmp as tmpfs, as UID 10001, and with an unreachable OTLP endpoint: /readyz answers 200 within 60 s."
+  badge: reproduced
+  capabilities: [image, runtime]
+  components: [java, temurin-jre-image, spring-boot, spring-framework]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestHardenedStartup
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestHardenedStartup$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s"
+  limitations: "Docker flags stand in for the pod security context; no cluster run yet."
+- id: ev-jvm-flag-placement-2
+  card: jvm-flag-placement
+  claim: "A Deployment's JAVA_TOOL_OPTIONS replaces the image's value instead of merging, so flags placed there disappear."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Documented Kubernetes and launcher behaviour."
+  reason: "Not exercised in a cluster yet. A cluster end-to-end test will cover the Deployment."
+- id: ev-jvm-aot-cache-1
+  card: jvm-aot-cache
+  claim: "The AOT cache built in the image is usable with the image's GC and class path: -XX:AOTMode=on exits 0."
+  badge: reproduced
+  capabilities: [image]
+  components: [java, temurin-jdk-image, temurin-jre-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestAOTCacheFailFast
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestAOTCacheFailFast$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "AOTMode=on with the image's GC and class path: exit 0 (openjdk version \"25.0.4.1\" 2026-08-18 LTS)"
+  limitations: "The training run warns that a few Spring ClassFile reader classes cannot be archived; the cache is still used."
+- id: ev-jvm-aot-cache-2
+  card: jvm-aot-cache
+  claim: "The unchanged ENTRYPOINT opens the cache: with -Xlog:aot the JVM logs Opened AOT cache /app/app.aot."
+  badge: reproduced
+  capabilities: [runtime]
+  components: [java, temurin-jre-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestAOTCacheLoadedOnLaunch
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestAOTCacheLoadedOnLaunch$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "unchanged ENTRYPOINT with -Xlog:aot logs \"Opened AOT cache /app/app.aot.\""
+  limitations: "The log text was read from the first run on 25.0.4.1+1 and may change with the JDK."
+- id: ev-jvm-aot-cache-3
+  card: jvm-aot-cache
+  claim: "The AOT cache shortens startup of the stage 1 fixture on two CPUs and 1 GiB."
+  badge: measured
+  capabilities: [runtime]
+  components: [java, temurin-jre-image, spring-boot]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestAOTStartupDelta
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestAOTStartupDelta$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39055415247/attempts/1
+  commit: 91cc032efb55dc1cc050624eba1e77896f59e833
+  date: "2026-10-17"
+  result: "process running for (s), --cpus=2 --memory=1g, 10 alternating rounds. AOT off [4.64 4.79 4.82 4.54 4.64 4.63 4.45 4.56 4.57 4.52] median 4.599; AOT on [2.56 2.60 2.66 2.52 2.55 2.49 2.53 2.50 2.48 2.59] median 2.539; delta 2.060 s (1.81x)"
+  measurement:
+    samples: 20
+    statistic: "median per mode"
+    unit: "seconds (Boot's process running for)"
+    protocol: "One discarded warm-up per mode, then 10 rounds alternating -XX:AOTMode=off and the default, --cpus=2 --memory=1g."
+  limitations: "A one-endpoint service; a real service loads more classes. x64 only; arm64 is not exercised."
+- id: ev-jvm-startup-options-1
+  card: jvm-startup-options
+  claim: "Native image, CRaC and Spring AOT trade build cost and runtime constraints for startup as the table shows."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Only the AOT cache is measured in this repository."
+  reason: "Comparison from the source guide and upstream documentation. Only the AOT cache is exercised."
+- id: ev-jvm-startup-probe-1
+  card: jvm-startup-probe
+  claim: "A startupProbe budget of about three times p99 startup on the smallest node type avoids killing healthy pods."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Engineering judgment from the source guide."
+  reason: "Needs a cluster and the smallest node type. A cluster end-to-end test will measure it."

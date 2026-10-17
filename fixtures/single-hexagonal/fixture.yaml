@@ -1,0 +1,61 @@
+# Fixture manifest. See CONTRIBUTING.md, "Fixtures".
+schema: initializer.pyahu.io/fixture/v1
+name: single-hexagonal
+baseline: v0.1-b1
+stage: 1
+options:
+  apiVersion: initializer.pyahu.io/v1alpha1
+  kind: Project
+  name: single-hexagonal
+  group: io.pyahu.fixture
+  description: Hexagonal single-service fixture
+  architecture: hexagonal
+  api: [rest]
+  database: postgres
+  persistence: jdbc
+  kafka: {enabled: false, outbox: false}
+  rabbitmq: false
+  cache: false
+  auth: true
+  pyahuCli: true
+  sample: true
+exercises:
+  - java
+  - temurin-jdk-image
+  - temurin-jre-image
+  - gradle
+  - spring-boot
+  - spring-framework
+  - micrometer
+  - micrometer-tracing
+  - opentelemetry-java
+  - opentelemetry-logback-appender
+  - jspecify
+  - spring-modulith
+  - jmolecules-bom
+  - jmolecules-archunit
+  - archunit
+  - error-prone
+  - errorprone-gradle-plugin
+  - nullaway
+  - spotless-gradle-plugin
+  - palantir-java-format
+  - cyclonedx-gradle-plugin
+  - otel-lgtm-image
+requiredTests:
+  - gradle/single-hexagonal::ApplicationTest
+  - gradle/single-hexagonal::ModulithTest
+  - gradle/single-hexagonal::ArchitectureTest
+  - acceptance/jvm::TestAOTCacheFailFast
+  - acceptance/jvm::TestAOTCacheLoadedOnLaunch
+  - acceptance/jvm::TestHardenedStartup
+  - acceptance/jvm::TestSerialGCOneCPU
+  - acceptance/jvm::TestSerialGCLowMemory
+  - acceptance/jvm::TestG1AboveThresholds
+  - acceptance/jvm::TestExplicitG1
+  - acceptance/jvm::TestHeapIsSeventyFivePercent
+  - acceptance/jvm::TestActiveProcessorCountOverride
+  - acceptance/jvm::TestAOTStartupDelta
+  - acceptance/observability::TestSignalsArrive
+  - acceptance/observability::TestLogCarriesTraceID
+  - acceptance/observability::TestExemplarLinksTrace

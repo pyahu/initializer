@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://initializer.pyahu.io/schemas/common.schema.json",
+  "title": "Shared definitions",
+  "$defs": {
+    "revisionId": {"type": "string", "pattern": "^v[0-9]+\\.[0-9]+-b[0-9]+$"},
+    "componentKey": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9.]+)*$"},
+    "guideId": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
+    "cardId": {"type": "string", "pattern": "^[a-z]{2,5}-[a-z0-9]+(-[a-z0-9]+)*$"},
+    "checklistId": {"type": "string", "pattern": "^[A-Z]{2,5}-[0-9]{2}$"},
+    "evidenceId": {"type": "string", "pattern": "^ev-[a-z]{2,5}-[a-z0-9]+(-[a-z0-9]+)*-[0-9]+$"},
+    "date": {"type": "string", "format": "date"},
+    "capability": {"enum": ["compile", "test", "image", "runtime", "cluster"]},
+    "testRef": {"type": "string", "pattern": "^[A-Za-z0-9_./-]+::[A-Za-z0-9_]+$"},
+    "filter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "architecture": {"$ref": "#/$defs/strings"},
+        "api": {"$ref": "#/$defs/strings"},
+        "database": {"$ref": "#/$defs/strings"},
+        "persistence": {"$ref": "#/$defs/strings"},
+        "kafka.enabled": {"$ref": "#/$defs/bools"},
+        "kafka.outbox": {"$ref": "#/$defs/bools"},
+        "rabbitmq": {"$ref": "#/$defs/bools"},
+        "cache": {"$ref": "#/$defs/bools"},
+        "auth": {"$ref": "#/$defs/bools"},
+        "pyahuCli": {"$ref": "#/$defs/bools"},
+        "sample": {"$ref": "#/$defs/bools"}
+      }
+    },
+    "strings": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "bools": {"type": "array", "minItems": 1, "items": {"type": "boolean"}, "uniqueItems": true}
+  }
+}

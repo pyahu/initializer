@@ -1,0 +1,68 @@
+---
+// Flow: one request's three signals from the app to the backends, and the correlation path.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="obs-otlp-flow"
+  caption="One request, three signals, one trace ID: from Spring Boot over OTLP to the backends."
+  description="Five numbered stages from left to right. 1, request: a client calls the service and may send a W3C traceparent header. 2, app: Spring Boot with spring-boot-starter-opentelemetry and no Java agent; Micrometer Observation turns the request into a server span, the OTLP meter registry exports metrics in seconds with histogram buckets and exemplars, and the OpenTelemetry Logback appender sends log records that carry the trace ID. 3, collector: the app sends all three signals over OTLP/HTTP on port 4318 to a collector, recommended in production as a gateway that enriches, scrubs, samples and retries; locally the otel-lgtm image includes one. 4, backends: traces go to Tempo, metrics to a Prometheus-compatible store, logs to Loki. 5, correlate in Grafana, dashed: a latency bucket's exemplar links to the trace, and the trace links to its log lines by trace_id.">
+  <svg viewBox="0 0 1000 460">
+    <defs>
+      <marker id="obs-otlp-flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="obs-otlp-flow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+    </defs>
+    <text x="20" y="32" class="dg-group">1 · REQUEST</text>
+    <text x="180" y="32" class="dg-group">2 · APP</text>
+    <text x="500" y="32" class="dg-group">3 · COLLECTOR</text>
+    <text x="740" y="32" class="dg-group">4 · BACKENDS</text>
+
+    <rect x="20" y="150" width="130" height="86" rx="6" class="dg-box" />
+    <text x="36" y="178" class="dg-title">Client</text>
+    <text x="36" y="202" class="dg-detail">GET /ping</text>
+    <text x="36" y="222" class="dg-detail">traceparent</text>
+    <path d="M150 193 H178" class="dg-line" marker-end="url(#obs-otlp-flow-arrow)" />
+
+    <rect x="180" y="48" width="290" height="300" rx="8" class="dg-frame" />
+    <text x="196" y="72" class="dg-note">Spring Boot 4.1, no Java agent</text>
+    <rect x="196" y="86" width="258" height="70" rx="6" class="dg-box dg-emphasis" />
+    <text x="212" y="112" class="dg-title">Observation → span</text>
+    <text x="212" y="136" class="dg-detail">server span, parent-based sampling</text>
+    <rect x="196" y="166" width="258" height="70" rx="6" class="dg-box dg-emphasis" />
+    <text x="212" y="192" class="dg-title">OTLP meter registry</text>
+    <text x="212" y="216" class="dg-detail">seconds, buckets, exemplars</text>
+    <rect x="196" y="246" width="258" height="86" rx="6" class="dg-box dg-emphasis" />
+    <text x="212" y="272" class="dg-title">Logback OTel appender</text>
+    <text x="212" y="296" class="dg-detail">installed by a bean; each record</text>
+    <text x="212" y="316" class="dg-detail">carries trace_id and span_id</text>
+
+    <path d="M454 121 H500" class="dg-line dg-accent" marker-end="url(#obs-otlp-flow-accent)" />
+    <path d="M454 201 H500" class="dg-line dg-accent" marker-end="url(#obs-otlp-flow-accent)" />
+    <path d="M454 289 H500" class="dg-line dg-accent" marker-end="url(#obs-otlp-flow-accent)" />
+    <text x="477" y="362" text-anchor="middle" class="dg-note dg-accent">OTLP/HTTP :4318</text>
+
+    <rect x="502" y="86" width="210" height="246" rx="6" class="dg-box" />
+    <text x="518" y="112" class="dg-title">Collector</text>
+    <text x="518" y="136" class="dg-detail">production: a gateway</text>
+    <text x="518" y="156" class="dg-detail">that enriches, scrubs PII,</text>
+    <text x="518" y="176" class="dg-detail">samples, batches, retries</text>
+    <text x="518" y="206" class="dg-detail">local: inside otel-lgtm</text>
+
+    <path d="M712 121 H740" class="dg-line" marker-end="url(#obs-otlp-flow-arrow)" />
+    <path d="M712 201 H740" class="dg-line" marker-end="url(#obs-otlp-flow-arrow)" />
+    <path d="M712 289 H740" class="dg-line" marker-end="url(#obs-otlp-flow-arrow)" />
+    <rect x="742" y="86" width="236" height="70" rx="6" class="dg-box" />
+    <text x="758" y="112" class="dg-title">Tempo</text>
+    <text x="758" y="136" class="dg-detail">traces, by trace ID</text>
+    <rect x="742" y="166" width="236" height="70" rx="6" class="dg-box" />
+    <text x="758" y="192" class="dg-title">Prometheus-compatible</text>
+    <text x="758" y="216" class="dg-detail">metrics, with exemplars</text>
+    <rect x="742" y="262" width="236" height="70" rx="6" class="dg-box" />
+    <text x="758" y="288" class="dg-title">Loki</text>
+    <text x="758" y="312" class="dg-detail">logs, trace_id as metadata</text>
+
+    <text x="740" y="384" class="dg-group">5 · CORRELATE</text>
+    <path d="M978 201 C 998 201, 998 121, 978 121" class="dg-line dg-dash" marker-end="url(#obs-otlp-flow-arrow)" />
+    <path d="M742 121 C 724 121, 724 297, 742 297" class="dg-line dg-dash" marker-end="url(#obs-otlp-flow-arrow)" />
+    <text x="740" y="408" class="dg-note">exemplar → trace → log lines,</text>
+    <text x="740" y="426" class="dg-note">one trace_id across all three</text>
+  </svg>
+</Diagram>

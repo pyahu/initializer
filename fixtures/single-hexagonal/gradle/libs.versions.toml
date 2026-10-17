@@ -1,0 +1,36 @@
+[versions]
+spring-boot = "4.1.1"
+spring-modulith = "2.1.1"
+jmolecules = "2025.0.2"
+opentelemetry-logback-appender = "2.28.1-alpha"
+archunit = "1.5.1"
+error-prone = "2.50.0"
+nullaway = "0.14.2"
+palantir-java-format = "2.102.0"
+errorprone-gradle-plugin = "5.1.1"
+spotless = "8.10.4"
+cyclonedx = "3.5.1"
+
+[libraries]
+spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
+spring-modulith-bom = { module = "org.springframework.modulith:spring-modulith-bom", version.ref = "spring-modulith" }
+jmolecules-bom = { module = "org.jmolecules:jmolecules-bom", version.ref = "jmolecules" }
+spring-boot-starter-webmvc = { module = "org.springframework.boot:spring-boot-starter-webmvc" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-boot-starter-opentelemetry = { module = "org.springframework.boot:spring-boot-starter-opentelemetry" }
+opentelemetry-logback-appender = { module = "io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0", version.ref = "opentelemetry-logback-appender" }
+jmolecules-hexagonal-architecture = { module = "org.jmolecules:jmolecules-hexagonal-architecture" }
+jspecify = { module = "org.jspecify:jspecify" }
+error-prone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "error-prone" }
+nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "nullaway" }
+spring-boot-starter-webmvc-test = { module = "org.springframework.boot:spring-boot-starter-webmvc-test" }
+spring-modulith-starter-test = { module = "org.springframework.modulith:spring-modulith-starter-test" }
+archunit-junit5 = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunit" }
+jmolecules-archunit = { module = "org.jmolecules.integrations:jmolecules-archunit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+errorprone = { id = "net.ltgt.errorprone", version.ref = "errorprone-gradle-plugin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }

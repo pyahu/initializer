@@ -1,0 +1,33 @@
+{
+  "files": [
+    {
+      "path": "fixtures/single-hexagonal/Dockerfile",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "dockerfile",
+      "sha256": "fdefe9f88b2ce28bfcc7c96c1ef56ae99546e93c4e3af96457723e6dd3011d12"
+    },
+    {
+      "path": "fixtures/single-hexagonal/build.gradle.kts",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "kotlin",
+      "sha256": "49e3e047c4d5f9d17df005dc59b0335b7076dea279e55db5b9fafc892bfe7df4"
+    },
+    {
+      "path": "fixtures/single-hexagonal/src/main/java/io/pyahu/fixture/hexagonal/config/OpenTelemetryLoggingConfig.java",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "java",
+      "sha256": "ef61d922e683bc7fdfdf4e0fd60a9c956cb207631618d76bcfc60bf2738de2c1"
+    },
+    {
+      "path": "fixtures/single-hexagonal/src/main/resources/application.yaml",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "yaml",
+      "sha256": "32b88849cb7e0d731641101e440e42f909881fd9a5c80df4bb57909b455176af"
+    }
+  ],
+  "generatedBy": "guidekit generate"
+}

@@ -1,0 +1,71 @@
+---
+import Icon from "../components/Icon.astro";
+import LandingLayout from "../layouts/LandingLayout.astro";
+
+const guides = [
+  { href: "/guides/jvm-in-containers/", title: "The JVM in containers", text: "Heap from the limit, an explicit GC, CPUs the JVM really gets, and an AOT cache CI proves is used." },
+  { href: "/guides/observability/", title: "Observability", text: "Traces, metrics and logs over OTLP from Spring Boot 4.1, joined by one trace ID." },
+];
+
+const benefits = [
+  { icon: "shield", title: "Proven, not asserted", text: "Every claim carries a record: the test that proves it, the run, and the result. What is not proven says so." },
+  { icon: "layers", title: "Decisions you can read", text: "Each decision is a card: the failure it prevents, the fix, where it fits, and what it costs." },
+  { icon: "code", title: "Files that run", text: "Recipes are excerpts of fixture files that build and run in CI on every change." },
+] as const;
+---
+
+<LandingLayout title="Pyahu Initializer guides" description="Production guides for Spring Boot services on Kubernetes, with every claim proven by a tested fixture.">
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <p class="eyebrow"><span class="signal"></span>Java 25 · Spring Boot 4.1 · Kubernetes</p>
+        <h1>Production guides for Spring Boot. <span>Every claim proven.</span></h1>
+        <p class="hero-copy">Short decisions, real failure modes, and files that build and run in CI. The guides come first; the Initializer will generate services that already follow them.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="/guides/jvm-in-containers/">Start with the JVM <Icon name="arrow" size={18} /></a>
+          <a class="button quiet" href="/reference/docs/">Reference docs</a>
+        </div>
+        <ul class="trust-list" aria-label="How the guides are kept honest">
+          <li><Icon name="check" size={16} />Pinned baseline</li>
+          <li><Icon name="check" size={16} />Tests behind claims</li>
+          <li><Icon name="check" size={16} />Unproven marked</li>
+        </ul>
+      </div>
+      <div class="setup-panel" aria-label="Example evidence">
+        <div class="panel-bar"><span></span><span></span><span></span><code>evidence</code></div>
+        <div class="setup-body">
+          <p class="setup-label">What a claim looks like</p>
+          <pre><code><span class="prompt">claim</span>  -XX:MaxRAMPercentage=75 in 1 GiB
+<span class="prompt">test</span>   TestHeapIsSeventyFivePercent
+<span class="prompt">result</span> MaxHeapSize = 805306368</code></pre>
+          <div class="setup-result"><span class="result-mark"><Icon name="check" size={17} /></span><div><strong>Reproduced in CI</strong><p>on every change, baseline v0.1-b1</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section why-section" id="why" aria-labelledby="why-title">
+    <div class="section-heading">
+      <p class="eyebrow">Why these guides</p>
+      <h2 id="why-title">Advice you can check.</h2>
+      <p class="section-lead">Most production advice is copied from somewhere. These guides show the test behind each claim.</p>
+    </div>
+    <div class="benefit-grid">
+      {benefits.map((b) => (
+        <article class="benefit-card"><Icon name={b.icon} size={25} /><h3>{b.title}</h3><p>{b.text}</p></article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section why-section" id="guides" aria-labelledby="guides-title">
+    <div class="section-heading">
+      <p class="eyebrow">The pilot</p>
+      <h2 id="guides-title">Two guides, more to come.</h2>
+    </div>
+    <div class="benefit-grid">
+      {guides.map((g) => (
+        <article class="benefit-card"><h3><a href={g.href}>{g.title}</a></h3><p>{g.text}</p></article>
+      ))}
+    </div>
+  </section>
+</LandingLayout>

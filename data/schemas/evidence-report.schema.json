@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://initializer.pyahu.io/schemas/evidence-report.schema.json",
+  "title": "Evidence report written by guidekit evidence verify",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "fixture", "baseline", "commit", "runId", "runAttempt", "tests", "components", "ok"],
+  "properties": {
+    "schema": {"const": "initializer.pyahu.io/evidence-report/v1"},
+    "fixture": {"type": "string"},
+    "baseline": {"$ref": "common.schema.json#/$defs/revisionId"},
+    "commit": {"type": "string"},
+    "runId": {"type": "integer"},
+    "runAttempt": {"type": "integer"},
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["test", "status", "runs", "output"],
+        "properties": {
+          "test": {"$ref": "common.schema.json#/$defs/testRef"},
+          "status": {"enum": ["pass", "fail", "skip", "missing"]},
+          "runs": {"type": "integer", "minimum": 0},
+          "output": {"type": "string", "maxLength": 2000}
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "expected", "resolved", "status"],
+        "properties": {
+          "key": {"type": "string"},
+          "expected": {"type": "string"},
+          "resolved": {"type": "string"},
+          "status": {"enum": ["match", "mismatch", "missing"]}
+        }
+      }
+    },
+    "ok": {"type": "boolean"}
+  }
+}

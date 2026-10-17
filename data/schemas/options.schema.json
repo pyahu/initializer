@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://initializer.pyahu.io/schemas/options.schema.json",
+  "title": "Project options, v0.1 supported values",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "group", "description", "architecture", "api", "database", "kafka", "rabbitmq", "cache", "auth", "pyahuCli", "sample"],
+  "properties": {
+    "apiVersion": {"const": "initializer.pyahu.io/v1alpha1"},
+    "kind": {"const": "Project"},
+    "name": {"type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"},
+    "group": {"type": "string", "pattern": "^[a-z][a-z0-9]*(\\.[a-z][a-z0-9]*)+$"},
+    "description": {"type": "string", "minLength": 1},
+    "architecture": {"enum": ["hexagonal", "ddd-layered"]},
+    "api": {"type": "array", "minItems": 1, "items": {"enum": ["rest"]}, "uniqueItems": true},
+    "database": {"enum": ["none", "postgres"]},
+    "persistence": {"enum": ["jdbc"]},
+    "kafka": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "outbox"],
+      "properties": {"enabled": {"const": false}, "outbox": {"const": false}}
+    },
+    "rabbitmq": {"const": false},
+    "cache": {"const": false},
+    "auth": {"type": "boolean"},
+    "pyahuCli": {"type": "boolean"},
+    "sample": {"type": "boolean"}
+  },
+  "if": {"properties": {"database": {"const": "postgres"}}},
+  "then": {"required": ["persistence"]},
+  "else": {"not": {"required": ["persistence"]}}
+}

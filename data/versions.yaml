@@ -1,0 +1,462 @@
+# Baseline revisions. See CONTRIBUTING.md, "Baselines".
+# A revision is frozen once it exists on main, except each component's qualification block,
+# which only guidekit qualify writes.
+schema: initializer.pyahu.io/versions/v1
+active: v0.1-b1
+revisions:
+  - id: v0.1-b1
+    release: v0.1
+    created: "2026-10-17"
+    components:
+      java:
+        version: "25.0.4.1+1"
+        kind: jdk
+        vendor: "Eclipse Temurin"
+        feature: "25"
+        build: "25.0.4.1+1"
+        managedBy: null
+        verifiedAt: "Adoptium API release_versions, 2026-10-17"
+        guides: [jvm-in-containers, observability]
+        claims: [compile, runtime]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+            runtime: [ev-jvm-aot-cache-2, ev-jvm-aot-cache-3, ev-jvm-cpu-count-1, ev-jvm-flag-placement-1, ev-jvm-gc-explicit-1, ev-jvm-gc-explicit-2, ev-jvm-gc-explicit-3, ev-jvm-gc-explicit-4, ev-jvm-heap-sizing-1]
+      temurin-jdk-image:
+        version: "25.0.4.1_1-jdk-noble"
+        kind: image
+        image: "eclipse-temurin:25.0.4.1_1-jdk-noble"
+        digest: "sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4"
+        managedBy: null
+        verifiedAt: "registry-1.docker.io manifest index, 2026-10-17"
+        guides: [jvm-in-containers]
+        claims: [compile, image]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+            image: [ev-jvm-aot-cache-1]
+      temurin-jre-image:
+        version: "25.0.4.1_1-jre-noble"
+        kind: image
+        image: "eclipse-temurin:25.0.4.1_1-jre-noble"
+        digest: "sha256:37c16059e13b3dfa59f4c24af72dd0f7798d5f1b06647e306feb914f4163a721"
+        managedBy: null
+        verifiedAt: "registry-1.docker.io manifest index, 2026-10-17"
+        guides: [jvm-in-containers]
+        claims: [image, runtime]
+        qualification:
+          state: qualified
+          capabilities:
+            image: [ev-jvm-aot-cache-1, ev-jvm-flag-placement-1]
+            runtime: [ev-jvm-aot-cache-2, ev-jvm-aot-cache-3, ev-jvm-cpu-count-1, ev-jvm-flag-placement-1, ev-jvm-gc-explicit-1, ev-jvm-gc-explicit-2, ev-jvm-gc-explicit-3, ev-jvm-gc-explicit-4, ev-jvm-heap-sizing-1]
+      gradle:
+        version: "9.8.1"
+        kind: tool
+        distributionSha256Sum: "dce76f55f8e251a3a1f130eb120f30b3d271de2b76c9b0729d316b5a1b6dc01f"
+        managedBy: null
+        verifiedAt: "services.gradle.org, 2026-10-17"
+        guides: []
+        claims: [compile]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+      spring-boot:
+        version: "4.1.1"
+        kind: maven-bom
+        coordinates: "org.springframework.boot:spring-boot-dependencies"
+        pluginId: "org.springframework.boot"
+        managedBy: null
+        verifiedAt: "Maven Central metadata and Gradle plugin portal, 2026-10-17"
+        guides: [jvm-in-containers, observability]
+        claims: [compile, runtime]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+            runtime: [ev-jvm-aot-cache-3, ev-jvm-flag-placement-1, ev-obs-actuator-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
+      spring-framework:
+        version: "7.0.9"
+        kind: maven
+        coordinates: "org.springframework:spring-core"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.1.1, 2026-10-17"
+        guides: []
+        claims: [compile, runtime]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+            runtime: [ev-jvm-flag-placement-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
+      spring-data:
+        version: "2026.0.1"
+        kind: maven-bom
+        coordinates: "org.springframework.data:spring-data-bom"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.1.1, 2026-10-17"
+        guides: []
+        claims: [compile, runtime]
+        qualification:
+          state: provisional
+          capabilities: {}
+      spring-security:
+        version: "7.1.1"
+        kind: maven
+        coordinates: "org.springframework.security:spring-security-core"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.1.1, 2026-10-17"
+        guides: []
+        claims: [compile, runtime]
+        qualification:
+          state: provisional
+          capabilities: {}
+      micrometer:
+        version: "1.17.1"
+        kind: maven
+        coordinates: "io.micrometer:micrometer-core"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.1.1, 2026-10-17"
+        guides: [observability]
+        claims: [runtime]
+        qualification:
+          state: qualified
+          capabilities:
+            runtime: [ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
+      micrometer-tracing:
+        version: "1.7.1"
+        kind: maven
+        coordinates: "io.micrometer:micrometer-tracing"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.1.1, 2026-10-17"
+        guides: [observability]
+        claims: [runtime]
+        qualification:
+          state: qualified
+          capabilities:
+            runtime: [ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
+      opentelemetry-java:
+        version: "1.62.0"
+        kind: maven
+        coordinates: "io.opentelemetry:opentelemetry-api"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.1.1, 2026-10-17"
+        guides: [observability]
+        claims: [runtime]
+        qualification:
+          state: qualified
+          capabilities:
+            runtime: [ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
+      opentelemetry-logback-appender:
+        version: "2.28.1-alpha"
+        kind: maven
+        coordinates: "io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0"
+        managedBy: null
+        verifiedAt: "Maven Central; opentelemetry-instrumentation-bom 2.28.1 imports opentelemetry-bom 1.62.0, 2026-10-17"
+        guides: [observability]
+        claims: [runtime]
+        qualification:
+          state: qualified
+          capabilities:
+            runtime: [ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
+      jspecify:
+        version: "1.0.1"
+        kind: maven
+        coordinates: "org.jspecify:jspecify"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.1.1, 2026-10-17"
+        guides: []
+        claims: [compile]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+      liquibase:
+        version: "5.0.3"
+        kind: maven
+        coordinates: "org.liquibase:liquibase-core"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.1.1, 2026-10-17"
+        guides: []
+        claims: [compile, runtime, cluster]
+        qualification:
+          state: provisional
+          capabilities: {}
+      pgjdbc:
+        version: "42.7.13"
+        kind: maven
+        coordinates: "org.postgresql:postgresql"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.1.1, 2026-10-17"
+        guides: []
+        claims: [runtime]
+        qualification:
+          state: provisional
+          capabilities: {}
+      testcontainers:
+        version: "2.0.5"
+        kind: maven-bom
+        coordinates: "org.testcontainers:testcontainers-bom"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.1.1, 2026-10-17"
+        guides: []
+        claims: [test]
+        qualification:
+          state: provisional
+          capabilities: {}
+      spring-modulith:
+        version: "2.1.1"
+        kind: maven-bom
+        coordinates: "org.springframework.modulith:spring-modulith-bom"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-10-17"
+        guides: []
+        claims: [compile, test]
+        qualification:
+          state: partial
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+      jmolecules-bom:
+        version: "2025.0.2"
+        kind: maven-bom
+        coordinates: "org.jmolecules:jmolecules-bom"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-10-17 (manages jmolecules-hexagonal-architecture 2.0.1)"
+        guides: []
+        claims: [compile]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+      jmolecules-archunit:
+        version: "0.33.0"
+        kind: maven
+        coordinates: "org.jmolecules.integrations:jmolecules-archunit"
+        managedBy: jmolecules-bom
+        verifiedAt: "jmolecules-bom 2025.0.2 POM, 2026-10-17"
+        guides: []
+        claims: [test]
+        qualification:
+          state: provisional
+          capabilities: {}
+      archunit:
+        version: "1.5.1"
+        kind: maven
+        coordinates: "com.tngtech.archunit:archunit-junit5"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-10-17"
+        guides: []
+        claims: [test]
+        qualification:
+          state: provisional
+          capabilities: {}
+      error-prone:
+        version: "2.50.0"
+        kind: maven
+        coordinates: "com.google.errorprone:error_prone_core"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-10-17"
+        guides: []
+        claims: [compile]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+      errorprone-gradle-plugin:
+        version: "5.1.1"
+        kind: gradle-plugin
+        pluginId: "net.ltgt.errorprone"
+        managedBy: null
+        verifiedAt: "Gradle plugin portal, 2026-10-17"
+        guides: []
+        claims: [compile]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+      nullaway:
+        version: "0.14.2"
+        kind: maven
+        coordinates: "com.uber.nullaway:nullaway"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-10-17"
+        guides: []
+        claims: [compile]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+      spotless-gradle-plugin:
+        version: "8.10.4"
+        kind: gradle-plugin
+        pluginId: "com.diffplug.spotless"
+        managedBy: null
+        verifiedAt: "Gradle plugin portal, 2026-10-17"
+        guides: []
+        claims: [compile]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+      palantir-java-format:
+        version: "2.102.0"
+        kind: maven
+        coordinates: "com.palantir.javaformat:palantir-java-format"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-10-17"
+        guides: []
+        claims: [compile]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+      cyclonedx-gradle-plugin:
+        version: "3.5.1"
+        kind: gradle-plugin
+        pluginId: "org.cyclonedx.bom"
+        managedBy: null
+        verifiedAt: "Gradle plugin portal, 2026-10-17"
+        guides: []
+        claims: [compile]
+        qualification:
+          state: qualified
+          capabilities:
+            compile: [ev-obs-starter-not-agent-1]
+      openapi-generator-gradle-plugin:
+        version: "7.26.0"
+        kind: gradle-plugin
+        pluginId: "org.openapi.generator"
+        managedBy: null
+        verifiedAt: "Gradle plugin portal, 2026-10-17"
+        guides: []
+        claims: [compile]
+        qualification:
+          state: provisional
+          capabilities: {}
+      openapi-spec:
+        version: "3.1.2"
+        kind: spec
+        managedBy: null
+        verifiedAt: "spec.openapis.org, 2026-10-17"
+        guides: []
+        claims: [compile]
+        qualification:
+          state: provisional
+          capabilities: {}
+      datasource-micrometer:
+        version: "2.3.0"
+        kind: maven
+        coordinates: "net.ttddyy.observation:datasource-micrometer-spring-boot"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-10-17"
+        guides: [observability]
+        claims: [runtime]
+        qualification:
+          state: provisional
+          capabilities: {}
+      postgres-image:
+        version: "18.6"
+        kind: image
+        image: "postgres:18.6"
+        digest: "sha256:74935e72241653ca55e0414067e6d8763aceb8a810eb51b452253ec3dcfc4336"
+        managedBy: null
+        verifiedAt: "Docker Hub tags API, 2026-10-17"
+        guides: []
+        claims: [test, cluster]
+        qualification:
+          state: provisional
+          capabilities: {}
+      otel-lgtm-image:
+        version: "0.37.0"
+        kind: image
+        image: "grafana/otel-lgtm:0.37.0"
+        digest: "sha256:57b5ab1ca6619beb180174e2fccce04762470750669d043f544b4726d0582d07"
+        managedBy: null
+        verifiedAt: "registry-1.docker.io manifest index; GitHub release v0.37.0 of 2026-10-16"
+        guides: [observability]
+        claims: [test]
+        qualification:
+          state: qualified
+          capabilities:
+            test: [ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
+      kubernetes-1.36:
+        version: "1.36.5"
+        kind: platform
+        managedBy: null
+        verifiedAt: "dl.k8s.io, 2026-10-17"
+        guides: []
+        claims: [cluster]
+        qualification:
+          state: provisional
+          capabilities: {}
+      kubernetes-1.37:
+        version: "1.37.1"
+        kind: platform
+        managedBy: null
+        verifiedAt: "dl.k8s.io, 2026-10-17"
+        guides: []
+        claims: [cluster]
+        qualification:
+          state: provisional
+          capabilities: {}
+      kustomize:
+        version: "5.8.3"
+        kind: tool
+        managedBy: null
+        verifiedAt: "GitHub release kustomize/v5.8.3, 2026-10-17"
+        guides: []
+        claims: [cluster]
+        qualification:
+          state: provisional
+          capabilities: {}
+      cosign:
+        version: "3.1.3"
+        kind: tool
+        managedBy: null
+        verifiedAt: "GitHub release v3.1.3, 2026-10-17"
+        guides: []
+        claims: [image]
+        qualification:
+          state: provisional
+          capabilities: {}
+      syft:
+        version: "1.54.1"
+        kind: tool
+        managedBy: null
+        verifiedAt: "GitHub release v1.54.1, 2026-10-17"
+        guides: []
+        claims: [image]
+        qualification:
+          state: provisional
+          capabilities: {}
+      trivy:
+        version: "0.76.0"
+        kind: tool
+        managedBy: null
+        verifiedAt: "GitHub release v0.76.0, 2026-10-17"
+        guides: []
+        claims: [image]
+        qualification:
+          state: provisional
+          capabilities: {}
+      renovate:
+        version: "44.166.0"
+        kind: tool
+        managedBy: null
+        verifiedAt: "GitHub release 44.166.0, 2026-10-17"
+        guides: []
+        claims: [compile]
+        qualification:
+          state: provisional
+          capabilities: {}
+      slsa:
+        version: "1.2"
+        kind: spec
+        managedBy: null
+        verifiedAt: "slsa.dev, 2026-10-17"
+        guides: []
+        claims: [image]
+        qualification:
+          state: provisional
+          capabilities: {}

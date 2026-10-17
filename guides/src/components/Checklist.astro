@@ -1,0 +1,37 @@
+---
+// A guide's checklist items, grouped by type.
+import data from "../generated/guides.json";
+interface Props {
+  guide: string;
+}
+const { guide } = Astro.props;
+const g = (data.guides as any)[guide];
+if (!g) throw new Error(`Checklist: unknown guide ${guide}`);
+const types: [string, string][] = [
+  ["generated-config", "Generated configuration"],
+  ["verified-behaviour", "Verified behaviour"],
+  ["deployment-prerequisite", "Deployment prerequisites"],
+  ["operator-task", "Recurring operator tasks"],
+];
+---
+<div class="checklist not-content">
+  {types.map(([type, title]) => {
+    const items = g.checklist.filter((c: any) => c.type === type);
+    return items.length > 0 && (
+      <section>
+        <h3>{title}</h3>
+        <ul>
+          {items.map((c: any) => (
+            <li id={c.id}>
+              <p><strong>{c.id}</strong> {c.text}</p>
+              <p class="checklist-meta">
+                <a href={`#${c.card}`}>Card</a> · {c.claim === "enforced" ? `Enforced by ${c.tests.join(", ")}` : "Documented, not yet enforced by a generated test"}
+                {c.tags.length > 0 && <> · When {c.tags.join("; ")}</>}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  })}
+</div>

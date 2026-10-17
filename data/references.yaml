@@ -1,0 +1,4354 @@
+# Official documentation for the stack. See CONTRIBUTING.md, "References".
+schema: initializer.pyahu.io/references/v1
+entries:
+  - id: java-se-25-api-javadoc-root
+    title: "Java SE 25 API javadoc root"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "api"
+    area: "java"
+    url: "https://docs.oracle.com/en/java/javase/25/docs/api/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 (\"Overview (Java SE 25 & JDK 25)\")."
+    purpose: "Java SE 25 API javadoc root."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-jls-se-25
+    title: "JLS SE 25 (HTML)"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "spec"
+    area: "java"
+    url: "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "JLS SE 25 (HTML)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-jls-se-25-2
+    title: "JLS SE 25 (PDF)"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "spec"
+    area: "java"
+    url: "https://docs.oracle.com/javase/specs/jls/se25/jls25.pdf"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 (PDF)."
+    purpose: "JLS SE 25 (PDF)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-jvms-se-25
+    title: "JVMS SE 25"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "spec"
+    area: "java"
+    url: "https://docs.oracle.com/javase/specs/jvms/se25/html/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "JVMS SE 25."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-se-25-platform-jsr-400
+    title: "Java SE 25 Platform JSR 400 (spec root)"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "spec"
+    area: "java"
+    url: "https://openjdk.org/projects/jdk/25/spec/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Java SE 25 Platform JSR 400 (spec root)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-jdk-25-project-page
+    title: "JDK 25 project page (JEP list)"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "reference"
+    area: "java"
+    url: "https://openjdk.org/projects/jdk/25/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "JDK 25 project page (JEP list)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-jdk-25-release-notes
+    title: "JDK 25 release notes (Oracle, covers OpenJDK changes)"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "release-notes"
+    area: "java"
+    url: "https://www.oracle.com/java/technologies/javase/25-relnote-issues.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "JDK 25 release notes (Oracle, covers OpenJDK changes)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-jdk-25-consolidated-release-notes
+    title: "JDK 25 consolidated release notes (all updates)"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "release-notes"
+    area: "java"
+    url: "https://www.oracle.com/java/technologies/javase/25all-relnotes.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "JDK 25 consolidated release notes (all updates)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-launcher-tool-reference
+    title: "java launcher tool reference"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "reference"
+    area: "java"
+    url: "https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 (\"The java Command\")."
+    purpose: "java launcher tool reference."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-jdk-25-documentation-home
+    title: "JDK 25 documentation home"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "reference"
+    area: "java"
+    url: "https://docs.oracle.com/en/java/javase/25/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "JDK 25 documentation home."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-virtual-threads-guide
+    title: "Virtual threads guide (Core Libraries)"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "guide"
+    area: "java"
+    url: "https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Virtual threads guide (Core Libraries)."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-hotspot-gc-tuning-guide
+    title: "HotSpot GC tuning guide"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "guide"
+    area: "java"
+    url: "https://docs.oracle.com/en/java/javase/25/gctuning/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "HotSpot GC tuning guide."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-class-data-sharing-aot-cache
+    title: "Class Data Sharing / AOT cache (VM guide)"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "guide"
+    area: "java"
+    url: "https://docs.oracle.com/en/java/javase/25/vm/class-data-sharing.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Class Data Sharing / AOT cache (VM guide)."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-jdk-migration-guide
+    title: "JDK migration guide"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "migration"
+    area: "java"
+    url: "https://docs.oracle.com/en/java/javase/25/migrate/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "JDK migration guide."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: java-openjdk-builds-page
+    title: "OpenJDK builds page"
+    component: "java"
+    docVersion: "25"
+    match: "major"
+    kind: "reference"
+    area: "java"
+    url: "https://jdk.java.net/25/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 (note: `https://jdk.java.net/25/release-notes` returns 404. Use the Oracle release notes above.)."
+    purpose: "OpenJDK builds page."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-444
+    title: "JEP 444: Virtual Threads"
+    component: null
+    docVersion: "JDK 21"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/444"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 444 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 444, title: "Virtual Threads", status: "Closed / Delivered", release: "21"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-491
+    title: "JEP 491: Synchronize Virtual Threads without Pinning"
+    component: null
+    docVersion: "JDK 24"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/491"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 491 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 491, title: "Synchronize Virtual Threads without Pinning", status: "Closed / Delivered", release: "24"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-505
+    title: "JEP 505: Structured Concurrency (Fifth Preview), the preview in JDK 25"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/505"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 505 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 505, title: "Structured Concurrency", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-525
+    title: "JEP 525: Structured Concurrency (Sixth Preview), for context: still preview in 26"
+    component: null
+    docVersion: "JDK 26"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/525"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 525 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 525, title: "Structured Concurrency", status: "Closed / Delivered", release: "26"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-506
+    title: "JEP 506: Scoped Values (final)"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/506"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 506 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 506, title: "Scoped Values", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-483
+    title: "JEP 483: Ahead-of-Time Class Loading & Linking"
+    component: null
+    docVersion: "JDK 24"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/483"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 483 changes and in which JDK it was delivered."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: {number: 483, title: "Ahead-of-Time Class Loading & Linking", status: "Closed / Delivered", release: "24"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-514
+    title: "JEP 514: Ahead-of-Time Command-Line Ergonomics"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/514"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 514 changes and in which JDK it was delivered."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: {number: 514, title: "Ahead-of-Time Command-Line Ergonomics", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-515
+    title: "JEP 515: Ahead-of-Time Method Profiling"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/515"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 515 changes and in which JDK it was delivered."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: {number: 515, title: "Ahead-of-Time Method Profiling", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-516
+    title: "JEP 516: Ahead-of-Time Object Caching with Any GC (context, not in 25)"
+    component: null
+    docVersion: "JDK 26"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/516"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 516 changes and in which JDK it was delivered."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: {number: 516, title: "Ahead-of-Time Object Caching with Any GC", status: "Closed / Delivered", release: "26"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-519
+    title: "JEP 519: Compact Object Headers (product feature, opt-in)"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/519"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 519 changes and in which JDK it was delivered."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: {number: 519, title: "Compact Object Headers", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-248
+    title: "JEP 248: Make G1 the Default Garbage Collector (default-GC context)"
+    component: null
+    docVersion: "JDK 9"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/248"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 248 changes and in which JDK it was delivered."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: {number: 248, title: "Make G1 the Default Garbage Collector", status: "Closed / Delivered", release: "9"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-439
+    title: "JEP 439: Generational ZGC"
+    component: null
+    docVersion: "JDK 21"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/439"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 439 changes and in which JDK it was delivered."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: {number: 439, title: "Generational ZGC", status: "Closed / Delivered", release: "21"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-474
+    title: "JEP 474: ZGC: Generational Mode by Default"
+    component: null
+    docVersion: "JDK 23"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/474"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 474 changes and in which JDK it was delivered."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: {number: 474, title: "ZGC: Generational Mode by Default", status: "Closed / Delivered", release: "23"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-490
+    title: "JEP 490: ZGC: Remove the Non-Generational Mode"
+    component: null
+    docVersion: "JDK 24"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/490"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 490 changes and in which JDK it was delivered."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: {number: 490, title: "ZGC: Remove the Non-Generational Mode", status: "Closed / Delivered", release: "24"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-521
+    title: "JEP 521: Generational Shenandoah"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/521"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 521 changes and in which JDK it was delivered."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: {number: 521, title: "Generational Shenandoah", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-513
+    title: "JEP 513: Flexible Constructor Bodies (final)"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/513"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 513 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 513, title: "Flexible Constructor Bodies", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-511
+    title: "JEP 511: Module Import Declarations (final)"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/511"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 511 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 511, title: "Module Import Declarations", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-512
+    title: "JEP 512: Compact Source Files and Instance Main Methods (final)"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/512"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 512 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 512, title: "Compact Source Files and Instance Main Methods", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-502
+    title: "JEP 502: Stable Values (Preview)"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/502"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 502 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 502, title: "Stable Values", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-526
+    title: "JEP 526: Lazy Constants (Second Preview), the renamed successor of 502, for context"
+    component: null
+    docVersion: "JDK 26"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/526"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 526 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 526, title: "Lazy Constants", status: "Closed / Delivered", release: "26"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-510
+    title: "JEP 510: Key Derivation Function API (final)"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/510"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 510 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 510, title: "Key Derivation Function API", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-470
+    title: "JEP 470: PEM Encodings of Cryptographic Objects (Preview)"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/470"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 470 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 470, title: "PEM Encodings of Cryptographic Objects", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-509
+    title: "JEP 509: JFR CPU-Time Profiling (Experimental)"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/509"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 509 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 509, title: "JFR CPU-Time Profiling", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-518
+    title: "JEP 518: JFR Cooperative Sampling"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/518"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 518 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 518, title: "JFR Cooperative Sampling", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-520
+    title: "JEP 520: JFR Method Timing & Tracing"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/520"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 520 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 520, title: "JFR Method Timing & Tracing", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-485
+    title: "JEP 485: Stream Gatherers"
+    component: null
+    docVersion: "JDK 24"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/485"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 485 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 485, title: "Stream Gatherers", status: "Closed / Delivered", release: "24"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: jep-507
+    title: "JEP 507: Primitive Types in Patterns, instanceof, and switch (Third Preview)"
+    component: null
+    docVersion: "JDK 25"
+    match: "none"
+    kind: "jep"
+    area: "jeps"
+    url: "https://openjdk.org/jeps/507"
+    pinned: true
+    pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
+    purpose: "What JEP 507 changes and in which JDK it was delivered."
+    guides: []
+    appliesWhen: {}
+    jep: {number: 507, title: "Primitive Types in Patterns", status: "Closed / Delivered", release: "25"}
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-reference-root
+    title: "Reference root"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned (minor); checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Reference root."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-system-requirements
+    title: "System requirements"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/system-requirements.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect (\"requires at least Java 17, compatible up to Java 26, Gradle 8.14+/9.x\")."
+    expect: "4.1.1"
+    purpose: "System requirements."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-release-notes-4-1
+    title: "Release notes 4.1 (wiki)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "release-notes"
+    area: "spring-boot"
+    url: "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.1-Release-Notes"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Release notes 4.1 (wiki)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-release-v4-1-1
+    title: "Release v4.1.1 (GitHub)"
+    component: "spring-boot"
+    docVersion: "4.1.1"
+    match: "exact"
+    kind: "release"
+    area: "spring-boot"
+    url: "https://github.com/spring-projects/spring-boot/releases/tag/v4.1.1"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Release v4.1.1 (GitHub)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-migration-guide-3-x-to-4-0
+    title: "Migration guide 3.x to 4.0 (wiki)"
+    component: "spring-boot"
+    docVersion: "4.0"
+    match: "major"
+    kind: "migration"
+    area: "spring-boot"
+    url: "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide"
+    pinned: true
+    pinNote: "The 3.x to 4.0 migration guide applies to every 4.x line. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Migration guide 3.x to 4.0 (wiki)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-release-notes-4-0
+    title: "Release notes 4.0 (wiki)"
+    component: "spring-boot"
+    docVersion: "4.0"
+    match: "major"
+    kind: "release-notes"
+    area: "spring-boot"
+    url: "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Release-Notes"
+    pinned: true
+    pinNote: "4.0 release notes, still relevant on 4.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Release notes 4.0 (wiki)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-upgrading-spring-boot
+    title: "Upgrading Spring Boot (reference)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "migration"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/upgrading.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Upgrading Spring Boot (reference)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-dependency-versions-appendix
+    title: "Dependency versions appendix (managed versions)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/appendix/dependency-versions/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Dependency versions appendix (managed versions)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-application-properties-appendix
+    title: "Application properties appendix"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Application properties appendix."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-actuator
+    title: "Actuator (production-ready features)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/actuator/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Actuator (production-ready features)."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-actuator-endpoints
+    title: "Actuator endpoints (incl. Kubernetes probes anchor, verified)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Actuator endpoints (incl. Kubernetes probes anchor, verified)."
+    guides: ["jvm-in-containers", "observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-actuator-rest-api
+    title: "Actuator REST API"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/api/rest/actuator/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Actuator REST API."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-observability-opentelemetry-section
+    title: "Observability, OpenTelemetry section (anchor verified)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/actuator/observability.html#actuator.observability.opentelemetry"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Observability, OpenTelemetry section (anchor verified)."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-tracing
+    title: "Tracing (names spring-boot-starter-opentelemetry, OTLP export)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Tracing (names spring-boot-starter-opentelemetry, OTLP export)."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-metrics
+    title: "Metrics (incl. #actuator.metrics.export.otlp)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Metrics (incl. #actuator.metrics.export.otlp)."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-container-images
+    title: "Container images"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Container images."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-efficient-container-images
+    title: "Efficient container images (layering)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Efficient container images (layering)."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-dockerfiles
+    title: "Dockerfiles"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Dockerfiles."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-cloud-native-buildpacks
+    title: "Cloud Native Buildpacks"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Cloud Native Buildpacks."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-efficient-deployments
+    title: "Efficient deployments"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Efficient deployments."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-aot-cache-and-cds
+    title: "AOT cache and CDS (reference, sections #packaging.aot-cache.aot-cache and #packaging.aot-cache.cds)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/packaging/aot-cache.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "AOT cache and CDS (reference, sections #packaging.aot-cache.aot-cache and #packaging.aot-cache.cds)."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-aot-cache
+    title: "AOT cache (how-to)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "guide"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/how-to/aot-cache.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "AOT cache (how-to)."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-virtual-threads
+    title: "Virtual threads (anchor verified)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Virtual threads (anchor verified)."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-task-execution
+    title: "Task execution (virtual-thread executors)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/features/task-execution-and-scheduling.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Task execution (virtual-thread executors)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-testcontainers-support
+    title: "Testcontainers support"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Testcontainers support."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-sql-databases
+    title: "SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/data/sql.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-database-initialization
+    title: "Database initialization (Liquibase)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/how-to/data-initialization.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Database initialization (Liquibase)."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-oauth2
+    title: "OAuth2 (resource server auto-config)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/security/oauth2.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "OAuth2 (resource server auto-config)."
+    guides: []
+    appliesWhen: {auth: [true]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-deploying-to-the-cloud
+    title: "Deploying to the cloud (Kubernetes)"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/how-to/deployment/cloud.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Deploying to the cloud (Kubernetes)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-gradle-plugin
+    title: "Gradle plugin"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/gradle-plugin/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Gradle plugin."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-gradle-plugin-packaging-oci-images
+    title: "Gradle plugin: packaging OCI images"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/gradle-plugin/packaging-oci-image.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Gradle plugin: packaging OCI images."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-boot-boot-api-javadoc
+    title: "Boot API javadoc"
+    component: "spring-boot"
+    docVersion: "4.1"
+    match: "minor"
+    kind: "api"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.1/api/java/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect (\"Spring Boot 4.1.1 API\")."
+    expect: "4.1.1"
+    purpose: "Boot API javadoc."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-framework-reference
+    title: "Reference"
+    component: "spring-framework"
+    docVersion: "7.0"
+    match: "minor"
+    kind: "reference"
+    area: "spring-framework"
+    url: "https://docs.spring.io/spring-framework/reference/7.0/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned (minor); checked: 200 via redirect."
+    expect: "7.0.9"
+    purpose: "Reference."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-framework-null-safety
+    title: "Null-safety (JSpecify in Spring 7)"
+    component: "spring-framework"
+    docVersion: "7.0"
+    match: "minor"
+    kind: "reference"
+    area: "spring-framework"
+    url: "https://docs.spring.io/spring-framework/reference/7.0/core/null-safety.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "7.0.9"
+    purpose: "Null-safety (JSpecify in Spring 7)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-framework-javadoc
+    title: "Javadoc"
+    component: "spring-framework"
+    docVersion: "7.0.9"
+    match: "exact"
+    kind: "api"
+    area: "spring-framework"
+    url: "https://docs.spring.io/spring-framework/docs/7.0.9/javadoc-api/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned (patch); checked: 200."
+    purpose: "Javadoc."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-framework-7-0-release-notes
+    title: "7.0 release notes (wiki, also covers upgrading)"
+    component: "spring-framework"
+    docVersion: "7.0"
+    match: "minor"
+    kind: "release-notes"
+    area: "spring-framework"
+    url: "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "7.0 release notes (wiki, also covers upgrading)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-data-relational-reference
+    title: "Spring Data Relational reference"
+    component: "spring-data"
+    docVersion: "4.1"
+    match: "none"
+    kind: "reference"
+    area: "spring-data"
+    url: "https://docs.spring.io/spring-data/relational/reference/4.1/index.html"
+    pinned: true
+    pinNote: "Spring Data JDBC 4.1.1 ships in the Spring Data 2026.0.1 train that Boot manages. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Spring Data Relational reference."
+    guides: []
+    appliesWhen: {persistence: ["jdbc"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-data-jdbc-section
+    title: "JDBC section"
+    component: "spring-data"
+    docVersion: "4.1"
+    match: "none"
+    kind: "reference"
+    area: "spring-data"
+    url: "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html"
+    pinned: true
+    pinNote: "Spring Data JDBC 4.1.1 ships in the Spring Data 2026.0.1 train that Boot manages. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "JDBC section."
+    guides: []
+    appliesWhen: {persistence: ["jdbc"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-data-jdbc-getting-started
+    title: "JDBC getting started"
+    component: "spring-data"
+    docVersion: "4.1"
+    match: "none"
+    kind: "guide"
+    area: "spring-data"
+    url: "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc/getting-started.html"
+    pinned: true
+    pinNote: "Spring Data JDBC 4.1.1 ships in the Spring Data 2026.0.1 train that Boot manages. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "JDBC getting started."
+    guides: []
+    appliesWhen: {persistence: ["jdbc"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-data-persisting-entities
+    title: "Persisting entities (aggregates)"
+    component: "spring-data"
+    docVersion: "4.1"
+    match: "none"
+    kind: "reference"
+    area: "spring-data"
+    url: "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc/entity-persistence.html"
+    pinned: true
+    pinNote: "Spring Data JDBC 4.1.1 ships in the Spring Data 2026.0.1 train that Boot manages. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "4.1.1"
+    purpose: "Persisting entities (aggregates)."
+    guides: []
+    appliesWhen: {persistence: ["jdbc"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-data-2026-0-release-notes
+    title: "Spring Data 2026.0 release notes"
+    component: "spring-data"
+    docVersion: "2026.0"
+    match: "minor"
+    kind: "release-notes"
+    area: "spring-data"
+    url: "https://github.com/spring-projects/spring-data-commons/wiki/Spring-Data-2026.0-Release-Notes"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Spring Data 2026.0 release notes."
+    guides: []
+    appliesWhen: {persistence: ["jdbc"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-security-reference
+    title: "Reference"
+    component: "spring-security"
+    docVersion: "7.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-security"
+    url: "https://docs.spring.io/spring-security/reference/7.1/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "7.1.1"
+    purpose: "Reference."
+    guides: []
+    appliesWhen: {auth: [true]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-security-oauth-2-0-resource-server
+    title: "OAuth 2.0 Resource Server"
+    component: "spring-security"
+    docVersion: "7.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-security"
+    url: "https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "7.1.1"
+    purpose: "OAuth 2.0 Resource Server."
+    guides: []
+    appliesWhen: {auth: [true]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-security-resource-server-jwt
+    title: "Resource Server JWT"
+    component: "spring-security"
+    docVersion: "7.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-security"
+    url: "https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/jwt.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "7.1.1"
+    purpose: "Resource Server JWT."
+    guides: []
+    appliesWhen: {auth: [true]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-security-what-s-new-in-7-1
+    title: "What's new in 7.1"
+    component: "spring-security"
+    docVersion: "7.1"
+    match: "minor"
+    kind: "release-notes"
+    area: "spring-security"
+    url: "https://docs.spring.io/spring-security/reference/7.1/whats-new.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "7.1.1"
+    purpose: "What's new in 7.1."
+    guides: []
+    appliesWhen: {auth: [true]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-security-migration
+    title: "Migration (page title \"Migrating to 7.0\")"
+    component: "spring-security"
+    docVersion: "7.1"
+    match: "minor"
+    kind: "migration"
+    area: "spring-security"
+    url: "https://docs.spring.io/spring-security/reference/7.1/migration/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "7.1.1"
+    purpose: "Migration (page title \"Migrating to 7.0\")."
+    guides: []
+    appliesWhen: {auth: [true]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-modulith-reference
+    title: "Reference"
+    component: "spring-modulith"
+    docVersion: "2.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-modulith"
+    url: "https://docs.spring.io/spring-modulith/reference/2.1/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "2.1.1"
+    purpose: "Reference."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-modulith-fundamentals
+    title: "Fundamentals"
+    component: "spring-modulith"
+    docVersion: "2.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-modulith"
+    url: "https://docs.spring.io/spring-modulith/reference/2.1/fundamentals.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "2.1.1"
+    purpose: "Fundamentals."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-modulith-verifying-module-structure
+    title: "Verifying module structure"
+    component: "spring-modulith"
+    docVersion: "2.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-modulith"
+    url: "https://docs.spring.io/spring-modulith/reference/2.1/verification.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "2.1.1"
+    purpose: "Verifying module structure."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-modulith-application-events
+    title: "Application events (event publication registry)"
+    component: "spring-modulith"
+    docVersion: "2.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-modulith"
+    url: "https://docs.spring.io/spring-modulith/reference/2.1/events.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "2.1.1"
+    purpose: "Application events (event publication registry)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-modulith-integration-testing-modules
+    title: "Integration testing modules"
+    component: "spring-modulith"
+    docVersion: "2.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-modulith"
+    url: "https://docs.spring.io/spring-modulith/reference/2.1/testing.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "2.1.1"
+    purpose: "Integration testing modules."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-modulith-documenting-modules
+    title: "Documenting modules"
+    component: "spring-modulith"
+    docVersion: "2.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-modulith"
+    url: "https://docs.spring.io/spring-modulith/reference/2.1/documentation.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "2.1.1"
+    purpose: "Documenting modules."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-modulith-appendix
+    title: "Appendix (compatibility, properties)"
+    component: "spring-modulith"
+    docVersion: "2.1"
+    match: "minor"
+    kind: "reference"
+    area: "spring-modulith"
+    url: "https://docs.spring.io/spring-modulith/reference/2.1/appendix.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    expect: "2.1.1"
+    purpose: "Appendix (compatibility, properties)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: spring-modulith-2-0-reference
+    title: "(2.0 reference, for Boot 4.0 only)"
+    component: "spring-modulith"
+    docVersion: "2.0"
+    match: "minor"
+    kind: "reference"
+    area: "spring-modulith"
+    url: "https://docs.spring.io/spring-modulith/reference/2.0/index.html"
+    pinned: true
+    pinNote: "For Boot 4.0 only; listed so nobody uses it with Boot 4.1. Status on 2026-10-17: pinned; checked: 200."
+    expect: "2.1.1"
+    purpose: "(2.0 reference, for Boot 4.0 only)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: architecture-jmolecules-repo-at-release-tag
+    title: "jMolecules repo at release tag"
+    component: "jmolecules-bom"
+    docVersion: "2.0.1"
+    match: "none"
+    kind: "reference"
+    area: "architecture"
+    url: "https://github.com/xmolecules/jmolecules/tree/2.0.1"
+    pinned: true
+    pinNote: "jmolecules-ddd 2.0.1 is what jmolecules-bom 2025.0.2 manages. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "jMolecules repo at release tag."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: architecture-jmolecules-release-2-0-1
+    title: "jMolecules release 2.0.1"
+    component: "jmolecules-bom"
+    docVersion: "2.0.1"
+    match: "none"
+    kind: "release"
+    area: "architecture"
+    url: "https://github.com/xmolecules/jmolecules/releases/tag/2.0.1"
+    pinned: true
+    pinNote: "jmolecules-ddd 2.0.1 is what jmolecules-bom 2025.0.2 manages. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "jMolecules release 2.0.1."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: architecture-jmolecules-at-1-9-0
+    title: "jMolecules at 1.9.0 (the brief's line, superseded)"
+    component: "jmolecules-bom"
+    docVersion: "1.9.0"
+    match: "none"
+    kind: "reference"
+    area: "architecture"
+    url: "https://github.com/xmolecules/jmolecules/tree/1.9.0"
+    pinned: true
+    pinNote: "Superseded line; listed so nobody pins 1.9. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "jMolecules at 1.9.0 (the brief's line, superseded)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: architecture-jmolecules-archunit-at-tag
+    title: "jmolecules-archunit at tag"
+    component: "jmolecules-archunit"
+    docVersion: "0.33.0"
+    match: "exact"
+    kind: "reference"
+    area: "architecture"
+    url: "https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "jmolecules-archunit at tag."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: architecture-jmolecules-integrations-repo
+    title: "jmolecules-integrations repo"
+    component: "jmolecules-archunit"
+    docVersion: "main"
+    match: "none"
+    kind: "reference"
+    area: "architecture"
+    url: "https://github.com/xmolecules/jmolecules-integrations"
+    pinned: false
+    pinNote: "Repository main branch, not version-pinned. Status on 2026-10-17: not version-pinned (main branch); checked: 200."
+    purpose: "jmolecules-integrations repo."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: architecture-archunit-user-guide
+    title: "ArchUnit user guide"
+    component: "archunit"
+    docVersion: "1.5.1"
+    match: "exact"
+    kind: "guide"
+    area: "architecture"
+    url: "https://www.archunit.org/userguide/html/000_Index.html"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned (always latest; currently states 1.5.1); checked: 200."
+    purpose: "ArchUnit user guide."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: architecture-archunit-release-1-5-1
+    title: "ArchUnit release 1.5.1"
+    component: "archunit"
+    docVersion: "1.5.1"
+    match: "exact"
+    kind: "release"
+    area: "architecture"
+    url: "https://github.com/TNG/ArchUnit/releases/tag/v1.5.1"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "ArchUnit release 1.5.1."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: database-what-is-a-changelog
+    title: "What is a changelog (Community)"
+    component: "liquibase"
+    docVersion: "5.0.4"
+    match: "none"
+    kind: "guide"
+    area: "database"
+    url: "https://docs.liquibase.com/community/user-guide-5-0-4/what-is-a-changelog"
+    pinned: true
+    pinNote: "Community docs exist for 5.0.4 only; Boot 4.1.1 manages 5.0.3. Status on 2026-10-17: pinned (5.0.4, one patch above Boot's 5.0.3); checked: 200."
+    purpose: "What is a changelog (Community)."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: {txt: "https://docs.liquibase.com/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: database-install-with-spring-boot
+    title: "Install with Spring Boot (Community)"
+    component: "liquibase"
+    docVersion: "5.0.4"
+    match: "none"
+    kind: "reference"
+    area: "database"
+    url: "https://docs.liquibase.com/community/get-started-5-0-4/install-liquibase-with-spring-boot"
+    pinned: true
+    pinNote: "Community docs exist for 5.0.4 only; Boot 4.1.1 manages 5.0.3. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Install with Spring Boot (Community)."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: {txt: "https://docs.liquibase.com/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: database-connect-with-postgresql
+    title: "Connect with PostgreSQL (Community)"
+    component: "liquibase"
+    docVersion: "5.0.4"
+    match: "none"
+    kind: "reference"
+    area: "database"
+    url: "https://docs.liquibase.com/community/integration-guide-5-0-4/connect-liquibase-with-postgresql"
+    pinned: true
+    pinNote: "Community docs exist for 5.0.4 only; Boot 4.1.1 manages 5.0.3. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Connect with PostgreSQL (Community)."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: {txt: "https://docs.liquibase.com/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: database-community-5-0-3-release-notes
+    title: "Community 5.0.3 release notes"
+    component: "liquibase"
+    docVersion: "5.0.3"
+    match: "exact"
+    kind: "release-notes"
+    area: "database"
+    url: "https://docs.liquibase.com/community/release-notes/liquibase-community-5-0-3-release-notes"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Community 5.0.3 release notes."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: {txt: "https://docs.liquibase.com/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: database-community-5-0-4-release-notes
+    title: "Community 5.0.4 release notes"
+    component: "liquibase"
+    docVersion: "5.0.4"
+    match: "none"
+    kind: "release-notes"
+    area: "database"
+    url: "https://docs.liquibase.com/community/release-notes/liquibase-community-5-0-4-release-notes"
+    pinned: true
+    pinNote: "Community docs exist for 5.0.4 only; Boot 4.1.1 manages 5.0.3. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Community 5.0.4 release notes."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: {txt: "https://docs.liquibase.com/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: database-github-release-v5-0-3
+    title: "GitHub release v5.0.3"
+    component: "liquibase"
+    docVersion: "5.0.3"
+    match: "exact"
+    kind: "release"
+    area: "database"
+    url: "https://github.com/liquibase/liquibase/releases/tag/v5.0.3"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "GitHub release v5.0.3."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: database-documentation
+    title: "Documentation"
+    component: "postgres-image"
+    docVersion: "18"
+    match: "major"
+    kind: "reference"
+    area: "database"
+    url: "https://www.postgresql.org/docs/18/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned (major); checked: 200 (\"PostgreSQL 18.6 Documentation\")."
+    purpose: "Documentation."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: database-release-18-notes
+    title: "Release 18 notes"
+    component: "postgres-image"
+    docVersion: "18"
+    match: "major"
+    kind: "release-notes"
+    area: "database"
+    url: "https://www.postgresql.org/docs/18/release-18.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Release 18 notes."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: database-release-18-6-notes
+    title: "Release 18.6 notes"
+    component: "postgres-image"
+    docVersion: "18.6"
+    match: "exact"
+    kind: "release-notes"
+    area: "database"
+    url: "https://www.postgresql.org/docs/18/release-18-6.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Release 18.6 notes."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: database-versioning-policy
+    title: "Versioning policy"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "policy"
+    area: "database"
+    url: "https://www.postgresql.org/support/versioning/"
+    pinned: false
+    pinNote: "PostgreSQL versioning policy, not versioned. Status on 2026-10-17: not version-pinned (policy page); checked: 200."
+    purpose: "Versioning policy."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: database-pgjdbc-documentation
+    title: "pgJDBC documentation"
+    component: "pgjdbc"
+    docVersion: "42.7"
+    match: "minor"
+    kind: "reference"
+    area: "database"
+    url: "https://jdbc.postgresql.org/documentation/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned (site is latest only); checked: 200."
+    purpose: "pgJDBC documentation."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: testing-testcontainers-for-java-docs
+    title: "Testcontainers for Java docs"
+    component: "testcontainers"
+    docVersion: "2.0.5"
+    match: "exact"
+    kind: "reference"
+    area: "testing"
+    url: "https://java.testcontainers.org/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned (site serves latest only); checked: 200."
+    purpose: "Testcontainers for Java docs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: testing-postgres-module
+    title: "Postgres module"
+    component: "testcontainers"
+    docVersion: "2.0.5"
+    match: "exact"
+    kind: "reference"
+    area: "testing"
+    url: "https://java.testcontainers.org/modules/databases/postgres/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Postgres module."
+    guides: []
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: testing-junit-5-quickstart
+    title: "JUnit 5 quickstart"
+    component: "testcontainers"
+    docVersion: "2.0.5"
+    match: "exact"
+    kind: "guide"
+    area: "testing"
+    url: "https://java.testcontainers.org/quickstart/junit_5_quickstart/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "JUnit 5 quickstart."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: testing-docs-source-at-tag
+    title: "Docs source at tag (pinned alternative)"
+    component: "testcontainers"
+    docVersion: "2.0.5"
+    match: "exact"
+    kind: "reference"
+    area: "testing"
+    url: "https://github.com/testcontainers/testcontainers-java/tree/2.0.5/docs"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Docs source at tag (pinned alternative)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: testing-release-2-0-5
+    title: "Release 2.0.5"
+    component: "testcontainers"
+    docVersion: "2.0.5"
+    match: "exact"
+    kind: "release"
+    area: "testing"
+    url: "https://github.com/testcontainers/testcontainers-java/releases/tag/2.0.5"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Release 2.0.5."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: observability-otel-java-docs
+    title: "OTel Java docs"
+    component: "opentelemetry-java"
+    docVersion: "1.62.0"
+    match: "none"
+    kind: "reference"
+    area: "observability"
+    url: "https://opentelemetry.io/docs/languages/java/"
+    pinned: false
+    pinNote: "opentelemetry.io tracks the latest SDK (1.67.0 on 2026-10-17); Boot 4.1.1 manages 1.62.0. Status on 2026-10-17: not version-pinned (site tracks latest); checked: 200."
+    purpose: "OTel Java docs."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://opentelemetry.io/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: observability-otel-java-sdk-management
+    title: "OTel Java SDK management"
+    component: "opentelemetry-java"
+    docVersion: "1.62.0"
+    match: "none"
+    kind: "reference"
+    area: "observability"
+    url: "https://opentelemetry.io/docs/languages/java/sdk/"
+    pinned: false
+    pinNote: "opentelemetry.io tracks the latest SDK (1.67.0 on 2026-10-17); Boot 4.1.1 manages 1.62.0. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "OTel Java SDK management."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://opentelemetry.io/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: observability-otel-java-sdk-configuration
+    title: "OTel Java SDK configuration"
+    component: "opentelemetry-java"
+    docVersion: "1.62.0"
+    match: "none"
+    kind: "reference"
+    area: "observability"
+    url: "https://opentelemetry.io/docs/languages/java/configuration/"
+    pinned: false
+    pinNote: "opentelemetry.io tracks the latest SDK (1.67.0 on 2026-10-17); Boot 4.1.1 manages 1.62.0. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "OTel Java SDK configuration."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://opentelemetry.io/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: observability-otel-java-release-1-62-0
+    title: "OTel Java release 1.62.0 (Boot-managed)"
+    component: "opentelemetry-java"
+    docVersion: "1.62.0"
+    match: "exact"
+    kind: "release"
+    area: "observability"
+    url: "https://github.com/open-telemetry/opentelemetry-java/releases/tag/v1.62.0"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "OTel Java release 1.62.0 (Boot-managed)."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: observability-otlp-specification
+    title: "OTLP specification"
+    component: null
+    docVersion: "1.11.1"
+    match: "none"
+    kind: "spec"
+    area: "observability"
+    url: "https://opentelemetry.io/docs/specs/otlp/"
+    pinned: false
+    pinNote: "OTLP specification 1.11.1; not tied to a stack pin. Status on 2026-10-17: not version-pinned (title currently \"OTLP Specification 1.11.1\"); checked: 200."
+    purpose: "OTLP specification."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://opentelemetry.io/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: observability-otlp-specification-at-tag
+    title: "OTLP specification at tag"
+    component: null
+    docVersion: "1.11.1"
+    match: "none"
+    kind: "spec"
+    area: "observability"
+    url: "https://github.com/open-telemetry/opentelemetry-proto/blob/v1.11.1/docs/specification.md"
+    pinned: true
+    pinNote: "OTLP specification 1.11.1; not tied to a stack pin. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "OTLP specification at tag."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: observability-semantic-conventions
+    title: "Semantic conventions"
+    component: null
+    docVersion: "1.44.0"
+    match: "none"
+    kind: "reference"
+    area: "observability"
+    url: "https://opentelemetry.io/docs/specs/semconv/"
+    pinned: false
+    pinNote: "Semantic conventions 1.44.0; not tied to a stack pin. Status on 2026-10-17: not version-pinned (title currently \"1.44.0\"); checked: 200."
+    purpose: "Semantic conventions."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://opentelemetry.io/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: observability-semantic-conventions-at-tag
+    title: "Semantic conventions at tag"
+    component: null
+    docVersion: "1.44.0"
+    match: "none"
+    kind: "reference"
+    area: "observability"
+    url: "https://github.com/open-telemetry/semantic-conventions/tree/v1.44.0/docs"
+    pinned: true
+    pinNote: "Semantic conventions 1.44.0; not tied to a stack pin. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Semantic conventions at tag."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: observability-semconv-http-spans
+    title: "Semconv HTTP spans"
+    component: null
+    docVersion: "1.44.0"
+    match: "none"
+    kind: "reference"
+    area: "observability"
+    url: "https://opentelemetry.io/docs/specs/semconv/http/http-spans/"
+    pinned: false
+    pinNote: "Semantic conventions 1.44.0; not tied to a stack pin. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Semconv HTTP spans."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://opentelemetry.io/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: observability-semconv-db-client-spans
+    title: "Semconv DB client spans"
+    component: null
+    docVersion: "1.44.0"
+    match: "none"
+    kind: "reference"
+    area: "observability"
+    url: "https://opentelemetry.io/docs/specs/semconv/database/database-spans/"
+    pinned: false
+    pinNote: "Semantic conventions 1.44.0; not tied to a stack pin. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Semconv DB client spans."
+    guides: ["observability"]
+    appliesWhen: {database: ["postgres"]}
+    jep: null
+    llms: {txt: "https://opentelemetry.io/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: observability-semconv-messaging-spans
+    title: "Semconv messaging spans"
+    component: null
+    docVersion: "1.44.0"
+    match: "none"
+    kind: "reference"
+    area: "observability"
+    url: "https://opentelemetry.io/docs/specs/semconv/messaging/messaging-spans/"
+    pinned: false
+    pinNote: "Semantic conventions 1.44.0; not tied to a stack pin. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Semconv messaging spans."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://opentelemetry.io/llms.txt"}
+    baselines: []
+  - id: observability-semconv-jvm-metrics
+    title: "Semconv JVM metrics"
+    component: null
+    docVersion: "1.44.0"
+    match: "none"
+    kind: "reference"
+    area: "observability"
+    url: "https://opentelemetry.io/docs/specs/semconv/runtime/jvm-metrics/"
+    pinned: false
+    pinNote: "Semantic conventions 1.44.0; not tied to a stack pin. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Semconv JVM metrics."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://opentelemetry.io/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: observability-otel-specification
+    title: "OTel specification"
+    component: null
+    docVersion: "1.61.0"
+    match: "none"
+    kind: "spec"
+    area: "observability"
+    url: "https://opentelemetry.io/docs/specs/otel/"
+    pinned: false
+    pinNote: "OpenTelemetry specification 1.61.0; not tied to a stack pin. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "OTel specification."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://opentelemetry.io/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: observability-otel-specification-at-tag
+    title: "OTel specification at tag"
+    component: null
+    docVersion: "1.61.0"
+    match: "none"
+    kind: "spec"
+    area: "observability"
+    url: "https://github.com/open-telemetry/opentelemetry-specification/tree/v1.61.0/specification"
+    pinned: true
+    pinNote: "OpenTelemetry specification 1.61.0; not tied to a stack pin. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "OTel specification at tag."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: observability-otel-s-own-spring-boot-starter
+    title: "OTel's own Spring Boot starter (a different artifact from Boot's starter; listed to avoid confusion)"
+    component: null
+    docVersion: "latest"
+    match: "none"
+    kind: "reference"
+    area: "observability"
+    url: "https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/"
+    pinned: false
+    pinNote: "A different artifact from Boot's starter; listed to avoid confusion. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "OTel's own Spring Boot starter (a different artifact from Boot's starter; listed to avoid confusion)."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://opentelemetry.io/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: observability-micrometer-reference
+    title: "Micrometer reference"
+    component: "micrometer"
+    docVersion: "1.17"
+    match: "minor"
+    kind: "reference"
+    area: "observability"
+    url: "https://docs.micrometer.io/micrometer/reference/1.17/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned (minor, redirects while current); checked: 200 via redirect."
+    purpose: "Micrometer reference."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: observability-micrometer-otlp-registry
+    title: "Micrometer OTLP registry"
+    component: "micrometer"
+    docVersion: "1.17"
+    match: "minor"
+    kind: "reference"
+    area: "observability"
+    url: "https://docs.micrometer.io/micrometer/reference/1.17/implementations/otlp.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Micrometer OTLP registry."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: observability-micrometer-observation
+    title: "Micrometer Observation"
+    component: "micrometer"
+    docVersion: "1.17"
+    match: "minor"
+    kind: "reference"
+    area: "observability"
+    url: "https://docs.micrometer.io/micrometer/reference/observation.html"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned (unversioned path; 1.17 is current); checked: 200."
+    purpose: "Micrometer Observation."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: observability-micrometer-tracing-reference
+    title: "Micrometer Tracing reference"
+    component: "micrometer-tracing"
+    docVersion: "1.7"
+    match: "minor"
+    kind: "reference"
+    area: "observability"
+    url: "https://docs.micrometer.io/tracing/reference/1.7/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Micrometer Tracing reference."
+    guides: ["observability"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: build-user-manual
+    title: "User manual"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/userguide.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "User manual."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-release-notes
+    title: "Release notes"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "release-notes"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/release-notes.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Release notes."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-best-practices
+    title: "Best practices"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "guide"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/best_practices.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Best practices."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-version-catalogs
+    title: "Version catalogs"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/version_catalogs.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Version catalogs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-sharing-build-logic
+    title: "Sharing build logic (buildSrc)"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/sharing_build_logic_between_subprojects.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Sharing build logic (buildSrc)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-pre-compiled-script-plugins
+    title: "Pre-compiled script plugins"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/implementing_gradle_plugins_precompiled.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Pre-compiled script plugins."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-jvm-test-suite-plugin
+    title: "JVM Test Suite plugin"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/jvm_test_suite_plugin.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "JVM Test Suite plugin."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-toolchains
+    title: "Toolchains"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/toolchains.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Toolchains."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-configuration-cache
+    title: "Configuration cache"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/configuration_cache.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Configuration cache."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-compatibility-matrix
+    title: "Compatibility matrix (Java 25 support)"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/compatibility.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Compatibility matrix (Java 25 support)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-dependency-verification
+    title: "Dependency verification"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/dependency_verification.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Dependency verification."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-dsl-reference
+    title: "DSL reference"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/dsl/index.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "DSL reference."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-convention-plugins
+    title: "Convention plugins"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/implementing_gradle_plugins_convention.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Convention plugins."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-best-practices-for-structuring-builds
+    title: "Best practices for structuring builds"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "guide"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/best_practices_structuring_builds.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Best practices for structuring builds."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: build-composite-builds
+    title: "Composite builds (included build-logic)"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/composite_builds.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Composite builds (included build-logic)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-docs-home
+    title: "Docs home"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "reference"
+    area: "kubernetes"
+    url: "https://v1-36.docs.kubernetes.io/docs/home/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Docs home."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-probes
+    title: "Probes (concept)"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "reference"
+    area: "kubernetes"
+    url: "https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect (lands on `/docs/concepts/workloads/pods/probes/` on the same v1-36 host)."
+    purpose: "Probes (concept)."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-configure-liveness-readiness-startup-probes
+    title: "Configure liveness/readiness/startup probes (task)"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "guide"
+    area: "kubernetes"
+    url: "https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Configure liveness/readiness/startup probes (task)."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-pod-security-standards
+    title: "Pod Security Standards"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "reference"
+    area: "kubernetes"
+    url: "https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Pod Security Standards."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-pod-security-admission
+    title: "Pod Security Admission"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "reference"
+    area: "kubernetes"
+    url: "https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-admission/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Pod Security Admission."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-networkpolicy
+    title: "NetworkPolicy"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "reference"
+    area: "kubernetes"
+    url: "https://v1-36.docs.kubernetes.io/docs/concepts/services-networking/network-policies/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "NetworkPolicy."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-disruptions
+    title: "Disruptions (PDB concept)"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "reference"
+    area: "kubernetes"
+    url: "https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/disruptions/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Disruptions (PDB concept)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-configure-a-poddisruptionbudget
+    title: "Configure a PodDisruptionBudget"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "reference"
+    area: "kubernetes"
+    url: "https://v1-36.docs.kubernetes.io/docs/tasks/run-application/configure-pdb/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Configure a PodDisruptionBudget."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-pod-topology-spread-constraints
+    title: "Pod topology spread constraints"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "reference"
+    area: "kubernetes"
+    url: "https://v1-36.docs.kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Pod topology spread constraints."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-pod-lifecycle
+    title: "Pod lifecycle (graceful termination)"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "reference"
+    area: "kubernetes"
+    url: "https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Pod lifecycle (graceful termination)."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-resource-management
+    title: "Resource management"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "reference"
+    area: "kubernetes"
+    url: "https://v1-36.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Resource management."
+    guides: ["jvm-in-containers"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-kustomize-via-kubectl
+    title: "Kustomize via kubectl (task)"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "guide"
+    area: "kubernetes"
+    url: "https://v1-36.docs.kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Kustomize via kubectl (task)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-changelog-1-36
+    title: "CHANGELOG 1.36"
+    component: "kubernetes-1.36"
+    docVersion: "1.36"
+    match: "minor"
+    kind: "release-notes"
+    area: "kubernetes"
+    url: "https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.36.md"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned (file per minor); checked: 200."
+    purpose: "CHANGELOG 1.36."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-kustomize-reference
+    title: "Kustomize reference"
+    component: "kustomize"
+    docVersion: "5.8"
+    match: "minor"
+    kind: "reference"
+    area: "kubernetes"
+    url: "https://kubectl.docs.kubernetes.io/references/kustomize/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned (single living site); checked: 200."
+    purpose: "Kustomize reference."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-kustomization-yaml-reference
+    title: "kustomization.yaml reference"
+    component: "kustomize"
+    docVersion: "5.8"
+    match: "minor"
+    kind: "reference"
+    area: "kubernetes"
+    url: "https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "kustomization.yaml reference."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: kubernetes-release-kustomize-v5-8-3
+    title: "Release kustomize/v5.8.3"
+    component: "kustomize"
+    docVersion: "5.8.3"
+    match: "exact"
+    kind: "release"
+    area: "kubernetes"
+    url: "https://github.com/kubernetes-sigs/kustomize/releases/tag/kustomize%2Fv5.8.3"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Release kustomize/v5.8.3."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: api-openapi-specification-v3-1-2
+    title: "OpenAPI Specification v3.1.2 (latest 3.1 patch)"
+    component: "openapi-spec"
+    docVersion: "3.1.2"
+    match: "exact"
+    kind: "spec"
+    area: "api"
+    url: "https://spec.openapis.org/oas/v3.1.2.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "OpenAPI Specification v3.1.2 (latest 3.1 patch)."
+    guides: []
+    appliesWhen: {api: ["rest"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: api-openapi-specification-v3-1-0
+    title: "OpenAPI Specification v3.1.0"
+    component: "openapi-spec"
+    docVersion: "3.1.0"
+    match: "minor"
+    kind: "spec"
+    area: "api"
+    url: "https://spec.openapis.org/oas/v3.1.0.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "OpenAPI Specification v3.1.0."
+    guides: []
+    appliesWhen: {api: ["rest"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: api-openapi-generator-spring-generator
+    title: "openapi-generator Spring generator"
+    component: "openapi-generator-gradle-plugin"
+    docVersion: "7.26.0"
+    match: "exact"
+    kind: "reference"
+    area: "api"
+    url: "https://openapi-generator.tech/docs/generators/spring/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned (site = latest); checked: 200."
+    purpose: "openapi-generator Spring generator."
+    guides: []
+    appliesWhen: {api: ["rest"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: api-spring-generator-doc-at-tag
+    title: "Spring generator doc at tag"
+    component: "openapi-generator-gradle-plugin"
+    docVersion: "7.26.0"
+    match: "exact"
+    kind: "reference"
+    area: "api"
+    url: "https://github.com/OpenAPITools/openapi-generator/blob/v7.26.0/docs/generators/spring.md"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Spring generator doc at tag."
+    guides: []
+    appliesWhen: {api: ["rest"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: api-gradle-plugin-readme-at-tag
+    title: "Gradle plugin README at tag"
+    component: "openapi-generator-gradle-plugin"
+    docVersion: "7.26.0"
+    match: "exact"
+    kind: "reference"
+    area: "api"
+    url: "https://github.com/OpenAPITools/openapi-generator/blob/v7.26.0/modules/openapi-generator-gradle-plugin/README.adoc"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Gradle plugin README at tag."
+    guides: []
+    appliesWhen: {api: ["rest"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: api-plugins-overview
+    title: "Plugins overview"
+    component: "openapi-generator-gradle-plugin"
+    docVersion: "latest"
+    match: "none"
+    kind: "reference"
+    area: "api"
+    url: "https://openapi-generator.tech/docs/plugins/"
+    pinned: false
+    pinNote: "openapi-generator.tech serves the latest release only. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Plugins overview."
+    guides: []
+    appliesWhen: {api: ["rest"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: api-release-v7-26-0
+    title: "Release v7.26.0"
+    component: "openapi-generator-gradle-plugin"
+    docVersion: "7.26.0"
+    match: "exact"
+    kind: "release"
+    area: "api"
+    url: "https://github.com/OpenAPITools/openapi-generator/releases/tag/v7.26.0"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Release v7.26.0."
+    guides: []
+    appliesWhen: {api: ["rest"]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: identity-openid-connect-core-1-0
+    title: "OpenID Connect Core 1.0 (errata set 2)"
+    component: null
+    docVersion: "final"
+    match: "none"
+    kind: "spec"
+    area: "identity"
+    url: "https://openid.net/specs/openid-connect-core-1_0.html"
+    pinned: true
+    pinNote: "Final specification, not versioned with the stack. Status on 2026-10-17: pinned (final spec); checked: 200."
+    purpose: "OpenID Connect Core 1.0 (errata set 2)."
+    guides: []
+    appliesWhen: {auth: [true]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: identity-openid-connect-discovery-1-0
+    title: "OpenID Connect Discovery 1.0"
+    component: null
+    docVersion: "final"
+    match: "none"
+    kind: "spec"
+    area: "identity"
+    url: "https://openid.net/specs/openid-connect-discovery-1_0.html"
+    pinned: true
+    pinNote: "Final specification, not versioned with the stack. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "OpenID Connect Discovery 1.0."
+    guides: []
+    appliesWhen: {auth: [true]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: identity-rfc-6750-bearer-token-usage
+    title: "RFC 6750 Bearer Token Usage"
+    component: null
+    docVersion: "final"
+    match: "none"
+    kind: "spec"
+    area: "identity"
+    url: "https://www.rfc-editor.org/rfc/rfc6750.html"
+    pinned: true
+    pinNote: "Final specification, not versioned with the stack. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "RFC 6750 Bearer Token Usage."
+    guides: []
+    appliesWhen: {auth: [true]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: identity-rfc-7519-jwt
+    title: "RFC 7519 JWT"
+    component: null
+    docVersion: "final"
+    match: "none"
+    kind: "spec"
+    area: "identity"
+    url: "https://www.rfc-editor.org/rfc/rfc7519.html"
+    pinned: true
+    pinNote: "Final specification, not versioned with the stack. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "RFC 7519 JWT."
+    guides: []
+    appliesWhen: {auth: [true]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: identity-rfc-9068-jwt-profile-for-oauth-2-0-access-tokens
+    title: "RFC 9068 JWT Profile for OAuth 2.0 Access Tokens"
+    component: null
+    docVersion: "final"
+    match: "none"
+    kind: "spec"
+    area: "identity"
+    url: "https://www.rfc-editor.org/rfc/rfc9068.html"
+    pinned: true
+    pinNote: "Final specification, not versioned with the stack. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "RFC 9068 JWT Profile for OAuth 2.0 Access Tokens."
+    guides: []
+    appliesWhen: {auth: [true]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: identity-rfc-9700-oauth-2-0-security-bcp
+    title: "RFC 9700 OAuth 2.0 Security BCP"
+    component: null
+    docVersion: "final"
+    match: "none"
+    kind: "spec"
+    area: "identity"
+    url: "https://www.rfc-editor.org/rfc/rfc9700.html"
+    pinned: true
+    pinNote: "Final specification, not versioned with the stack. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "RFC 9700 OAuth 2.0 Security BCP."
+    guides: []
+    appliesWhen: {auth: [true]}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: ci-secure-use-reference
+    title: "Secure use reference (formerly \"Security hardening for GitHub Actions\"; the old URL redirects here)"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "ci"
+    url: "https://docs.github.com/en/actions/reference/security/secure-use"
+    pinned: false
+    pinNote: "GitHub documentation is unversioned. Status on 2026-10-17: not version-pinned (GitHub docs are unversioned); checked: 200."
+    purpose: "Secure use reference (formerly \"Security hardening for GitHub Actions\"; the old URL redirects here)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.github.com/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: ci-reuse-workflows
+    title: "Reuse workflows (how-to)"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "guide"
+    area: "ci"
+    url: "https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows"
+    pinned: false
+    pinNote: "GitHub documentation is unversioned. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Reuse workflows (how-to)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.github.com/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: ci-reusing-workflow-configurations
+    title: "Reusing workflow configurations (reference)"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "ci"
+    url: "https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations"
+    pinned: false
+    pinNote: "GitHub documentation is unversioned. Status on 2026-10-17: not version-pinned; checked: 200 (the old `/reusable-workflows` redirects here)."
+    purpose: "Reusing workflow configurations (reference)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.github.com/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: ci-openid-connect-in-actions
+    title: "OpenID Connect in Actions (keyless cosign)"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "ci"
+    url: "https://docs.github.com/en/actions/concepts/security/openid-connect"
+    pinned: false
+    pinNote: "GitHub documentation is unversioned. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "OpenID Connect in Actions (keyless cosign)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: {txt: "https://docs.github.com/llms.txt"}
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-slsa-spec-v1-2
+    title: "SLSA spec v1.2 (current; /spec/ and /spec/latest/ both redirect to v1.2)"
+    component: "slsa"
+    docVersion: "1.2"
+    match: "exact"
+    kind: "spec"
+    area: "supply-chain"
+    url: "https://slsa.dev/spec/v1.2/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "SLSA spec v1.2 (current; /spec/ and /spec/latest/ both redirect to v1.2)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-slsa-v1-2-build-track-basics
+    title: "SLSA v1.2 Build track basics"
+    component: "slsa"
+    docVersion: "1.2"
+    match: "exact"
+    kind: "reference"
+    area: "supply-chain"
+    url: "https://slsa.dev/spec/v1.2/build-track-basics"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "SLSA v1.2 Build track basics."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-slsa-v1-2-provenance
+    title: "SLSA v1.2 Provenance"
+    component: "slsa"
+    docVersion: "1.2"
+    match: "exact"
+    kind: "reference"
+    area: "supply-chain"
+    url: "https://slsa.dev/spec/v1.2/provenance"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "SLSA v1.2 Provenance."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-slsa-v1-1-v1-0
+    title: "SLSA v1.1 / v1.0 (older)"
+    component: "slsa"
+    docVersion: "1.1 and 1.0"
+    match: "none"
+    kind: "reference"
+    area: "supply-chain"
+    url: "https://slsa.dev/spec/v1.1/"
+    pinned: true
+    pinNote: "Older SLSA versions, for context only. Status on 2026-10-17: pinned; checked: 200 / 200."
+    purpose: "SLSA v1.1 / v1.0 (older)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: supply-chain-slsa-v1-1-v1-0-2
+    title: "SLSA v1.1 / v1.0 (older)"
+    component: "slsa"
+    docVersion: "1.1 and 1.0"
+    match: "none"
+    kind: "reference"
+    area: "supply-chain"
+    url: "https://slsa.dev/spec/v1.0/"
+    pinned: true
+    pinNote: "Older SLSA versions, for context only. Status on 2026-10-17: pinned; checked: 200 / 200."
+    purpose: "SLSA v1.1 / v1.0 (older)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: supply-chain-sigstore-docs
+    title: "Sigstore docs"
+    component: "cosign"
+    docVersion: "3"
+    match: "major"
+    kind: "reference"
+    area: "supply-chain"
+    url: "https://docs.sigstore.dev/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Sigstore docs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-cosign-signing-containers
+    title: "cosign: signing containers"
+    component: "cosign"
+    docVersion: "3"
+    match: "major"
+    kind: "reference"
+    area: "supply-chain"
+    url: "https://docs.sigstore.dev/cosign/signing/signing_with_containers/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "cosign: signing containers."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-cosign-verifying
+    title: "cosign: verifying"
+    component: "cosign"
+    docVersion: "3"
+    match: "major"
+    kind: "reference"
+    area: "supply-chain"
+    url: "https://docs.sigstore.dev/cosign/verifying/verify/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "cosign: verifying."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-cosign-in-toto-attestations
+    title: "cosign: in-toto attestations"
+    component: "cosign"
+    docVersion: "3"
+    match: "major"
+    kind: "reference"
+    area: "supply-chain"
+    url: "https://docs.sigstore.dev/cosign/verifying/attestation/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "cosign: in-toto attestations."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-cosign-release-v3-1-3
+    title: "cosign release v3.1.3"
+    component: "cosign"
+    docVersion: "3.1.3"
+    match: "exact"
+    kind: "release"
+    area: "supply-chain"
+    url: "https://github.com/sigstore/cosign/releases/tag/v3.1.3"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "cosign release v3.1.3."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-syft-docs
+    title: "Syft docs (Anchore OSS site)"
+    component: "syft"
+    docVersion: "1.54.1"
+    match: "exact"
+    kind: "reference"
+    area: "supply-chain"
+    url: "https://oss.anchore.com/docs/guides/sbom/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Syft docs (Anchore OSS site)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-syft-cli-reference
+    title: "Syft CLI reference"
+    component: "syft"
+    docVersion: "1.54.1"
+    match: "exact"
+    kind: "reference"
+    area: "supply-chain"
+    url: "https://oss.anchore.com/docs/reference/syft/cli/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Syft CLI reference."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-syft-repo-release-v1-54-1
+    title: "Syft repo / release v1.54.1"
+    component: "syft"
+    docVersion: "1.54.1"
+    match: "exact"
+    kind: "reference"
+    area: "supply-chain"
+    url: "https://github.com/anchore/syft"
+    pinned: false
+    pinNote: "Status on 2026-10-17: repo not pinned / release pinned; checked: 200 / 200."
+    purpose: "Syft repo / release v1.54.1."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-syft-repo-release-v1-54-1-2
+    title: "Syft repo / release v1.54.1"
+    component: "syft"
+    docVersion: "1.54.1"
+    match: "exact"
+    kind: "release"
+    area: "supply-chain"
+    url: "https://github.com/anchore/syft/releases/tag/v1.54.1"
+    pinned: true
+    pinNote: "Status on 2026-10-17: repo not pinned / release pinned; checked: 200 / 200."
+    purpose: "Syft repo / release v1.54.1."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-trivy-docs
+    title: "Trivy docs"
+    component: "trivy"
+    docVersion: "0.76"
+    match: "minor"
+    kind: "reference"
+    area: "supply-chain"
+    url: "https://trivy.dev/docs/v0.76/guide/"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned (minor); checked: 200 (`/docs/latest/guide/` also 200; `/latest/` returns 404)."
+    purpose: "Trivy docs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: supply-chain-trivy-release-v0-76-0
+    title: "Trivy release v0.76.0"
+    component: "trivy"
+    docVersion: "0.76.0"
+    match: "exact"
+    kind: "release"
+    area: "supply-chain"
+    url: "https://github.com/aquasecurity/trivy/releases/tag/v0.76.0"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Trivy release v0.76.0."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: dependencies-renovate-docs
+    title: "Renovate docs"
+    component: "renovate"
+    docVersion: "44.166.0"
+    match: "exact"
+    kind: "reference"
+    area: "dependencies"
+    url: "https://docs.renovatebot.com/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned (living docs); checked: 200."
+    purpose: "Renovate docs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: dependencies-renovate-configuration-options
+    title: "Renovate configuration options"
+    component: "renovate"
+    docVersion: "latest"
+    match: "none"
+    kind: "reference"
+    area: "dependencies"
+    url: "https://docs.renovatebot.com/configuration-options/"
+    pinned: false
+    pinNote: "Living documentation. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Renovate configuration options."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: dependencies-renovate-gradle-manager
+    title: "Renovate Gradle manager"
+    component: "renovate"
+    docVersion: "latest"
+    match: "none"
+    kind: "reference"
+    area: "dependencies"
+    url: "https://docs.renovatebot.com/modules/manager/gradle/"
+    pinned: false
+    pinNote: "Living documentation. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Renovate Gradle manager."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: dependencies-renovate-upgrade-best-practices
+    title: "Renovate upgrade best practices"
+    component: "renovate"
+    docVersion: "latest"
+    match: "none"
+    kind: "migration"
+    area: "dependencies"
+    url: "https://docs.renovatebot.com/upgrade-best-practices/"
+    pinned: false
+    pinNote: "Living documentation. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Renovate upgrade best practices."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-jspecify-start-here
+    title: "JSpecify start here"
+    component: "jspecify"
+    docVersion: "1.0"
+    match: "minor"
+    kind: "reference"
+    area: "static-analysis"
+    url: "https://jspecify.dev/docs/start-here/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned (site = 1.0 line); checked: 200."
+    purpose: "JSpecify start here."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-jspecify-user-guide
+    title: "JSpecify user guide"
+    component: "jspecify"
+    docVersion: "1.0"
+    match: "minor"
+    kind: "guide"
+    area: "static-analysis"
+    url: "https://jspecify.dev/docs/user-guide/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "JSpecify user guide."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-jspecify-spec
+    title: "JSpecify spec"
+    component: "jspecify"
+    docVersion: "1.0"
+    match: "minor"
+    kind: "spec"
+    area: "static-analysis"
+    url: "https://jspecify.dev/docs/spec/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "JSpecify spec."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-jspecify-annotations-javadoc-1-0-0
+    title: "JSpecify annotations javadoc 1.0.0"
+    component: "jspecify"
+    docVersion: "1.0"
+    match: "minor"
+    kind: "api"
+    area: "static-analysis"
+    url: "https://javadoc.io/doc/org.jspecify/jspecify/1.0.0/org/jspecify/annotations/package-summary.html"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "JSpecify annotations javadoc 1.0.0."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-jspecify-release-1-0-0
+    title: "JSpecify release 1.0.0"
+    component: "jspecify"
+    docVersion: "1.0"
+    match: "minor"
+    kind: "release"
+    area: "static-analysis"
+    url: "https://github.com/jspecify/jspecify/releases/tag/v1.0.0"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200 (artifact 1.0.1, 2026-07-29, is the latest patch)."
+    purpose: "JSpecify release 1.0.0."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-nullaway-readme-at-tag
+    title: "NullAway README at tag"
+    component: "nullaway"
+    docVersion: "0.14.2"
+    match: "exact"
+    kind: "reference"
+    area: "static-analysis"
+    url: "https://github.com/uber/NullAway/blob/v0.14.2/README.md"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "NullAway README at tag."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-nullaway-jspecify-support
+    title: "NullAway JSpecify support (wiki)"
+    component: "nullaway"
+    docVersion: "latest"
+    match: "none"
+    kind: "reference"
+    area: "static-analysis"
+    url: "https://github.com/uber/NullAway/wiki/JSpecify-Support"
+    pinned: false
+    pinNote: "Wiki, not version-pinned. Status on 2026-10-17: not version-pinned (wiki); checked: 200."
+    purpose: "NullAway JSpecify support (wiki)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-nullaway-release-0-14-2
+    title: "NullAway release 0.14.2"
+    component: "nullaway"
+    docVersion: "0.14.2"
+    match: "exact"
+    kind: "release"
+    area: "static-analysis"
+    url: "https://github.com/uber/NullAway/releases/tag/v0.14.2"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "NullAway release 0.14.2."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-error-prone-docs
+    title: "Error Prone docs"
+    component: "error-prone"
+    docVersion: "2.50.0"
+    match: "exact"
+    kind: "reference"
+    area: "static-analysis"
+    url: "https://errorprone.info/"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Error Prone docs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-error-prone-installation
+    title: "Error Prone installation"
+    component: "error-prone"
+    docVersion: "2.50.0"
+    match: "exact"
+    kind: "reference"
+    area: "static-analysis"
+    url: "https://errorprone.info/docs/installation"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Error Prone installation."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-error-prone-bug-patterns
+    title: "Error Prone bug patterns"
+    component: "error-prone"
+    docVersion: "2.50.0"
+    match: "exact"
+    kind: "reference"
+    area: "static-analysis"
+    url: "https://errorprone.info/bugpatterns"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Error Prone bug patterns."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-error-prone-release-2-50-0
+    title: "Error Prone release 2.50.0"
+    component: "error-prone"
+    docVersion: "2.50.0"
+    match: "exact"
+    kind: "release"
+    area: "static-analysis"
+    url: "https://github.com/google/error-prone/releases/tag/v2.50.0"
+    pinned: true
+    pinNote: "Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Error Prone release 2.50.0."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: static-analysis-gradle-errorprone-plugin
+    title: "gradle-errorprone-plugin (README)"
+    component: "errorprone-gradle-plugin"
+    docVersion: "5.1.1"
+    match: "exact"
+    kind: "reference"
+    area: "static-analysis"
+    url: "https://github.com/tbroyer/gradle-errorprone-plugin"
+    pinned: false
+    pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "gradle-errorprone-plugin (README)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: database-jakarta-persistence-3-2-spec-page
+    title: "Jakarta Persistence 3.2 spec page"
+    component: null
+    docVersion: "3.2"
+    match: "none"
+    kind: "spec"
+    area: "database"
+    url: "https://jakarta.ee/specifications/persistence/3.2/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Jakarta Persistence 3.2 spec page."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-jakarta-persistence-3-2-specification
+    title: "Jakarta Persistence 3.2 specification (HTML)"
+    component: null
+    docVersion: "3.2"
+    match: "none"
+    kind: "spec"
+    area: "database"
+    url: "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Jakarta Persistence 3.2 specification (HTML)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-jakarta-persistence-3-2-specification-2
+    title: "Jakarta Persistence 3.2 specification (PDF)"
+    component: null
+    docVersion: "3.2"
+    match: "none"
+    kind: "spec"
+    area: "database"
+    url: "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.pdf"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Jakarta Persistence 3.2 specification (PDF)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-jakarta-persistence-3-2-api-docs
+    title: "Jakarta Persistence 3.2 API docs"
+    component: null
+    docVersion: "3.2"
+    match: "none"
+    kind: "api"
+    area: "database"
+    url: "https://jakarta.ee/specifications/persistence/3.2/apidocs/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Jakarta Persistence 3.2 API docs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-hibernate-orm-7-4-user-guide
+    title: "Hibernate ORM 7.4 user guide"
+    component: null
+    docVersion: "7.4.5.Final"
+    match: "none"
+    kind: "guide"
+    area: "database"
+    url: "https://docs.hibernate.org/orm/7.4/userguide/html_single/Hibernate_User_Guide.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned (minor); checked: 200 via redirect."
+    purpose: "Hibernate ORM 7.4 user guide."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-hibernate-orm-7-4-introduction
+    title: "Hibernate ORM 7.4 introduction"
+    component: null
+    docVersion: "7.4"
+    match: "none"
+    kind: "reference"
+    area: "database"
+    url: "https://docs.hibernate.org/orm/7.4/introduction/html_single/Hibernate_Introduction.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Hibernate ORM 7.4 introduction."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-hibernate-orm-7-4-migration-guide
+    title: "Hibernate ORM 7.4 migration guide"
+    component: null
+    docVersion: "7.4"
+    match: "none"
+    kind: "migration"
+    area: "database"
+    url: "https://docs.hibernate.org/orm/7.4/migration-guide/migration-guide.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Hibernate ORM 7.4 migration guide."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-hibernate-orm-7-4-series-page
+    title: "Hibernate ORM 7.4 series page"
+    component: null
+    docVersion: "7.4"
+    match: "none"
+    kind: "release"
+    area: "database"
+    url: "https://hibernate.org/orm/releases/7.4/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Hibernate ORM 7.4 series page."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-jooq-manual
+    title: "jOOQ manual"
+    component: null
+    docVersion: "3.21.7"
+    match: "none"
+    kind: "reference"
+    area: "database"
+    url: "https://www.jooq.org/doc/3.21/manual/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned (minor); checked: 200."
+    purpose: "jOOQ manual."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-jooq-manual-single-page
+    title: "jOOQ manual, single page"
+    component: null
+    docVersion: "3.21"
+    match: "none"
+    kind: "reference"
+    area: "database"
+    url: "https://www.jooq.org/doc/3.21/manual-single-page/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "jOOQ manual, single page."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-spring-grpc-reference
+    title: "Spring gRPC reference"
+    component: null
+    docVersion: "1.1.1"
+    match: "none"
+    kind: "reference"
+    area: "api"
+    url: "https://docs.spring.io/spring-grpc/reference/1.1/index.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Spring gRPC reference."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-spring-grpc-getting-started
+    title: "Spring gRPC getting started"
+    component: null
+    docVersion: "1.1.1"
+    match: "none"
+    kind: "guide"
+    area: "api"
+    url: "https://docs.spring.io/spring-grpc/reference/1.1/getting-started.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Spring gRPC getting started."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-spring-boot-4-1-grpc
+    title: "Spring Boot 4.1 gRPC (first-party in Boot 4.1)"
+    component: null
+    docVersion: "4.1.1"
+    match: "none"
+    kind: "reference"
+    area: "api"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/io/grpc.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Spring Boot 4.1 gRPC (first-party in Boot 4.1)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-grpc-java-docs
+    title: "gRPC Java docs"
+    component: null
+    docVersion: "1.83.1 (Boot)"
+    match: "none"
+    kind: "reference"
+    area: "api"
+    url: "https://grpc.io/docs/languages/java/"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "gRPC Java docs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-grpc-java-basics-tutorial
+    title: "gRPC Java basics tutorial"
+    component: null
+    docVersion: "latest"
+    match: "none"
+    kind: "guide"
+    area: "api"
+    url: "https://grpc.io/docs/languages/java/basics/"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "gRPC Java basics tutorial."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-grpc-api-javadoc-1-83-1
+    title: "grpc-api javadoc 1.83.1"
+    component: null
+    docVersion: "1.83.1"
+    match: "none"
+    kind: "api"
+    area: "api"
+    url: "https://javadoc.io/doc/io.grpc/grpc-api/1.83.1/index.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 (the official `grpc.github.io/grpc-java/javadoc/` is latest = 1.85.0)."
+    purpose: "grpc-api javadoc 1.83.1."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-grpc-java-release-v1-83-1
+    title: "grpc-java release v1.83.1"
+    component: null
+    docVersion: "1.83.1"
+    match: "none"
+    kind: "release"
+    area: "api"
+    url: "https://github.com/grpc/grpc-java/releases/tag/v1.83.1"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "grpc-java release v1.83.1."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-protocol-buffers-docs
+    title: "Protocol Buffers docs"
+    component: null
+    docVersion: "v35.1 (protobuf-java 4.35.1)"
+    match: "none"
+    kind: "reference"
+    area: "api"
+    url: "https://protobuf.dev/"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Protocol Buffers docs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-proto3-language-guide
+    title: "Proto3 language guide"
+    component: null
+    docVersion: "latest"
+    match: "none"
+    kind: "guide"
+    area: "api"
+    url: "https://protobuf.dev/programming-guides/proto3/"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Proto3 language guide."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-editions-language-guide
+    title: "Editions language guide"
+    component: null
+    docVersion: "latest"
+    match: "none"
+    kind: "guide"
+    area: "api"
+    url: "https://protobuf.dev/programming-guides/editions/"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Editions language guide."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-java-generated-code-guide
+    title: "Java generated code guide"
+    component: null
+    docVersion: "latest"
+    match: "none"
+    kind: "guide"
+    area: "api"
+    url: "https://protobuf.dev/reference/java/java-generated/"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Java generated code guide."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-proto-best-practices
+    title: "Proto best practices (dos and don'ts)"
+    component: null
+    docVersion: "latest"
+    match: "none"
+    kind: "guide"
+    area: "api"
+    url: "https://protobuf.dev/best-practices/dos-donts/"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200 (the old `/programming-guides/dos-donts/` redirects here)."
+    purpose: "Proto best practices (dos and don'ts)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-protobuf-version-support
+    title: "Protobuf version support"
+    component: null
+    docVersion: "latest"
+    match: "none"
+    kind: "reference"
+    area: "api"
+    url: "https://protobuf.dev/support/version-support/"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Protobuf version support."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: api-protobuf-release-v35-1
+    title: "protobuf release v35.1"
+    component: null
+    docVersion: "35.1"
+    match: "none"
+    kind: "release"
+    area: "api"
+    url: "https://github.com/protocolbuffers/protobuf/releases/tag/v35.1"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "protobuf release v35.1."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-apache-kafka-4-2-docs
+    title: "Apache Kafka 4.2 docs"
+    component: null
+    docVersion: "4.2.1 (client)"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://kafka.apache.org/42/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned (minor); checked: 200 (`/42/documentation.html` is a legacy redirect stub; use `/42/`)."
+    purpose: "Apache Kafka 4.2 docs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-kafka-4-2-apis
+    title: "Kafka 4.2 APIs"
+    component: null
+    docVersion: "4.2"
+    match: "none"
+    kind: "api"
+    area: "messaging"
+    url: "https://kafka.apache.org/42/apis/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Kafka 4.2 APIs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-kafka-4-2-producer-configs
+    title: "Kafka 4.2 producer configs"
+    component: null
+    docVersion: "4.2"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://kafka.apache.org/42/configuration/producer-configs/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Kafka 4.2 producer configs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-kafka-4-2-upgrade-notes
+    title: "Kafka 4.2 upgrade notes"
+    component: null
+    docVersion: "4.2"
+    match: "none"
+    kind: "migration"
+    area: "messaging"
+    url: "https://kafka.apache.org/42/getting-started/upgrade/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Kafka 4.2 upgrade notes."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-kafka-4-2-javadoc
+    title: "Kafka 4.2 javadoc"
+    component: null
+    docVersion: "4.2"
+    match: "none"
+    kind: "api"
+    area: "messaging"
+    url: "https://kafka.apache.org/42/javadoc/index.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned (minor; title says 4.2.0 API); checked: 200."
+    purpose: "Kafka 4.2 javadoc."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-spring-for-apache-kafka-reference
+    title: "Spring for Apache Kafka reference"
+    component: null
+    docVersion: "4.1.1"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://docs.spring.io/spring-kafka/reference/4.1/index.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Spring for Apache Kafka reference."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-spring-kafka-what-s-new
+    title: "Spring Kafka what's new"
+    component: null
+    docVersion: "4.1.1"
+    match: "none"
+    kind: "release-notes"
+    area: "messaging"
+    url: "https://docs.spring.io/spring-kafka/reference/4.1/whats-new.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Spring Kafka what's new."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-spring-boot-kafka-support
+    title: "Spring Boot Kafka support"
+    component: null
+    docVersion: "4.1.1"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/messaging/kafka.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Spring Boot Kafka support."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-apache-avro-specification
+    title: "Apache Avro specification"
+    component: null
+    docVersion: "1.12.0"
+    match: "none"
+    kind: "spec"
+    area: "messaging"
+    url: "https://avro.apache.org/docs/1.12.0/specification/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned to 1.12.0 (latest release 1.12.2 has no published docs: `/docs/1.12.2/specification/` returns 404); checked: 200."
+    purpose: "Apache Avro specification."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-karapace-docs
+    title: "Karapace docs"
+    component: null
+    docVersion: "6.2.4"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://www.karapace.io/docs"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Karapace docs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-karapace-at-tag
+    title: "Karapace at tag"
+    component: null
+    docVersion: "6.2.4"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://github.com/Aiven-Open/karapace/tree/6.2.4"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Karapace at tag."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-debezium-outbox-event-router
+    title: "Debezium Outbox Event Router"
+    component: null
+    docVersion: "3.7 (3.7.0.Final)"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://debezium.io/documentation/reference/3.7/transformations/outbox-event-router.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned (minor); checked: 200."
+    purpose: "Debezium Outbox Event Router."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-debezium-postgresql-connector
+    title: "Debezium PostgreSQL connector"
+    component: null
+    docVersion: "3.7"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://debezium.io/documentation/reference/3.7/connectors/postgresql.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Debezium PostgreSQL connector."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-debezium-3-7-release-series
+    title: "Debezium 3.7 release series"
+    component: null
+    docVersion: "3.7"
+    match: "none"
+    kind: "release"
+    area: "messaging"
+    url: "https://debezium.io/releases/3.7/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Debezium 3.7 release series."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-rabbitmq-docs
+    title: "RabbitMQ docs"
+    component: null
+    docVersion: "4.3 (server 4.3.6)"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://www.rabbitmq.com/docs"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned (current = 4.3; older lines live at `/docs/4.2/...`; `/docs/4.3/` returns 404); checked: 200."
+    purpose: "RabbitMQ docs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-rabbitmq-quorum-queues
+    title: "RabbitMQ quorum queues"
+    component: null
+    docVersion: "4.3"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://www.rabbitmq.com/docs/quorum-queues"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "RabbitMQ quorum queues."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-rabbitmq-reliability-guide
+    title: "RabbitMQ reliability guide"
+    component: null
+    docVersion: "4.3"
+    match: "none"
+    kind: "guide"
+    area: "messaging"
+    url: "https://www.rabbitmq.com/docs/reliability"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "RabbitMQ reliability guide."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-spring-amqp-reference
+    title: "Spring AMQP reference"
+    component: null
+    docVersion: "4.1.1"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://docs.spring.io/spring-amqp/reference/4.1/index.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Spring AMQP reference."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-spring-boot-amqp
+    title: "Spring Boot AMQP"
+    component: null
+    docVersion: "4.1.1"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/messaging/amqp.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Spring Boot AMQP."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: cache-valkey-docs
+    title: "Valkey docs"
+    component: null
+    docVersion: "9.1.2"
+    match: "none"
+    kind: "reference"
+    area: "cache"
+    url: "https://valkey.io/docs/"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Valkey docs."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: cache-valkey-topics-commands
+    title: "Valkey topics / commands"
+    component: null
+    docVersion: "9.1"
+    match: "none"
+    kind: "reference"
+    area: "cache"
+    url: "https://valkey.io/topics/"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200 / 200."
+    purpose: "Valkey topics / commands."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: cache-valkey-topics-commands-2
+    title: "Valkey topics / commands"
+    component: null
+    docVersion: "9.1"
+    match: "none"
+    kind: "reference"
+    area: "cache"
+    url: "https://valkey.io/commands/"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200 / 200."
+    purpose: "Valkey topics / commands."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: cache-valkey-release-9-1-2
+    title: "Valkey release 9.1.2"
+    component: null
+    docVersion: "9.1.2"
+    match: "none"
+    kind: "release"
+    area: "cache"
+    url: "https://github.com/valkey-io/valkey/releases/tag/9.1.2"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
+    purpose: "Valkey release 9.1.2."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: cache-spring-data-redis-reference
+    title: "Spring Data Redis reference"
+    component: null
+    docVersion: "4.1.1"
+    match: "none"
+    kind: "reference"
+    area: "cache"
+    url: "https://docs.spring.io/spring-data/redis/reference/4.1/index.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Spring Data Redis reference."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: cache-spring-boot-nosql
+    title: "Spring Boot NoSQL (Redis)"
+    component: null
+    docVersion: "4.1.1"
+    match: "none"
+    kind: "reference"
+    area: "cache"
+    url: "https://docs.spring.io/spring-boot/4.1/reference/data/nosql.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
+    purpose: "Spring Boot NoSQL (Redis)."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: cache-lettuce-reference
+    title: "Lettuce reference"
+    component: null
+    docVersion: "7.5.x"
+    match: "none"
+    kind: "reference"
+    area: "cache"
+    url: "https://redis.github.io/lettuce/"
+    pinned: false
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
+    purpose: "Lettuce reference."
+    guides: []
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []

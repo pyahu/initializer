@@ -1,0 +1,12 @@
+---
+// Legend under a diagram. Labels come from guides.json (Go: guidedata.LegendText).
+import data from "../generated/guides.json";
+interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+const legend = data.legend as Record<string, string>;
+---
+<ul class="dg-legend not-content" aria-label="Diagram legend">
+  {items.map((item) => <li class={`dg-legend-${item}`}><span class="dg-swatch" aria-hidden="true"></span>{legend[item]}</li>)}
+</ul>

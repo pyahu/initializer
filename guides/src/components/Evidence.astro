@@ -1,0 +1,43 @@
+---
+// Evidence records of one card, from guides.json.
+import { Aside } from "@astrojs/starlight/components";
+import data from "../generated/guides.json";
+interface Props {
+  card: string;
+}
+const { card } = Astro.props;
+type Record_ = { id: string; badge: string; canonical: string; reason?: string; test?: string; commands?: string[]; environment?: string; run?: string; runUrl?: string; commitUrl?: string; measurement?: string; cluster?: string };
+let found: { coverage: string; records: Record_[] } | undefined;
+for (const g of Object.values(data.guides) as any[]) {
+  if (g.cards[card]) found = g.cards[card];
+}
+if (!found) throw new Error(`Evidence: unknown card ${card}`);
+---
+<div class="evidence not-content">
+  <p class="evidence-coverage">{found.coverage}</p>
+  {found.records.map((r) => (
+    <div class={`evidence-record badge-${r.badge}`} id={r.id}>
+      {r.badge === "not-exercised" ? (
+        <Aside type="caution" title="Not exercised">
+          <p>{r.canonical}</p>
+          <p>{r.reason}</p>
+        </Aside>
+      ) : (
+        <>
+          <p><span class="evidence-badge">{r.badge}</span> {r.canonical}</p>
+          <details>
+            <summary>How it was proven</summary>
+            <dl>
+              <dt>Test</dt><dd><code>{r.test}</code></dd>
+              <dt>Commands</dt><dd>{r.commands?.map((c) => <code class="evidence-command">{c}</code>)}</dd>
+              <dt>Environment</dt><dd>{r.environment}</dd>
+              {r.measurement && <><dt>Measurement</dt><dd>{r.measurement}</dd></>}
+              {r.cluster && <><dt>Cluster</dt><dd>{r.cluster}</dd></>}
+              <dt>Run</dt><dd><a href={r.runUrl}>{r.run}</a>. <a href={r.commitUrl}>Source at that commit</a>.</dd>
+            </dl>
+          </details>
+        </>
+      )}
+    </div>
+  ))}
+</div>
