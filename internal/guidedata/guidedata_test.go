@@ -100,11 +100,9 @@ import Recipe from '../../../components/Recipe.astro';
 import Checklist from '../../../components/Checklist.astro';
 import GuideReferences from '../../../components/GuideReferences.astro';
 
-<GuideStatus guide="g" />
-
-## Decision summary
-
 Text with ` + "`{braces}`" + ` in code.
+
+<GuideStatus guide="g" />
 
 <a id="gg-one"></a>
 
@@ -190,6 +188,8 @@ func TestParseGuideRejects(t *testing.T) {
 		"no expected":         {"**Expected:** e", "e"},
 		"evidence extra text": {"<Evidence card=\"gg-one\" />\n", "<Evidence card=\"gg-one\" />\n\nMore text.\n"},
 		"wrong prefix":        {"<a id=\"gg-one\"></a>", "<a id=\"xx-one\"></a>"},
+		"no intro":            {"Text with `{braces}` in code.\n\n", ""},
+		"heading in intro":    {"Text with `{braces}` in code.", "## Decision summary\n\nText."},
 	}
 	for name, c := range cases {
 		src := strings.Replace(goodGuide, c[0], c[1], 1)

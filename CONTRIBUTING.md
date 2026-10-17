@@ -93,11 +93,14 @@ The MDX is restricted so `guidekit` can read its structure:
 
 Body, in this order:
 
-1. `<GuideStatus guide="..." />`.
-2. `## Decision summary`, about 150 to 250 words, with the core diagram.
+1. A short description, prose only: what the guide covers and what changes for the reader.
+   Two short paragraphs at most.
+2. `<GuideStatus guide="..." />`. It renders the contents (a link to each card and section),
+   the questions the guide answers, and one line on the baseline and how claims are checked.
 3. Cards: an anchor line, a blank line, a `##` heading, then exactly `### Problem`,
    `### Solution`, `### Use cases`, `### Trade-offs`, `### Evidence`. Evidence holds only
-   `<Evidence card="..." />`. The heading may change; the anchor may not.
+   `<Evidence card="..." />`. The heading may change; the anchor may not. Diagrams go inside
+   the card they explain.
 4. `## Recipes`: per recipe a `###` heading, one `<Recipe />`, a paragraph starting
    `**Expected:**`, and a list starting `**If it fails:**`.
 5. `## Checklist` with `<Checklist guide="..." />`, and `## References` with

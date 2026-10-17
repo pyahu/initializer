@@ -2,70 +2,176 @@
 import Icon from "../components/Icon.astro";
 import LandingLayout from "../layouts/LandingLayout.astro";
 
+const parts = [
+  {
+    icon: "layers",
+    status: "Available",
+    title: "A knowledge base",
+    text: "Guides for building Java applications with Spring Boot, and later Next.js. Each decision explains the failure it prevents, the fix, where it fits, and what it costs.",
+    href: "#guides",
+    link: "See the guides",
+  },
+  {
+    icon: "terminal",
+    status: "In development",
+    title: "A project generator",
+    text: "pyahu new will create a service that already follows the guides: sized for containers, observability wired, Kubernetes manifests and CI included, in the architecture you choose.",
+    href: "#roadmap",
+    link: "See the roadmap",
+  },
+] as const;
+
 const guides = [
-  { href: "/guides/jvm-in-containers/", title: "The JVM in containers", text: "Heap from the limit, an explicit GC, CPUs the JVM really gets, and an AOT cache CI proves is used." },
-  { href: "/guides/observability/", title: "Observability", text: "Traces, metrics and logs over OTLP from Spring Boot 4.1, joined by one trace ID." },
+  { href: "/guides/jvm-in-containers/", title: "The JVM in containers", text: "Memory, CPU, garbage collector, and startup for a JVM in a pod. Stops OOMKills with a half-empty heap and slow rollouts." },
+  { href: "/guides/observability/", title: "Observability", text: "Traces, metrics, and logs over OTLP from Spring Boot 4.1, joined by one trace ID, so a slow request leads to its logs." },
 ];
 
-const benefits = [
-  { icon: "shield", title: "Proven, not asserted", text: "Every claim carries a record: the test that proves it, the run, and the result. What is not proven says so." },
-  { icon: "layers", title: "Decisions you can read", text: "Each decision is a card: the failure it prevents, the fix, where it fits, and what it costs." },
-  { icon: "code", title: "Files that run", text: "Recipes are excerpts of fixture files that build and run in CI on every change." },
-] as const;
+const planned = [
+  { name: "Architecture", text: "Hexagonal and DDD layered, with module rules tested" },
+  { name: "REST APIs", text: "Contract-first with OpenAPI" },
+  { name: "PostgreSQL", text: "Spring Data JDBC and Liquibase migrations" },
+  { name: "Security", text: "OIDC login and resource servers" },
+  { name: "Kubernetes", text: "Deployments, probes, and Kustomize overlays" },
+  { name: "CI and supply chain", text: "GitHub Actions, SBOM, signed images" },
+  { name: "Messaging", text: "Kafka with an outbox, RabbitMQ" },
+  { name: "Next.js", text: "A frontend next to the service, typed from its API" },
+];
+
+const anatomy = [
+  { title: "Questions first", text: "The top of each guide lists the questions it answers. Click one and you land on the answer." },
+  { title: "Decision cards", text: "One decision per card: the problem, the solution, where it fits, and the trade-offs, including when to choose differently." },
+  { title: "Recipes", text: "Files to copy, cut from a real service that is built and run on every change." },
+  { title: "Checklist", text: "Short items with stable IDs, to review a service against the guide." },
+];
+
+const proof = [
+  { title: "Exact versions", text: "Each guide is written for one baseline: a frozen list of versions, such as Java 25 and Spring Boot 4.1.1. The reference page lists them with the official docs for each." },
+  { title: "A real service behind the code", text: "Code in a guide comes from a small service in the repository. CI builds it and runs it on every change, so an upgrade that breaks the advice turns CI red first." },
+  { title: "A test behind each claim", text: "Under every card you can open how a claim was checked: the test, the command, and the result, for example a 768 MiB heap in a 1 GiB pod." },
+  { title: "Gaps said out loud", text: "Some claims need a cluster or a load test that has not run yet. They are marked \"Not exercised\" with the reason, never shown as proven." },
+];
+
+const roadmap = [
+  { when: "Now", text: "The first guides: the JVM in containers and observability." },
+  { when: "Next", text: "Generator v0.1: one service, hexagonal or DDD layered, REST with PostgreSQL, OIDC, OpenTelemetry, Kustomize, and CI." },
+  { when: "Later", text: "Monorepos with several services, JPA and jOOQ, gRPC, Kafka, RabbitMQ and Valkey, and Next.js frontends." },
+];
 ---
 
-<LandingLayout title="Pyahu Initializer guides" description="Production guides for Spring Boot services on Kubernetes, with every claim proven by a tested fixture.">
+<LandingLayout title="Pyahu Initializer" description="A knowledge base for production Java with Spring Boot and Next.js, and a generator for production-ready projects.">
   <section class="hero">
     <div class="hero-grid">
       <div class="hero-content">
-        <p class="eyebrow"><span class="signal"></span>Java 25 · Spring Boot 4.1 · Kubernetes</p>
-        <h1>Production guides for Spring Boot. <span>Every claim proven.</span></h1>
-        <p class="hero-copy">Short decisions, real failure modes, and files that build and run in CI. The guides come first; the Initializer will generate services that already follow them.</p>
+        <p class="eyebrow"><span class="signal"></span>Java · Spring Boot · Next.js · Kubernetes</p>
+        <h1>Production Java, explained. <span>Then generated.</span></h1>
+        <p class="hero-copy">Pyahu Initializer is a modern knowledge base for building applications with Spring Boot and Next.js, and a generator that starts new projects at production quality, following the same guides.</p>
         <div class="hero-actions">
-          <a class="button primary" href="/guides/jvm-in-containers/">Start with the JVM <Icon name="arrow" size={18} /></a>
-          <a class="button quiet" href="/reference/docs/">Reference docs</a>
+          <a class="button primary" href="#guides">Read the guides <Icon name="arrow" size={18} /></a>
+          <a class="button quiet" href="#what">What it is</a>
         </div>
-        <ul class="trust-list" aria-label="How the guides are kept honest">
-          <li><Icon name="check" size={16} />Pinned baseline</li>
-          <li><Icon name="check" size={16} />Tests behind claims</li>
-          <li><Icon name="check" size={16} />Unproven marked</li>
-        </ul>
       </div>
-      <div class="setup-panel" aria-label="Example evidence">
-        <div class="panel-bar"><span></span><span></span><span></span><code>evidence</code></div>
+      <div class="setup-panel" aria-label="The two parts of the Initializer">
+        <div class="panel-bar"><span></span><span></span><span></span><code>initializer</code></div>
         <div class="setup-body">
-          <p class="setup-label">What a claim looks like</p>
-          <pre><code><span class="prompt">claim</span>  -XX:MaxRAMPercentage=75 in 1 GiB
-<span class="prompt">test</span>   TestHeapIsSeventyFivePercent
-<span class="prompt">result</span> MaxHeapSize = 805306368</code></pre>
-          <div class="setup-result"><span class="result-mark"><Icon name="check" size={17} /></span><div><strong>Reproduced in CI</strong><p>on every change, baseline v0.1-b1</p></div></div>
+          <p class="setup-label">1. Read why each decision is made</p>
+          <pre><code><span class="prompt">guide</span> The JVM in containers   <span class="comment">available</span>
+<span class="prompt">guide</span> Observability           <span class="comment">available</span>
+<span class="prompt">guide</span> PostgreSQL, Security ...  <span class="comment">planned</span></code></pre>
+          <p class="setup-label panel-gap">2. Start a project that already follows them</p>
+          <pre><code><span class="prompt">$</span> pyahu new orders --auth
+<span class="comment">  in development</span></code></pre>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section why-section" id="why" aria-labelledby="why-title">
+  <section class="section" id="what" aria-labelledby="what-title">
     <div class="section-heading">
-      <p class="eyebrow">Why these guides</p>
-      <h2 id="why-title">Advice you can check.</h2>
-      <p class="section-lead">Most production advice is copied from somewhere. These guides show the test behind each claim.</p>
+      <p class="eyebrow">What it is</p>
+      <h2 id="what-title">Two parts, one standard.</h2>
+      <p class="section-lead">The guides say how a production service should be built and why. The generator is the shortcut: it skips the wiring, not the understanding.</p>
     </div>
-    <div class="benefit-grid">
-      {benefits.map((b) => (
-        <article class="benefit-card"><Icon name={b.icon} size={25} /><h3>{b.title}</h3><p>{b.text}</p></article>
+    <div class="part-grid">
+      {parts.map((p) => (
+        <article class="benefit-card part-card">
+          <div class="part-head"><Icon name={p.icon} size={25} /><span class="pill">{p.status}</span></div>
+          <h3>{p.title}</h3>
+          <p>{p.text}</p>
+          <a class="text-link" href={p.href}>{p.link} <Icon name="arrow" size={15} /></a>
+        </article>
       ))}
     </div>
   </section>
 
-  <section class="section why-section" id="guides" aria-labelledby="guides-title">
+  <section class="section" id="guides" aria-labelledby="guides-title">
     <div class="section-heading">
-      <p class="eyebrow">The pilot</p>
-      <h2 id="guides-title">Two guides, more to come.</h2>
+      <p class="eyebrow">The guides</p>
+      <h2 id="guides-title">Start here.</h2>
+      <p class="section-lead">Two guides are ready. More topics follow, each before the generator supports it.</p>
     </div>
-    <div class="benefit-grid">
+    <div class="part-grid">
       {guides.map((g) => (
-        <article class="benefit-card"><h3><a href={g.href}>{g.title}</a></h3><p>{g.text}</p></article>
+        <article class="benefit-card part-card">
+          <h3><a href={g.href}>{g.title}</a></h3>
+          <p>{g.text}</p>
+          <a class="text-link" href={g.href}>Read the guide <Icon name="arrow" size={15} /></a>
+        </article>
       ))}
+    </div>
+    <h3 class="subheading">Planned topics</h3>
+    <div class="profile-grid planned-grid">
+      {planned.map((t) => (
+        <div class="profile-card is-rolling"><div><code>{t.name}</code><span>planned</span></div><p>{t.text}</p></div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section proof-section" id="inside" aria-labelledby="inside-title">
+    <div class="section-heading">
+      <p class="eyebrow">Inside a guide</p>
+      <h2 id="inside-title">Built to be read fast.</h2>
+      <p class="section-lead">Read the questions, jump to the answer, copy the file. The detail is there when you need it.</p>
+    </div>
+    <div class="proof-grid">
+      {anatomy.map((a) => (
+        <article><strong>{a.title}</strong><p>{a.text}</p></article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section proof-section" id="proof" aria-labelledby="proof-title">
+    <div class="section-heading">
+      <p class="eyebrow">How the guides are proven</p>
+      <h2 id="proof-title">Advice you can check.</h2>
+      <p class="section-lead">Most production advice is copied from somewhere. Here every claim shows where it was checked, or says that it was not.</p>
+    </div>
+    <div class="proof-grid">
+      {proof.map((p) => (
+        <article><strong>{p.title}</strong><p>{p.text}</p></article>
+      ))}
+    </div>
+    <a class="text-link" href="/guides/jvm-in-containers/#jvm-heap-sizing">See an example <Icon name="arrow" size={15} /></a>
+  </section>
+
+  <section class="section proof-section" id="roadmap" aria-labelledby="roadmap-title">
+    <div class="section-heading">
+      <p class="eyebrow">Roadmap</p>
+      <h2 id="roadmap-title">Guides first, then the generator.</h2>
+      <p class="section-lead">Every option gets its guide and a tested service before the generator offers it. No dates are promised.</p>
+    </div>
+    <div class="proof-grid">
+      {roadmap.map((r) => (
+        <article><strong>{r.when}</strong><p>{r.text}</p></article>
+      ))}
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <p class="eyebrow center">Start reading</p>
+    <h2>Size your JVM for the pod it runs in.</h2>
+    <div class="hero-actions center">
+      <a class="button primary" href="/guides/jvm-in-containers/">The JVM in containers <Icon name="arrow" size={18} /></a>
+      <a class="button quiet" href="/guides/observability/">Observability</a>
     </div>
   </section>
 </LandingLayout>

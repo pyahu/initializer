@@ -50,31 +50,12 @@ import GuideReferences from '../../../components/GuideReferences.astro';
 import DiagramLegend from '../../../components/DiagramLegend.astro';
 import OtlpFlowDiagram from '../../../components/diagrams/OtlpFlowDiagram.astro';
 
+How to get traces, metrics, and logs out of a Spring Boot 4.1 service over OTLP, joined by one trace ID. Follow it
+and a latency spike leads you to the slow request's trace, and from the trace to that request's log lines.
+
+Uses Boot's own OpenTelemetry starter, no Java agent. Each card says when its advice is wrong for you.
+
 <GuideStatus guide="observability" />
-
-## Decision summary
-
-A customer says checkout is slow. Without correlated telemetry you open three tools: a latency graph with no
-route, logs with no request ID, and no trace, because Boot samples 10% by default and the one you need was
-dropped. This guide builds one pipeline in which every span, metric series, and log line carries the same service
-identity, and a latency spike leads to its trace and then to that request's log lines.
-
-The choices:
-
-- `spring-boot-starter-opentelemetry`, OTLP/HTTP for all three signals, and no Java agent.
-- The OTLP endpoint from `OTEL_EXPORTER_OTLP_ENDPOINT`, which Boot 4.1 maps to its own properties.
-- The OpenTelemetry Logback appender, installed by a bean, so log records carry the trace ID.
-- Parent-based sampling in the app; tail sampling, PII scrubbing and retries in a collector.
-- Metrics in seconds with histogram buckets, SLO buckets, and bounded tags.
-- Actuator on its own port, exposing only what probes and humans need.
-
-When they are wrong: many existing services that nobody will touch (the agent), or a scrape-based Prometheus
-setup that already works (keep it, and read the trade-offs before mixing).
-
-<OtlpFlowDiagram />
-<DiagramLegend items={['recommended', 'context', 'optional']} />
-
-Copy the tested files from the [recipes](#recipes); review a service against the [checklist](#checklist).
 
 <a id="obs-starter-not-agent"></a>
 
@@ -93,6 +74,9 @@ Use `spring-boot-starter-opentelemetry`. It brings Micrometer Observation, Micro
 OpenTelemetry SDK, and the Micrometer OTLP registry, all with versions from the Boot BOM. One Observation yields a
 span and a timer with the same tags. Check that no base image or platform injects `-javaagent` through
 `JAVA_TOOL_OPTIONS`.
+
+<OtlpFlowDiagram />
+<DiagramLegend items={['recommended', 'context', 'optional']} />
 
 ### Use cases
 

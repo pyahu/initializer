@@ -1,5 +1,5 @@
 ---
-// State, baseline, verification, coverage, sources, and questions of a guide.
+// The guide's map: its parts, the questions it answers, and one line on how it is proven.
 import { Aside } from "@astrojs/starlight/components";
 import data from "../generated/guides.json";
 interface Props {
@@ -8,27 +8,35 @@ interface Props {
 const { guide } = Astro.props;
 const g = (data.guides as any)[guide];
 if (!g) throw new Error(`GuideStatus: unknown guide ${guide}`);
-const stateText: Record<string, string> = {
-  draft: "Draft: decided, being proven by a fixture.",
-  released: "Released: applies to a released template.",
-  explanatory: "Explanatory: a comparison that is never generated.",
-};
 ---
-<div class="guide-status not-content">
-  <p class="guide-status-line">
-    <span class={`guide-state state-${g.state}`}>{g.state}</span>{" "}
-    {stateText[g.state]} Baseline {g.baseline}. {g.verification ? `Verified: ${g.verification}.` : "No complete verification run recorded yet."} {g.coverage}.
-  </p>
+<div class="guide-map not-content">
   {g.status.reverify && (
     <Aside type="caution" title="Re-verify">
       <ul>{g.status.reverifyReasons.map((r: string) => <li>{r}</li>)}</ul>
     </Aside>
   )}
   {g.status.stale && <Aside type="caution" title="Stale">This guide was last verified more than two baseline revisions ago.</Aside>}
-  <details class="guide-questions" open>
-    <summary>Questions this guide answers</summary>
-    <ul>{g.questions.map((q: any) => <li><a href={`#${q.answeredIn}`}>{q.id} {q.text}</a></li>)}</ul>
-  </details>
+  <div class="guide-map-grid">
+    <nav class="guide-map-block" aria-labelledby={`${guide}-contents`}>
+      <h2 class="guide-map-title" id={`${guide}-contents`}>In this guide</h2>
+      <ol class="guide-contents">
+        {g.contents.map((c: any) => <li><a href={`#${c.id}`}>{c.title}</a></li>)}
+      </ol>
+      <p class="guide-more">
+        Then: <a href="#recipes">Recipes</a> (tested files to copy), <a href="#checklist">Checklist</a> (review a service), <a href="#references">References</a> (official docs).
+      </p>
+    </nav>
+    <div class="guide-map-block">
+      <h2 class="guide-map-title" id={`${guide}-questions`}>Questions it answers</h2>
+      <ul class="guide-questions">
+        {g.questions.map((q: any) => <li><a href={`#${q.answeredIn}`}><span class="guide-qid">{q.id}</span> {q.text}</a></li>)}
+      </ul>
+    </div>
+  </div>
+  <p class="guide-proof">
+    Written for baseline <a href="/reference/docs/">{g.baseline}</a>. {g.verification && <>Last full check: {g.verification}. </>}{g.coverage};
+    each card shows how its claims were checked. <a href="/#proof">How the guides are proven</a>.
+  </p>
   {g.sources.length > 0 && (
     <p class="guide-sources">
       {g.sources.map((s: any) => <>Adapted from “{s.title}” by {s.author} ({s.date}), {s.license}. </>)}

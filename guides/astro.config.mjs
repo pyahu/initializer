@@ -9,7 +9,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Pyahu Initializer",
-      description: "Production guides for Spring Boot services, proven by tested fixtures.",
+      description: "A knowledge base for production Java with Spring Boot and Next.js, and a generator for production-ready projects.",
       logo: { src: "./src/assets/mark.svg", alt: "Pyahu Initializer", replacesTitle: false },
       favicon: "/assets/mark.svg",
       social: [{ icon: "github", label: "GitHub", href: "https://github.com/pyahu/initializer" }],

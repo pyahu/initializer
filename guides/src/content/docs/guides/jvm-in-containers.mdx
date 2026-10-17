@@ -52,30 +52,13 @@ import ContainerMemoryDiagram from '../../../components/diagrams/ContainerMemory
 import ImageBuildTimelineDiagram from '../../../components/diagrams/ImageBuildTimelineDiagram.astro';
 import PodTopologyDiagram from '../../../components/diagrams/PodTopologyDiagram.astro';
 
+How to size a JVM for the pod it runs in: memory, CPU, garbage collector, and startup. Follow it and pods stop
+being OOMKilled with a half-empty heap, the JVM uses the CPUs it really gets, and new pods start fast enough for
+smooth rollouts.
+
+Written for Java 25 and Spring Boot 4.1 on Kubernetes. Each card says when its advice is wrong for you.
+
 <GuideStatus guide="jvm-in-containers" />
-
-## Decision summary
-
-Three failures this guide prevents. A pod is OOMKilled every few hours while the heap graph shows 60%. A 1 GiB pod
-quietly runs SerialGC, or a pod with no CPU limit sizes its thread pools for a 64-core node. A slow start makes
-rollouts drag and probes flaky.
-
-The choices:
-
-- Memory request equal to limit. Heap at 75% of the limit (`-XX:MaxRAMPercentage=75`), initial equal to max.
-  Prove the rest fits with Native Memory Tracking under load.
-- `-XX:+UseG1GC` in the image `ENTRYPOINT`, always. No CPU limit, and `-XX:ActiveProcessorCount` set to the CPU
-  request rounded up, at least 2.
-- GC, cache and crash-log flags in the `ENTRYPOINT`; sizing in `JAVA_TOOL_OPTIONS` from the Deployment.
-- The JDK 25 AOT cache, trained in the image build and checked in CI. Size the `startupProbe` from measured startup.
-
-When they are wrong: batch jobs (ParallelGC), sub-millisecond pause targets (generational ZGC), and functions that
-scale to zero (native image). Each card says when to choose differently.
-
-<ContainerMemoryDiagram />
-<DiagramLegend items={['recommended', 'context', 'failure']} />
-
-Copy the tested files from the [recipes](#recipes); review a service against the [checklist](#checklist).
 
 <a id="jvm-heap-sizing"></a>
 
@@ -88,6 +71,9 @@ page: heap, metaspace, code cache, thread stacks, direct buffers, GC structures,
 close to the limit leaves too little for the rest. There is no `OutOfMemoryError` and no heap dump, just SIGKILL.
 
 The JVM default is the opposite mistake: `MaxRAMPercentage` is 25, so a 1 GiB pod gets a 256 MiB heap.
+
+<ContainerMemoryDiagram />
+<DiagramLegend items={['recommended', 'context', 'failure']} />
 
 ### Solution
 

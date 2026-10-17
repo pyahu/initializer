@@ -267,27 +267,20 @@ func ParseGuide(path string, s *Schemas, retiredCards map[string]string) (*Guide
 		p++
 		return true
 	}
-	expectTag("GuideStatus", "guide", g.Meta.ID)
-	if t := peek(); t == nil || t.kind != "h2" || t.text != "Decision summary" {
-		fail(lineAt(peek()), "expected ## Decision summary")
+	// Intro: what the guide covers, in prose only, then the status block with the contents.
+	intro := 0
+	for t := peek(); t != nil && t.kind == "text"; t = peek() {
+		intro++
+		p++
+	}
+	if intro == 0 {
+		fail(lineAt(peek()), "a guide opens with a short description before <GuideStatus />")
+	}
+	if !expectTag("GuideStatus", "guide", g.Meta.ID) {
 		return g, errs
 	}
-	p++
-	// Decision summary content until the first anchor.
-	for t := peek(); t != nil && t.kind != "anchor" && !(t.kind == "h2"); t = peek() {
-		if t.kind == "h3" {
-			fail(t.line, "no ### in the decision summary")
-		}
-		if t.kind == "tag" {
-			if strings.HasSuffix(t.name, "Diagram") {
-				g.Diagrams = append(g.Diagrams, t.name)
-			} else if t.name == "DiagramLegend" {
-				g.Legends = append(g.Legends, parseItems(t.attr["items"]))
-			} else {
-				fail(t.line, "%s does not belong in the decision summary", t.name)
-			}
-		}
-		p++
+	if t := peek(); t != nil && t.kind != "anchor" {
+		fail(t.line, "the first card follows <GuideStatus /> directly")
 	}
 	// Cards.
 	for t := peek(); t != nil && t.kind == "anchor"; t = peek() {

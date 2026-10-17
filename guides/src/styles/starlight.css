@@ -123,12 +123,19 @@ body:has(.dg-dialog[open]) { overflow: hidden; }
 .dg-legend-failure .dg-swatch { border-top: 2px dotted var(--sl-color-red); }
 
 /* Guide status, evidence, checklist. */
-.guide-status { margin-block: 0 1.5rem; padding: 0.9rem 1rem; border: 1px solid var(--sl-color-hairline); border-radius: 8px; font-size: 0.9rem; }
-.guide-status p { margin: 0; }
-.guide-status .guide-sources { margin-top: 0.5rem; color: var(--sl-color-gray-2); font-size: 0.82rem; }
-.guide-status .guide-questions { margin-top: 0.6rem; }
-.guide-status .guide-questions ul { margin: 0.4rem 0 0; padding-left: 1.1rem; }
-.guide-state, .evidence-badge { display: inline-block; padding: 0.05rem 0.45rem; border-radius: 999px; font-family: var(--sl-font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid var(--sl-color-accent); color: var(--sl-color-accent); }
+.guide-map { margin-block: 1.5rem 2.5rem; display: grid; gap: 1rem; }
+.guide-map p { margin: 0; }
+.guide-map-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+.guide-map-block { padding: 1rem 1.15rem; border: 1px solid var(--sl-color-hairline); border-radius: 10px; background: var(--sl-color-bg-nav); }
+.guide-map .guide-map-title { margin: 0 0 0.6rem; font-size: 0.78rem; font-family: var(--sl-font-mono); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sl-color-gray-2); }
+.guide-contents, .guide-questions { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.35rem; font-size: 0.95rem; }
+.guide-questions { list-style: none; padding-left: 0; }
+.guide-map a { text-decoration: none; }
+.guide-map a:hover { text-decoration: underline; }
+.guide-qid { display: inline-block; min-width: 3.6rem; font-family: var(--sl-font-mono); font-size: 0.75rem; color: var(--sl-color-gray-3); }
+.guide-more { margin-top: 0.7rem !important; font-size: 0.85rem; color: var(--sl-color-gray-2); }
+.guide-proof, .guide-sources { font-size: 0.85rem; color: var(--sl-color-gray-2); }
+.evidence-badge { display: inline-block; padding: 0.05rem 0.45rem; border-radius: 999px; font-family: var(--sl-font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid var(--sl-color-accent); color: var(--sl-color-accent); }
 .evidence { display: grid; gap: 0.7rem; }
 .evidence p { margin: 0; }
 .evidence-coverage { font-size: 0.85rem; color: var(--sl-color-gray-2); }

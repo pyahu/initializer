@@ -18,15 +18,16 @@ was proven. This page is the short version; the full rules, which `guidekit chec
 
 ## A guide page
 
-1. **Status**: state, baseline, verification, coverage, sources, and the questions the guide answers.
-2. **Decision summary**: the failure, the choices, when they are wrong, the core diagram. About 150 to 250 words.
+1. **Description**: what the guide covers and what changes for the reader, in two short paragraphs at most.
+2. **Contents and questions**: a link to each card and section, and the questions the guide answers, each linked
+   to its answer.
 3. **Decision cards**, one per decision, each with a stable anchor and five parts in this order: Problem,
-   Solution, Use cases, Trade-offs, Evidence.
+   Solution, Use cases, Trade-offs, Evidence. Diagrams sit in the card they explain.
 4. **Recipes**: an excerpt from a tested fixture file, a link to the complete file, the expected result, and what
    to do when it fails.
 5. **Checklist** and **References**, rendered from the data files.
 
-A reader who only needs the answer stops at the summary. A reviewer stops at the cards.
+A reader with one question clicks it and lands on the answer. A reviewer reads the cards.
 
 ## Evidence
 
@@ -42,12 +43,6 @@ Each record states one claim and carries one badge:
 
 A card lists every record; there is no single badge per card. The fixture workflow re-runs every named test on
 each change, so a claim that stops being true turns CI red.
-
-## States
-
-- **Draft**: decided, being proven by a fixture.
-- **Released**: applies to a released template, with its evidence.
-- **Explanatory**: a comparison that is never generated.
 
 ## Checklist items
 

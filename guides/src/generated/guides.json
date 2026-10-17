@@ -301,6 +301,40 @@
           ]
         }
       },
+      "contents": [
+        {
+          "id": "jvm-heap-sizing",
+          "title": "Size the heap from the memory limit"
+        },
+        {
+          "id": "jvm-gc-explicit",
+          "title": "Set the garbage collector explicitly"
+        },
+        {
+          "id": "jvm-cpu-count",
+          "title": "Size the JVM for the CPUs it gets"
+        },
+        {
+          "id": "jvm-gc-choice",
+          "title": "Choose G1 unless pauses are what you sell"
+        },
+        {
+          "id": "jvm-flag-placement",
+          "title": "Put image flags in the ENTRYPOINT, sizing in JAVA_TOOL_OPTIONS"
+        },
+        {
+          "id": "jvm-aot-cache",
+          "title": "Build the AOT cache in the image and prove it is used"
+        },
+        {
+          "id": "jvm-startup-options",
+          "title": "Pick the startup optimisation by workload"
+        },
+        {
+          "id": "jvm-startup-probe",
+          "title": "Size the startupProbe from measured startup"
+        }
+      ],
       "checklist": [
         {
           "id": "JVM-01",
@@ -878,6 +912,40 @@
           ]
         }
       },
+      "contents": [
+        {
+          "id": "obs-starter-not-agent",
+          "title": "Use Boot's OpenTelemetry starter, not the agent"
+        },
+        {
+          "id": "obs-otlp-config",
+          "title": "Configure OTLP the Boot 4.1 way"
+        },
+        {
+          "id": "obs-logs-otlp",
+          "title": "Install the Logback appender so logs carry the trace"
+        },
+        {
+          "id": "obs-sampling",
+          "title": "Sample parent-based in the app, tail-sample in the collector"
+        },
+        {
+          "id": "obs-metric-shape",
+          "title": "Shape metrics: seconds, buckets, SLOs, bounded tags"
+        },
+        {
+          "id": "obs-collector",
+          "title": "Put a collector between the app and the backends"
+        },
+        {
+          "id": "obs-correlation",
+          "title": "Correlate metric, trace, and log with one trace ID"
+        },
+        {
+          "id": "obs-actuator",
+          "title": "Keep Actuator on its own port"
+        }
+      ],
       "checklist": [
         {
           "id": "OBS-01",

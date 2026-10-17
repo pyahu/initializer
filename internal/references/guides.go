@@ -54,6 +54,11 @@ type questionOut struct {
 	CardTitle  string `json:"cardTitle"`
 }
 
+type contentOut struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+}
+
 type guideOut struct {
 	ID           string                `json:"id"`
 	Title        string                `json:"title"`
@@ -65,6 +70,7 @@ type guideOut struct {
 	Sources      []guidedata.Source    `json:"sources"`
 	Questions    []questionOut         `json:"questions"`
 	Cards        map[string]cardOut    `json:"cards"`
+	Contents     []contentOut          `json:"contents"`
 	Checklist    []checklistOut        `json:"checklist"`
 	References   []refOut              `json:"references"`
 }
@@ -106,12 +112,15 @@ func GuidesJSON(r *guidedata.Repo) ([]byte, error) {
 		}
 		out := guideOut{ID: g.Meta.ID, Title: g.Title, State: g.Meta.State, Baseline: g.Meta.Baseline,
 			Status: r.Status(g), Sources: g.Meta.Sources, Cards: map[string]cardOut{},
-			Questions: []questionOut{}, Checklist: []checklistOut{}, References: []refOut{}}
+			Questions: []questionOut{}, Contents: []contentOut{}, Checklist: []checklistOut{}, References: []refOut{}}
 		if out.Sources == nil {
 			out.Sources = []guidedata.Source{}
 		}
 		if v := g.Meta.Verification; v != nil {
 			out.Verification = fmt.Sprintf("%s, %s, baseline %s", guidedata.RunText(v.Run, v.Commit), v.Date, v.Baseline)
+		}
+		for _, c := range g.Cards {
+			out.Contents = append(out.Contents, contentOut{ID: c.ID, Title: c.Title})
 		}
 		for _, q := range g.Meta.Questions {
 			out.Questions = append(out.Questions, questionOut{ID: q.ID, Text: q.Text, AnsweredIn: q.AnsweredIn, CardTitle: cardTitle[q.AnsweredIn]})
