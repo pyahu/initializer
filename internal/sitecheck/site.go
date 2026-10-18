@@ -317,7 +317,11 @@ func checkExports(r *guidedata.Repo, dist, site string) []error {
 		return []error{fmt.Errorf("llms.txt: %v", err)}
 	}
 	base := strings.TrimSuffix(site, "/")
-	for _, p := range []string{"/guides/jvm-in-containers/", "/guides/observability/", "/reference/docs/"} {
+	want := []string{"/guides/", "/reference/docs/"}
+	for _, g := range r.Guides {
+		want = append(want, "/guides/"+g.Meta.ID+"/")
+	}
+	for _, p := range want {
 		if !strings.Contains(string(idx), base+p) {
 			add("llms.txt does not list %s%s", base, p)
 		}

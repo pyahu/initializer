@@ -62,6 +62,13 @@ func Generate(r *guidedata.Repo) (Outputs, error) {
 		}
 		out[r.Rel(filepath.Join(fx.Dir, "docs", "references.md"))] = b
 	}
+	skill, err := Skill(r)
+	if err != nil {
+		return nil, err
+	}
+	for p, b := range skill {
+		out[p] = b
+	}
 	return out, nil
 }
 

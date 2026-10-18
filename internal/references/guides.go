@@ -165,17 +165,7 @@ func GuidesJSON(r *guidedata.Repo) ([]byte, error) {
 			out.Checklist = append(out.Checklist, checklistOut{ID: c.ID, Type: c.Type, Card: c.Card, Text: c.Text, Claim: c.Claim, Tests: tests, Tags: guidedata.FilterTags(c.AppliesWhen)})
 		}
 		sort.Slice(out.Checklist, func(i, j int) bool { return out.Checklist[i].ID < out.Checklist[j].ID })
-		for _, e := range entriesFor(r, g.Meta.Baseline, nil) {
-			if contains(e.Guides, g.Meta.ID) {
-				out.References = append(out.References, refOut{ID: e.ID, Title: e.Title, URL: e.URL, Version: versionOf(r, g.Meta.Baseline, e), Pinned: e.Pinned, Purpose: e.Purpose})
-			}
-		}
-		// Documents for a later release: no baseline pins them yet, so they carry no version.
-		for _, e := range r.References.Entries {
-			if len(e.Baselines) == 0 && contains(e.Guides, g.Meta.ID) {
-				out.References = append(out.References, refOut{ID: e.ID, Title: e.Title, URL: e.URL, Pinned: false, Purpose: e.Purpose, Later: true})
-			}
-		}
+		out.References = append(out.References, guideRefs(r, g)...)
 		guides[g.Meta.ID] = out
 	}
 	return marshal(map[string]any{
@@ -184,4 +174,21 @@ func GuidesJSON(r *guidedata.Repo) ([]byte, error) {
 		"legend":      guidedata.LegendText,
 		"guides":      guides,
 	})
+}
+
+// guideRefs lists a guide's official documents: the baseline's first, then those for a later release.
+func guideRefs(r *guidedata.Repo, g *guidedata.Guide) []refOut {
+	var refs []refOut
+	for _, e := range entriesFor(r, g.Meta.Baseline, nil) {
+		if contains(e.Guides, g.Meta.ID) {
+			refs = append(refs, refOut{ID: e.ID, Title: e.Title, URL: e.URL, Version: versionOf(r, g.Meta.Baseline, e), Pinned: e.Pinned, Purpose: e.Purpose})
+		}
+	}
+	// Documents for a later release: no baseline pins them yet, so they carry no version.
+	for _, e := range r.References.Entries {
+		if len(e.Baselines) == 0 && contains(e.Guides, g.Meta.ID) {
+			refs = append(refs, refOut{ID: e.ID, Title: e.Title, URL: e.URL, Pinned: false, Purpose: e.Purpose, Later: true})
+		}
+	}
+	return refs
 }

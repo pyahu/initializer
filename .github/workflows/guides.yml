@@ -11,6 +11,7 @@ on:
       - cmd/**
       - internal/**
       - acceptance/**
+      - skills/**
       - go.mod
       - go.sum
       - .github/workflows/guides.yml
@@ -22,6 +23,7 @@ on:
       - cmd/**
       - internal/**
       - acceptance/**
+      - skills/**
       - go.mod
       - go.sum
       - .github/workflows/guides.yml

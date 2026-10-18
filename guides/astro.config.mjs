@@ -1,15 +1,22 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import starlightLlmsTxt from "starlight-llms-txt";
+import { readFileSync } from "node:fs";
 
 const site = "https://initializer.pyahu.io";
+
+// Every guide for llms.txt, in the order of the guides index page.
+const guideLinks = readFileSync(new URL("./src/content/docs/guides.mdx", import.meta.url), "utf8")
+  .split("\n")
+  .filter((l) => /^- \[[^\]]+\]\(\/guides\/[a-z0-9-]+\/\)/.test(l))
+  .map((l) => l.replace("](/", `](${site}/`));
 
 export default defineConfig({
   site,
   integrations: [
     starlight({
       title: "Pyahu Initializer",
-      description: "A knowledge base for production Java with Spring Boot and Next.js, and a generator for production-ready projects.",
+      description: "Production practices for Java with Spring Boot and Next.js and a generator for production-ready projects.",
       logo: { src: "./src/assets/mark.svg", alt: "Pyahu Initializer", replacesTitle: false },
       favicon: "/assets/mark.svg",
       social: [{ icon: "github", label: "GitHub", href: "https://github.com/pyahu/initializer" }],
@@ -77,10 +84,13 @@ export default defineConfig({
       plugins: [
         starlightLlmsTxt({
           details: [
-            `- [The JVM in containers](${site}/guides/jvm-in-containers/): memory, CPU, GC and startup for a JVM in a pod.`,
-            `- [Observability](${site}/guides/observability/): traces, metrics and logs over OTLP with Spring Boot 4.1.`,
-            `- [The guides](${site}/guides/): Pyahu's production practices for Spring Boot, Java and Next.js in six parts.`,
+            `- [The guides](${site}/guides/): Pyahu's production practices for Spring Boot, Java and Next.js in six parts, one step per question.`,
+            `- [Agent Skill](https://github.com/pyahu/initializer/tree/main/skills): the same guides as plain Markdown, one file per guide, with the full checklist.`,
             `- [Reference docs](${site}/reference/docs/): official documentation for the exact versions of the baseline.`,
+            "",
+            "Guides:",
+            "",
+            ...guideLinks,
           ].join("\n"),
           minify: { details: false },
           pageSeparator: "\n\n<!-- page -->\n\n",

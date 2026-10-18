@@ -192,6 +192,7 @@ keys combine with AND, values with OR, `{}` means always.
 - `guides/src/content/docs/reference/docs.md`
 - `guides/src/generated/guides.json` and `guides/src/generated/fixture-files.json`
 - `fixtures/<name>/docs/references.md`
+- `skills/pyahu-production-guides/` (the Agent Skill: `SKILL.md`, `checklist.md` and one file per guide)
 
 ## Fixtures
 
