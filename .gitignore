@@ -4,7 +4,7 @@ output/
 .env.*
 !.env.example
 .DS_Store
-out/
+/out/
 fixtures/*/build/
 fixtures/*/.gradle/
 build/
