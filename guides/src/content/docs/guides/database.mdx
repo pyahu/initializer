@@ -95,7 +95,9 @@ see it nor shed it. A small pool makes the queue form in HikariCP instead, where
    draining pods.
 3. Leave room for migrations, monitoring and a human with `psql`.
 4. Cap the runtime role in the database, so an overrun fails fast with a clear error:
-   `ALTER ROLE orders_app CONNECTION LIMIT <n>`.
+   `ALTER ROLE orders_app CONNECTION LIMIT <n>`. Here `<n>` is this service's whole budget from item 2: the pool
+   size times the most pods that can run at once. A pool of 5 with an HPA maximum of 6, one surge pod and one
+   draining pod gives 40.
 
 ### When this is not for you
 
