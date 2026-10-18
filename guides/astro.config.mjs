@@ -82,6 +82,7 @@ export default defineConfig({
         {
           label: "About",
           items: [
+            { label: "Why it exists", slug: "why" },
             { label: "How we keep it current", slug: "maintenance" },
             { label: "Reference docs", slug: "reference/docs" },
           ],
@@ -93,6 +94,7 @@ export default defineConfig({
             `- [The guides](${site}/guides/): Pyahu's production practices for Spring Boot, Java and Next.js in six parts, one step per question.`,
             `- [Agent Skill](https://github.com/pyahu/initializer/tree/main/skills): the same guides as plain Markdown, one file per guide, with the full checklist.`,
             `- [Reference docs](${site}/reference/docs/): official documentation for the exact versions of the baseline.`,
+            `- [Why it exists](${site}/why/): the problem it solves, why guides come first and why versions are pinned.`,
             `- [How we keep it current](${site}/maintenance/): how versions, advice and links stay up to date.`,
             "",
             "Guides:",

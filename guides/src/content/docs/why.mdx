@@ -1,0 +1,98 @@
+---
+title: Why it exists
+description: The problem the Pyahu Initializer solves, why the guides come before the generator, why every version is pinned and what the project is not.
+tableOfContents: { maxHeadingLevel: 2 }
+---
+
+Starting a Spring Boot service takes a minute. Getting it ready for production takes months. Most of what that
+takes is learned in incidents: a pod killed for memory, a rollout that drops requests, a pool that runs
+out of connections, a trace that stops at the first hop.
+
+This page explains what the Pyahu Initializer does about that and why it is built the way it is. Its companion,
+[How we keep it current](/maintenance/), explains how it stays right over time.
+
+## The problem
+
+Three gaps keep showing up in teams that run Java in production.
+
+- **Starters stop at "hello world".** A new project compiles and runs. Sizing the JVM for its container,
+  probes, timeouts, telemetry and a locked pod are left to each team, usually after the first outage.
+- **Advice comes without versions or proof.** A blog post written for an older release looks just as
+  confident as one written for yours. Defaults change between releases: Spring Boot 4 moved to Jackson 3, for
+  example. Advice that was right can be wrong for the version you run and nothing tells you.
+- **Every team reinvents its standard.** Without a shared reference, reviews turn into taste and the same
+  decision is argued again in every repository.
+
+## What we built
+
+Two parts with one standard behind them.
+
+- **[The guides](/guides/)** explain how a production service should be built and why. Each one answers a few
+  questions with one step per question and ends with files to copy and a checklist with stable IDs.
+- **The generator**, still in development, will start a new project that already follows the guides.
+
+The guides also come as an
+[Agent Skill](https://github.com/pyahu/initializer/tree/main/skills) and as `llms.txt`, so AI coding tools
+follow the same practices your team reads.
+
+## Why the guides come first
+
+Code you do not understand is code you cannot run at three in the morning. A generator that hands you a
+finished project without the reasons behind it saves a day and costs you the first incident.
+
+So the generator is a shortcut: it skips the wiring, not the understanding. Every option follows the same
+order. First its guide, then a real service that proves the guide and only then the generator option that
+produces it. Nothing reaches the generator before the other two exist.
+
+## Why every version is pinned
+
+Advice is only true for a version. "Set this timeout" depends on the default it replaces and defaults move.
+"Use the latest" cannot be tested, because the latest changes while the test runs.
+
+So every guide is written for a **baseline**: a frozen list of exact versions, such as Java 25 and Spring Boot
+4.1.1. A claim can then point to the test that checked it on exactly those versions. The cost is that we trail
+the newest release by days or weeks. Security fixes do not wait; [How we keep it current](/maintenance/)
+explains how a new baseline is cut.
+
+## Why a real service and tests
+
+Example code rots when nothing runs it. The code in the guides is cut from a small service in the repository.
+CI builds it, builds its image and runs behaviour tests against it on every change, so an upgrade that breaks
+the advice turns CI red before it reaches a reader.
+
+Each claim is tied to a test, its command and its result. Some claims need a cluster or a load test that has
+not run yet. Those say "not exercised" and why, so nothing untested passes as proven.
+
+## Why questions and steps
+
+People arrive with a problem, not a table of contents. So every guide starts from the questions it answers and
+gives each one a step: the answer in short, what goes wrong, what to do and when the advice is not for you.
+
+That last part matters. Advice has limits and a guide that hides them gets applied where it does harm.
+
+## Your choices stay yours
+
+- **The architecture is your choice.** The generator will offer hexagonal and DDD layered and the guides
+  compare the other styles honestly, even the ones it does not generate.
+- **The generated project is plain.** Spring Boot, Gradle and Kubernetes, with no runtime library of ours
+  inside. It does not need Pyahu to build or to run.
+- **Generate once, then it is yours.** There is no managed upgrade that rewrites your code. You keep it current
+  with your own tools, as the [build quality guide](/guides/build-quality/) shows.
+
+## What it is not
+
+- **Not a framework.** Nothing to depend on at runtime and nothing to migrate away from.
+- **Not every stack.** It covers Java with Spring Boot, Gradle, Kubernetes and Next.js. Maven, Kotlin and
+  Quarkus are out of scope for now.
+- **Not a substitute for reading.** The checklist tells you what to check; the guides tell you why it matters.
+
+## Who is behind it
+
+Pyahu runs a managed platform for JVM teams and follows these practices in its own services. We publish them
+because a shared, tested reference is worth more than one more private wiki.
+
+The code is MIT and the guide text is CC BY 4.0, so you can copy both, adapt them and use them inside your
+company. Everything is on [GitHub](https://github.com/pyahu/initializer): the guides, the service that proves
+them, the tests and their runs. Corrections and new questions are welcome; the
+[contributing notes](https://github.com/pyahu/initializer/blob/main/CONTRIBUTING.md) explain the rules every
+change has to pass.
