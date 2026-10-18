@@ -35,6 +35,9 @@ paths:
         - $ref: "#/components/parameters/Package"
         - $ref: "#/components/parameters/Description"
         - $ref: "#/components/parameters/Architecture"
+        - $ref: "#/components/parameters/Database"
+        - $ref: "#/components/parameters/Auth"
+        - $ref: "#/components/parameters/Frontend"
       responses:
         "200":
           $ref: "#/components/responses/Starter"
@@ -100,6 +103,30 @@ components:
       schema:
         type: string
         maxLength: 20
+    Database:
+      name: database
+      in: query
+      required: false
+      description: "`none` (default) or `postgres`."
+      schema:
+        type: string
+        maxLength: 20
+    Auth:
+      name: auth
+      in: query
+      required: false
+      description: "`none` (default) or `oidc`."
+      schema:
+        type: string
+        maxLength: 20
+    Frontend:
+      name: frontend
+      in: query
+      required: false
+      description: "`none` (default) or `nextjs`."
+      schema:
+        type: string
+        maxLength: 20
   responses:
     Starter:
       description: The project as a zip file.
@@ -138,9 +165,18 @@ components:
         architecture:
           type: string
           maxLength: 20
+        database:
+          type: string
+          maxLength: 20
+        auth:
+          type: string
+          maxLength: 20
+        frontend:
+          type: string
+          maxLength: 20
     Metadata:
       type: object
-      required: [baseline, fields, architectures]
+      required: [baseline, fields]
       properties:
         baseline:
           $ref: "#/components/schemas/BaselineInfo"
@@ -148,10 +184,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Field"
-        architectures:
-          type: array
-          items:
-            $ref: "#/components/schemas/Choice"
     BaselineInfo:
       type: object
       required: [id, java, springBoot, url]
@@ -183,6 +215,11 @@ components:
           type: string
         maxLength:
           type: integer
+        choices:
+          type: array
+          description: The values a field with a fixed list accepts. Empty for free text.
+          items:
+            $ref: "#/components/schemas/Choice"
     Choice:
       type: object
       required: [id, title, isDefault]

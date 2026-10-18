@@ -3,6 +3,7 @@ package [[packageName]].ping.adapter.in.web;
 import [[packageName]].ping.adapter.in.web.api.PingApi;
 import [[packageName]].ping.adapter.in.web.api.model.PingResponse;
 import [[packageName]].ping.application.port.in.Ping;
+import [[packageName]].ping.domain.Pong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +19,7 @@ class PingController implements PingApi {
 
     @Override
     public ResponseEntity<PingResponse> ping() {
-        return ResponseEntity.ok(new PingResponse(ping.ping().message()));
+        Pong pong = ping.ping();
+        return ResponseEntity.ok(new PingResponse(pong.message()[[#postgres]], pong.count()[[/postgres]]));
     }
 }

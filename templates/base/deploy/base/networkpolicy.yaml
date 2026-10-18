@@ -1,4 +1,5 @@
-# Deny everything, then allow each path on purpose (security guide, step 8). Port 8081 (Actuator) has no rule.
+# Deny everything for every pod of the application, then allow each path on purpose (security guide, step 8).
+# Port 8081 (Actuator) has no rule.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -8,13 +9,14 @@ spec:
     matchLabels:
       app.kubernetes.io/name: [[name]]
       app.kubernetes.io/instance: [[name]]
-      app.kubernetes.io/component: api
   policyTypes: [Ingress, Egress]
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: [[name]]-allow
+  name: [[name]]-api
+  labels:
+    app.kubernetes.io/component: api
 spec:
   podSelector:
     matchLabels:
@@ -42,3 +44,48 @@ spec:
     - ports:
         - port: 4318
           protocol: TCP
+[[#postgres]]
+    # PostgreSQL. Narrow the peer to your database's address.
+    - ports:
+        - port: 5432
+          protocol: TCP
+[[/postgres]]
+[[#oidc]]
+    # The identity provider's signing keys, over HTTPS (security guide, step 1).
+    - ports:
+        - port: 443
+          protocol: TCP
+[[/oidc]]
+[[#postgres]]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: [[name]]-migration
+  labels:
+    app.kubernetes.io/component: migration
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: [[name]]
+      app.kubernetes.io/instance: [[name]]
+      app.kubernetes.io/component: migration
+  policyTypes: [Ingress, Egress]
+  egress:
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - ports:
+        - port: 4318
+          protocol: TCP
+    - ports:
+        - port: 5432
+          protocol: TCP
+[[/postgres]]

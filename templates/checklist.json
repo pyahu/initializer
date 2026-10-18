@@ -2617,7 +2617,11 @@
               "step": 1,
               "type": "generated-config",
               "text": "Data fetching and service calls live in server components; modules that hold secrets or call the service start with import 'server-only'.",
-              "appliesWhen": {}
+              "appliesWhen": {
+                "frontend": [
+                  "nextjs"
+                ]
+              }
             },
             {
               "id": "NEXT-02",
@@ -2625,7 +2629,11 @@
               "step": 2,
               "type": "generated-config",
               "text": "The TypeScript client types are generated from the service's OpenAPI document and CI fails when the generated file is out of date.",
-              "appliesWhen": {}
+              "appliesWhen": {
+                "frontend": [
+                  "nextjs"
+                ]
+              }
             },
             {
               "id": "NEXT-03",
@@ -2633,7 +2641,11 @@
               "step": 2,
               "type": "verified-behaviour",
               "text": "The browser never calls the service directly; the Next.js server calls it by its cluster name.",
-              "appliesWhen": {}
+              "appliesWhen": {
+                "frontend": [
+                  "nextjs"
+                ]
+              }
             },
             {
               "id": "NEXT-04",
@@ -2644,6 +2656,9 @@
               "appliesWhen": {
                 "auth": [
                   true
+                ],
+                "frontend": [
+                  "nextjs"
                 ]
               }
             },
@@ -2656,6 +2671,9 @@
               "appliesWhen": {
                 "auth": [
                   true
+                ],
+                "frontend": [
+                  "nextjs"
                 ]
               }
             },
@@ -2665,7 +2683,11 @@
               "step": 4,
               "type": "generated-config",
               "text": "One image is promoted across environments; no environment specific value uses the NEXT_PUBLIC_ prefix.",
-              "appliesWhen": {}
+              "appliesWhen": {
+                "frontend": [
+                  "nextjs"
+                ]
+              }
             },
             {
               "id": "NEXT-07",
@@ -2673,7 +2695,11 @@
               "step": 5,
               "type": "verified-behaviour",
               "text": "Nothing that depends on the user's session is cached in a shared cache; cached reads have a tag and a lifetime.",
-              "appliesWhen": {}
+              "appliesWhen": {
+                "frontend": [
+                  "nextjs"
+                ]
+              }
             },
             {
               "id": "NEXT-08",
@@ -2681,7 +2707,11 @@
               "step": 5,
               "type": "deployment-prerequisite",
               "text": "With more than one replica, cached data uses a shared cache handler or a short lifetime per pod.",
-              "appliesWhen": {}
+              "appliesWhen": {
+                "frontend": [
+                  "nextjs"
+                ]
+              }
             },
             {
               "id": "NEXT-09",
@@ -2689,7 +2719,11 @@
               "step": 6,
               "type": "generated-config",
               "text": "The image is built with output: 'standalone', copies only .next/standalone, .next/static and public, runs as the node user and starts with CMD [\"node\", \"server.js\"].",
-              "appliesWhen": {}
+              "appliesWhen": {
+                "frontend": [
+                  "nextjs"
+                ]
+              }
             },
             {
               "id": "NEXT-10",
@@ -2697,7 +2731,11 @@
               "step": 6,
               "type": "deployment-prerequisite",
               "text": "Probes point at a route handler that returns 200; the grace period covers the slowest request; several replicas share the Server Actions encryption key and a deploymentId.",
-              "appliesWhen": {}
+              "appliesWhen": {
+                "frontend": [
+                  "nextjs"
+                ]
+              }
             },
             {
               "id": "NEXT-11",
@@ -2705,7 +2743,11 @@
               "step": 7,
               "type": "generated-config",
               "text": "next.config.js sets nosniff, a referrer policy, frame denial and HSTS on every path, poweredByHeader is false and a Content Security Policy is in place.",
-              "appliesWhen": {}
+              "appliesWhen": {
+                "frontend": [
+                  "nextjs"
+                ]
+              }
             },
             {
               "id": "NEXT-12",
@@ -2713,7 +2755,11 @@
               "step": 8,
               "type": "generated-config",
               "text": "instrumentation.ts registers OpenTelemetry with the service's address in fetch.propagateContextUrls and exports to the same collector as the service.",
-              "appliesWhen": {}
+              "appliesWhen": {
+                "frontend": [
+                  "nextjs"
+                ]
+              }
             }
           ]
         }

@@ -75,10 +75,14 @@ jobs:
   generated:
     needs: start
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
+        architecture: [hexagonal, ddd-layered]
+        database: [none, postgres]
+        auth: [none, oidc]
+        frontend: [none, nextjs]
         include:
           - architecture: hexagonal
             name: orders
@@ -108,13 +112,18 @@ jobs:
       - name: Generate, twice
         # POST with form fields as curl -d sends them, then GET with the same fields as a query: same bytes.
         env:
-          ARCHITECTURE: ${{ matrix.architecture }}
           NAME: ${{ matrix.name }}
           GROUP: ${{ matrix.group }}
+          ARCHITECTURE: ${{ matrix.architecture }}
+          DATABASE: ${{ matrix.database }}
+          AUTH: ${{ matrix.auth }}
+          FRONTEND: ${{ matrix.frontend }}
         run: |
           mkdir -p out
-          curl -fsS localhost:18080/starter.zip -d name="$NAME" -d group="$GROUP" -d architecture="$ARCHITECTURE" -o out/post.zip
-          curl -fsS "localhost:18080/starter.zip?name=$NAME&group=$GROUP&architecture=$ARCHITECTURE" -o out/get.zip
+          curl -fsS localhost:18080/starter.zip -d name="$NAME" -d group="$GROUP" -d architecture="$ARCHITECTURE" \
+            -d database="$DATABASE" -d auth="$AUTH" -d frontend="$FRONTEND" -o out/post.zip
+          curl -fsS "localhost:18080/starter.zip?name=$NAME&group=$GROUP&architecture=$ARCHITECTURE&database=$DATABASE&auth=$AUTH&frontend=$FRONTEND" \
+            -o out/get.zip
           cmp out/post.zip out/get.zip
           cd out && unzip -q post.zip
           test -x "$NAME/gradlew"

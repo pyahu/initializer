@@ -15,7 +15,14 @@ import org.jspecify.annotations.Nullable;
  * can generate.
  */
 public record ProjectRequest(
-        String name, String group, String packageName, String description, Architecture architecture) {
+        String name,
+        String group,
+        String packageName,
+        String description,
+        Architecture architecture,
+        Database database,
+        Auth auth,
+        Frontend frontend) {
 
     private static final Set<String> JAVA_KEYWORDS = Set.of(
             "abstract",
@@ -79,35 +86,46 @@ public record ProjectRequest(
         requireNonNull(packageName, "packageName");
         requireNonNull(description, "description");
         requireNonNull(architecture, "architecture");
+        requireNonNull(database, "database");
+        requireNonNull(auth, "auth");
+        requireNonNull(frontend, "frontend");
     }
 
     /**
      * Validates the fields and fills in the defaults. A blank value counts as absent, as an empty form field does.
      *
+     * @param fields values by {@link ProjectField#id()}; an absent field takes its default
      * @throws InvalidProjectRequest with every rejected field, never only the first
      */
-    public static ProjectRequest of(
-            @Nullable String name,
-            @Nullable String group,
-            @Nullable String packageName,
-            @Nullable String description,
-            @Nullable String architecture) {
+    public static ProjectRequest of(Map<String, String> fields) {
         List<FieldError> errors = new ArrayList<>();
-        String n = check(ProjectField.NAME, name, errors);
-        String g = check(ProjectField.GROUP, group, errors);
+        String n = check(ProjectField.NAME, fields, errors);
+        String g = check(ProjectField.GROUP, fields, errors);
         keywords(ProjectField.GROUP, g, errors);
         // A package derived from a rejected name or group would only repeat their errors.
+        String packageName = fields.get(ProjectField.PACKAGE.id());
         boolean derived = packageName == null || packageName.isBlank();
         String p = derived ? g + "." + n.replace("-", "") : check(ProjectField.PACKAGE, packageName, "", errors);
         if (!derived || errors.isEmpty()) {
             keywords(ProjectField.PACKAGE, p, errors);
         }
-        String d = check(ProjectField.DESCRIPTION, description, errors);
-        String a = check(ProjectField.ARCHITECTURE, architecture, errors);
+        String d = check(ProjectField.DESCRIPTION, fields, errors);
+        String a = check(ProjectField.ARCHITECTURE, fields, errors);
+        String db = check(ProjectField.DATABASE, fields, errors);
+        String auth = check(ProjectField.AUTH, fields, errors);
+        String f = check(ProjectField.FRONTEND, fields, errors);
         if (!errors.isEmpty()) {
             throw new InvalidProjectRequest(errors);
         }
-        return new ProjectRequest(n, g, p, d, Architecture.of(a).orElseThrow());
+        return new ProjectRequest(
+                n,
+                g,
+                p,
+                d,
+                Choice.of(Architecture.class, a).orElseThrow(),
+                Choice.of(Database.class, db).orElseThrow(),
+                Choice.of(Auth.class, auth).orElseThrow(),
+                Choice.of(Frontend.class, f).orElseThrow());
     }
 
     /** The package as a directory, such as {@code com/example/demo}. */
@@ -116,26 +134,30 @@ public record ProjectRequest(
     }
 
     /**
-     * The options in the shape the guides' checklist filters on (see CONTRIBUTING.md, "Checklist"). The base project
-     * has a REST API and no database, messaging, cache or login yet.
+     * The options in the shape the guides' checklist filters on (see CONTRIBUTING.md, "Checklist"). Every project has
+     * a REST API and no messaging or cache yet.
      */
     public Map<String, Object> options() {
         Map<String, Object> options = new LinkedHashMap<>();
         options.put("architecture", architecture.id());
         options.put("api", List.of("rest"));
-        options.put("database", "none");
+        options.put("database", database.id());
+        if (database == Database.POSTGRES) {
+            options.put("persistence", "jdbc");
+        }
         options.put("kafka.enabled", false);
         options.put("kafka.outbox", false);
         options.put("rabbitmq", false);
         options.put("cache", false);
-        options.put("auth", false);
+        options.put("auth", auth == Auth.OIDC);
+        options.put("frontend", frontend.id());
         options.put("pyahuCli", false);
         options.put("sample", true);
         return options;
     }
 
-    private static String check(ProjectField field, @Nullable String value, List<FieldError> errors) {
-        return check(field, value, requireNonNull(field.defaultValue(), field.id()), errors);
+    private static String check(ProjectField field, Map<String, String> fields, List<FieldError> errors) {
+        return check(field, fields.get(field.id()), requireNonNull(field.defaultValue(), field.id()), errors);
     }
 
     private static String check(ProjectField field, @Nullable String value, String fallback, List<FieldError> errors) {
@@ -145,6 +167,13 @@ public record ProjectRequest(
         String v = value.strip();
         if (v.length() > field.maxLength()) {
             errors.add(new FieldError(field.id(), "at most " + field.maxLength() + " characters"));
+        } else if (!field.choices().isEmpty() && field.choices().stream().noneMatch(c -> c.id().equals(v))) {
+            errors.add(new FieldError(
+                    field.id(),
+                    "must be one of "
+                            + String.join(
+                                    ", ",
+                                    field.choices().stream().map(Choice::id).toList())));
         } else if (!field.pattern().matcher(v).matches()) {
             errors.add(
                     new FieldError(field.id(), "must match " + field.pattern().pattern()));

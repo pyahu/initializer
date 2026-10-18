@@ -3,7 +3,6 @@ package io.pyahu.start.generation.presentation;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.pyahu.start.generation.application.DescribeOptions;
 import io.pyahu.start.generation.application.GenerateProject;
-import io.pyahu.start.generation.domain.Architecture;
 import io.pyahu.start.generation.domain.FieldError;
 import io.pyahu.start.generation.domain.InvalidProjectRequest;
 import io.pyahu.start.generation.domain.ProjectArchive;
@@ -58,20 +57,27 @@ class StarterController implements StarterApi {
     public ResponseEntity<Metadata> getMetadata() {
         DescribeOptions.Options options = describeOptions.describe();
         var baseline = options.baseline();
-        List<Field> fields = options.fields().stream()
-                .map(f -> new Field(f.id(), f.description())
-                        .defaultValue(f.defaultValue())
-                        .pattern(f.pattern().pattern())
-                        .maxLength(f.maxLength()))
-                .toList();
-        List<Choice> architectures = options.architectures().stream()
-                .map(a -> new Choice(a.id(), a.title(), a == Architecture.DEFAULT))
-                .toList();
+        List<Field> fields =
+                options.fields().stream().map(StarterController::field).toList();
         return ResponseEntity.ok(new Metadata(
-                new BaselineInfo(baseline.id(), baseline.java(), baseline.springBoot(), MAINTENANCE),
-                fields,
-                architectures));
+                new BaselineInfo(baseline.id(), baseline.java(), baseline.springBoot(), MAINTENANCE), fields));
     }
+
+    private static Field field(ProjectField f) {
+        Field field = new Field(f.id(), f.description())
+                .defaultValue(f.defaultValue())
+                .pattern(f.pattern().pattern())
+                .maxLength(f.maxLength());
+        if (!f.choices().isEmpty()) {
+            field.choices(f.choices().stream()
+                    .map(c -> new Choice(c.id(), c.title(), c.id().equals(f.defaultValue())))
+                    .toList());
+        }
+        return field;
+    }
+
+    // The generated signatures name every field; the request is read from the parameter map instead, which also
+    // holds the fields the contract does not know.
 
     @Override
     public ResponseEntity<Resource> getStarter(
@@ -79,8 +85,11 @@ class StarterController implements StarterApi {
             @Nullable String group,
             @Nullable String _package,
             @Nullable String description,
-            @Nullable String architecture) {
-        return starter(name, group, _package, description, architecture);
+            @Nullable String architecture,
+            @Nullable String database,
+            @Nullable String auth,
+            @Nullable String frontend) {
+        return starter();
     }
 
     @Override
@@ -89,23 +98,26 @@ class StarterController implements StarterApi {
             @Nullable String group,
             @Nullable String _package,
             @Nullable String description,
-            @Nullable String architecture) {
-        return starter(name, group, _package, description, architecture);
+            @Nullable String architecture,
+            @Nullable String database,
+            @Nullable String auth,
+            @Nullable String frontend) {
+        return starter();
     }
 
-    private ResponseEntity<Resource> starter(
-            @Nullable String name,
-            @Nullable String group,
-            @Nullable String packageName,
-            @Nullable String description,
-            @Nullable String architecture) {
-        rejectUnknownOrRepeatedFields(http.getParameterMap());
-        ProjectRequest request = ProjectRequest.of(name, group, packageName, description, architecture);
+    private ResponseEntity<Resource> starter() {
+        ProjectRequest request = ProjectRequest.of(fields(http.getParameterMap()));
         ProjectArchive archive = generateProject.generate(request);
         meters.counter(
                         "initializer.projects.generated",
                         "architecture",
-                        request.architecture().id())
+                        request.architecture().id(),
+                        "database",
+                        request.database().id(),
+                        "auth",
+                        request.auth().id(),
+                        "frontend",
+                        request.frontend().id())
                 .increment();
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/zip"))
@@ -118,18 +130,25 @@ class StarterController implements StarterApi {
                 .body(new ByteArrayResource(archive.content()));
     }
 
-    /** A typo such as {@code nme=orders} must fail, not quietly give a project called demo. */
-    static void rejectUnknownOrRepeatedFields(Map<String, String[]> parameters) {
+    /**
+     * One value per field. A typo such as {@code nme=orders} must fail, not quietly give a project called demo, and
+     * so must a field given twice.
+     */
+    static Map<String, String> fields(Map<String, String[]> parameters) {
         List<FieldError> errors = new ArrayList<>();
+        Map<String, String> fields = new TreeMap<>();
         new TreeMap<>(parameters).forEach((field, values) -> {
             if (!FIELDS.contains(field)) {
                 errors.add(new FieldError(field, "unknown field"));
             } else if (values.length > 1) {
                 errors.add(new FieldError(field, "given more than once"));
+            } else if (values.length == 1) {
+                fields.put(field, values[0]);
             }
         });
         if (!errors.isEmpty()) {
             throw new InvalidProjectRequest(errors);
         }
+        return fields;
     }
 }

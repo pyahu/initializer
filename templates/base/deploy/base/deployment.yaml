@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: [[name]]
+  labels:
+    app.kubernetes.io/component: api
 spec:
   # No replicas: the HorizontalPodAutoscaler owns the count (Kubernetes deployment guide, step 4).
   revisionHistoryLimit: 5
@@ -70,6 +72,19 @@ spec:
               value: >-
                 -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=75.0 -XX:ActiveProcessorCount=2
                 -XX:+ExitOnOutOfMemoryError -Djava.io.tmpdir=/tmp
+[[#postgres]]
+            # The runtime role only: the migration role belongs to the Job (database guide, step 4).
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: [[name]]-db-app
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: [[name]]-db-app
+                  key: password
+[[/postgres]]
           resources:
             requests:
               cpu: "1"

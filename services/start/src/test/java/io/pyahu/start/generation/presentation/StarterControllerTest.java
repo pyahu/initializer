@@ -8,7 +8,6 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.pyahu.start.generation.application.DescribeOptions;
 import io.pyahu.start.generation.application.GenerateProject;
-import io.pyahu.start.generation.domain.Architecture;
 import io.pyahu.start.generation.domain.Baseline;
 import io.pyahu.start.generation.domain.Pin;
 import io.pyahu.start.generation.domain.ProjectArchive;
@@ -52,16 +51,20 @@ class StarterControllerTest {
     void describesTheOptions() {
         Baseline baseline =
                 new Baseline("v0.1-b1", Map.of("java", Pin.of("25.0.4.1+1"), "spring-boot", Pin.of("4.1.1")));
-        given(describeOptions.describe())
-                .willReturn(new DescribeOptions.Options(baseline, ProjectField.ALL, List.of(Architecture.values())));
+        given(describeOptions.describe()).willReturn(new DescribeOptions.Options(baseline, ProjectField.ALL));
         var result = mvc.get().uri("/metadata").exchange();
         assertThat(result).hasStatusOk();
         assertThat(result).bodyJson().extractingPath("$.baseline.springBoot").isEqualTo("4.1.1");
+        assertThat(result).bodyJson().extractingPath("$.fields[0].defaultValue").isEqualTo("demo");
+        assertThat(result).bodyJson().extractingPath("$.fields[0].choices").isEqualTo(List.of());
         assertThat(result)
                 .bodyJson()
-                .extractingPath("$.architectures[0].isDefault")
-                .isEqualTo(true);
-        assertThat(result).bodyJson().extractingPath("$.fields[0].defaultValue").isEqualTo("demo");
+                .extractingPath("$.fields[?(@.id == 'database')].choices[*].id")
+                .isEqualTo(List.of("none", "postgres"));
+        assertThat(result)
+                .bodyJson()
+                .extractingPath("$.fields[?(@.id == 'architecture')].choices[0].isDefault")
+                .isEqualTo(List.of(true));
     }
 
     @Test
@@ -70,14 +73,16 @@ class StarterControllerTest {
         var result = mvc.get().uri("/starter.zip?name=orders").exchange();
         assertThat(result).hasStatusOk().hasContentType("application/zip");
         assertThat(result).headers().hasValue("Content-Disposition", "attachment; filename=\"orders.zip\"");
-        assertThat(meters.counter("initializer.projects.generated", "architecture", "hexagonal")
+        assertThat(meters.get("initializer.projects.generated")
+                        .tags("architecture", "hexagonal", "database", "none", "auth", "none", "frontend", "none")
+                        .counter()
                         .count())
                 .isPositive();
     }
 
     @Test
     void postTakesFormFieldsSoCurlDashDWorks() {
-        given(generateProject.generate(ProjectRequest.of("orders", null, null, null, "ddd-layered")))
+        given(generateProject.generate(ProjectRequest.of(Map.of("name", "orders", "architecture", "ddd-layered"))))
                 .willReturn(new ProjectArchive("orders.zip", new byte[] {1}));
         var result = mvc.post()
                 .uri("/starter.zip")
@@ -104,6 +109,24 @@ class StarterControllerTest {
                 mvc.get().uri("/starter.zip?name=Orders&architecture=onion").exchange();
         assertThat(result).hasStatus(400).hasContentType(MediaType.APPLICATION_PROBLEM_JSON);
         assertThat(result).bodyJson().extractingPath("$.errors[*].field").isEqualTo(List.of("name", "architecture"));
+    }
+
+    @Test
+    void everyOptionIsAField() {
+        given(generateProject.generate(ProjectRequest.of(
+                        Map.of("name", "orders", "database", "postgres", "auth", "oidc", "frontend", "nextjs"))))
+                .willReturn(new ProjectArchive("orders.zip", new byte[] {1}));
+        var result = mvc.get()
+                .uri("/starter.zip?name=orders&database=postgres&auth=oidc&frontend=nextjs")
+                .exchange();
+        assertThat(result).hasStatusOk();
+    }
+
+    @Test
+    void anUnknownChoiceNamesTheChoices() {
+        var result = mvc.get().uri("/starter.zip?database=mysql").exchange();
+        assertThat(result).hasStatus(400);
+        assertThat(result).bodyJson().extractingPath("$.errors[0].message").isEqualTo("must be one of none, postgres");
     }
 
     @Test

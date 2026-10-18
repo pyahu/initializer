@@ -87,6 +87,13 @@ tasks.named<JavaCompile>("compileTestJava") {
 tasks.test {
     useJUnitPlatform()
 }
+[[#postgres]]
+
+// On the laptop the application migrates on start, as the one database user (database guide, steps 4 and 5).
+tasks.bootRun {
+    args("--spring.liquibase.enabled=true")
+}
+[[/postgres]]
 
 spotless {
     java {

@@ -1,10 +1,7 @@
 package io.pyahu.start.generation.domain;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 /** How the code inside each capability is arranged (architecture guide, step 2). */
-public enum Architecture {
+public enum Architecture implements Choice {
     HEXAGONAL("hexagonal", "Hexagonal", "https://initializer.pyahu.io/guides/architecture/#arch-hexagonal"),
     DDD_LAYERED("ddd-layered", "DDD layered", "https://initializer.pyahu.io/guides/architecture/#arch-ddd-layered");
 
@@ -20,19 +17,17 @@ public enum Architecture {
         this.guide = guide;
     }
 
+    @Override
     public String id() {
         return id;
     }
 
+    @Override
     public String title() {
         return title;
     }
 
     public String guide() {
         return guide;
-    }
-
-    public static Optional<Architecture> of(String id) {
-        return Arrays.stream(values()).filter(a -> a.id.equals(id)).findFirst();
     }
 }

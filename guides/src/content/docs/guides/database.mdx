@@ -375,6 +375,10 @@ application at it without any URL in the test.
    your production major version.
 3. Annotate the container with `@ServiceConnection`.
 4. Run the changelog in tests, so a migration that does not apply fails the build.
+5. To test the roles of step 4 too, run the changelog as the migration role. Limit the annotation to
+   `@ServiceConnection(type = JdbcConnectionDetails.class)` and give Liquibase its own `spring.liquibase.url`,
+   `user` and `password`. Otherwise Spring Boot derives Liquibase's connection from the container as well and
+   migrates as its admin, whatever `spring.liquibase.user` says.
 
 ### When this is not for you
 

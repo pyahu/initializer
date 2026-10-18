@@ -60,6 +60,48 @@
       "matchDatasources": ["docker"],
       "dependencyDashboardApproval": true,
       "labels": ["baseline"]
+    },
+    {
+      "description": "The generated frontend's npm packages are tooling: one pull request for minor and patch updates of both package files and their lock files. The matrix workflow builds every combination before the merge.",
+      "matchFileNames": ["templates/nextjs-*/frontends/web/package.json"],
+      "matchManagers": ["npm"],
+      "enabled": true,
+      "groupName": "Generated frontend packages",
+      "labels": ["tooling"]
+    },
+    {
+      "description": "Major updates of the generated frontend's packages change what the Next.js guide says: listed only.",
+      "matchFileNames": ["templates/nextjs-*/frontends/web/package.json"],
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "The generated frontend's Node is a toolchain, pinned in its .node-version, its Dockerfile and the generated workflow: listed only, moved together.",
+      "matchFileNames": ["templates/nextjs/frontends/web/**", "templates/base/.github/workflows/ci.yml"],
+      "matchPackageNames": ["node"],
+      "enabled": true,
+      "dependencyDashboardApproval": true,
+      "groupName": "Generated frontend Node",
+      "labels": ["toolchain"]
+    },
+    {
+      "description": "The mock identity provider of the generated Compose file and smoke test is tooling.",
+      "matchFileNames": ["templates/base/compose.yml", "templates/base/.github/workflows/ci.yml"],
+      "matchPackageNames": ["ghcr.io/navikt/mock-oauth2-server"],
+      "enabled": true,
+      "dependencyDashboardApproval": false,
+      "groupName": "Generated mock identity provider",
+      "labels": ["tooling"]
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Images the generated workflow pins in env, next to the same images in the frontend's Dockerfile and compose.yml.",
+      "managerFilePatterns": ["/^templates/base/\\.github/workflows/ci\\.yml$/"],
+      "matchStrings": ["(?:NODE|OIDC)_IMAGE: (?<depName>[^:\\s]+):(?<currentValue>[^@\\s]+)@(?<currentDigest>sha256:[a-f0-9]{64})"],
+      "datasourceTemplate": "docker"
     }
   ],
   "vulnerabilityAlerts": {

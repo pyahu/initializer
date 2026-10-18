@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class ChecklistItemTest {
 
     private final Map<String, Object> options =
-            ProjectRequest.of(null, null, null, null, "hexagonal").options();
+            ProjectRequest.of(Map.of("architecture", "hexagonal")).options();
 
     @Test
     void anEmptyFilterAlwaysApplies() {

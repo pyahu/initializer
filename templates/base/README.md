@@ -9,17 +9,51 @@ name the guide and step behind each choice.
 ## Run it
 
 ```sh
-./gradlew bootRun                # starts Grafana with Docker Compose, then the service
-curl localhost:8080/ping         # {"message":"pong"}
+./gradlew bootRun                # starts the containers of compose.yml, then the service
+[[^oidc]]
+curl localhost:8080/ping         # {"message":"pong"[[#postgres]],"count":1[[/postgres]]}
+[[/oidc]]
+[[#oidc]]
+token=$(curl -s localhost:8090/default/token -d grant_type=client_credentials \
+  -d client_id=cli -d client_secret=local -d scope=[[name]] | tr -d '\n' | sed -E 's/.*"access_token" *: *"([^"]+)".*/\1/')
+curl -H "Authorization: Bearer $token" localhost:8080/ping   # {"message":"pong"[[#postgres]],"count":1[[/postgres]]}
+[[/oidc]]
 ```
 
 Traces, metrics and logs land in Grafana on http://localhost:3000 (admin/admin).
+[[#postgres]]
+
+On the laptop the service migrates PostgreSQL on start, as one user. In every shared environment the migration
+Job does it with its own role and the service only reads and writes data (database guide).
+[[/postgres]]
+[[#oidc]]
+
+The service accepts only tokens for its API. Locally a mock identity provider issues them on
+http://localhost:8090/default; in each environment set `OIDC_ISSUER_URI` and `OIDC_AUDIENCE` (security guide).
+[[/oidc]]
+[[#nextjs]]
+
+The frontend runs next to it, on http://localhost:3001:
+
+```sh
+cd frontends/web
+npm ci
+npm run dev
+```
+
+It renders on its server and calls the service there[[#oidc]]; *Sign in* goes to the mock identity provider, which
+signs in any user name[[/oidc]]. After a change to the contract, `npm run api` regenerates `src/api/schema.d.ts`
+(Next.js guide).
+[[/nextjs]]
 
 ## Build it
 
 ```sh
 ./gradlew build                  # compile with Error Prone and NullAway, tests, Spotless, SBOM
 docker build -t [[name]] .       # image with layers and an AOT cache, running as user 10001
+[[#nextjs]]
+docker build -t [[name]]-web frontends/web
+[[/nextjs]]
 kustomize build deploy/overlays/dev
 ```
 
@@ -33,8 +67,31 @@ kustomize build deploy/overlays/dev
 | `src/main/openapi/api.yaml` | The REST contract. The build generates the interfaces the controllers implement. |
 [[layout]]
 | `src/main/resources/application.yaml` | Every setting, with local defaults the Deployment overrides. |
+[[#postgres]]
+| `src/main/resources/db/changelog/` | The Liquibase changelog, applied by the migration Job. |
+| `db/roles.sql` | The migration and runtime roles, created once per database by an admin. |
+[[/postgres]]
+[[#nextjs]]
+| `frontends/web/` | The Next.js frontend, with its own image. |
+[[/nextjs]]
 | `deploy/` | Kustomize: a base, a `dev` and a `prod` overlay. |
-| `compose.yml` | The local loop: Grafana with OpenTelemetry. |
+| `compose.yml` | The local loop: Grafana with OpenTelemetry[[#postgres]], PostgreSQL[[/postgres]][[#oidc]], a mock identity provider[[/oidc]]. |
 | `CHECKLIST.md` | What to review before production, with the step that explains each item. |
 
 The architecture is [[architectureTitle]]: [guide]([[architectureGuide]]).
+[[#postgres]]
+
+## Before the first deploy
+
+Create in each namespace the Secrets `[[name]]-db-app` and `[[name]]-db-migrator` with the keys `username` and
+`password`.[[#webAuth]] Also create `[[name]]-web-auth` with `better-auth-secret` and `oidc-client-secret`.[[/webAuth]] Then
+apply the migration Job, wait until it completes and apply the rest.
+[[/postgres]]
+[[^postgres]]
+[[#webAuth]]
+
+## Before the first deploy
+
+Create in each namespace the Secret `[[name]]-web-auth` with the keys `better-auth-secret` and `oidc-client-secret`.
+[[/webAuth]]
+[[/postgres]]

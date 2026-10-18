@@ -300,24 +300,24 @@ file exists for it yet, so these are lists.
 
 ### Generated configuration
 
-- **NEXT-01** Data fetching and service calls live in server components; modules that hold secrets or call the service start with import 'server-only'. (step 1)
-- **NEXT-02** The TypeScript client types are generated from the service's OpenAPI document and CI fails when the generated file is out of date. (step 2)
-- **NEXT-04** Login runs the OIDC code flow on the server with a maintained library; the session is an httpOnly, secure, sameSite cookie and the access token never reaches the browser. (step 3; when auth: true)
-- **NEXT-06** One image is promoted across environments; no environment specific value uses the NEXT_PUBLIC_ prefix. (step 4)
-- **NEXT-09** The image is built with output: 'standalone', copies only .next/standalone, .next/static and public, runs as the node user and starts with CMD ["node", "server.js"]. (step 6)
-- **NEXT-11** next.config.js sets nosniff, a referrer policy, frame denial and HSTS on every path, poweredByHeader is false and a Content Security Policy is in place. (step 7)
-- **NEXT-12** instrumentation.ts registers OpenTelemetry with the service's address in fetch.propagateContextUrls and exports to the same collector as the service. (step 8)
+- **NEXT-01** Data fetching and service calls live in server components; modules that hold secrets or call the service start with import 'server-only'. (step 1; when frontend: nextjs)
+- **NEXT-02** The TypeScript client types are generated from the service's OpenAPI document and CI fails when the generated file is out of date. (step 2; when frontend: nextjs)
+- **NEXT-04** Login runs the OIDC code flow on the server with a maintained library; the session is an httpOnly, secure, sameSite cookie and the access token never reaches the browser. (step 3; when auth: true; frontend: nextjs)
+- **NEXT-06** One image is promoted across environments; no environment specific value uses the NEXT_PUBLIC_ prefix. (step 4; when frontend: nextjs)
+- **NEXT-09** The image is built with output: 'standalone', copies only .next/standalone, .next/static and public, runs as the node user and starts with CMD ["node", "server.js"]. (step 6; when frontend: nextjs)
+- **NEXT-11** next.config.js sets nosniff, a referrer policy, frame denial and HSTS on every path, poweredByHeader is false and a Content Security Policy is in place. (step 7; when frontend: nextjs)
+- **NEXT-12** instrumentation.ts registers OpenTelemetry with the service's address in fetch.propagateContextUrls and exports to the same collector as the service. (step 8; when frontend: nextjs)
 
 ### Verified behaviour
 
-- **NEXT-03** The browser never calls the service directly; the Next.js server calls it by its cluster name. (step 2)
-- **NEXT-05** Every Server Action and every data access function checks the user itself, not only proxy.ts. (step 3; when auth: true)
-- **NEXT-07** Nothing that depends on the user's session is cached in a shared cache; cached reads have a tag and a lifetime. (step 5)
+- **NEXT-03** The browser never calls the service directly; the Next.js server calls it by its cluster name. (step 2; when frontend: nextjs)
+- **NEXT-05** Every Server Action and every data access function checks the user itself, not only proxy.ts. (step 3; when auth: true; frontend: nextjs)
+- **NEXT-07** Nothing that depends on the user's session is cached in a shared cache; cached reads have a tag and a lifetime. (step 5; when frontend: nextjs)
 
 ### Deployment prerequisites
 
-- **NEXT-08** With more than one replica, cached data uses a shared cache handler or a short lifetime per pod. (step 5)
-- **NEXT-10** Probes point at a route handler that returns 200; the grace period covers the slowest request; several replicas share the Server Actions encryption key and a deploymentId. (step 6)
+- **NEXT-08** With more than one replica, cached data uses a shared cache handler or a short lifetime per pod. (step 5; when frontend: nextjs)
+- **NEXT-10** Probes point at a route handler that returns 200; the grace period covers the slowest request; several replicas share the Server Actions encryption key and a deploymentId. (step 6; when frontend: nextjs)
 
 ## References
 

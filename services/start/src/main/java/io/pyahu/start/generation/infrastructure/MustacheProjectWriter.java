@@ -2,6 +2,7 @@ package io.pyahu.start.generation.infrastructure;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
+import io.pyahu.start.generation.domain.Auth;
 import io.pyahu.start.generation.domain.ChecklistItem;
 import io.pyahu.start.generation.domain.Contribution;
 import io.pyahu.start.generation.domain.Contribution.CatalogLibrary;
@@ -12,6 +13,8 @@ import io.pyahu.start.generation.domain.Contribution.Dependency;
 import io.pyahu.start.generation.domain.Contribution.Property;
 import io.pyahu.start.generation.domain.Contribution.Section;
 import io.pyahu.start.generation.domain.Contribution.Value;
+import io.pyahu.start.generation.domain.Database;
+import io.pyahu.start.generation.domain.Frontend;
 import io.pyahu.start.generation.domain.ProjectArchive;
 import io.pyahu.start.generation.domain.ProjectDescription;
 import io.pyahu.start.generation.domain.ProjectRequest;
@@ -30,6 +33,7 @@ import org.springframework.stereotype.Component;
  *
  * <p>Templates use {@code [[ ]]} as delimiters, so the {@code ${{ }}} of GitHub Actions and the {@code {{ }}} of
  * other tools pass through untouched. A missing value fails the generation instead of writing an empty string.
+ * Sections test the flag of one option, such as {@code [[#postgres]]}; anything more belongs in the recipe.
  */
 @Component
 class MustacheProjectWriter implements ProjectWriter {
@@ -89,6 +93,12 @@ class MustacheProjectWriter implements ProjectWriter {
         model.put("packageName", r.packageName());
         model.put("description", r.description());
         model.put("architecture", r.architecture().id());
+        // One flag per option, for the sections of files that differ by option.
+        model.put("postgres", r.database() == Database.POSTGRES);
+        model.put("oidc", r.auth() == Auth.OIDC);
+        model.put("nextjs", r.frontend() == Frontend.NEXTJS);
+        // The frontend's login: OIDC with Next.js.
+        model.put("webAuth", r.auth() == Auth.OIDC && r.frontend() == Frontend.NEXTJS);
         for (Value v : d.all(Value.class)) {
             model.put(v.name(), v.value());
         }

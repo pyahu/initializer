@@ -11,3 +11,29 @@ services:
       interval: 5s
       timeout: 2s
       retries: 30
+[[#postgres]]
+  # One user on the laptop; db/init-local.sh still creates the two roles of production (database guide, step 4).
+  postgres:
+    image: [[postgresImage]]
+    environment:
+      POSTGRES_PASSWORD: local
+      POSTGRES_DB: [[dbName]]
+    ports:
+      - "5432"
+    volumes:
+      - ./db:/db:ro
+      - ./db/init-local.sh:/docker-entrypoint-initdb.d/init-local.sh:ro
+[[/postgres]]
+[[#oidc]]
+  # A mock identity provider that signs in any user name you type. Its tokens carry the audiences of production:
+  # the API, [[#nextjs]]and the frontend's client ID, [[/nextjs]]so the service checks them as it would there.
+  oidc:
+    image: ghcr.io/navikt/mock-oauth2-server:6.0.5@sha256:5ed2f078c6503147860a5114f06414257bb7eeccc68b0e806bdf0869f2602509
+    ports:
+      - "8090:8080"
+    environment:
+      JSON_CONFIG: >-
+        {"interactiveLogin": true, "tokenCallbacks": [{"issuerId": "default", "tokenExpiry": 3600,
+        "requestMappings": [{"requestParam": "client_id", "match": "*",
+        "claims": {"aud": ["[[name]]"[[#nextjs]], "[[name]]-web"[[/nextjs]]], "email": "developer@localhost"}}]}]}
+[[/oidc]]

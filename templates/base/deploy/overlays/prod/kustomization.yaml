@@ -15,11 +15,37 @@ configMapGenerator:
     literals:
       - DEPLOYMENT_ENVIRONMENT=prod
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.observability:4318
+[[#postgres]]
+      # Credentials come from the Secrets [[name]]-db-app and [[name]]-db-migrator, created out of band.
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres.example.internal:5432/[[dbName]]
+[[/postgres]]
+[[#oidc]]
+      - OIDC_ISSUER_URI=https://login.example.com/your-tenant
+      - OIDC_AUDIENCE=[[name]]
+[[/oidc]]
+[[#nextjs]]
+  - name: [[name]]-web-config
+    behavior: merge
+    literals:
+      - DEPLOYMENT_ENVIRONMENT=prod
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.observability:4318
+[[#oidc]]
+      # BETTER_AUTH_SECRET and OIDC_CLIENT_SECRET come from the Secret [[name]]-web-auth, created out of band.
+      - BETTER_AUTH_URL=https://[[name]].example.com
+      - OIDC_ISSUER_URI=https://login.example.com/your-tenant
+      - OIDC_CLIENT_ID=[[name]]-web
+[[/oidc]]
+[[/nextjs]]
 
 images:
   - name: [[name]]
     newName: ghcr.io/your-org/[[name]]
     digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+[[#nextjs]]
+  - name: [[name]]-web
+    newName: ghcr.io/your-org/[[name]]-web
+    digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+[[/nextjs]]
 
 patches:
   # At least 3 replicas in production (Kubernetes deployment guide, steps 5 and 6).

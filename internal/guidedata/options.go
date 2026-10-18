@@ -9,7 +9,7 @@ import (
 var OptionPaths = map[string]string{
 	"architecture": "string", "api": "list", "database": "string", "persistence": "string",
 	"kafka.enabled": "bool", "kafka.outbox": "bool", "rabbitmq": "bool", "cache": "bool",
-	"auth": "bool", "pyahuCli": "bool", "sample": "bool",
+	"auth": "bool", "frontend": "string", "pyahuCli": "bool", "sample": "bool",
 }
 
 // OptionValues are the values the options contract allows per path (all releases), so
@@ -19,6 +19,7 @@ var OptionValues = map[string][]any{
 	"api":          {"rest", "grpc"},
 	"database":     {"none", "postgres"},
 	"persistence":  {"jdbc", "jpa", "jooq"},
+	"frontend":     {"none", "nextjs"},
 }
 
 // CheckFilter validates a filter's keys, value types and values.

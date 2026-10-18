@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class ProjectDescriptionTest {
 
     private final ProjectDescription d =
-            new ProjectDescription(ProjectRequest.of(null, null, null, null, null), new Baseline("v0.1-b1", Map.of()));
+            new ProjectDescription(ProjectRequest.of(Map.of()), new Baseline("v0.1-b1", Map.of()));
 
     @Test
     void twoContributionsWithTheSameKeyConflict() {

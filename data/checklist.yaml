@@ -1799,7 +1799,7 @@
   text: "Data fetching and service calls live in server components; modules that hold secrets or call the service start with import 'server-only'."
   claim: documented
   tests: []
-  appliesWhen: {}
+  appliesWhen: {frontend: [nextjs]}
 - id: NEXT-02
   guide: nextjs
   card: next-typed-client
@@ -1807,7 +1807,7 @@
   text: "The TypeScript client types are generated from the service's OpenAPI document and CI fails when the generated file is out of date."
   claim: documented
   tests: []
-  appliesWhen: {}
+  appliesWhen: {frontend: [nextjs]}
 - id: NEXT-03
   guide: nextjs
   card: next-typed-client
@@ -1815,7 +1815,7 @@
   text: "The browser never calls the service directly; the Next.js server calls it by its cluster name."
   claim: documented
   tests: []
-  appliesWhen: {}
+  appliesWhen: {frontend: [nextjs]}
 - id: NEXT-04
   guide: nextjs
   card: next-auth
@@ -1823,7 +1823,7 @@
   text: "Login runs the OIDC code flow on the server with a maintained library; the session is an httpOnly, secure, sameSite cookie and the access token never reaches the browser."
   claim: documented
   tests: []
-  appliesWhen: {auth: [true]}
+  appliesWhen: {auth: [true], frontend: [nextjs]}
 - id: NEXT-05
   guide: nextjs
   card: next-auth
@@ -1831,7 +1831,7 @@
   text: "Every Server Action and every data access function checks the user itself, not only proxy.ts."
   claim: documented
   tests: []
-  appliesWhen: {auth: [true]}
+  appliesWhen: {auth: [true], frontend: [nextjs]}
 - id: NEXT-06
   guide: nextjs
   card: next-env
@@ -1839,7 +1839,7 @@
   text: "One image is promoted across environments; no environment specific value uses the NEXT_PUBLIC_ prefix."
   claim: documented
   tests: []
-  appliesWhen: {}
+  appliesWhen: {frontend: [nextjs]}
 - id: NEXT-07
   guide: nextjs
   card: next-caching
@@ -1847,7 +1847,7 @@
   text: "Nothing that depends on the user's session is cached in a shared cache; cached reads have a tag and a lifetime."
   claim: documented
   tests: []
-  appliesWhen: {}
+  appliesWhen: {frontend: [nextjs]}
 - id: NEXT-08
   guide: nextjs
   card: next-caching
@@ -1855,7 +1855,7 @@
   text: "With more than one replica, cached data uses a shared cache handler or a short lifetime per pod."
   claim: documented
   tests: []
-  appliesWhen: {}
+  appliesWhen: {frontend: [nextjs]}
 - id: NEXT-09
   guide: nextjs
   card: next-kubernetes
@@ -1863,7 +1863,7 @@
   text: "The image is built with output: 'standalone', copies only .next/standalone, .next/static and public, runs as the node user and starts with CMD [\"node\", \"server.js\"]."
   claim: documented
   tests: []
-  appliesWhen: {}
+  appliesWhen: {frontend: [nextjs]}
 - id: NEXT-10
   guide: nextjs
   card: next-kubernetes
@@ -1871,7 +1871,7 @@
   text: "Probes point at a route handler that returns 200; the grace period covers the slowest request; several replicas share the Server Actions encryption key and a deploymentId."
   claim: documented
   tests: []
-  appliesWhen: {}
+  appliesWhen: {frontend: [nextjs]}
 - id: NEXT-11
   guide: nextjs
   card: next-headers
@@ -1879,7 +1879,7 @@
   text: "next.config.js sets nosniff, a referrer policy, frame denial and HSTS on every path, poweredByHeader is false and a Content Security Policy is in place."
   claim: documented
   tests: []
-  appliesWhen: {}
+  appliesWhen: {frontend: [nextjs]}
 - id: NEXT-12
   guide: nextjs
   card: next-tracing
@@ -1887,7 +1887,7 @@
   text: "instrumentation.ts registers OpenTelemetry with the service's address in fetch.propagateContextUrls and exports to the same collector as the service."
   claim: documented
   tests: []
-  appliesWhen: {}
+  appliesWhen: {frontend: [nextjs]}
 - id: RMQ-01
   guide: rabbitmq
   card: rmq-when

@@ -41,7 +41,7 @@ The Initializer service and a project it generates:
 ```sh
 ./gradlew :start:build                           # engine tests, templates included
 ./gradlew :start:bootRun
-curl localhost:8080/starter.zip -d name=orders -o orders.zip && unzip orders.zip
+curl localhost:8080/starter.zip -d name=orders -d database=postgres -o orders.zip && unzip orders.zip
 go run ./cmd/runworkflow -dir orders             # the generated project's own CI, on this machine
 ```
 
@@ -225,20 +225,26 @@ evidence file from the report.
 
 ## Templates
 
-`templates/base/` goes into every project, `templates/<architecture>/` adds the files of one architecture. A path
-segment `_package_` becomes the package directory; `gitignore` and `gitattributes` get their dot when generated.
-Two sets writing the same file is an error, never a merge.
+`templates/base/` goes into every project, `templates/<architecture>/` adds the files of one architecture and each
+option adds its own sets: `postgres/` with `<architecture>-postgres/`, `oidc/`, `nextjs/` with `nextjs-oidc/` or
+`nextjs-plain/` (the frontend's package and lock files differ by the login library). A path segment `_package_`
+becomes the package directory; `gitignore`, `gitattributes` and `dockerignore` get their dot when generated. Two
+sets writing the same file is an error, never a merge.
 
 Every file is a JMustache template with `[[ ]]` as delimiters, so `${{ }}` in workflows passes through. The
 wrapper scripts and the wrapper jar are copied from this repository at build time and never rendered. Templates
-hold no logic: what a project contains (dependencies, catalog entries, `application.yaml` keys, checklist items)
-is decided in `ProjectRecipe` and only written by the templates. Imports of rendered Java files are sorted after
-rendering, so `spotlessCheck` passes for any package.
+hold no logic beyond a section per option flag (`[[#postgres]]`, `[[#oidc]]`, `[[#nextjs]]`) where one file differs
+by option: what a project contains (dependencies, catalog entries, `application.yaml` keys, checklist items) is
+decided in `ProjectRecipe` and only written by the templates. Imports of rendered Java files are sorted after
+rendering, so `spotlessCheck` passes for any package. `frontends/web/src/api/schema.d.ts` must be what
+`openapi-typescript` writes for each variant of the contract; the generated workflow checks it.
 
 Versions come from the active baseline when a project is generated; never type one into a template. The
-generated workflow is the exception: its action SHAs are tooling that Renovate updates with ours, and its
-kustomize image must stay on the baseline's kustomize version (a test checks it). The matrix in `start.yml`
-generates every combination through the API and runs the generated workflow with `cmd/runworkflow`.
+exceptions are tooling that Renovate updates: the generated workflow's action SHAs, the frontend's npm packages
+and lock files, its Node image (listed only, like a toolchain) and the mock identity provider of `compose.yml` and
+the smoke test. Tests keep the kustomize image on the baseline's kustomize version and each image pinned in
+several files the same in all of them. The matrix in `start.yml` generates all 16 combinations through the API and
+runs each generated workflow with `cmd/runworkflow`.
 
 ## Exceptions
 

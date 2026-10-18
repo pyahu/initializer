@@ -25,6 +25,7 @@
         "rabbitmq": {"$ref": "#/$defs/bools"},
         "cache": {"$ref": "#/$defs/bools"},
         "auth": {"$ref": "#/$defs/bools"},
+        "frontend": {"$ref": "#/$defs/strings"},
         "pyahuCli": {"$ref": "#/$defs/bools"},
         "sample": {"$ref": "#/$defs/bools"}
       }

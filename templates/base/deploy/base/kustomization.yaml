@@ -10,14 +10,24 @@ resources:
   - hpa.yaml
   - pdb.yaml
   - networkpolicy.yaml
+[[#postgres]]
+  - migration-job.yaml
+[[/postgres]]
+[[#nextjs]]
+  - web/serviceaccount.yaml
+  - web/deployment.yaml
+  - web/service.yaml
+  - web/hpa.yaml
+  - web/pdb.yaml
+  - web/networkpolicy.yaml
+[[/nextjs]]
 
-# The recommended labels on every object and pod template. Selectors are written in each object and keep
-# only name, instance and component, never the version (step 3).
+# The recommended labels on every object and pod template. Each object adds its own component (api,
+# migration or web); selectors keep only name, instance and component, never the version (step 3).
 labels:
   - pairs:
       app.kubernetes.io/name: [[name]]
       app.kubernetes.io/instance: [[name]]
-      app.kubernetes.io/component: api
       app.kubernetes.io/version: "0.1.0"
       app.kubernetes.io/part-of: [[name]]
       app.kubernetes.io/managed-by: kustomize
@@ -27,6 +37,18 @@ labels:
 # The hash in the name rolls the pods when a value changes (step 4).
 configMapGenerator:
   - name: [[name]]-config
+    options:
+      labels:
+        app.kubernetes.io/component: api
     literals:
       - DEPLOYMENT_ENVIRONMENT=base
       - TRACING_SAMPLING_PROBABILITY=0.1
+[[#nextjs]]
+  - name: [[name]]-web-config
+    options:
+      labels:
+        app.kubernetes.io/component: web
+    literals:
+      # The service by its cluster name, from the server only (Next.js guide, step 2).
+      - API_BASE_URL=http://[[name]]
+[[/nextjs]]

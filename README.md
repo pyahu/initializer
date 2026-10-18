@@ -37,6 +37,7 @@ go run ./cmd/guidekit check            # data, guides, cross-references
 cd guides && npm ci && npm run dev     # the site at http://localhost:4321 (Node 24.22.0)
 ./gradlew :start:bootRun               # the generator, in development
 curl localhost:8080/starter.zip -d name=orders -o orders.zip
+curl localhost:8080/starter.zip -d name=orders -d database=postgres -d auth=oidc -d frontend=nextjs -o orders.zip
 ```
 
 ## License

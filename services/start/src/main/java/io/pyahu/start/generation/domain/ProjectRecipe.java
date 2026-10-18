@@ -14,8 +14,8 @@ import java.util.List;
 import org.jspecify.annotations.Nullable;
 
 /**
- * What goes into a project: the base every project gets, then the architecture. Each part is a list of
- * contributions; composition happens here, in code, so the templates stay free of logic.
+ * What goes into a project: the base every project gets, the architecture, then each option. Each part is a list of
+ * contributions; composition happens here, in code, so the templates hold no more than a section per option.
  */
 public final class ProjectRecipe {
 
@@ -32,13 +32,29 @@ public final class ProjectRecipe {
 
     public ProjectDescription describe(ProjectRequest request, Baseline baseline) {
         ProjectDescription d = new ProjectDescription(request, baseline);
+        String architecture = request.architecture().id();
         files(d, BASE);
-        files(d, request.architecture().id());
+        files(d, architecture);
         base(d);
         switch (request.architecture()) {
             case HEXAGONAL -> hexagonal(d);
             case DDD_LAYERED -> dddLayered(d);
         }
+        if (request.database() == Database.POSTGRES) {
+            files(d, "postgres");
+            files(d, architecture + "-postgres");
+            postgres(d);
+        }
+        if (request.auth() == Auth.OIDC) {
+            files(d, "oidc");
+            oidc(d);
+        }
+        if (request.frontend() == Frontend.NEXTJS) {
+            files(d, "nextjs");
+            // The package files differ by the login library; so does the lock file npm writes from them.
+            files(d, request.auth() == Auth.OIDC ? "nextjs-oidc" : "nextjs-plain");
+        }
+        runtimeLauncher(d);
         checklist(d);
         return d;
     }
@@ -49,8 +65,11 @@ public final class ProjectRecipe {
             String path = file.replace("_package_", packagePath);
             if (path.equals("gitignore") || path.equals("gitattributes")) {
                 path = "." + path;
+            } else if (path.endsWith("/gitignore") || path.endsWith("/dockerignore")) {
+                int slash = path.lastIndexOf('/');
+                path = path.substring(0, slash + 1) + "." + path.substring(slash + 1);
             }
-            d.add(new Contribution.File(path, set + "/" + file, path.equals("gradlew")));
+            d.add(new Contribution.File(path, set + "/" + file, path.equals("gradlew") || path.endsWith(".sh")));
         }
     }
 
@@ -136,6 +155,9 @@ public final class ProjectRecipe {
         property(d, "spring.threads.virtual.enabled", "true");
         property(d, "spring.lifecycle.timeout-per-shutdown-phase", "20s");
         property(d, "spring.mvc.problemdetails.enabled", "true");
+        // Behind the ingress: trust its forwarded headers, so HSTS and client addresses are right (security guide,
+        // step 5). Narrow server.tomcat.remoteip.internal-proxies to the ingress in each environment.
+        property(d, "server.forward-headers-strategy", "native");
         property(d, "logging.structured.format.console", "ecs");
         property(d, "management.server.port", "8081");
         property(d, "management.endpoints.web.exposure.include", "health,info");
@@ -153,6 +175,7 @@ public final class ProjectRecipe {
 
     private static void hexagonal(ProjectDescription d) {
         String p = d.request().packageName();
+        boolean postgres = d.request().database() == Database.POSTGRES;
         version(d, "jmolecules", "jmolecules-bom");
         library(d, "jmolecules-bom", "org.jmolecules:jmolecules-bom", "jmolecules");
         platform(d, "implementation", "jmolecules-bom");
@@ -163,27 +186,104 @@ public final class ProjectRecipe {
                 .add(new Value(
                         "layout",
                         rows(
-                                "src/main/java/.../ping/domain/", "The rules, plain Java.",
-                                "src/main/java/.../ping/application/port/", "What the capability offers and needs.",
-                                "src/main/java/.../ping/application/service/", "The use cases behind the ports.",
-                                "src/main/java/.../ping/adapter/", "The web and, later, the database.")));
-        runtimeLauncher(d);
+                                "src/main/java/.../ping/domain/",
+                                "The rules, plain Java.",
+                                "src/main/java/.../ping/application/port/",
+                                "What the capability offers and needs.",
+                                "src/main/java/.../ping/application/service/",
+                                "The use cases behind the ports.",
+                                "src/main/java/.../ping/adapter/",
+                                postgres ? "The web and the database." : "The web and, later, the database.")));
     }
 
     private static void dddLayered(ProjectDescription d) {
         String p = d.request().packageName();
+        boolean postgres = d.request().database() == Database.POSTGRES;
         d.add(new Value("apiPackage", p + ".ping.presentation.api"))
                 .add(new Value(
                         "layout",
                         rows(
-                                "src/main/java/.../ping/presentation/", "The web layer.",
-                                "src/main/java/.../ping/application/", "The use cases.",
-                                "src/main/java/.../ping/domain/", "The rules, plain Java.",
-                                "src/main/java/.../ping/infrastructure/", "The database and clients, later.")));
-        runtimeLauncher(d);
+                                "src/main/java/.../ping/presentation/",
+                                "The web layer.",
+                                "src/main/java/.../ping/application/",
+                                "The use cases.",
+                                "src/main/java/.../ping/domain/",
+                                "The rules, plain Java.",
+                                "src/main/java/.../ping/infrastructure/",
+                                postgres ? "The database." : "The database and clients, later.")));
     }
 
-    /** The launcher goes last, so the test section ends the same way in every recipe. */
+    /**
+     * PostgreSQL through JDBC (database guide). The application only reads and writes data; a Job applies the
+     * changelog with the migration role; readiness waits for it.
+     */
+    private static void postgres(ProjectDescription d) {
+        ProjectRequest r = d.request();
+        Baseline b = d.baseline();
+        // Unquoted SQL names: the database, the schema and the roles share this prefix.
+        String db = r.name().replace('-', '_');
+        d.add(new Value("dbName", db))
+                .add(new Value("postgresImage", image(b, "postgres-image")))
+                .add(new Value("postgresVersion", b.version("postgres-image")))
+                .add(new Value("postgresDigest", b.required("postgres-image", Pin::digest, "digest")));
+
+        implementation(d, "spring-boot-starter-jdbc", "org.springframework.boot:spring-boot-starter-jdbc");
+        implementation(d, "spring-boot-starter-liquibase", "org.springframework.boot:spring-boot-starter-liquibase");
+        // JDBC spans and the trace ID in the pool's logs (observability guide, step 3).
+        version(d, "datasource-micrometer", "datasource-micrometer");
+        library(
+                d,
+                "datasource-micrometer-spring-boot",
+                "net.ttddyy.observation:datasource-micrometer-spring-boot",
+                "datasource-micrometer");
+        d.add(new Dependency(Section.MAIN, "implementation", "libs.datasource.micrometer.spring.boot"));
+        library(d, "postgresql", "org.postgresql:postgresql", null);
+        d.add(new Dependency(Section.MAIN, "runtimeOnly", "libs.postgresql"));
+        test(d, "spring-boot-testcontainers", "org.springframework.boot:spring-boot-testcontainers", null);
+        test(d, "testcontainers-junit-jupiter", "org.testcontainers:testcontainers-junit-jupiter", null);
+        test(d, "testcontainers-postgresql", "org.testcontainers:testcontainers-postgresql", null);
+
+        // A local default the Deployment replaces; Docker Compose replaces it on the laptop (configuration guide).
+        property(d, "spring.datasource.url", "jdbc:postgresql://localhost:5432/" + db);
+        // A small, fixed pool and short waits, in milliseconds (database guide, steps 1, 2 and 9).
+        property(d, "spring.datasource.hikari.maximum-pool-size", "5");
+        property(d, "spring.datasource.hikari.minimum-idle", "5");
+        property(d, "spring.datasource.hikari.connection-timeout", "3000");
+        property(d, "spring.datasource.hikari.max-lifetime", "1500000");
+        property(d, "spring.datasource.hikari.keepalive-time", "120000");
+        property(d, "spring.datasource.hikari.leak-detection-threshold", "60000");
+        property(d, "spring.datasource.hikari.schema", db);
+        property(d, "spring.datasource.hikari.data-source-properties.ApplicationName", r.name());
+        property(d, "spring.transaction.default-timeout", "10s");
+        property(d, "spring.jdbc.template.query-timeout", "5s");
+        // The migration Job turns it on; the application never migrates (step 5).
+        property(d, "spring.liquibase.enabled", "false");
+        property(d, "spring.liquibase.default-schema", db);
+        property(d, "management.endpoint.health.group.readiness.include", "readinessState,migrations");
+    }
+
+    /** A resource server that accepts only tokens for this API (security guide, steps 1 to 4). */
+    private static void oidc(ProjectDescription d) {
+        ProjectRequest r = d.request();
+        implementation(
+                d,
+                "spring-boot-starter-security-oauth2-resource-server",
+                "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server");
+        test(
+                d,
+                "spring-boot-starter-security-oauth2-resource-server-test",
+                "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test",
+                null);
+        // The local defaults point at the mock identity provider of compose.yml.
+        property(
+                d,
+                "spring.security.oauth2.resourceserver.jwt.issuer-uri",
+                "${OIDC_ISSUER_URI:http://localhost:8090/default}");
+        property(d, "spring.security.oauth2.resourceserver.jwt.audiences", "${OIDC_AUDIENCE:" + r.name() + "}");
+        property(d, "spring.security.oauth2.resourceserver.jwt.jws-algorithms", "RS256");
+    }
+
+    /** The launcher goes last, so the test section ends the same way whatever the options. */
     private static void runtimeLauncher(ProjectDescription d) {
         library(d, "junit-platform-launcher", "org.junit.platform:junit-platform-launcher", null);
         d.add(new Dependency(Section.TEST, "testRuntimeOnly", "libs.junit.platform.launcher"));

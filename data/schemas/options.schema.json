@@ -24,6 +24,7 @@
     "rabbitmq": {"const": false},
     "cache": {"const": false},
     "auth": {"type": "boolean"},
+    "frontend": {"enum": ["none", "nextjs"]},
     "pyahuCli": {"type": "boolean"},
     "sample": {"type": "boolean"}
   },

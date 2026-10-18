@@ -7782,7 +7782,9 @@
           "text": "Data fetching and service calls live in server components; modules that hold secrets or call the service start with import 'server-only'.",
           "claim": "documented",
           "tests": [],
-          "tags": []
+          "tags": [
+            "frontend: nextjs"
+          ]
         },
         {
           "id": "NEXT-02",
@@ -7791,7 +7793,9 @@
           "text": "The TypeScript client types are generated from the service's OpenAPI document and CI fails when the generated file is out of date.",
           "claim": "documented",
           "tests": [],
-          "tags": []
+          "tags": [
+            "frontend: nextjs"
+          ]
         },
         {
           "id": "NEXT-03",
@@ -7800,7 +7804,9 @@
           "text": "The browser never calls the service directly; the Next.js server calls it by its cluster name.",
           "claim": "documented",
           "tests": [],
-          "tags": []
+          "tags": [
+            "frontend: nextjs"
+          ]
         },
         {
           "id": "NEXT-04",
@@ -7810,7 +7816,8 @@
           "claim": "documented",
           "tests": [],
           "tags": [
-            "auth: true"
+            "auth: true",
+            "frontend: nextjs"
           ]
         },
         {
@@ -7821,7 +7828,8 @@
           "claim": "documented",
           "tests": [],
           "tags": [
-            "auth: true"
+            "auth: true",
+            "frontend: nextjs"
           ]
         },
         {
@@ -7831,7 +7839,9 @@
           "text": "One image is promoted across environments; no environment specific value uses the NEXT_PUBLIC_ prefix.",
           "claim": "documented",
           "tests": [],
-          "tags": []
+          "tags": [
+            "frontend: nextjs"
+          ]
         },
         {
           "id": "NEXT-07",
@@ -7840,7 +7850,9 @@
           "text": "Nothing that depends on the user's session is cached in a shared cache; cached reads have a tag and a lifetime.",
           "claim": "documented",
           "tests": [],
-          "tags": []
+          "tags": [
+            "frontend: nextjs"
+          ]
         },
         {
           "id": "NEXT-08",
@@ -7849,7 +7861,9 @@
           "text": "With more than one replica, cached data uses a shared cache handler or a short lifetime per pod.",
           "claim": "documented",
           "tests": [],
-          "tags": []
+          "tags": [
+            "frontend: nextjs"
+          ]
         },
         {
           "id": "NEXT-09",
@@ -7858,7 +7872,9 @@
           "text": "The image is built with output: 'standalone', copies only .next/standalone, .next/static and public, runs as the node user and starts with CMD [\"node\", \"server.js\"].",
           "claim": "documented",
           "tests": [],
-          "tags": []
+          "tags": [
+            "frontend: nextjs"
+          ]
         },
         {
           "id": "NEXT-10",
@@ -7867,7 +7883,9 @@
           "text": "Probes point at a route handler that returns 200; the grace period covers the slowest request; several replicas share the Server Actions encryption key and a deploymentId.",
           "claim": "documented",
           "tests": [],
-          "tags": []
+          "tags": [
+            "frontend: nextjs"
+          ]
         },
         {
           "id": "NEXT-11",
@@ -7876,7 +7894,9 @@
           "text": "next.config.js sets nosniff, a referrer policy, frame denial and HSTS on every path, poweredByHeader is false and a Content Security Policy is in place.",
           "claim": "documented",
           "tests": [],
-          "tags": []
+          "tags": [
+            "frontend: nextjs"
+          ]
         },
         {
           "id": "NEXT-12",
@@ -7885,7 +7905,9 @@
           "text": "instrumentation.ts registers OpenTelemetry with the service's address in fetch.propagateContextUrls and exports to the same collector as the service.",
           "claim": "documented",
           "tests": [],
-          "tags": []
+          "tags": [
+            "frontend: nextjs"
+          ]
         }
       ],
       "references": [

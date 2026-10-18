@@ -3,3 +3,6 @@ build/
 .gradle/
 .kotlin/
 deploy/
+[[#nextjs]]
+frontends/
+[[/nextjs]]

@@ -1,0 +1,29 @@
+# Applied by the migration Job with the migration role, never by the application (database guide, step 5).
+# Never edit a changeset that ran: add a new one, backward compatible with the release still running (step 7).
+databaseChangeLog:
+  - changeSet:
+      id: 1-ping-counter
+      author: [[name]]
+      changes:
+        - createTable:
+            tableName: ping_counter
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: answered
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - insert:
+            tableName: ping_counter
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: answered
+                  valueNumeric: 0
