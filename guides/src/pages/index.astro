@@ -7,9 +7,9 @@ const parts = [
     icon: "layers",
     status: "Available",
     title: "A knowledge base",
-    text: "A course of 24 guides for building Java services with Spring Boot and a Next.js frontend next to them. Each step answers one question: the failure it prevents, the fix and when to choose differently.",
+    text: "24 guides with the practices Pyahu follows for Java services with Spring Boot and a Next.js frontend next to them. Each step answers one question: the failure it prevents, the fix and when to choose differently.",
     href: "#guides",
-    link: "See the course",
+    link: "See the guides",
   },
   {
     icon: "terminal",
@@ -99,9 +99,9 @@ const proof = [
 ];
 
 const roadmap = [
-  { when: "Now", text: "The course: 24 guides in six modules, from the first build to Kubernetes, messaging and a Next.js frontend." },
+  { when: "Now", text: "24 guides in six parts, from the first build to Kubernetes, messaging and a Next.js frontend." },
   { when: "Next", text: "Generator v0.1: one service, hexagonal or DDD layered, REST with PostgreSQL, OIDC, OpenTelemetry, Kustomize and CI." },
-  { when: "Later", text: "The generator grows with the course: monorepos, JPA and jOOQ, gRPC, Kafka, RabbitMQ, Valkey and Next.js, each once its tested service exists." },
+  { when: "Later", text: "The generator grows with the guides: monorepos, JPA and jOOQ, gRPC, Kafka, RabbitMQ, Valkey and Next.js, each once its tested service exists." },
 ];
 ---
 
@@ -113,7 +113,7 @@ const roadmap = [
         <h1>Production Java, explained. <span>Then generated.</span></h1>
         <p class="hero-copy">Pyahu Initializer is a modern knowledge base for building applications with Spring Boot and Next.js and a generator that starts new projects at production quality, following the same guides.</p>
         <div class="hero-actions">
-          <a class="button primary" href="/course/">Start the course <Icon name="arrow" size={18} /></a>
+          <a class="button primary" href="/guides/">Read the guides <Icon name="arrow" size={18} /></a>
           <a class="button quiet" href="#what">What it is</a>
         </div>
       </div>
@@ -155,8 +155,8 @@ const roadmap = [
 
   <section class="section" id="guides" aria-labelledby="guides-title">
     <div class="section-heading">
-      <p class="eyebrow">The course</p>
-      <h2 id="guides-title">Six modules, one service.</h2>
+      <p class="eyebrow">The guides</p>
+      <h2 id="guides-title">Six parts, one service.</h2>
       <p class="section-lead">Follow them in order to build a service from the first commit to production or jump straight to the question you have today.</p>
     </div>
     <div class="profile-grid module-grid">
@@ -172,7 +172,7 @@ const roadmap = [
         </article>
       ))}
     </div>
-    <a class="text-link" href="/course/">How the course works <Icon name="arrow" size={15} /></a>
+    <a class="text-link" href="/guides/">All guides <Icon name="arrow" size={15} /></a>
   </section>
 
   <section class="section proof-section" id="inside" aria-labelledby="inside-title">
@@ -219,8 +219,8 @@ const roadmap = [
     <p class="eyebrow center">Start reading</p>
     <h2>Start with a build you can trust.</h2>
     <div class="hero-actions center">
-      <a class="button primary" href="/course/">The course <Icon name="arrow" size={18} /></a>
-      <a class="button quiet" href="/guides/build-quality/">Module 1: Build and code quality</a>
+      <a class="button primary" href="/guides/">All guides <Icon name="arrow" size={18} /></a>
+      <a class="button quiet" href="/guides/build-quality/">Build and code quality</a>
     </div>
   </section>
 </LandingLayout>

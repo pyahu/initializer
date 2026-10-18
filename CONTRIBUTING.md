@@ -1,11 +1,8 @@
 # Contributing
 
-The guides are the product. Every decision is a card with the failure it prevents and every
+The guides are the product. Each step answers one question with the failure it prevents and every
 claim carries the test that proves it. `guidekit` enforces the rules below; CI runs it on every
 change.
-
-Writing rules and the page shape are on the site: [style guide](https://initializer.pyahu.io/contributing/style/)
-and [diagram kit](https://initializer.pyahu.io/contributing/diagrams/).
 
 ## Toolchain
 

@@ -1,10 +1,11 @@
 # Pyahu Initializer
 
-A course on production Spring Boot, Java and Next.js and later a generator that applies it. The guides come
-first: each step answers one question with the failure it prevents and every claim has a test behind it.
+Guides with the production practices Pyahu follows for Spring Boot, Java and Next.js, shared with the community.
+A generator that applies them comes later. Each step answers one question with the failure it prevents and every
+claim has a test behind it.
 
 - Site: https://initializer.pyahu.io
-- [The course](https://initializer.pyahu.io/course/): 24 guides in six modules (foundations, build the service,
+- [The guides](https://initializer.pyahu.io/guides/): 24 guides in six parts (foundations, build the service,
   events and data, run in production, ship, grow)
 - How to contribute: [CONTRIBUTING.md](CONTRIBUTING.md)
 

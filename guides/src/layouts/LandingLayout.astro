@@ -11,7 +11,7 @@ const { title, description } = Astro.props;
 const canonical = new URL("/", "https://initializer.pyahu.io");
 const navigation = [
   { href: "#what", label: "What it is" },
-  { href: "#guides", label: "Course" },
+  { href: "#guides", label: "Guides" },
   { href: "#proof", label: "How it is proven" },
   { href: "#roadmap", label: "Roadmap" },
 ];
@@ -47,7 +47,7 @@ const navigation = [
         ))}
       </nav>
       <div class="header-actions">
-        <a class="nav-cta" href="/course/">Start the course <Icon name="arrow" size={16} /></a>
+        <a class="nav-cta" href="/guides/">Read the guides <Icon name="arrow" size={16} /></a>
         <details class="mobile-menu">
           <summary>Menu</summary>
           <nav aria-label="Mobile navigation">
@@ -66,9 +66,8 @@ const navigation = [
           <p>A knowledge base for production Java and a generator that follows it.</p>
         </div>
         <nav class="footer-links" aria-label="Footer navigation">
-          <a href="/course/">Course</a>
+          <a href="/guides/">Guides</a>
           <a href="/reference/docs/">Reference docs</a>
-          <a href="/contributing/style/">Style guide</a>
           <a href="https://github.com/pyahu/initializer">GitHub</a>
           <a href="https://pyahu.io">Pyahu <Icon name="arrow" size={15} /></a>
         </nav>

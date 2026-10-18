@@ -17,7 +17,7 @@ export default defineConfig({
       // Until the pilot format is approved.
       head: [{ tag: "meta", attrs: { name: "robots", content: "noindex" } }],
       sidebar: [
-        { label: "Start here", items: [{ label: "The course", slug: "course" }] },
+        { label: "Start here", items: [{ label: "All guides", slug: "guides" }] },
         {
           label: "1. Foundations",
           items: [
@@ -73,26 +73,19 @@ export default defineConfig({
           ],
         },
         { label: "Reference", items: [{ label: "Reference docs", slug: "reference/docs" }] },
-        {
-          label: "Contributing",
-          items: [
-            { label: "Style guide", slug: "contributing/style" },
-            { label: "Diagram kit", slug: "contributing/diagrams" },
-          ],
-        },
       ],
       plugins: [
         starlightLlmsTxt({
           details: [
             `- [The JVM in containers](${site}/guides/jvm-in-containers/): memory, CPU, GC and startup for a JVM in a pod.`,
             `- [Observability](${site}/guides/observability/): traces, metrics and logs over OTLP with Spring Boot 4.1.`,
-            `- [The course](${site}/course/): production Spring Boot in six modules, from the first build to a frontend next to the service.`,
+            `- [The guides](${site}/guides/): Pyahu's production practices for Spring Boot, Java and Next.js in six parts.`,
             `- [Reference docs](${site}/reference/docs/): official documentation for the exact versions of the baseline.`,
           ].join("\n"),
           minify: { details: false },
           pageSeparator: "\n\n<!-- page -->\n\n",
           customSelectors: { all: [".dg-dialog", ".dg-hint"] },
-          promote: ["course", "guides/**", "reference/**"],
+          promote: ["guides", "guides/**", "reference/**"],
         }),
       ],
     }),
