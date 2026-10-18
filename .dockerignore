@@ -1,0 +1,10 @@
+# Image builds run from the repository root; keep the context to what Gradle needs.
+.git
+**/build
+**/.gradle
+**/.kotlin
+**/node_modules
+guides
+fixtures
+skills
+out

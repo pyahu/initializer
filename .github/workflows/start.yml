@@ -1,0 +1,57 @@
+name: Start service
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - services/start/**
+      - build-logic/**
+      - gradle/**
+      - settings.gradle.kts
+      - gradlew
+      - data/versions.yaml
+      - .dockerignore
+      - .github/workflows/start.yml
+  pull_request:
+    paths:
+      - services/start/**
+      - build-logic/**
+      - gradle/**
+      - settings.gradle.kts
+      - gradlew
+      - data/versions.yaml
+      - .dockerignore
+      - .github/workflows/start.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: start-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  JDK_IMAGE: eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4
+
+jobs:
+  start:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Gradle build in the pinned JDK
+        run: |
+          docker run --rm -v "$PWD:/w" -w /w "$JDK_IMAGE" sh -c \
+            './gradlew --no-daemon build && ./gradlew --no-daemon -p build-logic test'
+      - name: Image
+        run: docker buildx build --load -t start:ci -f services/start/Dockerfile .
+      - name: Smoke
+        run: |
+          docker run -d --name start -p 8081:8081 -e MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED=false start:ci
+          for i in $(seq 1 60); do
+            if curl -sf localhost:8081/actuator/health/readiness; then exit 0; fi
+            sleep 1
+          done
+          docker logs start
+          exit 1

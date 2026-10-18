@@ -62,8 +62,8 @@ These are the steps we follow, in order.
 1. **Pick the updates** from the Dependency Dashboard. Read the release notes of each one.
 2. **Append the revision** to `data/versions.yaml`, for example `v0.1-b2`, with the new versions and image
    digests. Make it `active`.
-3. **Update the service** in `fixtures/` to the same versions: the version catalog, the Gradle wrapper and the
-   Dockerfile.
+3. **Update the services** to the same versions: the fixtures in `fixtures/` and the Initializer's own build
+   (`gradle/libs.versions.toml`, the Gradle wrapper and each Dockerfile).
 4. **Run the tests.** The fixture workflow builds the service and its image, runs every behaviour test and fails
    if any resolved version differs from the revision. Then `guidekit qualify` records how well each version is
    covered.

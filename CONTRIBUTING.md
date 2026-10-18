@@ -223,6 +223,7 @@ changes; a renewal is a new record.
 | `guides.yml` | `go test`, `check`, `generate --check`, `qualify --check`, `npm audit`, site build, `site` |
 | `links.yml` | external links and BOM pins, also weekly |
 | `fixture-single-hexagonal.yml` | fixture build, image, acceptance tests, evidence report |
+| `start.yml` | the Initializer service: Gradle build in the pinned JDK, convention plugin tests, image, smoke |
 
 The site deploys from `main` through Cloudflare Workers Builds (root directory `guides`) to
 https://initializer.pyahu.io. Commits go straight to `main`; a red pipeline is fixed with a new

@@ -43,8 +43,8 @@
       "labels": ["toolchain"]
     },
     {
-      "description": "The baseline: fixtures run exactly the versions of data/versions.yaml, so their updates are listed only and land as a new baseline revision.",
-      "matchFileNames": ["fixtures/**"],
+      "description": "The baseline: fixtures and the Initializer's own Gradle build run exactly the versions of data/versions.yaml, so their updates are listed only and land as a new baseline revision.",
+      "matchFileNames": ["fixtures/**", "services/**", "build-logic/**", "gradle/**", "settings.gradle.kts"],
       "dependencyDashboardApproval": true,
       "labels": ["baseline"]
     }

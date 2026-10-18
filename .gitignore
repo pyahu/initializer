@@ -7,3 +7,6 @@ output/
 out/
 fixtures/*/build/
 fixtures/*/.gradle/
+build/
+.gradle/
+.kotlin/

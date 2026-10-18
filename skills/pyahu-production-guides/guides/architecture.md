@@ -161,6 +161,9 @@ Only the composition root, the `config` package, sees every layer, because it wi
 2. Define repository interfaces in `domain` or `application`; implement them in `infrastructure`.
 3. Write the dependency graph above as your own ArchUnit rule. jMolecules' `ensureLayering()` allows every layer
    to use the layers below it, including domain to infrastructure, so it does not enforce this variant.
+4. Leave the layer packages without jMolecules' layered annotations (`@DomainLayer`, `@InfrastructureLayer` and the
+   rest). With `jmolecules-archunit` on the test classpath, Spring Modulith's `verify()` applies `ensureLayering()`
+   to annotated packages and fails the build as soon as infrastructure implements a domain interface.
 
 ### When this is not for you
 
