@@ -1,0 +1,42 @@
+---
+// Test layers of a Spring Boot service, many fast tests at the bottom, few slow ones at the top.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="test-pyramid"
+  caption="Many fast tests at the bottom, a few slow ones at the top: each layer catches what the one below cannot."
+  description="Five test layers stacked as a pyramid, widest at the bottom, with an arrow up the left side from fast and many to slow and few. 1, recommended, at the bottom and widest: domain unit tests with plain JUnit and AssertJ, no Spring, milliseconds each. 2, recommended: slice tests such as @WebMvcTest, @DataJdbcTest and @RestClientTest, which start one layer of Spring. 3, architecture tests: ArchUnit, jMolecules rules and Spring Modulith verify, which read the compiled classes and start nothing. 4, integration tests: @SpringBootTest with a real PostgreSQL from Testcontainers. 5, at the top and narrowest: tests that run the built image with Docker. Below the pyramid, failure, marked with a cross: when every test is a @SpringBootTest, the whole application boots for every new context, a run takes minutes and a failure does not say which layer broke.">
+  <svg viewBox="0 0 1000 470">
+    <defs>
+      <marker id="test-pyramid-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+    </defs>
+    <text x="90" y="36" class="dg-group">TEST LAYERS · MANY FAST TESTS AT THE BOTTOM</text>
+
+    <path d="M50 372 V66" class="dg-line" marker-end="url(#test-pyramid-arrow)" />
+    <text x="20" y="54" class="dg-note">slow, few</text>
+    <text x="20" y="392" class="dg-note">fast</text>
+
+    <rect x="330" y="60" width="340" height="56" rx="6" class="dg-box" />
+    <text x="346" y="84" class="dg-title">5 · Image tests</text>
+    <text x="346" y="104" class="dg-detail">the built image, run by Go and Docker</text>
+
+    <rect x="270" y="124" width="460" height="56" rx="6" class="dg-box" />
+    <text x="286" y="148" class="dg-title">4 · Integration tests</text>
+    <text x="286" y="168" class="dg-detail">@SpringBootTest with PostgreSQL from Testcontainers</text>
+
+    <rect x="210" y="188" width="580" height="56" rx="6" class="dg-box" />
+    <text x="226" y="212" class="dg-title">3 · Architecture tests</text>
+    <text x="226" y="232" class="dg-detail">ArchUnit, jMolecules rules and Modulith verify; nothing starts</text>
+
+    <rect x="150" y="252" width="700" height="56" rx="6" class="dg-box dg-emphasis" />
+    <text x="166" y="276" class="dg-title">2 · Slice tests</text>
+    <text x="166" y="296" class="dg-detail">@WebMvcTest, @DataJdbcTest, @RestClientTest: one layer of Spring</text>
+
+    <rect x="90" y="316" width="820" height="56" rx="6" class="dg-box dg-emphasis" />
+    <text x="106" y="340" class="dg-title">1 · Domain unit tests</text>
+    <text x="106" y="360" class="dg-detail">plain JUnit and AssertJ, no Spring, milliseconds each</text>
+
+    <rect x="90" y="396" width="820" height="56" rx="6" class="dg-box dg-fail" />
+    <text x="106" y="420" class="dg-title">✕ Every test is a @SpringBootTest</text>
+    <text x="106" y="440" class="dg-detail">the whole app boots for each new context, runs take minutes and failures do not name the layer</text>
+  </svg>
+</Diagram>

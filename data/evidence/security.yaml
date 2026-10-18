@@ -101,3 +101,17 @@
   baseline: v0.1-b1
   limitations: "A deployment prerequisite; it depends on the cluster's network plugin."
   reason: "Needs a cluster with a NetworkPolicy-enforcing network plugin."
+- id: ev-sec-tls-1
+  card: sec-tls
+  claim: "With spring.ssl.bundle.pem.<name> and server.ssl.bundle, Spring Boot 4.1.1 serves TLS from PEM files; reload-on-update reloads the bundle when the files change and Tomcat and Netty pick it up."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Property names read from the Spring Boot 4.1.1 configuration metadata; reload behaviour from the Spring Boot SSL reference."
+  reason: "The example service serves plain HTTP; no TLS test runs yet."
+- id: ev-sec-tls-2
+  card: sec-tls
+  claim: "The HTTP client builders in Spring Boot 4.1.1 build their TLS setup once, so a renewed client certificate is used only after the pod restarts."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "The source guide reproduced this against the Boot 4.1.1 jars; this repository has not."
+  reason: "The example service makes no outbound call; no mTLS test runs yet."

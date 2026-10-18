@@ -1,0 +1,64 @@
+# Evidence records for the caching guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-cache-when-1
+  card: cache-when
+  claim: "Valkey is a BSD licensed fork of Redis OSS 7.2 that keeps its protocol, so Spring Data Redis with Lettuce connects to it unchanged."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from valkey.io (licence and migration page). No test connects Spring Data Redis to Valkey here."
+  reason: "The example service has no cache and no Valkey container yet."
+- id: ev-cache-abstraction-1
+  card: cache-abstraction
+  claim: "With Spring Data Redis configured, Spring Boot 4.1.1 creates a RedisCacheManager and @Cacheable on a method called from the same class does not cache because only calls through the proxy are intercepted."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Spring Boot 4.1 caching reference and the Spring Framework cache annotations reference."
+  reason: "The example service has no cache yet, so no test calls a cached method."
+- id: ev-cache-ttl-1
+  card: cache-ttl
+  claim: "spring.cache.redis.time-to-live has no default in Spring Boot 4.1.1, so Redis cache entries never expire unless it is set."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Spring Boot 4.1.1 configuration metadata, not observed against a running Valkey."
+  reason: "No test writes a cache entry and reads its time to live yet."
+- id: ev-cache-keys-1
+  card: cache-keys
+  claim: "Spring Data Redis 4.1.1 prefixes cache keys with the cache name and two colons and serialises values with JdkSerializationRedisSerializer unless a RedisCacheConfiguration sets another serialiser."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Spring Data Redis cache reference and the 4.1.1 jar, which ships JacksonJsonRedisSerializer and GenericJacksonJsonRedisSerializer."
+  reason: "No test reads raw cache keys or values from Valkey yet."
+- id: ev-cache-consistency-1
+  card: cache-consistency
+  claim: "A transaction aware RedisCacheManager performs puts and evictions only after the surrounding transaction commits."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from RedisCacheManagerBuilder.transactionAware() and the TransactionAwareCacheDecorator javadoc in Spring Framework 7.0.9."
+  reason: "The example service has no database writes or cache yet."
+- id: ev-cache-stampede-1
+  card: cache-stampede
+  claim: "With Spring Data Redis's default non locking cache writer, @Cacheable(sync = true) takes no lock, while Caffeine computes a missing key once per cache instance."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Spring Data Redis 4.1.1 source (DefaultRedisCacheWriter) and the Caffeine population documentation; no concurrent load test."
+  reason: "No load test runs concurrent misses against a cache yet."
+- id: ev-cache-degraded-1
+  card: cache-degraded
+  claim: "Spring's default cache error handling throws cache errors back to the caller and Lettuce waits up to 60 seconds for a command when no timeout is set."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from SimpleCacheErrorHandler in Spring Framework 7.0.9 and RedisURI.DEFAULT_TIMEOUT in Lettuce 7.5.2."
+  reason: "No test stops Valkey under load yet."
+- id: ev-cache-memory-1
+  card: cache-memory
+  claim: "Valkey has no memory limit by default on 64 bit systems and its default eviction policy is noeviction, so a full instance refuses writes."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Valkey eviction documentation and valkey.conf."
+  reason: "No Valkey instance runs in the example service yet."
+- id: ev-cache-memory-2
+  card: cache-memory
+  claim: "With spring.cache.redis.enable-statistics set to true, Spring Boot binds cache metrics for the Redis caches declared at startup."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Spring Boot 4.1 metrics reference and configuration metadata."
+  reason: "No test reads cache metrics yet."

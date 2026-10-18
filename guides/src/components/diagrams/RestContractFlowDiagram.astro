@@ -1,0 +1,56 @@
+---
+// Flow: the OpenAPI contract generates the interface the web adapter implements; the domain never sees it.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="rest-contract-flow"
+  caption="Contract first: one OpenAPI file, a generated interface, a thin web adapter and a domain that never sees the contract."
+  description="Five numbered stages from left to right. 1, contract: api.yaml in OpenAPI 3.1, kept in the repository and reviewed in pull requests, highlighted. 2, build: the openApiGenerate Gradle task with interfaceOnly writes the API interface and the request and response models, no controllers, highlighted. 3, web adapter: your controller implements the generated interface and maps the generated models to your own types, highlighted. 4, application: a port, the use case, with your own types. 5, domain: the business rules, with no web or contract types. Below the contract, clients such as the frontend and partners read the same file. A note says the build fails when the controller no longer matches the contract.">
+  <svg viewBox="0 0 1000 296">
+    <defs>
+      <marker id="rest-contract-flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="rest-contract-flow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+    </defs>
+    <text x="20" y="32" class="dg-group">1 · CONTRACT</text>
+    <text x="220" y="32" class="dg-group">2 · BUILD</text>
+    <text x="430" y="32" class="dg-group">3 · WEB ADAPTER</text>
+    <text x="650" y="32" class="dg-group">4 · APPLICATION</text>
+    <text x="840" y="32" class="dg-group">5 · DOMAIN</text>
+
+    <rect x="20" y="52" width="160" height="96" rx="6" class="dg-box dg-emphasis" />
+    <text x="36" y="80" class="dg-title">api.yaml</text>
+    <text x="36" y="104" class="dg-detail">OpenAPI 3.1</text>
+    <text x="36" y="126" class="dg-detail">reviewed in PRs</text>
+    <path d="M180 100 H218" class="dg-line dg-accent" marker-end="url(#rest-contract-flow-accent)" />
+
+    <rect x="220" y="52" width="170" height="96" rx="6" class="dg-box dg-emphasis" />
+    <text x="236" y="80" class="dg-title">openApiGenerate</text>
+    <text x="236" y="104" class="dg-detail">interfaceOnly</text>
+    <text x="236" y="126" class="dg-detail">API + models</text>
+    <path d="M390 100 H428" class="dg-line dg-accent" marker-end="url(#rest-contract-flow-accent)" />
+
+    <rect x="430" y="52" width="180" height="96" rx="6" class="dg-box dg-emphasis" />
+    <text x="446" y="80" class="dg-title">Controller</text>
+    <text x="446" y="104" class="dg-detail">implements the API</text>
+    <text x="446" y="126" class="dg-detail">maps the models</text>
+    <path d="M610 100 H648" class="dg-line" marker-end="url(#rest-contract-flow-arrow)" />
+
+    <rect x="650" y="52" width="150" height="96" rx="6" class="dg-box" />
+    <text x="666" y="80" class="dg-title">Port</text>
+    <text x="666" y="104" class="dg-detail">the use case</text>
+    <text x="666" y="126" class="dg-detail">your own types</text>
+    <path d="M800 100 H838" class="dg-line" marker-end="url(#rest-contract-flow-arrow)" />
+
+    <rect x="840" y="52" width="140" height="96" rx="6" class="dg-box" />
+    <text x="856" y="80" class="dg-title">Domain</text>
+    <text x="856" y="104" class="dg-detail">the rules</text>
+    <text x="856" y="126" class="dg-detail">no web types</text>
+
+    <path d="M100 148 V196" class="dg-line" marker-end="url(#rest-contract-flow-arrow)" />
+    <rect x="20" y="198" width="160" height="78" rx="6" class="dg-box" />
+    <text x="36" y="226" class="dg-title">Clients</text>
+    <text x="36" y="250" class="dg-detail">read the same file</text>
+
+    <text x="220" y="240" class="dg-note">The build fails when the controller no longer matches the contract.</text>
+    <text x="220" y="260" class="dg-note">The domain never depends on generated code.</text>
+  </svg>
+</Diagram>

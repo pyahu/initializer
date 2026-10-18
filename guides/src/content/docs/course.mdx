@@ -1,0 +1,73 @@
+---
+title: The course
+description: Production Spring Boot in six modules, from the first build to a frontend next to the service.
+tableOfContents: { maxHeadingLevel: 2 }
+---
+
+Building a Spring Boot service is easy. Running it in production for years is where most teams learn the hard
+way: pods killed for memory, slow rollouts, telemetry nobody can follow, a database that runs out of connections.
+
+This course collects those lessons as short guides. Each guide answers a handful of questions with one step per
+question and ends with tested files you can copy and a checklist to review your own service.
+
+## How to use it
+
+- **In order**, if you are starting a service: each module builds on the one before.
+- **By question**, if something is already on fire: open the guide, read its questions and jump to yours.
+
+Every guide is written for exact versions: Java 25, Spring Boot 4.1 and Kubernetes 1.36 to 1.37. The
+[reference docs](/reference/docs/) list them with the official documentation for each.
+
+## 1. Foundations
+
+Set up a service you can change safely for years.
+
+- [Build and code quality](/guides/build-quality/): a build that is the same everywhere and stops bugs before review.
+- [Architecture: hexagonal and DDD layered](/guides/architecture/): capabilities first, then a style inside each one.
+- [Architecture styles compared](/guides/architecture-styles/): Onion, Clean, vertical slice and the rest on one scenario.
+- [Testing a Spring Boot service](/guides/testing/): the right test at each layer, fast feedback first.
+
+## 2. Build the service
+
+Expose an API, store data and call other services without surprises.
+
+- [REST APIs, contract first](/guides/rest-apis/): OpenAPI first, then errors, writes, lists and versions done one way.
+- [gRPC services](/guides/grpc/): deadlines, honest errors and calls spread across pods.
+- [The database in production](/guides/database/): pools, timeouts, roles, migrations and tests on PostgreSQL.
+- [JPA and jOOQ](/guides/jpa-and-jooq/): pick Spring Data JDBC, JPA or jOOQ and use it well.
+- [HTTP clients and resilience](/guides/http-clients/): timeouts, safe retries and a limit per downstream service.
+- [Virtual threads and concurrency](/guides/virtual-threads/): turn them on and keep the limits that protect what you call.
+
+## 3. Events and data
+
+Move data between services reliably and keep hot data close.
+
+- [Kafka with the outbox](/guides/kafka/): events that are never lost and never sent twice.
+- [RabbitMQ](/guides/rabbitmq/): work queues where no message is lost or stuck forever.
+- [Caching with Valkey](/guides/caching/): when a cache helps and how to live with it going down.
+
+## 4. Run in production
+
+Size it, configure it, see inside it and lock it down.
+
+- [The JVM in containers](/guides/jvm-in-containers/): memory, CPU, garbage collector and startup in a pod.
+- [Configuration and secrets](/guides/configuration/): settings that fail fast and secrets that never leak.
+- [Observability](/guides/observability/): traces, metrics and logs over OTLP joined by one trace ID.
+- [Security hardening](/guides/security/): tokens, permissions, headers, errors and a locked pod.
+
+## 5. Ship
+
+Turn a commit into a running pod you can trust.
+
+- [The container image and supply chain](/guides/container-image/): small layered images, no root and knowing what ships.
+- [CI pipelines](/guides/ci-pipelines/): build in the pinned JDK, test the real image, publish what others can verify.
+- [Deploying to Kubernetes](/guides/kubernetes-deployment/): probes, shutdown, rollouts, disruption and scaling.
+- [Kubernetes manifests](/guides/kubernetes-manifests/): plain YAML, Helm or Kustomize, validated before apply.
+
+## 6. Grow
+
+Work fast locally, add services and put a frontend next to them.
+
+- [Local development](/guides/local-development/): a fast loop with the real database and telemetry next to it.
+- [Monorepos with several services](/guides/monorepo/): many services in one repository without a distributed monolith.
+- [Next.js next to the service](/guides/nextjs/): a production frontend with its own image and Deployment.

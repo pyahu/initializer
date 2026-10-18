@@ -105,6 +105,7 @@ Baseline **v0.1-b1**. Every link points to the documentation for the version in 
 | [Null-safety (JSpecify in Spring 7)](https://docs.spring.io/spring-framework/reference/7.0/core/null-safety.html) | 7.0.9 (docs 7.0) | pinned | Null-safety (JSpecify in Spring 7). |
 | [Javadoc](https://docs.spring.io/spring-framework/docs/7.0.9/javadoc-api/) | 7.0.9 | pinned | Javadoc. |
 | [7.0 release notes (wiki, also covers upgrading)](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes) | 7.0.9 (docs 7.0) | pinned | 7.0 release notes (wiki, also covers upgrading). |
+| [Declarative transaction management](https://docs.spring.io/spring-framework/reference/7.0/data-access/transaction/declarative.html) | 7.0.9 (docs 7.0) | pinned | How @Transactional works and where to put it. |
 
 ## Spring Data
 
@@ -148,6 +149,13 @@ Baseline **v0.1-b1**. Every link points to the documentation for the version in 
 | [jmolecules-integrations repo](https://github.com/xmolecules/jmolecules-integrations) | 0.33.0 (docs main) | not version-pinned | jmolecules-integrations repo. |
 | [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html) | 1.5.1 | not version-pinned | ArchUnit user guide. |
 | [ArchUnit release 1.5.1](https://github.com/TNG/ArchUnit/releases/tag/v1.5.1) | 1.5.1 | pinned | ArchUnit release 1.5.1. |
+| [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/) | 2005 | pinned | Ports and adapters as defined by its author. |
+| [Eric Evans: Domain-Driven Design Reference](https://www.domainlanguage.com/ddd/reference/) | 2015 | pinned | Definitions and pattern summaries, including Layered Architecture. |
+| [Jeffrey Palermo: The Onion Architecture, part 1](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/) | 2008 | pinned | Onion Architecture as defined by its author: all coupling toward the center. |
+| [Robert C. Martin: The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) | 2012 | pinned | The Dependency Rule: source code dependencies only point inwards. |
+| [Jimmy Bogard: Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/) | 2018 | pinned | Organising code by request: minimise coupling between slices. |
+| [Martin Fowler: Presentation Domain Data Layering](https://martinfowler.com/bliki/PresentationDomainDataLayering.html) | 2015 | pinned | Layering by presentation, domain and data and when to split into domain oriented modules. |
+| [Martin Fowler: GUI Architectures](https://martinfowler.com/eaaDev/uiArchs.html) | 2006 | pinned | MVC and Separated Presentation explained. |
 
 ## Liquibase, PostgreSQL, pgJDBC
 
@@ -319,6 +327,68 @@ Baseline **v0.1-b1**. Every link points to the documentation for the version in 
 
 ## By guide
 
+### [Architecture styles compared](/guides/architecture-styles/)
+
+- [Fundamentals](https://docs.spring.io/spring-modulith/reference/2.1/fundamentals.html)
+- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.1/verification.html)
+- [jmolecules-archunit at tag](https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit)
+- [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html)
+- [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/)
+- [Eric Evans: Domain-Driven Design Reference](https://www.domainlanguage.com/ddd/reference/)
+- [Jeffrey Palermo: The Onion Architecture, part 1](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/)
+- [Robert C. Martin: The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [Jimmy Bogard: Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/)
+- [Martin Fowler: Presentation Domain Data Layering](https://martinfowler.com/bliki/PresentationDomainDataLayering.html)
+- [Martin Fowler: GUI Architectures](https://martinfowler.com/eaaDev/uiArchs.html)
+
+### [Architecture: hexagonal and DDD layered](/guides/architecture/)
+
+- [Reference](https://docs.spring.io/spring-modulith/reference/2.1/index.html)
+- [Fundamentals](https://docs.spring.io/spring-modulith/reference/2.1/fundamentals.html)
+- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.1/verification.html)
+- [Integration testing modules](https://docs.spring.io/spring-modulith/reference/2.1/testing.html)
+- [jMolecules repo at release tag](https://github.com/xmolecules/jmolecules/tree/2.0.1)
+- [jmolecules-archunit at tag](https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit)
+- [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html)
+- [Declarative transaction management](https://docs.spring.io/spring-framework/reference/7.0/data-access/transaction/declarative.html)
+- [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/)
+
+### [Build and code quality](/guides/build-quality/)
+
+- [Gradle plugin](https://docs.spring.io/spring-boot/4.1/gradle-plugin/index.html)
+- [Best practices](https://docs.gradle.org/9.8.1/userguide/best_practices.html)
+- [Version catalogs](https://docs.gradle.org/9.8.1/userguide/version_catalogs.html)
+- [Toolchains](https://docs.gradle.org/9.8.1/userguide/toolchains.html)
+- [Dependency verification](https://docs.gradle.org/9.8.1/userguide/dependency_verification.html)
+- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/)
+- [Renovate Gradle manager](https://docs.renovatebot.com/modules/manager/gradle/)
+- [Renovate upgrade best practices](https://docs.renovatebot.com/upgrade-best-practices/)
+- [JSpecify user guide](https://jspecify.dev/docs/user-guide/)
+- [JSpecify annotations javadoc 1.0.0](https://javadoc.io/doc/org.jspecify/jspecify/1.0.0/org/jspecify/annotations/package-summary.html)
+- [NullAway README at tag](https://github.com/uber/NullAway/blob/v0.14.2/README.md)
+- [NullAway JSpecify support (wiki)](https://github.com/uber/NullAway/wiki/JSpecify-Support)
+- [Error Prone docs](https://errorprone.info/)
+- [Error Prone installation](https://errorprone.info/docs/installation)
+- [Error Prone bug patterns](https://errorprone.info/bugpatterns)
+- [gradle-errorprone-plugin (README)](https://github.com/tbroyer/gradle-errorprone-plugin)
+
+### [Caching with Valkey](/guides/caching/)
+
+- None yet.
+
+### [CI pipelines](/guides/ci-pipelines/)
+
+- [Secure use reference (formerly "Security hardening for GitHub Actions"; the old URL redirects here)](https://docs.github.com/en/actions/reference/security/secure-use)
+- [Reuse workflows (how-to)](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows)
+- [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect)
+- [SLSA v1.2 Build track basics](https://slsa.dev/spec/v1.2/build-track-basics)
+- [SLSA v1.2 Provenance](https://slsa.dev/spec/v1.2/provenance)
+- [cosign: signing containers](https://docs.sigstore.dev/cosign/signing/signing_with_containers/)
+- [cosign: verifying](https://docs.sigstore.dev/cosign/verifying/verify/)
+- [Syft CLI reference](https://oss.anchore.com/docs/reference/syft/cli/)
+- [Renovate docs](https://docs.renovatebot.com/)
+- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/)
+
 ### [Configuration and secrets](/guides/configuration/)
 
 - [Application properties appendix](https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html)
@@ -366,6 +436,10 @@ Baseline **v0.1-b1**. Every link points to the documentation for the version in 
 - [Testcontainers for Java docs](https://java.testcontainers.org/)
 - [Postgres module](https://java.testcontainers.org/modules/databases/postgres/)
 
+### [gRPC services](/guides/grpc/)
+
+- [Configure liveness/readiness/startup probes (task)](https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
 ### [HTTP clients and resilience](/guides/http-clients/)
 
 - [Migration guide 3.x to 4.0 (wiki)](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide)
@@ -376,6 +450,14 @@ Baseline **v0.1-b1**. Every link points to the documentation for the version in 
 - [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html)
 - [7.0 release notes (wiki, also covers upgrading)](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes)
 - [Semconv HTTP spans](https://opentelemetry.io/docs/specs/semconv/http/http-spans/)
+
+### [JPA and jOOQ](/guides/jpa-and-jooq/)
+
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html)
+- [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.1/reference/data/sql.html)
+- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html)
+- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html)
+- [Testcontainers for Java docs](https://java.testcontainers.org/)
 
 ### [The JVM in containers](/guides/jvm-in-containers/)
 
@@ -408,6 +490,10 @@ Baseline **v0.1-b1**. Every link points to the documentation for the version in 
 - [Pod lifecycle (graceful termination)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 - [Resource management](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
+### [Kafka with the outbox](/guides/kafka/)
+
+- None yet.
+
 ### [Deploying to Kubernetes](/guides/kubernetes-deployment/)
 
 - [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes)
@@ -429,6 +515,34 @@ Baseline **v0.1-b1**. Every link points to the documentation for the version in 
 - [Release kustomize/v5.8.3](https://github.com/kubernetes-sigs/kustomize/releases/tag/kustomize%2Fv5.8.3)
 - [Trivy docs](https://trivy.dev/docs/v0.76/guide/)
 - [Trivy release v0.76.0](https://github.com/aquasecurity/trivy/releases/tag/v0.76.0)
+
+### [Local development](/guides/local-development/)
+
+- [Observability, OpenTelemetry section (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/observability.html#actuator.observability.opentelemetry)
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html)
+- [Documentation](https://www.postgresql.org/docs/18/index.html)
+- [Testcontainers for Java docs](https://java.testcontainers.org/)
+- [Postgres module](https://java.testcontainers.org/modules/databases/postgres/)
+
+### [Monorepos with several services](/guides/monorepo/)
+
+- [Version catalogs](https://docs.gradle.org/9.8.1/userguide/version_catalogs.html)
+- [Sharing build logic (buildSrc)](https://docs.gradle.org/9.8.1/userguide/sharing_build_logic_between_subprojects.html)
+- [Convention plugins](https://docs.gradle.org/9.8.1/userguide/implementing_gradle_plugins_convention.html)
+- [Best practices for structuring builds](https://docs.gradle.org/9.8.1/userguide/best_practices_structuring_builds.html)
+- [Composite builds (included build-logic)](https://docs.gradle.org/9.8.1/userguide/composite_builds.html)
+- [Reuse workflows (how-to)](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows)
+- [Reusing workflow configurations (reference)](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations)
+
+### [Next.js next to the service](/guides/nextjs/)
+
+- [OTel specification](https://opentelemetry.io/docs/specs/otel/)
+- [Probes (concept)](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/)
+- [Pod Security Standards](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/)
+- [Pod lifecycle (graceful termination)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+- [OpenAPI Specification v3.1.2 (latest 3.1 patch)](https://spec.openapis.org/oas/v3.1.2.html)
+- [OpenID Connect Core 1.0 (errata set 2)](https://openid.net/specs/openid-connect-core-1_0.html)
+- [RFC 9700 OAuth 2.0 Security BCP](https://www.rfc-editor.org/rfc/rfc9700.html)
 
 ### [Observability](/guides/observability/)
 
@@ -456,6 +570,19 @@ Baseline **v0.1-b1**. Every link points to the documentation for the version in 
 - [Micrometer Observation](https://docs.micrometer.io/micrometer/reference/observation.html)
 - [Micrometer Tracing reference](https://docs.micrometer.io/tracing/reference/1.7/index.html)
 
+### [RabbitMQ](/guides/rabbitmq/)
+
+- None yet.
+
+### [REST APIs, contract first](/guides/rest-apis/)
+
+- [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html)
+- [OpenAPI Specification v3.1.2 (latest 3.1 patch)](https://spec.openapis.org/oas/v3.1.2.html)
+- [openapi-generator Spring generator](https://openapi-generator.tech/docs/generators/spring/)
+- [Spring generator doc at tag](https://github.com/OpenAPITools/openapi-generator/blob/v7.26.0/docs/generators/spring.md)
+- [Gradle plugin README at tag](https://github.com/OpenAPITools/openapi-generator/blob/v7.26.0/modules/openapi-generator-gradle-plugin/README.adoc)
+- [Release v7.26.0](https://github.com/OpenAPITools/openapi-generator/releases/tag/v7.26.0)
+
 ### [Security hardening](/guides/security/)
 
 - [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes)
@@ -470,6 +597,18 @@ Baseline **v0.1-b1**. Every link points to the documentation for the version in 
 - [RFC 6750 Bearer Token Usage](https://www.rfc-editor.org/rfc/rfc6750.html)
 - [RFC 9068 JWT Profile for OAuth 2.0 Access Tokens](https://www.rfc-editor.org/rfc/rfc9068.html)
 - [RFC 9700 OAuth 2.0 Security BCP](https://www.rfc-editor.org/rfc/rfc9700.html)
+
+### [Testing a Spring Boot service](/guides/testing/)
+
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html)
+- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.1/verification.html)
+- [Integration testing modules](https://docs.spring.io/spring-modulith/reference/2.1/testing.html)
+- [jmolecules-archunit at tag](https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit)
+- [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html)
+- [Testcontainers for Java docs](https://java.testcontainers.org/)
+- [Postgres module](https://java.testcontainers.org/modules/databases/postgres/)
+- [JUnit 5 quickstart](https://java.testcontainers.org/quickstart/junit_5_quickstart/)
+- [Release 2.0.5](https://github.com/testcontainers/testcontainers-java/releases/tag/2.0.5)
 
 ### [Virtual threads and concurrency](/guides/virtual-threads/)
 

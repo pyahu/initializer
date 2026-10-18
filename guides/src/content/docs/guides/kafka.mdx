@@ -1,0 +1,362 @@
+---
+title: Kafka with the outbox
+description: Publish and consume events from Spring Boot 4.1 without losing them or sending them twice.
+tableOfContents: { maxHeadingLevel: 2 }
+guide:
+  id: kafka
+  prefix: KAFKA
+  state: draft
+  baseline: v0.1-b1
+  components: [java, spring-boot, postgres-image]
+  verification: null
+  questions:
+    - id: KAFKA-Q1
+      text: "Why do events get lost or sent twice?"
+      answeredIn: kafka-why-outbox
+    - id: KAFKA-Q2
+      text: "How do I run the outbox without losing events?"
+      answeredIn: kafka-outbox-table
+    - id: KAFKA-Q3
+      text: "How do producers and consumers agree on the event format?"
+      answeredIn: kafka-schemas
+    - id: KAFKA-Q4
+      text: "How should I choose topics and keys?"
+      answeredIn: kafka-topics
+    - id: KAFKA-Q5
+      text: "Which producer settings matter?"
+      answeredIn: kafka-producer
+    - id: KAFKA-Q6
+      text: "When does a consumer commit and what if it crashes?"
+      answeredIn: kafka-consumers
+    - id: KAFKA-Q7
+      text: "What happens to a message that keeps failing?"
+      answeredIn: kafka-errors
+    - id: KAFKA-Q8
+      text: "How do I spot trouble and replay events?"
+      answeredIn: kafka-lag-replay
+---
+import GuideStatus from '../../../components/GuideStatus.astro';
+import Checklist from '../../../components/Checklist.astro';
+import GuideReferences from '../../../components/GuideReferences.astro';
+import DiagramLegend from '../../../components/DiagramLegend.astro';
+import KafkaOutboxDiagram from '../../../components/diagrams/KafkaOutboxDiagram.astro';
+
+An order is saved and the "order placed" event never reaches billing. Or it reaches billing twice and the customer
+is charged twice. Nobody sees an error: the database committed and Kafka said yes. The gap was in between.
+
+This guide makes events as reliable as the data they describe: saved in the same transaction, published from the
+database log, read with a known format and handled safely when they fail. It uses Spring for Apache Kafka 4.1.1
+and the Kafka 4.2.1 client, the versions Spring Boot 4.1.1 manages.
+
+<GuideStatus guide="kafka" />
+
+<a id="kafka-why-outbox"></a>
+
+## 1. Why do events get lost or sent twice?
+
+**In short:** because "save to the database, then send to Kafka" is two writes that can fail apart. Write the event
+to an outbox table in the same transaction instead and let Debezium publish it.
+
+### What's going on
+
+Your service saves an order and then sends an event. Two systems, two writes, no shared transaction. If the
+service crashes after the commit and before the send, the event is lost. If it sends first and the commit then
+fails, the world hears about an order that does not exist. A retry after a timeout can send it twice.
+
+The outbox removes the gap. Think of it as writing the letter and the copy for the post office in the same notebook:
+either both are on the page or neither is. The event goes into an outbox table inside the same database
+transaction as the order. Debezium reads the database's write-ahead log and publishes each outbox row to Kafka.
+Nothing in your code talks to Kafka on the write path.
+
+<KafkaOutboxDiagram />
+<DiagramLegend items={['recommended', 'context', 'failure']} />
+
+### Do this
+
+1. Write every event your service publishes as an outbox row, in the transaction that changes the data.
+2. Run Debezium's PostgreSQL connector with the outbox event router to publish those rows.
+3. Remove direct `KafkaTemplate` sends from code paths that also write to the database.
+
+### When this is not for you
+
+- The event is not tied to a database change, such as a metric or a log line: send it directly and accept that it
+  can be lost.
+- Your service has no database: there is nothing to keep consistent with, so a direct send is fine.
+
+<a id="kafka-outbox-table"></a>
+
+## 2. How do I run the outbox without losing events?
+
+**In short:** keep outbox rows after they are published, delete only rows older than a retention window and below a
+published watermark. Create the replication slot before the app accepts writes.
+
+```text
+id, aggregatetype, aggregateid, type, payload
+```
+
+### What's going on
+
+Debezium's outbox event router expects a table with these columns: a unique `id`, the `aggregatetype` that picks the
+topic, the `aggregateid` that becomes the record key, the event `type` and the `payload`. It only cares about inserts
+and filters out deletes.
+
+That invites a shortcut: insert the row and delete it right away, in the same transaction. The event still reaches
+the log, so it works, until the replication slot is lost. Then the only copy of every unpublished event was in the
+log and it is gone. Keeping the rows means you can publish them again.
+
+The slot is also the other risk. PostgreSQL keeps log segments for a slot that has not caught up, so a stuck
+connector can fill the disk. `max_slot_wal_keep_size` puts a ceiling on that; past it the slot is invalidated.
+
+### Do this
+
+1. Create the outbox table with the router's columns and an index on the time the row was written.
+2. Never delete in the writing transaction. A cleanup job deletes only rows older than the retention window and
+   below the published watermark, so a long outage never deletes unpublished events.
+3. Create the publication and the replication slot right after migrations, before the app takes writes. With the
+   `pgoutput` plugin, set `publication.autocreate.mode` to `filtered` so the connector does not try to publish
+   every table.
+4. Set `max_slot_wal_keep_size` in PostgreSQL and alert when the slot falls behind.
+5. Set `heartbeat.interval.ms` on the connector, so a quiet outbox still moves the slot forward.
+
+### When this is not for you
+
+- A tiny event rate you can afford to lose during an incident: the simple insert then delete pattern works, as long
+  as you accept that a lost slot loses events.
+
+<a id="kafka-schemas"></a>
+
+## 3. How do producers and consumers agree on the event format?
+
+**In short:** describe every event with an Avro schema, store it in a schema registry and let the registry refuse
+changes that break readers.
+
+### What's going on
+
+Events outlive the code that wrote them. A consumer deployed last month must read the event you publish today. JSON
+without a contract breaks quietly: a renamed field just arrives as `null`.
+
+Avro records carry the id of their schema. A schema registry stores every version. The registry checks each new
+version against a compatibility rule before accepting it. Karapace is an Apache licensed registry that speaks the
+same API as the Confluent Schema Registry, so the Confluent Avro serializer works with it; that serializer module is
+Apache 2.0 too. Karapace starts with `BACKWARD` compatibility: a new schema must be able to read data written with
+the previous one.
+
+### Do this
+
+1. Keep `.avsc` files in the repository next to the code that owns the event.
+2. Add new fields with a default value, so old events still read. Avro's schema resolution fills the default when
+   the writer did not have the field.
+3. Never rename or remove a field in place. Add a new one, migrate readers, then retire the old one.
+4. Register schemas from CI and fail the build when the registry rejects a change.
+
+### When this is not for you
+
+- Events that never leave one service: a simpler format may be enough. Once a second team reads them, add the
+  contract.
+
+<a id="kafka-topics"></a>
+
+## 4. How should I choose topics and keys?
+
+**In short:** one topic per aggregate type, the aggregate id as the key and enough partitions for the consumers you
+expect.
+
+```text
+outbox.event.order   key = order id
+```
+
+### What's going on
+
+Kafka keeps order only inside a partition. The key decides the partition. Use the aggregate id as the key and
+every event about one order lands in the same partition, in the order it was written. Use no key or a random one and
+"order shipped" can overtake "order placed".
+
+The outbox router does this for you: by default it routes by `aggregatetype` to a topic named
+`outbox.event.<aggregatetype>` and uses `aggregateid` as the key. Partitions also cap parallelism: a consumer group
+cannot use more consumers than the topic has partitions.
+
+### Do this
+
+1. Pick the aggregate type as the topic and the aggregate id as the key.
+2. Size partitions for your peak consumer count. Adding partitions later changes which partition a key maps to.
+3. Set retention on purpose: long enough to replay after an incident. Use compaction only for topics that hold the
+   latest state per key.
+4. Create topics explicitly, with replication, instead of relying on automatic creation.
+
+### When this is not for you
+
+- Events with no ordering need, such as independent notifications: spread them evenly and order does not matter.
+
+<a id="kafka-producer"></a>
+
+## 5. Which producer settings matter?
+
+**In short:** keep the Kafka 4.2 defaults, `acks=all` with idempotence on. Do not override them by accident.
+
+```yaml
+spring.kafka.template.observation-enabled: true
+```
+
+### What's going on
+
+In Kafka 4.2 the producer defaults to `acks=all` and `enable.idempotence=true`. A record is confirmed only after
+all in-sync replicas have it. A retried batch cannot be written twice. The trap: if you set a conflicting value
+without enabling idempotence explicitly, the client quietly turns idempotence off.
+
+With the outbox, Debezium is the producer for your events. Your own `KafkaTemplate` is left for records that are
+not tied to a database change. Spring Kafka's tracing is off by default, so producers send no trace context until you
+turn on observation.
+
+### Do this
+
+1. Leave `acks` and `enable.idempotence` unset or set them to `all` and `true` explicitly.
+2. Set `spring.kafka.template.observation-enabled: true`, so traces follow the record (see the
+   [observability guide](/guides/observability/)).
+3. Use Kafka transactions (`spring.kafka.producer.transaction-id-prefix`) only for read, process and write between
+   topics. They do not cover your database.
+
+### When this is not for you
+
+- Fire and forget telemetry where throughput matters more than every record: `acks=1` is a deliberate choice, not a
+  default to copy.
+
+<a id="kafka-consumers"></a>
+
+## 6. When does a consumer commit and what if it crashes?
+
+**In short:** Spring Kafka commits after your listener returns, so a crash means the record comes again. Make the
+handler idempotent.
+
+```yaml
+spring.kafka.listener.observation-enabled: true
+```
+
+### What's going on
+
+Spring Kafka sets `enable.auto.commit` to `false` unless you set it. The listener container commits offsets
+itself. The default `AckMode` is `BATCH`: it commits once every record from a poll is processed. If the pod dies
+before that commit, the next consumer gets those records again. That is "at least once". Kafka cannot do better
+across your database.
+
+So the handler must survive a second delivery. Record the event id in a processed events table in the same
+transaction as the work. Skip ids you have seen. It is like stamping a delivery note: a second copy of the same
+note gets filed, not delivered again.
+
+### Do this
+
+1. Keep auto commit off and the default `BATCH` ack mode unless you need something else.
+2. Store processed event ids in the consumer's database, in the transaction that does the work. Skip duplicates.
+3. Use a record listener, the default `spring.kafka.listener.type: single`. Switch to batch listeners only for bulk
+   work where you handle partial failures yourself.
+4. Turn on `spring.kafka.listener.observation-enabled` so each record continues the producer's trace.
+
+### When this is not for you
+
+- Handlers that are naturally idempotent, such as "set status to shipped": they still need the commit model
+  but not the processed events table.
+
+<a id="kafka-errors"></a>
+
+## 7. What happens to a message that keeps failing?
+
+**In short:** retry a few times with a backoff, then send it to a dead letter topic and keep going. Never let one bad
+record block the partition.
+
+### What's going on
+
+By default Spring Kafka's `DefaultErrorHandler` retries a failed record ten times with no delay, then logs it and
+moves on. That is too fast to ride out a short outage and too quiet to notice the record was dropped.
+
+Some failures will never succeed: a record that cannot be deserialized, for example. The handler treats those as
+fatal and skips the retries. With a `DeadLetterPublishingRecoverer`, an exhausted or fatal record goes to a topic
+named `<topic>-dlt`, on the same partition, with headers describing the exception. You can read it, fix the cause and
+replay it.
+
+### Do this
+
+1. Configure the `DefaultErrorHandler` with an exponential backoff and a `DeadLetterPublishingRecoverer`.
+2. Create each dead letter topic with at least as many partitions as the original, because the default resolver
+   keeps the partition.
+3. Wrap deserializers in `ErrorHandlingDeserializer`, so a bad record reaches the dead letter topic instead of failing
+   every poll.
+4. For long waits without blocking the partition, use Spring Kafka's retry topics (`spring.kafka.retry.topic.enabled`,
+   with `attempts`, `backoff.delay` and `backoff.max-delay`).
+5. Alert when a dead letter topic receives records.
+
+### When this is not for you
+
+- Strict ordering per key: a record moved to a retry or dead letter topic lets later records for the same key go
+  first. Keep blocking retries in that case and alert on lag instead.
+
+<a id="kafka-lag-replay"></a>
+
+## 8. How do I spot trouble and replay events?
+
+**In short:** watch consumer lag, the slot's lag and the dead letter topics. Replay by resetting offsets or by
+publishing retained outbox rows again.
+
+```sh
+kafka-consumer-groups.sh --bootstrap-server <broker> --group <group> --topic <topic> \
+  --reset-offsets --to-datetime 2026-10-18T10:00:00.000 --execute
+```
+
+### What's going on
+
+Consumer lag is how far a group is behind the newest record. It is the one number that tells you a consumer is slow,
+stuck or down, long before users notice. The Kafka client reports it as `records-lag-max`. Spring Boot exposes
+client metrics through Micrometer.
+
+Replay comes in two kinds. Consumers that missed or mishandled records can rewind: stop the group, reset its offsets
+to a point in time and start it again. Idempotent handlers make the second pass safe. If events never reached
+Kafka, for example after a lost replication slot, the outbox rows you kept are the source: publish them again with a
+new snapshot.
+
+### Do this
+
+1. Alert on consumer lag per group, on the replication slot's lag and on records in dead letter topics.
+2. Replay a consumer with `kafka-consumer-groups.sh --reset-offsets --to-datetime`, with the group stopped.
+3. Replay from a dead letter topic with a small job that sends fixed records back to the original topic.
+4. After a lost slot, take a new snapshot of the retained outbox rows. Consumers drop the duplicates by event id.
+
+### When this is not for you
+
+- It always applies. The details change: a retention window shorter than your longest incident makes replay
+  impossible, so size it first.
+
+## Put it all together
+
+The outbox, the registry and the consumer rules land in four places.
+
+### In the database
+
+- The outbox table with `id`, `aggregatetype`, `aggregateid`, `type` and `payload`, written in the same transaction
+  as the data (steps 1 and 2).
+- A processed events table on the consumer side (step 6).
+- A cleanup job that deletes only below the published watermark and after the retention window (step 2).
+- `max_slot_wal_keep_size` set; the publication and slot created right after migrations (step 2).
+
+### In the connector
+
+- Debezium's PostgreSQL connector with the outbox event router, `pgoutput`, `publication.autocreate.mode: filtered`
+  and `heartbeat.interval.ms` (steps 1 and 2).
+- Avro values with the schema registry's URL, so each record carries its schema id (step 3).
+
+### In application.yaml
+
+- `spring.kafka.template.observation-enabled` and `spring.kafka.listener.observation-enabled` set to `true` (steps 5
+  and 6).
+- No overrides of `acks` or `enable.idempotence`; auto commit left off (steps 5 and 6).
+- `spring.kafka.retry.topic.*` only if you use retry topics (step 7).
+
+### In operations
+
+- Topics created explicitly, keyed by aggregate id, with retention longer than your longest incident (step 4).
+- Alerts on consumer lag, slot lag and dead letter topics plus a written replay procedure (steps 7 and 8).
+
+## Checklist
+
+<Checklist guide="kafka" />
+
+## References
+
+<GuideReferences guide="kafka" />

@@ -25,6 +25,9 @@ guide:
     - id: DB-Q5
       text: "When should migrations run?"
       answeredIn: db-migrations
+    - id: DB-Q9
+      text: "How do I run the migration Job safely?"
+      answeredIn: db-migration-job
     - id: DB-Q6
       text: "How do I change the schema without downtime?"
       answeredIn: db-expand-contract
@@ -254,8 +257,8 @@ A Job runs the changelog once, before the new pods start. The pods only connect 
 ### Do this
 
 1. Turn Liquibase off in the application: `spring.liquibase.enabled: false`.
-2. Run the same changelog from a Job, as the migration user, before the rollout. Order it in your pipeline or
-   GitOps tool, such as an Argo CD `PreSync` hook or a Helm `pre-upgrade` hook.
+2. Run the same changelog from a Job, as the migration user, before the rollout. Step 6 shows how to order it
+   and what to do when it fails.
 3. Never edit a changeset that already ran. Add a new one.
 
 ### When this is not for you
@@ -263,9 +266,50 @@ A Job runs the changelog once, before the new pods start. The pods only connect 
 - One replica, an internal tool or an early prototype: migrating on startup is simpler and fine.
 - An init container is not the fix: it runs once per pod, so the pods still race for the lock.
 
+<a id="db-migration-job"></a>
+
+## 6. How do I run the migration Job safely?
+
+**In short:** run it before the new pods, wait until it completes and stop the rollout if it fails. The old pods
+keep serving while you fix it.
+
+```sh
+kubectl wait --for=condition=complete job/<app>-migrate-<version> --timeout=10m
+```
+
+### What's going on
+
+A migration Job is a small program with one task: bring the schema to the version the new code expects. Three
+things decide whether it is safe.
+
+- **Order.** The Job must finish before the new pods start. Its credentials must exist before the Job starts.
+  A Job pod whose Secret is missing waits in `CreateContainerConfigError` instead of failing.
+- **Failure.** If the Job fails, the rollout must not start. The old pods keep running on a schema they still
+  understand, which is why every change has to be backward compatible (step 7).
+- **The lock.** Liquibase marks its lock table, `DATABASECHANGELOGLOCK`, while it works. If the Job is killed
+  halfway, by a node drain for example, the lock stays and the next run waits for it.
+
+### Do this
+
+1. Put the release version in the Job's name: a Job's pod template cannot change once the Job exists. Tools that
+   delete and recreate the Job on every sync, such as an Argo CD hook, can keep one fixed name.
+2. Set a low `backoffLimit`, such as 1 or 2 (the default is 6) and an `activeDeadlineSeconds` so a stuck
+   migration fails instead of hanging.
+3. Order it. In a pipeline, apply the Job and `kubectl wait --for=condition=complete` before the Deployment. With
+   Argo CD, use a `PreSync` hook or an earlier sync wave. With Helm, a `pre-upgrade` hook. With Flux, a separate
+   `Kustomization` that the app `dependsOn`.
+4. If a killed Job left the lock behind, run `liquibase release-locks` once, after making sure no migration is
+   running.
+5. Set `ttlSecondsAfterFinished` so finished Jobs and their pods are cleaned up.
+
+### When this is not for you
+
+- Migrating on startup (step 5) has no Job to order, at the price of every pod waiting on the lock.
+- A failing Job blocks the release. That is the point: fix it forward with a new changeset in a new release.
+
 <a id="db-expand-contract"></a>
 
-## 6. How do I change the schema without downtime?
+## 7. How do I change the schema without downtime?
 
 **In short:** never break the version that is still running. Expand first, switch the code, contract one release
 later.
@@ -308,7 +352,7 @@ Some statements also lock a busy table for the whole time they run. `CREATE INDE
 
 <a id="db-testing"></a>
 
-## 7. How do I test against a real database?
+## 8. How do I test against a real database?
 
 **In short:** run the real migrations against the same major PostgreSQL version as production, in a container,
 with Testcontainers 2.
@@ -336,7 +380,7 @@ application at it without any URL in the test.
 
 <a id="db-pool-metrics"></a>
 
-## 8. How do I know the pool is in trouble?
+## 9. How do I know the pool is in trouble?
 
 **In short:** alert when threads wait for a connection and page when they give up.
 
@@ -377,7 +421,7 @@ Everything above lands in three places: the application's configuration, the dat
 - `connection-timeout`, `max-lifetime`, `keepalive-time` and `leak-detection-threshold`, in milliseconds (step 2).
 - `spring.transaction.default-timeout` and `spring.jdbc.template.query-timeout` (step 3).
 - `spring.liquibase.enabled: false` (step 5).
-- `ApplicationName` in the data source properties (step 8).
+- `ApplicationName` in the data source properties (step 9).
 
 ### In PostgreSQL
 
@@ -387,7 +431,8 @@ Everything above lands in three places: the application's configuration, the dat
 
 ### In the Deployment
 
-- A migration Job that runs before the rollout, with the migration user's credentials (step 5).
+- A migration Job that runs before the rollout, with the migration user's credentials, a low `backoffLimit`, an
+  `activeDeadlineSeconds` and a name that carries the release version (steps 5 and 6).
 - Only the runtime user's credentials in the application pods (step 4).
 - Replicas, surge and HPA maximum that fit the connection budget (step 1).
 

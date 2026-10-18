@@ -7,9 +7,9 @@ const parts = [
     icon: "layers",
     status: "Available",
     title: "A knowledge base",
-    text: "Guides for building Java applications with Spring Boot and later Next.js. Each decision explains the failure it prevents, the fix, where it fits and what it costs.",
+    text: "A course of 24 guides for building Java services with Spring Boot and a Next.js frontend next to them. Each step answers one question: the failure it prevents, the fix and when to choose differently.",
     href: "#guides",
-    link: "See the guides",
+    link: "See the course",
   },
   {
     icon: "terminal",
@@ -21,31 +21,73 @@ const parts = [
   },
 ] as const;
 
-const guides = [
-  { href: "/guides/jvm-in-containers/", title: "The JVM in containers", text: "Memory, CPU, garbage collector and startup for a JVM in a pod." },
-  { href: "/guides/virtual-threads/", title: "Virtual threads", text: "Turn them on and keep the limits that protect what you call." },
-  { href: "/guides/database/", title: "The database", text: "Pools, timeouts, roles, migrations and tests on PostgreSQL." },
-  { href: "/guides/http-clients/", title: "HTTP clients", text: "Timeouts, safe retries and a limit per downstream service." },
-  { href: "/guides/observability/", title: "Observability", text: "Traces, metrics and logs over OTLP, joined by one trace ID." },
-  { href: "/guides/configuration/", title: "Configuration and secrets", text: "Settings that fail fast and secrets that never leak." },
-  { href: "/guides/security/", title: "Security hardening", text: "Tokens, permissions, headers, errors and a locked pod." },
-  { href: "/guides/container-image/", title: "The container image", text: "Small layered images, no root, and knowing what ships." },
-  { href: "/guides/kubernetes-deployment/", title: "Deploying to Kubernetes", text: "Probes, shutdown, rollouts, disruption and scaling." },
-  { href: "/guides/kubernetes-manifests/", title: "Kubernetes manifests", text: "Plain YAML, Helm or Kustomize, validated before apply." },
-];
-
-const planned = [
-  { name: "Architecture", text: "Hexagonal and DDD layered, with module rules tested" },
-  { name: "REST APIs", text: "Start from the OpenAPI contract" },
-  { name: "CI pipelines", text: "Build, test and publish with GitHub Actions" },
-  { name: "Messaging", text: "Kafka with an outbox, RabbitMQ" },
-  { name: "Next.js", text: "A frontend next to the service, typed from its API" },
+const modules = [
+  {
+    title: "1. Foundations",
+    text: "Set up a service you can change safely for years.",
+    guides: [
+      { href: "/guides/build-quality/", title: "Build and code quality" },
+      { href: "/guides/architecture/", title: "Architecture" },
+      { href: "/guides/architecture-styles/", title: "Architecture styles compared" },
+      { href: "/guides/testing/", title: "Testing a Spring Boot service" },
+    ],
+  },
+  {
+    title: "2. Build the service",
+    text: "Expose an API, store data and call other services without surprises.",
+    guides: [
+      { href: "/guides/rest-apis/", title: "REST APIs, contract first" },
+      { href: "/guides/grpc/", title: "gRPC services" },
+      { href: "/guides/database/", title: "The database in production" },
+      { href: "/guides/jpa-and-jooq/", title: "JPA and jOOQ" },
+      { href: "/guides/http-clients/", title: "HTTP clients and resilience" },
+      { href: "/guides/virtual-threads/", title: "Virtual threads and concurrency" },
+    ],
+  },
+  {
+    title: "3. Events and data",
+    text: "Move data between services reliably and keep hot data close.",
+    guides: [
+      { href: "/guides/kafka/", title: "Kafka with the outbox" },
+      { href: "/guides/rabbitmq/", title: "RabbitMQ" },
+      { href: "/guides/caching/", title: "Caching with Valkey" },
+    ],
+  },
+  {
+    title: "4. Run in production",
+    text: "Size it, configure it, see inside it and lock it down.",
+    guides: [
+      { href: "/guides/jvm-in-containers/", title: "The JVM in containers" },
+      { href: "/guides/configuration/", title: "Configuration and secrets" },
+      { href: "/guides/observability/", title: "Observability" },
+      { href: "/guides/security/", title: "Security hardening" },
+    ],
+  },
+  {
+    title: "5. Ship",
+    text: "Turn a commit into a running pod you can trust.",
+    guides: [
+      { href: "/guides/container-image/", title: "The container image" },
+      { href: "/guides/ci-pipelines/", title: "CI pipelines" },
+      { href: "/guides/kubernetes-deployment/", title: "Deploying to Kubernetes" },
+      { href: "/guides/kubernetes-manifests/", title: "Kubernetes manifests" },
+    ],
+  },
+  {
+    title: "6. Grow",
+    text: "Work fast locally, add services and put a frontend next to them.",
+    guides: [
+      { href: "/guides/local-development/", title: "Local development" },
+      { href: "/guides/monorepo/", title: "Monorepos with several services" },
+      { href: "/guides/nextjs/", title: "Next.js next to the service" },
+    ],
+  },
 ];
 
 const anatomy = [
   { title: "Questions first", text: "The top of each guide lists the questions it answers. Click one and you land on the answer." },
-  { title: "Decision cards", text: "One decision per card: the problem, the solution, where it fits and what it costs, including when to choose differently." },
-  { title: "Recipes", text: "Files to copy, cut from a real service that is built and run on every change." },
+  { title: "One step per question", text: "Each step starts with the answer in short, then what goes wrong, what to do and when the advice is not for you." },
+  { title: "Put it all together", text: "Files to copy with a short explanation, cut from a real service that is built and run on every change." },
   { title: "Checklist", text: "Short items with stable IDs, to review a service against the guide." },
 ];
 
@@ -57,9 +99,9 @@ const proof = [
 ];
 
 const roadmap = [
-  { when: "Now", text: "Ten guides for running a Spring Boot service in production, from the JVM to Kubernetes." },
+  { when: "Now", text: "The course: 24 guides in six modules, from the first build to Kubernetes, messaging and a Next.js frontend." },
   { when: "Next", text: "Generator v0.1: one service, hexagonal or DDD layered, REST with PostgreSQL, OIDC, OpenTelemetry, Kustomize and CI." },
-  { when: "Later", text: "Monorepos with several services, JPA and jOOQ, gRPC, Kafka, RabbitMQ and Valkey and Next.js frontends." },
+  { when: "Later", text: "The generator grows with the course: monorepos, JPA and jOOQ, gRPC, Kafka, RabbitMQ, Valkey and Next.js, each once its tested service exists." },
 ];
 ---
 
@@ -71,17 +113,20 @@ const roadmap = [
         <h1>Production Java, explained. <span>Then generated.</span></h1>
         <p class="hero-copy">Pyahu Initializer is a modern knowledge base for building applications with Spring Boot and Next.js and a generator that starts new projects at production quality, following the same guides.</p>
         <div class="hero-actions">
-          <a class="button primary" href="#guides">Read the guides <Icon name="arrow" size={18} /></a>
+          <a class="button primary" href="/course/">Start the course <Icon name="arrow" size={18} /></a>
           <a class="button quiet" href="#what">What it is</a>
         </div>
       </div>
       <div class="setup-panel" aria-label="The two parts of the Initializer">
         <div class="panel-bar"><span></span><span></span><span></span><code>initializer</code></div>
         <div class="setup-body">
-          <p class="setup-label">1. Read why each decision is made</p>
-          <pre><code><span class="prompt">guide</span> JVM, database, security ...  <span class="comment">10 ready</span>
-<span class="prompt">guide</span> Kubernetes, observability   <span class="comment">ready</span>
-<span class="prompt">guide</span> Architecture, Next.js ...    <span class="comment">planned</span></code></pre>
+          <p class="setup-label">1. Learn why each decision is made</p>
+          <pre><code><span class="prompt">1</span> Foundations         <span class="comment">4 guides</span>
+<span class="prompt">2</span> Build the service   <span class="comment">6 guides</span>
+<span class="prompt">3</span> Events and data     <span class="comment">3 guides</span>
+<span class="prompt">4</span> Run in production   <span class="comment">4 guides</span>
+<span class="prompt">5</span> Ship                <span class="comment">4 guides</span>
+<span class="prompt">6</span> Grow                <span class="comment">3 guides</span></code></pre>
           <p class="setup-label panel-gap">2. Start a project that already follows them</p>
           <pre><code><span class="prompt">$</span> pyahu new orders --auth
 <span class="comment">  in development</span></code></pre>
@@ -110,21 +155,24 @@ const roadmap = [
 
   <section class="section" id="guides" aria-labelledby="guides-title">
     <div class="section-heading">
-      <p class="eyebrow">The guides</p>
-      <h2 id="guides-title">Start here.</h2>
-      <p class="section-lead">Ten guides cover running a Spring Boot service in production. More topics follow, each before the generator supports it.</p>
+      <p class="eyebrow">The course</p>
+      <h2 id="guides-title">Six modules, one service.</h2>
+      <p class="section-lead">Follow them in order to build a service from the first commit to production or jump straight to the question you have today.</p>
     </div>
-    <div class="profile-grid guide-grid">
-      {guides.map((g) => (
-        <a class="profile-card guide-card" href={g.href}><div><code>{g.title}</code></div><p>{g.text}</p></a>
+    <div class="profile-grid module-grid">
+      {modules.map((m) => (
+        <article class="profile-card module-card">
+          <h3>{m.title}</h3>
+          <p>{m.text}</p>
+          <ul>
+            {m.guides.map((g) => (
+              <li><a href={g.href}>{g.title}</a></li>
+            ))}
+          </ul>
+        </article>
       ))}
     </div>
-    <h3 class="subheading">Planned topics</h3>
-    <div class="profile-grid planned-grid">
-      {planned.map((t) => (
-        <div class="profile-card is-rolling"><div><code>{t.name}</code><span>planned</span></div><p>{t.text}</p></div>
-      ))}
-    </div>
+    <a class="text-link" href="/course/">How the course works <Icon name="arrow" size={15} /></a>
   </section>
 
   <section class="section proof-section" id="inside" aria-labelledby="inside-title">
@@ -169,10 +217,10 @@ const roadmap = [
 
   <section class="final-cta">
     <p class="eyebrow center">Start reading</p>
-    <h2>Size your JVM for the pod it runs in.</h2>
+    <h2>Start with a build you can trust.</h2>
     <div class="hero-actions center">
-      <a class="button primary" href="/guides/jvm-in-containers/">The JVM in containers <Icon name="arrow" size={18} /></a>
-      <a class="button quiet" href="/guides/observability/">Observability</a>
+      <a class="button primary" href="/course/">The course <Icon name="arrow" size={18} /></a>
+      <a class="button quiet" href="/guides/build-quality/">Module 1: Build and code quality</a>
     </div>
   </section>
 </LandingLayout>

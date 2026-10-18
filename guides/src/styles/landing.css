@@ -107,10 +107,12 @@ pre { overflow-x: auto; font-size: .82rem; line-height: 1.85; }
 .subheading { margin: 3rem 0 1.2rem; color: var(--ink); }
 .planned-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .panel-gap { margin-top: 1.6rem; }
-.guide-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: .5rem; }
-.guide-card { display: block; transition: border-color .15s ease; }
-.guide-card:hover { border-color: var(--blue); }
-.guide-card code { color: var(--ink); font-family: var(--font); font-size: 1rem; font-weight: 600; }
+.module-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.module-card h3 { color: var(--ink); font-size: 1.05rem; }
+.module-card ul { margin: .9rem 0 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
+.module-card li { font-size: .88rem; }
+.module-card a { color: #c6ddfb; }
+.module-card a:hover { color: var(--ink); text-decoration: underline; }
 
 .profiles-section { display: grid; grid-template-columns: .78fr 1.22fr; gap: 4.5rem; align-items: start; }
 .profiles-copy { position: sticky; top: 2rem; }
@@ -157,7 +159,7 @@ pre { overflow-x: auto; font-size: .82rem; line-height: 1.85; }
 }
 
 @media (max-width: 980px) {
-  .planned-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .planned-grid, .module-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 760px) {
@@ -183,7 +185,7 @@ pre { overflow-x: auto; font-size: .82rem; line-height: 1.85; }
   .nav-cta { display: none; }
   .hero h1 { font-size: clamp(2.65rem, 13vw, 3.8rem); }
   .hero-copy { font-size: 1.05rem; }
-  .profile-grid, .planned-grid { grid-template-columns: 1fr; }
+  .profile-grid, .planned-grid, .module-grid { grid-template-columns: 1fr; }
   .proof-grid article { grid-template-columns: 1fr; gap: .4rem; }
   .setup-body, .install-panel pre { padding: 1.2rem; }
   .setup-panel pre, .install-panel pre { font-size: .72rem; }

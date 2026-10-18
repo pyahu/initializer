@@ -28,6 +28,9 @@ guide:
     - id: MAN-Q6
       text: "How should I apply manifests to the cluster?"
       answeredIn: man-server-side-apply
+    - id: MAN-Q8
+      text: "Should a GitOps controller apply the manifests?"
+      answeredIn: man-gitops
     - id: MAN-Q7
       text: "How do I catch broken manifests before they reach a cluster?"
       answeredIn: man-validation
@@ -253,9 +256,49 @@ does not delete objects you removed from Git: its pruning is still alpha.
   move it once, deliberately.
 - A GitOps controller applies for you: turn on its server-side option instead.
 
+<a id="man-gitops"></a>
+
+## 7. Should a GitOps controller apply the manifests?
+
+**In short:** yes, once more than one person deploys or more than one cluster exists. Git becomes the only way in,
+and a controller keeps the cluster equal to it.
+
+### What's going on
+
+With a pipeline that runs `kubectl apply`, the cluster changes only when the pipeline runs. Anyone with access can
+change it in between and nothing puts it back. Objects you delete from Git stay in the cluster.
+
+A GitOps controller such as Argo CD or Flux works the other way round. It runs inside the cluster, watches a Git
+repository and applies what it finds there, again and again. Think of a thermostat: you set the temperature in
+Git and the controller keeps correcting the room. A manual change is drift. The controller undoes it or
+reports it. An object removed from Git is removed from the cluster when pruning is on.
+
+The two treat Helm differently. Argo CD renders a chart with `helm template` and applies the output, so no Helm
+release exists and Helm hooks become Argo CD hooks. Flux installs a real Helm release, with hooks, history and
+rollback.
+
+### Do this
+
+1. Point the controller at one folder per environment in Git, the overlays from step 2.
+2. Turn on pruning, so objects removed from Git leave the cluster: `prune` in Argo CD's automated sync policy,
+   `.spec.prune` in a Flux `Kustomization`.
+3. In Argo CD, turn on `selfHeal`, so a manual change is put back. Flux corrects drift on Kustomize objects by
+   default.
+4. Keep server-side apply from step 6 (Argo CD's `ServerSideApply=true` sync option; Flux applies server-side by
+   default) and leave `spec.replicas` to the HPA.
+5. Order what must come first, such as a database migration before the app: an Argo CD sync wave
+   (`argocd.argoproj.io/sync-wave`) or a Flux `Kustomization` with `dependsOn`. The
+   [database guide](/guides/database/#db-migration-job) shows the migration Job.
+
+### When this is not for you
+
+- One person, one cluster and a pipeline that already applies server-side: a controller is one more component to
+  run for little gain.
+- Urgent fixes now go through Git too. Plan a fast path for them instead of editing the cluster by hand.
+
 <a id="man-validation"></a>
 
-## 7. How do I catch broken manifests before they reach a cluster?
+## 8. How do I catch broken manifests before they reach a cluster?
 
 **In short:** render every environment in CI and check the rendered YAML with kubeconform, kube-linter,
 `trivy config` and pluto.
@@ -303,10 +346,11 @@ Everything above lives in one folder next to the service and one job in CI.
 
 ### In CI
 
-- Render every overlay with `kustomize build` (step 7).
-- Check the output with kubeconform, kube-linter, `trivy config` and pluto (step 7).
+- Render every overlay with `kustomize build` (step 8).
+- Check the output with kubeconform, kube-linter, `trivy config` and pluto (step 8).
 - Set the image digest with `kustomize edit set image` once the image is pushed (step 5).
-- Apply with `kubectl apply --server-side --field-manager=<name>` or let a GitOps controller do it (step 6).
+- Apply with `kubectl apply --server-side --field-manager=<name>` (step 6) or let a GitOps controller do it with
+  pruning on (step 7).
 
 ## Checklist
 

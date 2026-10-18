@@ -1,0 +1,69 @@
+---
+// Flow: the stages of a service pipeline, what each one proves and the stop on any failure.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="ci-pipeline-stages"
+  caption="Five stages, each proving one more thing and nothing is published until all of them pass."
+  description="Five numbered stages from left to right, joined by arrows. 1, check out: actions pinned to commit SHAs and a read only token; it proves nobody swapped the code that runs. 2, build, highlighted: the Gradle build inside the pinned JDK image runs the unit and architecture tests; it proves the code compiles and the tests pass. 3, image, highlighted: docker buildx builds the image from the same Dockerfile as production; it proves the service packages. 4, behaviour, highlighted: tests start the image CI just built and check it from outside; it proves the thing you ship runs. 5, publish, only on the main branch: push by digest with an SBOM, a provenance attestation and a signature; it proves to others where the image came from. Failure path: stages 2, 3 and 4 each lead with a dotted red line to one box, any stage fails: the run stops and nothing is published. A note says the test reports upload even then, with if: always().">
+  <svg viewBox="0 0 1000 400">
+    <defs>
+      <marker id="ci-pipeline-stages-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="ci-pipeline-stages-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+      <marker id="ci-pipeline-stages-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-fail" /></marker>
+    </defs>
+    <text x="20" y="32" class="dg-group">1 · CHECK OUT</text>
+    <text x="215" y="32" class="dg-group">2 · BUILD</text>
+    <text x="410" y="32" class="dg-group">3 · IMAGE</text>
+    <text x="605" y="32" class="dg-group">4 · BEHAVIOUR</text>
+    <text x="800" y="32" class="dg-group">5 · PUBLISH</text>
+
+    <rect x="20" y="48" width="175" height="96" rx="6" class="dg-box" />
+    <text x="34" y="76" class="dg-title">Pinned actions</text>
+    <text x="34" y="100" class="dg-detail">commit SHAs</text>
+    <text x="34" y="120" class="dg-detail">read only token</text>
+    <path d="M195 96 H213" class="dg-line dg-accent" marker-end="url(#ci-pipeline-stages-accent)" />
+
+    <rect x="215" y="48" width="175" height="96" rx="6" class="dg-box dg-emphasis" />
+    <text x="229" y="76" class="dg-title">Gradle build</text>
+    <text x="229" y="100" class="dg-detail">in the pinned JDK</text>
+    <text x="229" y="120" class="dg-detail">tests and rules</text>
+    <path d="M390 96 H408" class="dg-line dg-accent" marker-end="url(#ci-pipeline-stages-accent)" />
+
+    <rect x="410" y="48" width="175" height="96" rx="6" class="dg-box dg-emphasis" />
+    <text x="424" y="76" class="dg-title">Image</text>
+    <text x="424" y="100" class="dg-detail">docker buildx</text>
+    <text x="424" y="120" class="dg-detail">same Dockerfile</text>
+    <path d="M585 96 H603" class="dg-line dg-accent" marker-end="url(#ci-pipeline-stages-accent)" />
+
+    <rect x="605" y="48" width="175" height="96" rx="6" class="dg-box dg-emphasis" />
+    <text x="619" y="76" class="dg-title">Behaviour tests</text>
+    <text x="619" y="100" class="dg-detail">start the image</text>
+    <text x="619" y="120" class="dg-detail">check it from outside</text>
+    <path d="M780 96 H798" class="dg-line dg-dash" marker-end="url(#ci-pipeline-stages-arrow)" />
+
+    <rect x="800" y="48" width="180" height="96" rx="6" class="dg-box" />
+    <text x="814" y="76" class="dg-title">Publish</text>
+    <text x="814" y="100" class="dg-detail">push by digest</text>
+    <text x="814" y="120" class="dg-detail">SBOM, provenance</text>
+    <text x="814" y="162" class="dg-note">main branch only</text>
+
+    <text x="20" y="190" class="dg-note">proves: nobody swapped</text>
+    <text x="20" y="206" class="dg-note">the code that runs</text>
+    <text x="215" y="190" class="dg-note">proves: it compiles</text>
+    <text x="215" y="206" class="dg-note">and the tests pass</text>
+    <text x="410" y="190" class="dg-note">proves: the service</text>
+    <text x="410" y="206" class="dg-note">packages</text>
+    <text x="605" y="190" class="dg-note">proves: what you ship</text>
+    <text x="605" y="206" class="dg-note">really runs</text>
+    <text x="800" y="190" class="dg-note">proves to others: where</text>
+    <text x="800" y="206" class="dg-note">the image came from</text>
+
+    <path d="M375 144 V292" class="dg-line dg-fail" marker-end="url(#ci-pipeline-stages-fail)" />
+    <path d="M570 144 V292" class="dg-line dg-fail" marker-end="url(#ci-pipeline-stages-fail)" />
+    <path d="M765 144 V292" class="dg-line dg-fail" marker-end="url(#ci-pipeline-stages-fail)" />
+    <rect x="215" y="294" width="565" height="62" rx="6" class="dg-box dg-fail" />
+    <text x="231" y="320" class="dg-title">✕ Any stage fails</text>
+    <text x="231" y="342" class="dg-detail">the run stops and nothing is published</text>
+    <text x="215" y="384" class="dg-note">test reports still upload, with if: always()</text>
+  </svg>
+</Diagram>

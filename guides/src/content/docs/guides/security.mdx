@@ -34,6 +34,9 @@ guide:
     - id: SEC-Q8
       text: "How locked down should the pod be?"
       answeredIn: sec-pod-hardening
+    - id: SEC-Q9
+      text: "Where should TLS end and how do I add mTLS?"
+      answeredIn: sec-tls
   sources:
     - title: "08 · Security hardening"
       origin: spring-boot-production-guides/08-security-hardening.md
@@ -347,6 +350,62 @@ uses 8080 and 8081.
   app only.
 - Your cluster's network plugin does not enforce NetworkPolicy: the policies then do nothing, without an error.
 
+<a id="sec-tls"></a>
+
+## 9. Where should TLS end and how do I add mTLS?
+
+**In short:** end TLS at the ingress for most services. When traffic must be encrypted all the way to the pod or a
+partner wants a client certificate, describe the certificates once as a Spring Boot SSL bundle.
+
+```yaml
+spring.ssl.bundle.pem.server:
+  reload-on-update: true
+  keystore:
+    certificate: file:/etc/tls/server/tls.crt
+    private-key: file:/etc/tls/server/tls.key
+server.ssl.bundle: server
+```
+
+### What's going on
+
+TLS is the lock on the connection. The real question is where the lock opens. Most clusters open it at the ingress
+and send plain HTTP to the pod over the private network, fenced by NetworkPolicies. Some rules or partners ask for
+more:
+
+| Option | When | Cost |
+| ------ | ---- | ---- |
+| End TLS at the ingress | The default for most services | Traffic inside the cluster is plain; forwarded headers must be right (step 5) |
+| TLS at the ingress and again in the pod | Rules require encryption everywhere | A certificate per service to issue and renew |
+| Service mesh mTLS | Many services must prove who they are to each other | Running the mesh; the app stays on HTTP |
+| mTLS from the app | A partner API requires a client certificate | Renewing the client certificate is your job |
+
+An SSL bundle is a named set of certificates and keys. You define it once and use it by name: `server.ssl.bundle`
+for the web server, `spring.http.clients.ssl.bundle` for every HTTP client or
+`spring.http.serviceclient.<group>.ssl.bundle` for one downstream group.
+
+Renewal is the catch. With `reload-on-update: true`, Spring Boot reloads a bundle when its files change. Only
+the Tomcat and Netty web servers pick up the new bundle. The HTTP clients build their TLS setup once, so a renewed
+client certificate reaches them only when the pod restarts.
+
+### Do this
+
+1. Write down where TLS ends for the service: at the ingress, in the pod or in a mesh.
+2. For TLS in the pod, define a PEM bundle from the mounted certificate files, set `server.ssl.bundle` and
+   `reload-on-update: true` and limit protocols with `options.enabled-protocols: TLSv1.3`.
+3. Require client certificates on the server (`server.ssl.client-auth: need`) only when every caller has one.
+4. For mTLS to a partner, define a bundle with your client certificate and the partner's CA in
+   `truststore.certificate`. Set it on that client group only.
+5. Mount the certificate Secret as a directory, never with `subPath`, so renewed files reach the pod. Roll the
+   pods when a client certificate changes. Renew well before expiry so the old one is still valid during the
+   rollout.
+
+### When this is not for you
+
+- A service mesh already encrypts and authenticates the traffic between pods: keep the app on plain HTTP and let the
+  mesh own the certificates.
+- TLS passthrough to the pod removes routing and the web application firewall at the edge: use it only when the
+  certificate must end in the app.
+
 ## Put it all together
 
 The steps land in three places: the image, the application and the Deployment.
@@ -371,12 +430,14 @@ pod can run with `runAsNonRoot` (step 8).
   to 5).
 - `spring.mvc.problemdetails.enabled: true` and a handler for every other exception with a fixed text (step 6).
 - A separate client with `InetAddressFilter.externalAddresses()` for URLs that users supply (step 7).
+- An SSL bundle with `server.ssl.bundle` when TLS ends in the pod or on one client group for mTLS (step 9).
 
 ### In the Deployment
 
 - The pod and container security context from step 8, with an `emptyDir` at `/tmp`.
 - `server.tomcat.remoteip.internal-proxies` set to the ingress addresses (step 5).
 - The namespace label for `restricted` and a NetworkPolicy that denies by default, with explicit allows (step 8).
+- The certificate Secret mounted as a directory when TLS ends in the pod (step 9).
 - `ENTRA_TENANT_ID` and `API_CLIENT_ID` from each environment's configuration. They are not secrets (step 1).
 
 ## Checklist

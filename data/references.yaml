@@ -885,7 +885,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Observability, OpenTelemetry section (anchor verified)."
-    guides: ["observability"]
+    guides: ["observability", "local-development"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1089,7 +1089,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Testcontainers support."
-    guides: ["database"]
+    guides: ["database", "jpa-and-jooq", "local-development", "testing"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1106,7 +1106,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)."
-    guides: ["database"]
+    guides: ["database", "jpa-and-jooq"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: null
@@ -1174,7 +1174,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Gradle plugin."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1225,7 +1225,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned (minor); checked: 200 via redirect."
     expect: "7.0.9"
     purpose: "Reference."
-    guides: ["http-clients"]
+    guides: ["http-clients", "rest-apis"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1291,7 +1291,7 @@ entries:
     pinNote: "Spring Data JDBC 4.1.1 ships in the Spring Data 2026.0.1 train that Boot manages. Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Spring Data Relational reference."
-    guides: ["database"]
+    guides: ["database", "jpa-and-jooq"]
     appliesWhen: {persistence: ["jdbc"]}
     jep: null
     llms: null
@@ -1308,7 +1308,7 @@ entries:
     pinNote: "Spring Data JDBC 4.1.1 ships in the Spring Data 2026.0.1 train that Boot manages. Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "JDBC section."
-    guides: ["database"]
+    guides: ["database", "jpa-and-jooq"]
     appliesWhen: {persistence: ["jdbc"]}
     jep: null
     llms: null
@@ -1460,7 +1460,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "2.1.1"
     purpose: "Reference."
-    guides: []
+    guides: ["architecture"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1477,7 +1477,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "2.1.1"
     purpose: "Fundamentals."
-    guides: []
+    guides: ["architecture", "architecture-styles"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1494,7 +1494,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "2.1.1"
     purpose: "Verifying module structure."
-    guides: []
+    guides: ["architecture", "architecture-styles", "testing"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1528,7 +1528,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "2.1.1"
     purpose: "Integration testing modules."
-    guides: []
+    guides: ["architecture", "testing"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1595,7 +1595,7 @@ entries:
     pinned: true
     pinNote: "jmolecules-ddd 2.0.1 is what jmolecules-bom 2025.0.2 manages. Status on 2026-10-17: pinned; checked: 200."
     purpose: "jMolecules repo at release tag."
-    guides: []
+    guides: ["architecture"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1643,7 +1643,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "jmolecules-archunit at tag."
-    guides: []
+    guides: ["architecture", "architecture-styles", "testing"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1675,7 +1675,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned (always latest; currently states 1.5.1); checked: 200."
     purpose: "ArchUnit user guide."
-    guides: []
+    guides: ["architecture", "architecture-styles", "testing"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1803,7 +1803,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned (major); checked: 200 (\"PostgreSQL 18.6 Documentation\")."
     purpose: "Documentation."
-    guides: ["database"]
+    guides: ["database", "local-development"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: null
@@ -1883,7 +1883,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned (site serves latest only); checked: 200."
     purpose: "Testcontainers for Java docs."
-    guides: ["database"]
+    guides: ["database", "jpa-and-jooq", "local-development", "testing"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1899,7 +1899,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Postgres module."
-    guides: ["database"]
+    guides: ["database", "local-development", "testing"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: null
@@ -1915,7 +1915,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "JUnit 5 quickstart."
-    guides: []
+    guides: ["testing"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1947,7 +1947,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Release 2.0.5."
-    guides: []
+    guides: ["testing"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2155,7 +2155,7 @@ entries:
     pinned: false
     pinNote: "OpenTelemetry specification 1.61.0; not tied to a stack pin. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "OTel specification."
-    guides: ["observability"]
+    guides: ["observability", "nextjs"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://opentelemetry.io/llms.txt"}
@@ -2299,7 +2299,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Best practices."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
@@ -2315,7 +2315,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Version catalogs."
-    guides: []
+    guides: ["build-quality", "monorepo"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
@@ -2331,7 +2331,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Sharing build logic (buildSrc)."
-    guides: []
+    guides: ["monorepo"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
@@ -2379,7 +2379,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Toolchains."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
@@ -2427,7 +2427,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Dependency verification."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
@@ -2459,7 +2459,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Convention plugins."
-    guides: []
+    guides: ["monorepo"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
@@ -2475,7 +2475,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Best practices for structuring builds."
-    guides: []
+    guides: ["monorepo"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
@@ -2491,7 +2491,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Composite builds (included build-logic)."
-    guides: []
+    guides: ["monorepo"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt"}
@@ -2523,7 +2523,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect (lands on `/docs/concepts/workloads/pods/probes/` on the same v1-36 host)."
     purpose: "Probes (concept)."
-    guides: ["jvm-in-containers", "kubernetes-deployment"]
+    guides: ["jvm-in-containers", "kubernetes-deployment", "nextjs"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2539,7 +2539,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Configure liveness/readiness/startup probes (task)."
-    guides: ["jvm-in-containers", "kubernetes-deployment"]
+    guides: ["jvm-in-containers", "kubernetes-deployment", "grpc"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2555,7 +2555,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Pod Security Standards."
-    guides: ["security"]
+    guides: ["security", "nextjs"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2651,7 +2651,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Pod lifecycle (graceful termination)."
-    guides: ["jvm-in-containers", "kubernetes-deployment"]
+    guides: ["jvm-in-containers", "kubernetes-deployment", "nextjs"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2763,7 +2763,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "OpenAPI Specification v3.1.2 (latest 3.1 patch)."
-    guides: []
+    guides: ["nextjs", "rest-apis"]
     appliesWhen: {api: ["rest"]}
     jep: null
     llms: null
@@ -2795,7 +2795,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned (site = latest); checked: 200."
     purpose: "openapi-generator Spring generator."
-    guides: []
+    guides: ["rest-apis"]
     appliesWhen: {api: ["rest"]}
     jep: null
     llms: null
@@ -2811,7 +2811,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Spring generator doc at tag."
-    guides: []
+    guides: ["rest-apis"]
     appliesWhen: {api: ["rest"]}
     jep: null
     llms: null
@@ -2827,7 +2827,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Gradle plugin README at tag."
-    guides: []
+    guides: ["rest-apis"]
     appliesWhen: {api: ["rest"]}
     jep: null
     llms: null
@@ -2859,7 +2859,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Release v7.26.0."
-    guides: []
+    guides: ["rest-apis"]
     appliesWhen: {api: ["rest"]}
     jep: null
     llms: null
@@ -2875,7 +2875,7 @@ entries:
     pinned: true
     pinNote: "Final specification, not versioned with the stack. Status on 2026-10-17: pinned (final spec); checked: 200."
     purpose: "OpenID Connect Core 1.0 (errata set 2)."
-    guides: []
+    guides: ["nextjs"]
     appliesWhen: {auth: [true]}
     jep: null
     llms: null
@@ -2955,7 +2955,7 @@ entries:
     pinned: true
     pinNote: "Final specification, not versioned with the stack. Status on 2026-10-17: pinned; checked: 200."
     purpose: "RFC 9700 OAuth 2.0 Security BCP."
-    guides: ["security"]
+    guides: ["security", "nextjs"]
     appliesWhen: {auth: [true]}
     jep: null
     llms: null
@@ -2971,7 +2971,7 @@ entries:
     pinned: false
     pinNote: "GitHub documentation is unversioned. Status on 2026-10-17: not version-pinned (GitHub docs are unversioned); checked: 200."
     purpose: "Secure use reference (formerly \"Security hardening for GitHub Actions\"; the old URL redirects here)."
-    guides: []
+    guides: ["ci-pipelines"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.github.com/llms.txt"}
@@ -2987,7 +2987,7 @@ entries:
     pinned: false
     pinNote: "GitHub documentation is unversioned. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Reuse workflows (how-to)."
-    guides: []
+    guides: ["ci-pipelines", "monorepo"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.github.com/llms.txt"}
@@ -3003,7 +3003,7 @@ entries:
     pinned: false
     pinNote: "GitHub documentation is unversioned. Status on 2026-10-17: not version-pinned; checked: 200 (the old `/reusable-workflows` redirects here)."
     purpose: "Reusing workflow configurations (reference)."
-    guides: []
+    guides: ["monorepo"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.github.com/llms.txt"}
@@ -3019,7 +3019,7 @@ entries:
     pinned: false
     pinNote: "GitHub documentation is unversioned. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "OpenID Connect in Actions (keyless cosign)."
-    guides: ["container-image"]
+    guides: ["container-image", "ci-pipelines"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.github.com/llms.txt"}
@@ -3051,7 +3051,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "SLSA v1.2 Build track basics."
-    guides: []
+    guides: ["ci-pipelines"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3067,7 +3067,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "SLSA v1.2 Provenance."
-    guides: ["container-image"]
+    guides: ["container-image", "ci-pipelines"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3131,7 +3131,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "cosign: signing containers."
-    guides: ["container-image"]
+    guides: ["container-image", "ci-pipelines"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3147,7 +3147,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "cosign: verifying."
-    guides: ["container-image"]
+    guides: ["container-image", "ci-pipelines"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3211,7 +3211,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Syft CLI reference."
-    guides: ["container-image"]
+    guides: ["container-image", "ci-pipelines"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3291,7 +3291,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned (living docs); checked: 200."
     purpose: "Renovate docs."
-    guides: ["container-image"]
+    guides: ["container-image", "ci-pipelines"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3307,7 +3307,7 @@ entries:
     pinned: false
     pinNote: "Living documentation. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Renovate configuration options."
-    guides: ["container-image"]
+    guides: ["container-image", "build-quality", "ci-pipelines"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3323,7 +3323,7 @@ entries:
     pinned: false
     pinNote: "Living documentation. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Renovate Gradle manager."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3339,7 +3339,7 @@ entries:
     pinned: false
     pinNote: "Living documentation. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Renovate upgrade best practices."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3371,7 +3371,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "JSpecify user guide."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3403,7 +3403,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "JSpecify annotations javadoc 1.0.0."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3435,7 +3435,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "NullAway README at tag."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3451,7 +3451,7 @@ entries:
     pinned: false
     pinNote: "Wiki, not version-pinned. Status on 2026-10-17: not version-pinned (wiki); checked: 200."
     purpose: "NullAway JSpecify support (wiki)."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3483,7 +3483,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Error Prone docs."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3499,7 +3499,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Error Prone installation."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3515,7 +3515,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Error Prone bug patterns."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3547,7 +3547,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "gradle-errorprone-plugin (README)."
-    guides: []
+    guides: ["build-quality"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3579,7 +3579,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
     purpose: "Jakarta Persistence 3.2 specification (HTML)."
-    guides: []
+    guides: ["jpa-and-jooq"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3627,7 +3627,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned (minor); checked: 200 via redirect."
     purpose: "Hibernate ORM 7.4 user guide."
-    guides: []
+    guides: ["jpa-and-jooq"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3643,7 +3643,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
     purpose: "Hibernate ORM 7.4 introduction."
-    guides: []
+    guides: ["jpa-and-jooq"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3659,7 +3659,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
     purpose: "Hibernate ORM 7.4 migration guide."
-    guides: []
+    guides: ["jpa-and-jooq"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3691,7 +3691,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned (minor); checked: 200."
     purpose: "jOOQ manual."
-    guides: []
+    guides: ["jpa-and-jooq"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3707,7 +3707,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
     purpose: "jOOQ manual, single page."
-    guides: []
+    guides: ["jpa-and-jooq"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3723,7 +3723,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
     purpose: "Spring gRPC reference."
-    guides: []
+    guides: ["grpc"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3739,7 +3739,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
     purpose: "Spring gRPC getting started."
-    guides: []
+    guides: ["grpc"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3755,7 +3755,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
     purpose: "Spring Boot 4.1 gRPC (first-party in Boot 4.1)."
-    guides: []
+    guides: ["grpc"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3771,7 +3771,7 @@ entries:
     pinned: false
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "gRPC Java docs."
-    guides: []
+    guides: ["grpc"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3787,7 +3787,7 @@ entries:
     pinned: false
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "gRPC Java basics tutorial."
-    guides: []
+    guides: ["grpc"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3803,7 +3803,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 (the official `grpc.github.io/grpc-java/javadoc/` is latest = 1.85.0)."
     purpose: "grpc-api javadoc 1.83.1."
-    guides: []
+    guides: ["grpc"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3851,7 +3851,7 @@ entries:
     pinned: false
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Proto3 language guide."
-    guides: []
+    guides: ["grpc"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3899,7 +3899,7 @@ entries:
     pinned: false
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200 (the old `/programming-guides/dos-donts/` redirects here)."
     purpose: "Proto best practices (dos and don'ts)."
-    guides: []
+    guides: ["grpc"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3947,7 +3947,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned (minor); checked: 200 (`/42/documentation.html` is a legacy redirect stub; use `/42/`)."
     purpose: "Apache Kafka 4.2 docs."
-    guides: []
+    guides: ["kafka"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3979,7 +3979,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
     purpose: "Kafka 4.2 producer configs."
-    guides: []
+    guides: ["kafka"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4027,7 +4027,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
     purpose: "Spring for Apache Kafka reference."
-    guides: []
+    guides: ["kafka"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4059,7 +4059,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
     purpose: "Spring Boot Kafka support."
-    guides: []
+    guides: ["kafka"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4075,7 +4075,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned to 1.12.0 (latest release 1.12.2 has no published docs: `/docs/1.12.2/specification/` returns 404); checked: 200."
     purpose: "Apache Avro specification."
-    guides: []
+    guides: ["kafka"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4091,7 +4091,7 @@ entries:
     pinned: false
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Karapace docs."
-    guides: []
+    guides: ["kafka"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4123,7 +4123,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned (minor); checked: 200."
     purpose: "Debezium Outbox Event Router."
-    guides: []
+    guides: ["kafka"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4139,7 +4139,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200."
     purpose: "Debezium PostgreSQL connector."
-    guides: []
+    guides: ["kafka"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4171,7 +4171,7 @@ entries:
     pinned: false
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned (current = 4.3; older lines live at `/docs/4.2/...`; `/docs/4.3/` returns 404); checked: 200."
     purpose: "RabbitMQ docs."
-    guides: []
+    guides: ["rabbitmq"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4187,7 +4187,7 @@ entries:
     pinned: false
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "RabbitMQ quorum queues."
-    guides: []
+    guides: ["rabbitmq"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4203,7 +4203,7 @@ entries:
     pinned: false
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "RabbitMQ reliability guide."
-    guides: []
+    guides: ["rabbitmq"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4219,7 +4219,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
     purpose: "Spring AMQP reference."
-    guides: []
+    guides: ["rabbitmq"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4235,7 +4235,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
     purpose: "Spring Boot AMQP."
-    guides: []
+    guides: ["rabbitmq"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4251,7 +4251,7 @@ entries:
     pinned: false
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Valkey docs."
-    guides: []
+    guides: ["caching"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4315,7 +4315,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
     purpose: "Spring Data Redis reference."
-    guides: []
+    guides: ["caching"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4331,7 +4331,7 @@ entries:
     pinned: true
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: pinned; checked: 200 via redirect."
     purpose: "Spring Boot NoSQL (Redis)."
-    guides: []
+    guides: ["caching"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -4347,7 +4347,311 @@ entries:
     pinned: false
     pinNote: "Later release; not published with v0.1. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Lettuce reference."
-    guides: []
+    guides: ["caching"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: spring-framework-declarative-transactions
+    title: "Declarative transaction management"
+    component: "spring-framework"
+    docVersion: "7.0"
+    match: "minor"
+    kind: "reference"
+    area: "spring-framework"
+    url: "https://docs.spring.io/spring-framework/reference/7.0/data-access/transaction/declarative.html"
+    pinned: true
+    pinNote: "Status on 2026-10-18: pinned to 7.0; checked: 200."
+    purpose: "How @Transactional works and where to put it."
+    guides: ["architecture"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: architecture-cockburn-hexagonal
+    title: "Alistair Cockburn: Hexagonal architecture"
+    component: null
+    docVersion: "2005"
+    match: "none"
+    kind: "guide"
+    area: "architecture"
+    url: "https://alistair.cockburn.us/hexagonal-architecture/"
+    pinned: true
+    pinNote: "The original article, not versioned with the stack; checked 2026-10-18: 200."
+    purpose: "Ports and adapters as defined by its author."
+    guides: ["architecture", "architecture-styles"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: architecture-evans-ddd-reference
+    title: "Eric Evans: Domain-Driven Design Reference"
+    component: null
+    docVersion: "2015"
+    match: "none"
+    kind: "guide"
+    area: "architecture"
+    url: "https://www.domainlanguage.com/ddd/reference/"
+    pinned: true
+    pinNote: "The 2015 reference, not versioned with the stack; checked 2026-10-18: 200. The PDF it links holds Layered Architecture on page 10."
+    purpose: "Definitions and pattern summaries, including Layered Architecture."
+    guides: ["architecture-styles"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: architecture-palermo-onion
+    title: "Jeffrey Palermo: The Onion Architecture, part 1"
+    component: null
+    docVersion: "2008"
+    match: "none"
+    kind: "guide"
+    area: "architecture"
+    url: "https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/"
+    pinned: true
+    pinNote: "The original article, not versioned with the stack; checked 2026-10-18: 200."
+    purpose: "Onion Architecture as defined by its author: all coupling toward the center."
+    guides: ["architecture-styles"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: architecture-martin-clean
+    title: "Robert C. Martin: The Clean Architecture"
+    component: null
+    docVersion: "2012"
+    match: "none"
+    kind: "guide"
+    area: "architecture"
+    url: "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html"
+    pinned: true
+    pinNote: "The original article, not versioned with the stack; checked 2026-10-18: 200."
+    purpose: "The Dependency Rule: source code dependencies only point inwards."
+    guides: ["architecture-styles"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: architecture-bogard-vertical-slice
+    title: "Jimmy Bogard: Vertical Slice Architecture"
+    component: null
+    docVersion: "2018"
+    match: "none"
+    kind: "guide"
+    area: "architecture"
+    url: "https://www.jimmybogard.com/vertical-slice-architecture/"
+    pinned: true
+    pinNote: "The original article, not versioned with the stack; checked 2026-10-18: 200."
+    purpose: "Organising code by request: minimise coupling between slices."
+    guides: ["architecture-styles"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: architecture-fowler-presentation-domain-data
+    title: "Martin Fowler: Presentation Domain Data Layering"
+    component: null
+    docVersion: "2015"
+    match: "none"
+    kind: "guide"
+    area: "architecture"
+    url: "https://martinfowler.com/bliki/PresentationDomainDataLayering.html"
+    pinned: true
+    pinNote: "Bliki article, not versioned with the stack; checked 2026-10-18: 200."
+    purpose: "Layering by presentation, domain and data and when to split into domain oriented modules."
+    guides: ["architecture-styles"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: architecture-fowler-gui-architectures
+    title: "Martin Fowler: GUI Architectures"
+    component: null
+    docVersion: "2006"
+    match: "none"
+    kind: "guide"
+    area: "architecture"
+    url: "https://martinfowler.com/eaaDev/uiArchs.html"
+    pinned: true
+    pinNote: "Article, not versioned with the stack; checked 2026-10-18: 200."
+    purpose: "MVC and Separated Presentation explained."
+    guides: ["architecture-styles"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: ["v0.1-b1"]
+  - id: database-spring-data-jpa-projections
+    title: "Spring Data JPA: projections"
+    component: "spring-data"
+    docVersion: "4.1"
+    match: "none"
+    kind: "reference"
+    area: "spring-data"
+    url: "https://docs.spring.io/spring-data/jpa/reference/4.1/repositories/projections.html"
+    pinned: true
+    pinNote: "Spring Data JPA 4.1.1 is the module version in the 2026.0.1 release train, so the docs follow the module version, not the train. Later release; not published with v0.1. Status on 2026-10-18: checked: 200."
+    purpose: "Interface and class based projections for reads that skip entity loading."
+    guides: ["jpa-and-jooq"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-spring-data-jpa-query-methods
+    title: "Spring Data JPA: JPA query methods"
+    component: "spring-data"
+    docVersion: "4.1"
+    match: "none"
+    kind: "reference"
+    area: "spring-data"
+    url: "https://docs.spring.io/spring-data/jpa/reference/4.1/jpa/query-methods.html"
+    pinned: true
+    pinNote: "Spring Data JPA 4.1.1 is the module version in the 2026.0.1 release train. Later release; not published with v0.1. Status on 2026-10-18: checked: 200."
+    purpose: "Query methods, @Query and fetch plans on repository methods."
+    guides: ["jpa-and-jooq"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-jooq-codegen-gradle
+    title: "jOOQ manual: running the code generator with Gradle"
+    component: null
+    docVersion: "3.21.7"
+    match: "none"
+    kind: "reference"
+    area: "database"
+    url: "https://www.jooq.org/doc/3.21/manual/code-generation/codegen-gradle/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-18: pinned (minor); checked: 200."
+    purpose: "The official org.jooq.jooq-codegen-gradle plugin."
+    guides: ["jpa-and-jooq"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-jooq-codegen-liquibase
+    title: "jOOQ manual: LiquibaseDatabase (deprecated in 3.21.0)"
+    component: null
+    docVersion: "3.21.7"
+    match: "none"
+    kind: "reference"
+    area: "database"
+    url: "https://www.jooq.org/doc/3.21/manual/code-generation/codegen-liquibase/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Status on 2026-10-18: pinned (minor); checked: 200."
+    purpose: "Why generation from Liquibase files is deprecated and Testcontainers is recommended instead."
+    guides: ["jpa-and-jooq"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: database-jooq-blog-testcontainers-codegen
+    title: "jOOQ blog: using Testcontainers to generate jOOQ code"
+    component: null
+    docVersion: "3.21.7"
+    match: "none"
+    kind: "guide"
+    area: "database"
+    url: "https://blog.jooq.org/using-testcontainers-to-generate-jooq-code/"
+    pinned: false
+    pinNote: "Not version-pinned; the 3.21 manual links it as the recommended replacement. Later release; not published with v0.1. Status on 2026-10-18: checked: 200."
+    purpose: "Migrating a container database and generating jOOQ classes from it."
+    guides: ["jpa-and-jooq"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-spring-kafka-error-handling
+    title: "Spring for Apache Kafka: handling exceptions"
+    component: null
+    docVersion: "4.1"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://docs.spring.io/spring-kafka/reference/4.1/kafka/annotation-error-handling.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Checked on 2026-10-18: 200."
+    purpose: "DefaultErrorHandler defaults, fatal exceptions, DeadLetterPublishingRecoverer and the <topic>-dlt naming."
+    guides: ["kafka"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-spring-kafka-listener-container
+    title: "Spring for Apache Kafka: message listener containers"
+    component: null
+    docVersion: "4.1"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://docs.spring.io/spring-kafka/reference/4.1/kafka/receiving-messages/message-listener-container.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Checked on 2026-10-18: 200."
+    purpose: "Committing offsets: auto commit off by default and the default AckMode BATCH."
+    guides: ["kafka"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-spring-kafka-retry-topics
+    title: "Spring for Apache Kafka: non-blocking retries"
+    component: null
+    docVersion: "4.1"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://docs.spring.io/spring-kafka/reference/4.1/retrytopic.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Checked on 2026-10-18: 200."
+    purpose: "Retry topics that wait without blocking the partition."
+    guides: ["kafka"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-kafka-4-2-basic-operations
+    title: "Kafka 4.2 basic operations"
+    component: null
+    docVersion: "4.2"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://kafka.apache.org/42/operations/basic-kafka-operations/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Checked on 2026-10-18: 200."
+    purpose: "kafka-consumer-groups.sh and resetting offsets to a point in time."
+    guides: ["kafka"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-kafka-4-2-monitoring
+    title: "Kafka 4.2 monitoring"
+    component: null
+    docVersion: "4.2"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://kafka.apache.org/42/operations/monitoring/"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Checked on 2026-10-18: 200."
+    purpose: "Consumer metrics such as records-lag-max."
+    guides: ["kafka"]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: []
+  - id: messaging-postgresql-18-replication-settings
+    title: "PostgreSQL 18 replication settings"
+    component: null
+    docVersion: "18"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://www.postgresql.org/docs/18/runtime-config-replication.html"
+    pinned: true
+    pinNote: "Later release; not published with v0.1. Checked on 2026-10-18: 200."
+    purpose: "max_slot_wal_keep_size and other limits on replication slots."
+    guides: ["kafka"]
     appliesWhen: {}
     jep: null
     llms: null

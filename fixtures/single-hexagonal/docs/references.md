@@ -101,6 +101,7 @@ Official documentation for this project's versions (baseline v0.1-b1), filtered 
 | [Null-safety (JSpecify in Spring 7)](https://docs.spring.io/spring-framework/reference/7.0/core/null-safety.html) | 7.0.9 (docs 7.0) | pinned | Null-safety (JSpecify in Spring 7). |
 | [Javadoc](https://docs.spring.io/spring-framework/docs/7.0.9/javadoc-api/) | 7.0.9 | pinned | Javadoc. |
 | [7.0 release notes (wiki, also covers upgrading)](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes) | 7.0.9 (docs 7.0) | pinned | 7.0 release notes (wiki, also covers upgrading). |
+| [Declarative transaction management](https://docs.spring.io/spring-framework/reference/7.0/data-access/transaction/declarative.html) | 7.0.9 (docs 7.0) | pinned | How @Transactional works and where to put it. |
 
 ## Spring Data
 
@@ -144,6 +145,13 @@ Official documentation for this project's versions (baseline v0.1-b1), filtered 
 | [jmolecules-integrations repo](https://github.com/xmolecules/jmolecules-integrations) | 0.33.0 (docs main) | not version-pinned | jmolecules-integrations repo. |
 | [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html) | 1.5.1 | not version-pinned | ArchUnit user guide. |
 | [ArchUnit release 1.5.1](https://github.com/TNG/ArchUnit/releases/tag/v1.5.1) | 1.5.1 | pinned | ArchUnit release 1.5.1. |
+| [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/) | 2005 | pinned | Ports and adapters as defined by its author. |
+| [Eric Evans: Domain-Driven Design Reference](https://www.domainlanguage.com/ddd/reference/) | 2015 | pinned | Definitions and pattern summaries, including Layered Architecture. |
+| [Jeffrey Palermo: The Onion Architecture, part 1](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/) | 2008 | pinned | Onion Architecture as defined by its author: all coupling toward the center. |
+| [Robert C. Martin: The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) | 2012 | pinned | The Dependency Rule: source code dependencies only point inwards. |
+| [Jimmy Bogard: Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/) | 2018 | pinned | Organising code by request: minimise coupling between slices. |
+| [Martin Fowler: Presentation Domain Data Layering](https://martinfowler.com/bliki/PresentationDomainDataLayering.html) | 2015 | pinned | Layering by presentation, domain and data and when to split into domain oriented modules. |
+| [Martin Fowler: GUI Architectures](https://martinfowler.com/eaaDev/uiArchs.html) | 2006 | pinned | MVC and Separated Presentation explained. |
 
 ## Liquibase, PostgreSQL, pgJDBC
 

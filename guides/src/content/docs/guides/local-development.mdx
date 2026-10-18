@@ -1,0 +1,350 @@
+---
+title: Local development
+description: A fast local loop for a Spring Boot 4.1 service, with the real database and telemetry running next to it.
+tableOfContents: { maxHeadingLevel: 2 }
+guide:
+  id: local-development
+  prefix: LOCAL
+  state: draft
+  baseline: v0.1-b1
+  components: [java, spring-boot, testcontainers, postgres-image, otel-lgtm-image, liquibase]
+  verification: null
+  questions:
+    - id: LOCAL-Q1
+      text: "Why run real dependencies instead of mocks?"
+      answeredIn: local-real-deps
+    - id: LOCAL-Q2
+      text: "How do I start the dependencies with the app?"
+      answeredIn: local-compose
+    - id: LOCAL-Q3
+      text: "Can I declare the containers in Java instead?"
+      answeredIn: local-testcontainers
+    - id: LOCAL-Q4
+      text: "How do I see traces, metrics and logs on my laptop?"
+      answeredIn: local-telemetry
+    - id: LOCAL-Q5
+      text: "How do I keep local settings close to production?"
+      answeredIn: local-same-config
+    - id: LOCAL-Q6
+      text: "How do I get fast restarts while I code?"
+      answeredIn: local-devtools
+    - id: LOCAL-Q7
+      text: "How do I get useful data into the local database?"
+      answeredIn: local-seed-data
+    - id: LOCAL-Q8
+      text: "When is a local Kubernetes worth it?"
+      answeredIn: local-kubernetes
+---
+import GuideStatus from '../../../components/GuideStatus.astro';
+import Recipe from '../../../components/Recipe.astro';
+import Checklist from '../../../components/Checklist.astro';
+import GuideReferences from '../../../components/GuideReferences.astro';
+import DiagramLegend from '../../../components/DiagramLegend.astro';
+import LocalLoopDiagram from '../../../components/diagrams/LocalLoopDiagram.astro';
+
+A new developer clones the service and asks how to run it. The answer is a wiki page from last year: install
+PostgreSQL by hand, copy a properties file from a colleague and do not worry about the failing tests. Two days
+later they are still not sure their laptop behaves like production.
+
+This guide builds a local loop that starts in one command: the real database and a telemetry backend in
+containers, wired to the app by Spring Boot, with the same settings as the cluster and restarts in seconds.
+
+<GuideStatus guide="local-development" />
+
+<a id="local-real-deps"></a>
+
+## 1. Why run real dependencies instead of mocks?
+
+**In short:** run the PostgreSQL version production runs, in a container. Save mocks for unit tests.
+
+```text
+postgres:18.6
+```
+
+### What's going on
+
+A mock answers whatever you told it to answer. An embedded database like H2 speaks its own SQL, with its own
+types, locks and error messages. Both make the laptop agree with you, which is the opposite of what you want
+from it.
+
+Think of a flight simulator built from a different plane. You learn the wrong buttons and you find out on the
+first real flight. A container with the real database costs a few seconds to start and removes a whole class of
+"works on my machine" bugs.
+
+### Do this
+
+1. Run your real dependencies in containers: PostgreSQL first, then anything else the service calls.
+2. Use the image and version that production runs. Baseline v0.1-b1 pins `postgres:18.6`.
+3. Keep mocks for unit tests of your own code, where they belong.
+
+### When this is not for you
+
+- A library or a pure domain module with no database: it needs no containers at all.
+- Your laptop cannot run containers: use a shared development database and accept that it drifts.
+
+<a id="local-compose"></a>
+
+## 2. How do I start the dependencies with the app?
+
+**In short:** add Spring Boot's Docker Compose support and a `compose.yml`. Boot starts the containers and wires
+the connections for you.
+
+```kotlin
+developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+```
+
+### What's going on
+
+When this module is on the class path, Spring Boot looks for a `compose.yml` in the working directory, runs
+`docker compose up` when the app starts and `docker compose stop` when it shuts down. For every container it
+recognises, such as `postgres` or `grafana/otel-lgtm`, it creates a service connection: the URL, user and
+password come from the container, so your config needs none of them.
+
+If the containers are already running, Boot only connects to them. It needs the Docker Compose CLI, version
+2.2.0 or later.
+
+<LocalLoopDiagram />
+<DiagramLegend items={['recommended', 'context', 'optional', 'failure']} />
+
+### Do this
+
+1. Add `spring-boot-docker-compose` as `developmentOnly`, so it never reaches the production jar.
+2. Put a `compose.yml` next to the app with the database. Boot reads `POSTGRES_USER`, `POSTGRES_PASSWORD` and
+   `POSTGRES_DB` from the container's environment:
+
+   ```yaml
+   services:
+     postgres:
+       image: postgres:18.6
+       environment:
+         POSTGRES_USER: app
+         POSTGRES_PASSWORD: local
+         POSTGRES_DB: app
+       ports:
+         - "5432"
+   ```
+
+3. Add a `healthcheck` to each service. Without one, Boot only waits until the port accepts a connection.
+4. Set `spring.docker.compose.lifecycle-management: start-only` if you want the containers to keep running
+   between restarts.
+
+### When this is not for you
+
+- You prefer to keep container setup in Java: see step 3. Pick one of the two, not both.
+- Tests skip Docker Compose by default (`spring.docker.compose.skip.in-tests`). Tests use Testcontainers.
+
+<a id="local-testcontainers"></a>
+
+## 3. Can I declare the containers in Java instead?
+
+**In short:** yes. Declare them as beans with `@ServiceConnection` in a test configuration and start the app
+from a small launcher in `src/test`.
+
+```java
+SpringApplication.from(Application::main).with(LocalContainers.class).run(args);
+```
+
+### What's going on
+
+Testcontainers gives you the same containers as a `compose.yml`, written in Java. Spring Boot can use them at
+development time, not only in tests: a launcher class in `src/test` starts the real app with the test class path,
+so it sees your container beans.
+
+The containers then live in the same code as your integration tests. One definition starts the database for the
+test suite and for the app you click through.
+
+### Do this
+
+1. Create a `@TestConfiguration` with a `@Bean @ServiceConnection` method per container, such as a
+   `PostgreSQLContainer` (in Testcontainers 2.0.5 it lives in `org.testcontainers.postgresql`).
+2. Create `TestApplication` in `src/test` with the line above.
+3. Run it with `./gradlew bootTestRun` or as a normal main class from the IDE.
+
+### When this is not for you
+
+- Teammates who are not Java developers need to start the stack: a `compose.yml` is easier to share.
+- You already use Docker Compose support: keep one way to start containers.
+
+<a id="local-telemetry"></a>
+
+## 4. How do I see traces, metrics and logs on my laptop?
+
+**In short:** run the `grafana/otel-lgtm` image. One container gives you a collector, Tempo, Loki, Prometheus and
+Grafana.
+
+```text
+grafana/otel-lgtm:0.37.0
+```
+
+### What's going on
+
+Observability that you only see in production gets fixed in production. The `grafana/otel-lgtm` image packs a
+whole backend in one container, built for development, demos and tests. It accepts OTLP on port 4318 and serves
+Grafana on port 3000, with the user `admin` and the password `admin`.
+
+Spring Boot recognises the image in a `compose.yml` and as `LgtmStackContainer` with Testcontainers, so traces,
+metrics and logs flow without any endpoint in your config. The same pipeline as in the
+[observability guide](/guides/observability/), on your laptop.
+
+### Do this
+
+1. Add `grafana/otel-lgtm:0.37.0` to your `compose.yml` or an `LgtmStackContainer` bean to your test
+   configuration.
+2. Start the app and send a request.
+3. Open Grafana on `http://localhost:3000` and find the request's trace, then its log lines by trace ID.
+
+### When this is not for you
+
+- Never in production or shared environments: the image says so itself. Production sends OTLP to a real
+  collector.
+- Data is lost when the container goes away. Mount a volume on `/data` only if you really need to keep it.
+
+<a id="local-same-config"></a>
+
+## 5. How do I keep local settings close to production?
+
+**In short:** use the same property keys everywhere, with local defaults in `application.yaml` and change values
+with environment variables.
+
+```yaml
+deployment.environment.name: ${DEPLOYMENT_ENVIRONMENT:local}
+```
+
+### What's going on
+
+A separate local profile full of different keys slowly becomes a second application. It works on the laptop and
+hides the settings production depends on.
+
+Two things keep the gap small. Service connections from steps 2 to 4 take precedence over connection properties,
+so local URLs never enter your files. And a placeholder with a default, like the line above, gives every key a
+safe local value that the cluster overrides through an environment variable.
+
+### Do this
+
+1. Write every setting once in `application.yaml`, with a local default when the value differs by environment.
+2. Override values with environment variables locally and in the cluster, the same way.
+3. Keep secrets out of the repository, even local ones that look harmless.
+4. Read the [configuration guide](/guides/configuration/) for how sources stack and which one wins.
+
+### When this is not for you
+
+- A value that only makes sense locally, such as a debug log level for one package: a small `local` profile is
+  fine, as long as it holds only that.
+
+<a id="local-devtools"></a>
+
+## 6. How do I get fast restarts while I code?
+
+**In short:** add `spring-boot-devtools` as `developmentOnly`. The app restarts on its own each time you compile.
+
+```kotlin
+developmentOnly("org.springframework.boot:spring-boot-devtools")
+```
+
+### What's going on
+
+Stopping and starting a Spring Boot app by hand breaks your flow many times an hour. Devtools watches the class
+path and restarts the app when a compiled class changes. It uses two class loaders, so only your code is
+reloaded and the restart is much faster than a cold start.
+
+Devtools turns itself off when the app runs with `java -jar`, so a packaged image never restarts by surprise.
+
+### Do this
+
+1. Add the dependency as `developmentOnly`.
+2. Compile to trigger a restart: build the project in IntelliJ IDEA or save the file in Eclipse.
+3. With Testcontainers from step 3, mark container beans with `@RestartScope`, so a restart keeps the database
+   running. Use `testAndDevelopmentOnly` for devtools so `bootTestRun` picks it up.
+
+### When this is not for you
+
+- Class loading errors in a project with many modules: disable restart and check whether they go away.
+- LiveReload, the browser refresh, is deprecated as of Spring Boot 4.1.0. Do not build on it.
+
+<a id="local-seed-data"></a>
+
+## 7. How do I get useful data into the local database?
+
+**In short:** add sample data as Liquibase changesets with a `dev` context and give every other environment a
+context that never includes `dev`.
+
+```yaml
+spring.liquibase.contexts: dev
+```
+
+### What's going on
+
+An empty database makes every screen look broken, so people insert rows by hand and lose them on the next reset.
+Liquibase can keep sample data next to the schema changes, mark it with a context and insert it only where you
+ask for it.
+
+The trap: when no context is set, Liquibase runs every changeset, including the ones marked `dev`. So the safe
+default is the other way round: every environment names its context and only local names `dev`.
+
+### Do this
+
+1. Put sample data in changesets with `context: dev`.
+2. Locally, set `spring.liquibase.contexts: dev`.
+3. In every other environment, set a context such as `prod`, so the `dev` changesets are skipped. Changesets
+   without a context still run everywhere.
+4. Keep sample data small and fake. Never copy production data to a laptop.
+
+### When this is not for you
+
+- Tests that need specific rows: create them in the test itself, so each test shows what it depends on.
+
+<a id="local-kubernetes"></a>
+
+## 8. When is a local Kubernetes worth it?
+
+**In short:** only when you are testing Kubernetes behaviour itself: manifests, probes, secrets or ingress. For
+daily coding, containers next to the app are faster.
+
+### What's going on
+
+A local cluster adds minutes to every change: build the image, load it, roll it out. That is a high price for
+editing a controller. But some bugs only exist in a cluster: a probe on the wrong port, a Secret mounted at the
+wrong path, a NetworkPolicy that blocks the database.
+
+The [Pyahu CLI](https://cli.pyahu.io) can start your dependencies in a local k3d cluster from one project file,
+with the Ingresses, Secrets and volumes a real cluster has. It is most useful when a project has several
+dependencies.
+
+### Do this
+
+1. Code and test against containers from steps 2 to 4.
+2. Before you change manifests, run the service in a local cluster once and check probes, mounts and policies.
+3. Keep the manifests the same as the real ones; see [Kubernetes manifests](/guides/kubernetes-manifests/).
+
+### When this is not for you
+
+- All you need is a disposable database: one container is simpler than a cluster.
+
+## Put it all together
+
+The repository's example service already follows step 5. The rest you add next to it.
+
+### Settings with local defaults
+
+The fixture's `application.yaml` names the service and its environment with local defaults that the cluster
+overrides through environment variables (step 5).
+
+<Recipe id="local-resource-attributes" path="fixtures/single-hexagonal/src/main/resources/application.yaml" start="opentelemetry:" end="deployment.environment.name:" lang="yaml" />
+
+**Check it:** start the service with `-e DEPLOYMENT_ENVIRONMENT=dev`, send a request and look at the trace's
+resource attributes: `deployment.environment.name` is `dev`, not `local`.
+
+### Next to the service
+
+- A `compose.yml` with `postgres:18.6` and `grafana/otel-lgtm:0.37.0`, each with a healthcheck (steps 1, 2
+  and 4).
+- `spring-boot-docker-compose` and `spring-boot-devtools` as `developmentOnly` (steps 2 and 6).
+- Sample data in Liquibase changesets with `context: dev` and a non `dev` context everywhere else (step 7).
+
+## Checklist
+
+<Checklist guide="local-development" />
+
+## References
+
+<GuideReferences guide="local-development" />

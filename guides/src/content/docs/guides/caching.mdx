@@ -1,0 +1,345 @@
+---
+title: Caching with Valkey
+description: When a cache helps a Spring Boot 4.1 service and how to run one on Valkey with TTLs, safe keys, fresh data and a plan for when it goes down.
+tableOfContents: { maxHeadingLevel: 2 }
+guide:
+  id: caching
+  prefix: CACHE
+  state: draft
+  baseline: v0.1-b1
+  components: [spring-boot, spring-data, spring-framework, micrometer]
+  verification: null
+  questions:
+    - id: CACHE-Q1
+      text: "Do I need a cache and where should it live?"
+      answeredIn: cache-when
+    - id: CACHE-Q2
+      text: "Should I use @Cacheable or write the cache code myself?"
+      answeredIn: cache-abstraction
+    - id: CACHE-Q3
+      text: "How long should an entry live?"
+      answeredIn: cache-ttl
+    - id: CACHE-Q4
+      text: "How should I name keys and store values?"
+      answeredIn: cache-keys
+    - id: CACHE-Q5
+      text: "How do I keep the cache in step with the database?"
+      answeredIn: cache-consistency
+    - id: CACHE-Q6
+      text: "What happens when a popular entry expires?"
+      answeredIn: cache-stampede
+    - id: CACHE-Q7
+      text: "What if Valkey is slow or down?"
+      answeredIn: cache-degraded
+    - id: CACHE-Q8
+      text: "How much memory does the cache get and what should I watch?"
+      answeredIn: cache-memory
+---
+import GuideStatus from '../../../components/GuideStatus.astro';
+import Checklist from '../../../components/Checklist.astro';
+import GuideReferences from '../../../components/GuideReferences.astro';
+import DiagramLegend from '../../../components/DiagramLegend.astro';
+import CacheAsideDiagram from '../../../components/diagrams/CacheAsideDiagram.astro';
+
+The product page got slow, so someone added a cache. It was fast for a week. Then a price change took an hour to
+show up and a deploy filled the cache with values the new code could not read. The day Valkey restarted, every pod
+hammered the database at once.
+
+A cache is a copy of data that can be wrong, missing or gone at any moment. This guide shows how to add one to a
+Spring Boot 4.1 service on Valkey so that it stays a speed boost and never becomes the reason the service is down.
+
+<GuideStatus guide="caching" />
+
+<a id="cache-when"></a>
+
+## 1. Do I need a cache and where should it live?
+
+**In short:** cache data that is read far more often than it changes and is slow to get. Fix slow queries first
+and start with a local cache unless several pods must see the same value.
+
+### What's going on
+
+A cache is like keeping a photocopy of a document on your desk instead of walking to the archive each time. It
+saves a lot of walking, as long as the document rarely changes and nobody minds an old copy for a while.
+
+It is the wrong tool for a query that is slow because an index is missing. The cache hides the problem until the
+first miss, the first restart or the first new key and then the slow query is back at the worst moment.
+
+There are two places to keep the copy. A local cache such as Caffeine lives in each pod's heap: no network but
+every pod has its own copy and its own misses. A shared cache such as Valkey lives on the network: one copy for all
+pods, at the cost of a network call, a server to run and a new way to fail. Valkey is the open source (BSD)
+fork of Redis OSS 7.2 and speaks the same protocol, so Spring Data Redis talks to it.
+
+### Do this
+
+1. Measure first. Look at the slow query's plan and the database guide's advice before you cache anything
+   ([the database in production](/guides/database/)).
+2. Cache only data you can name with a clear key and that may be stale for a known time.
+3. Use Caffeine when each pod may hold its own copy and the data is small.
+4. Use Valkey when pods must share the copy, the data is large or computing it is expensive enough that every pod
+   doing it once is too much.
+
+### When this is not for you
+
+- Data that must always be current, such as a balance or stock you are about to sell: read the source.
+- Responses from another service: first set timeouts and limits ([HTTP clients](/guides/http-clients/)); a cache
+  in front of a failing service only delays the failure.
+
+<a id="cache-abstraction"></a>
+
+## 2. Should I use @Cacheable or write the cache code myself?
+
+**In short:** use `@Cacheable` for simple reads by key. Write the cache-aside code yourself when you need control
+over errors, batches or what gets stored.
+
+### What's going on
+
+Both do the same dance, called cache-aside. Look in the cache first. On a hit, return it. On a miss, read the
+database, store the result with a time to live and return it. On a write, change the database and then remove the
+cached copy.
+
+<CacheAsideDiagram />
+<DiagramLegend items={['recommended', 'context', 'failure']} />
+
+Spring's cache abstraction does this for you with annotations: `@Cacheable` on reads, `@CacheEvict` and
+`@CachePut` on writes. Spring Boot creates a `RedisCacheManager` when Spring Data Redis is configured. The catch:
+the annotations work through a proxy, so a method calling another method of the same class skips the cache.
+
+### Do this
+
+1. Add `spring-boot-starter-cache` and `spring-boot-starter-data-redis` and put `@EnableCaching` on a separate
+   configuration class, not on the application class, so tests can run without a cache.
+2. Declare the caches at startup with `spring.cache.cache-names`, so each one gets its settings and its metrics.
+3. Put `@Cacheable("products")` on the method that reads one product by id. Call it from another bean.
+4. Write the code by hand, with `RedisTemplate` or `StringRedisTemplate`, for batch reads, partial updates or when a
+   cache error must be handled differently per call.
+
+### When this is not for you
+
+- A method called from inside the same class: move it to another bean or the annotation does nothing.
+- Values that need a different time to live per entry: use the manager's `TtlFunction` or write the code yourself.
+
+<a id="cache-ttl"></a>
+
+## 3. How long should an entry live?
+
+**In short:** give every entry a time to live. Pick it from how stale the data may be, not from how often it
+changes.
+
+```yaml
+spring.cache.redis.time-to-live: 10m
+```
+
+### What's going on
+
+Spring Boot's Redis cache keeps entries forever by default. An entry that never expires is a bug that waits: it
+survives the data change you forgot to evict, the deploy that changed the class and the business rule that moved.
+
+The time to live is a promise to the reader: "this value is at most 10 minutes old". Choose it by asking how long a
+wrong answer is acceptable. Prices may be a minute. A list of countries may be a day.
+
+### Do this
+
+1. Set `spring.cache.redis.time-to-live` as the default for every cache.
+2. Give caches with different needs their own time to live with a `RedisCacheManagerBuilderCustomizer` bean.
+3. For many keys written at the same moment, spread their expiry with a `RedisCacheWriter.TtlFunction` that adds a
+   small random amount, so they do not all expire together (step 6).
+4. Write the chosen time to live next to the cache name in the code, with the reason.
+
+### When this is not for you
+
+- Values that must disappear the moment the source changes: a time to live is only the safety net. You also evict
+  on write (step 5).
+
+<a id="cache-keys"></a>
+
+## 4. How should I name keys and store values?
+
+**In short:** keep Spring's cache name prefix, put a version in the key and store values as JSON instead of Java
+serialisation.
+
+### What's going on
+
+Spring Data Redis prefixes each key with the cache name and two colons, such as `products::42`, so two caches never
+overwrite each other. Keep it.
+
+Its default value format is Java serialisation. That ties the bytes in Valkey to your exact class. Rename a field or
+deploy a new version next to an old one and the new pods fail to read what the old ones wrote. JSON is readable
+with `valkey-cli`, works across versions that add fields and does not run Java deserialisation on data from the
+network.
+
+A version in the key, such as `products::v2:42`, lets a deploy that changes the shape start with fresh keys while the
+old ones expire on their own.
+
+### Do this
+
+1. Keep `spring.cache.redis.use-key-prefix` at its default, `true`.
+2. Define a `RedisCacheConfiguration` bean that sets a JSON value serialiser. In Spring Data Redis 4.1 that is
+   `JacksonJsonRedisSerializer` for one type or `GenericJacksonJsonRedisSerializer` for many.
+3. Put a version in the prefix or the key. Raise it when the cached shape changes in a way old pods cannot read.
+4. Build keys from stable business ids, never from whole objects or from user input you have not bounded.
+
+### When this is not for you
+
+- A cache that only ever holds strings or numbers: `StringRedisTemplate` already stores plain text.
+
+<a id="cache-consistency"></a>
+
+## 5. How do I keep the cache in step with the database?
+
+**In short:** evict the entry after the database commit and accept that readers can see an old value for at most
+the time to live.
+
+### What's going on
+
+There are two writes, one to the database and one to the cache and nothing makes them happen together. If you
+evict before the commit, another request can read the old row and put it back before your change lands. If the
+commit then fails, you evicted for nothing, which is harmless. If you update the cache instead of evicting, two
+writers can race and leave the wrong value.
+
+Spring can delay cache puts and evictions until the transaction commits. With Spring Data Redis, ask the manager to
+be transaction aware.
+
+### Do this
+
+1. Evict on write with `@CacheEvict` (or a `delete` call), not `@CachePut`, unless you have a strong reason.
+2. Make the cache manager transaction aware (`RedisCacheManager.builder(...).transactionAware()`), so the eviction
+   runs after the commit.
+3. Keep the time to live short enough that a missed eviction heals itself.
+4. Write down, per cache, how stale its data may be. That number is the time to live.
+
+### When this is not for you
+
+- Several services write the same data: an eviction in one service does not reach the others. Publish an event or
+  give the data one owner.
+
+<a id="cache-stampede"></a>
+
+## 6. What happens when a popular entry expires?
+
+**In short:** every request that misses at that moment goes to the database at once. Spread expiry times and load
+each key once per pod where you can.
+
+### What's going on
+
+This is a stampede. A key read a thousand times a second expires. In the next few milliseconds hundreds of
+requests miss together and all run the same query. The database slows down, so even more requests miss.
+
+`@Cacheable(sync = true)` asks the cache to let one caller compute the value while the others wait. How well that
+works depends on the cache. Caffeine computes a missing key once per pod. Spring Data Redis's default cache writer
+takes no lock, so with Valkey every pod and every thread can still load. Its locking writer does lock but for the
+whole cache, not per key.
+
+### Do this
+
+1. Add a little random spread to the time to live of hot keys (step 3), so they do not expire together.
+2. Use `sync = true` on hot reads and put a small Caffeine cache in front of Valkey for the hottest keys, so each
+   pod loads a key once.
+3. For values that are expensive to compute, refresh them on a schedule before they expire instead of waiting for
+   a miss.
+4. Watch the database during a deploy or a Valkey restart: that is when every key is cold at once.
+
+### When this is not for you
+
+- Keys read a few times a minute: a stampede needs heavy traffic on one key. Do not add machinery you do not need.
+
+<a id="cache-degraded"></a>
+
+## 7. What if Valkey is slow or down?
+
+**In short:** set short timeouts and treat a cache error as a miss so the service keeps answering from the
+database.
+
+### What's going on
+
+A cache that fails should make the service slower, not broken. Two defaults work against that. Spring's cache
+abstraction throws any cache error back to the caller, so a Valkey outage turns into errors for your users. And
+Lettuce, the client Spring Boot uses, waits up to 60 seconds for a reply when you set no timeout, so a stuck Valkey
+holds every request thread.
+
+### Do this
+
+1. Set `spring.data.redis.connect-timeout` and `spring.data.redis.timeout` to values far below your request
+   deadline, such as a few hundred milliseconds.
+2. Register a `CacheErrorHandler` (through `CachingConfigurer`) that logs the error and returns, so a failed read
+   becomes a miss and a failed write is skipped.
+3. Make sure the database can take the load of a full miss for a while (step 6) or limit how much of it reaches the
+   database.
+4. Alert on cache errors, so a silent fallback does not hide an outage for days.
+
+### When this is not for you
+
+- Data that exists only in the cache, such as sessions or rate limit counters: a miss is not harmless there, so plan
+  that store's availability separately.
+
+<a id="cache-memory"></a>
+
+## 8. How much memory does the cache get and what should I watch?
+
+**In short:** give Valkey a `maxmemory` limit and an eviction policy and watch the hit ratio, latency and
+evictions.
+
+```text
+maxmemory 1gb
+maxmemory-policy allkeys-lru
+```
+
+### What's going on
+
+Out of the box on 64 bit systems Valkey has no memory limit and its default eviction policy is `noeviction`: when
+memory runs out, writes fail instead of making room. For a cache that is backwards. You want old entries pushed out,
+not new ones refused.
+
+`allkeys-lru` removes the least recently used keys from all keys and Valkey's documentation calls it a good pick
+when you are unsure. The `volatile` policies only remove keys that have a time to live and behave like
+`noeviction` when there are none.
+
+A cache you cannot see is a guess. The hit ratio says whether it helps at all, latency says whether it is still
+faster than the database and evictions say whether it is too small.
+
+### Do this
+
+1. Set `maxmemory` below the memory you give the Valkey container and `maxmemory-policy allkeys-lru`.
+2. Turn on `spring.cache.redis.enable-statistics: true`. Spring Boot then publishes `cache.*` metrics for the caches
+   declared at startup.
+3. Watch the hit ratio per cache, command latency and Valkey's evicted keys. A low hit ratio means the cache costs
+   more than it saves.
+4. Clearing a whole cache uses `KEYS` by default, which blocks Valkey on a big keyspace. Switch the cache writer to
+   `BatchStrategies.scan(1000)` if you ever clear caches.
+
+### When this is not for you
+
+- Valkey also holds data that must not be evicted, such as sessions: keep it in a separate instance with
+  `noeviction`, not in the cache instance.
+
+## Put it all together
+
+Caching touches three places: the build, the application and the Valkey server.
+
+### In the build
+
+- `spring-boot-starter-cache` and `spring-boot-starter-data-redis`; versions come from the Spring Boot BOM (step 2).
+- `com.github.ben-manes.caffeine:caffeine` only if you add a local layer for hot keys (step 6).
+
+### In the application
+
+- `@EnableCaching` on its own configuration class (step 2).
+- `spring.cache.cache-names` and `spring.cache.redis.time-to-live` for every cache (steps 2 and 3).
+- A `RedisCacheConfiguration` bean with a JSON serialiser and a versioned prefix (step 4).
+- A transaction aware cache manager and evictions after writes (step 5).
+- `spring.data.redis.connect-timeout`, `spring.data.redis.timeout` and a `CacheErrorHandler` that treats errors as
+  misses (step 7).
+- `spring.cache.redis.enable-statistics: true` (step 8).
+
+### On the Valkey server
+
+- `maxmemory` below the container limit and `maxmemory-policy allkeys-lru` (step 8).
+- A separate instance for anything that must not be evicted (step 8).
+
+## Checklist
+
+<Checklist guide="caching" />
+
+## References
+
+<GuideReferences guide="caching" />

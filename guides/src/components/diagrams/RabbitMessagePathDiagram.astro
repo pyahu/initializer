@@ -1,0 +1,58 @@
+---
+// Flow: one message from publisher to consumer, the confirm back and the dead letter path.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="rmq-message-path"
+  caption="One message through RabbitMQ: confirmed when stored, acknowledged when done, dead lettered when it keeps failing."
+  description="Four numbered stages from left to right. 1, publish: the publisher uses RabbitTemplate with correlated confirms and mandatory set. 2, route: the exchange routes the message by its key; with no matching queue the message is returned to the publisher. 3, store: a durable quorum queue replicated on three nodes, with a delivery limit of 20 and optional maximum length and TTL. 4, consume: the consumer has a prefetch, acknowledges after the work is done and skips message ids it has already processed. A dashed recommended path goes from the quorum queue back to the publisher: the confirm, sent once the message is stored on a majority of nodes. A failure path, marked with a cross, goes from the quorum queue to a dead letter queue: after 20 failed deliveries or a reject without requeue the message is dead lettered instead of lost. A note says delivery is at least once.">
+  <svg viewBox="0 0 1000 440">
+    <defs>
+      <marker id="rmq-message-path-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="rmq-message-path-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+      <marker id="rmq-message-path-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-fail" /></marker>
+    </defs>
+    <text x="20" y="32" class="dg-group">1 · PUBLISH</text>
+    <text x="252" y="32" class="dg-group">2 · ROUTE</text>
+    <text x="462" y="32" class="dg-group">3 · STORE</text>
+    <text x="722" y="32" class="dg-group">4 · CONSUME</text>
+
+    <rect x="20" y="60" width="200" height="120" rx="6" class="dg-box dg-emphasis" />
+    <text x="36" y="88" class="dg-title">Publisher</text>
+    <text x="36" y="112" class="dg-detail">RabbitTemplate</text>
+    <text x="36" y="132" class="dg-detail">confirms: correlated</text>
+    <text x="36" y="152" class="dg-detail">mandatory: true</text>
+    <path d="M220 120 H250" class="dg-line dg-accent" marker-end="url(#rmq-message-path-accent)" />
+
+    <rect x="252" y="60" width="180" height="120" rx="6" class="dg-box" />
+    <text x="268" y="88" class="dg-title">Exchange</text>
+    <text x="268" y="112" class="dg-detail">routes by key</text>
+    <text x="268" y="132" class="dg-detail">no match: returned</text>
+    <text x="268" y="152" class="dg-detail">to the publisher</text>
+    <path d="M432 120 H460" class="dg-line dg-accent" marker-end="url(#rmq-message-path-accent)" />
+
+    <rect x="462" y="60" width="230" height="120" rx="6" class="dg-box dg-emphasis" />
+    <text x="478" y="88" class="dg-title">Quorum queue</text>
+    <text x="478" y="112" class="dg-detail">durable, on 3 nodes</text>
+    <text x="478" y="132" class="dg-detail">delivery limit 20</text>
+    <text x="478" y="152" class="dg-detail">max length and TTL</text>
+    <path d="M692 120 H720" class="dg-line dg-accent" marker-end="url(#rmq-message-path-accent)" />
+
+    <rect x="722" y="60" width="258" height="120" rx="6" class="dg-box dg-emphasis" />
+    <text x="738" y="88" class="dg-title">Consumer</text>
+    <text x="738" y="112" class="dg-detail">prefetch sized to the work</text>
+    <text x="738" y="132" class="dg-detail">ack after the work is done</text>
+    <text x="738" y="152" class="dg-detail">skips ids already seen</text>
+
+    <path d="M540 180 V230 H120 V184" class="dg-line dg-dash dg-accent" marker-end="url(#rmq-message-path-accent)" />
+    <text x="150" y="252" class="dg-note dg-accent">confirm: stored on a majority of nodes</text>
+
+    <path d="M640 180 V300 H720" class="dg-line dg-fail" marker-end="url(#rmq-message-path-fail)" />
+    <text x="520" y="292" class="dg-note dg-fail">✕ keeps failing</text>
+    <rect x="722" y="262" width="258" height="96" rx="6" class="dg-box dg-fail" />
+    <text x="738" y="290" class="dg-title">✕ Dead letter queue</text>
+    <text x="738" y="314" class="dg-detail">after 20 failed deliveries</text>
+    <text x="738" y="334" class="dg-detail">or a reject without requeue</text>
+
+    <text x="20" y="410" class="dg-note">Delivery is at least once: a confirmed message is never lost yet it can arrive twice.</text>
+  </svg>
+</Diagram>

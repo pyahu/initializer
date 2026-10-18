@@ -1,11 +1,11 @@
 # Pyahu Initializer
 
-Production guides for Spring Boot services and later a generator that applies them. The guides come first:
-every decision is a card with the failure it prevents and every claim carries the test that proves it.
+A course on production Spring Boot, Java and Next.js and later a generator that applies it. The guides come
+first: each step answers one question with the failure it prevents and every claim has a test behind it.
 
 - Site: https://initializer.pyahu.io
-- Guides: ten, from [the JVM in containers](https://initializer.pyahu.io/guides/jvm-in-containers/) to
-  [Kubernetes manifests](https://initializer.pyahu.io/guides/kubernetes-manifests/)
+- [The course](https://initializer.pyahu.io/course/): 24 guides in six modules (foundations, build the service,
+  events and data, run in production, ship, grow)
 - How to contribute: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## How a claim is proven

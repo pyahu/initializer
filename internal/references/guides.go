@@ -45,6 +45,7 @@ type refOut struct {
 	Version string `json:"version"`
 	Pinned  bool   `json:"pinned"`
 	Purpose string `json:"purpose"`
+	Later   bool   `json:"later"`
 }
 
 type questionOut struct {
@@ -167,6 +168,12 @@ func GuidesJSON(r *guidedata.Repo) ([]byte, error) {
 		for _, e := range entriesFor(r, g.Meta.Baseline, nil) {
 			if contains(e.Guides, g.Meta.ID) {
 				out.References = append(out.References, refOut{ID: e.ID, Title: e.Title, URL: e.URL, Version: versionOf(r, g.Meta.Baseline, e), Pinned: e.Pinned, Purpose: e.Purpose})
+			}
+		}
+		// Documents for a later release: no baseline pins them yet, so they carry no version.
+		for _, e := range r.References.Entries {
+			if len(e.Baselines) == 0 && contains(e.Guides, g.Meta.ID) {
+				out.References = append(out.References, refOut{ID: e.ID, Title: e.Title, URL: e.URL, Pinned: false, Purpose: e.Purpose, Later: true})
 			}
 		}
 		guides[g.Meta.ID] = out

@@ -1,0 +1,57 @@
+# Evidence records for the monorepo guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-mono-when-1
+  card: mono-when
+  claim: "One repository suits services that one team owns and changes together; separate repositories suit services with different owners or release schedules."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Engineering judgment. There is no measurement behind it."
+  reason: "A recommendation about team structure; no test can prove it. The repository has no monorepo example yet."
+- id: ev-mono-boundaries-rule-1
+  card: mono-boundaries-rule
+  claim: "Services in one repository depend only on contracts and generated client projects, never on another service's project."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Stated as a rule. No build check enforces it in this repository yet."
+  reason: "The example service is a single service; there is no second service to depend on."
+- id: ev-mono-contracts-1
+  card: mono-contracts
+  claim: "Each contract lives in contracts/<service>/, is owned by the producing service, is compared with its last release in CI and is consumed through a generated client project."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "The compatibility check tool is not chosen yet."
+  reason: "The repository has no contract between two services yet."
+- id: ev-mono-build-logic-1
+  card: mono-build-logic
+  claim: "Gradle recommends an included build named build-logic over buildSrc for convention plugins, because any change in buildSrc makes the whole build out of date; it is added with includeBuild inside pluginManagement."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Taken from the Gradle 9.8.1 best practices and composite builds documentation."
+  reason: "The example service is a single project without build-logic."
+- id: ev-mono-catalog-1
+  card: mono-catalog
+  claim: "An included build-logic build reads the root version catalog by importing gradle/libs.versions.toml with from(files(...)) in its settings, and convention plugins read it through VersionCatalogsExtension."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Taken from the Gradle 9.8.1 version catalog documentation, which shows the import for buildSrc."
+  reason: "The example service has a catalog but no build-logic build that imports it."
+- id: ev-mono-one-service-1
+  card: mono-one-service
+  claim: "Including a nested project by its full path creates empty parent projects; a flat name with an explicit projectDir avoids them."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Taken from the Gradle 9.8.1 best practices for structuring builds."
+  reason: "The example service is a single project; no nested service is included."
+- id: ev-mono-ci-1
+  card: mono-ci
+  claim: "A workflow skipped by a path filter leaves its required check pending and blocks the pull request, so the only required check is a gate job in a workflow that always runs."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "The pending behaviour is taken from the GitHub Actions workflow syntax documentation."
+  reason: "This repository has no orchestration workflow with a gate job yet."
+- id: ev-mono-ship-1
+  card: mono-ship
+  claim: "Each service has its own image, built from the repository root with a service target, its own deploy folder and its own releases. The same digest is promoted between environments."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Stated as a rule. No multi-service image build exists here."
+  reason: "The example service is a single service with one image."

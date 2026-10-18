@@ -1,0 +1,53 @@
+---
+// Flow: cache-aside reads and writes between the service, Valkey and the database, plus the stampede.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="cache-aside-paths"
+  caption="Cache-aside: read Valkey first, load from the database on a miss, evict after the write commits."
+  description="Three boxes. Left, the service, using @Cacheable or its own cache-aside code. Top right, Valkey, highlighted, holding keys such as products::v2:42 with a time to live on every entry and a maxmemory limit with allkeys-lru eviction. Bottom right, PostgreSQL, the source of truth. Five numbered arrows from the service. 1, to Valkey: get the key; a hit returns here. 2, to the database, only on a miss: read the row. 3, to Valkey: set the key with a time to live. 4, to the database: write and commit. 5, to Valkey: delete the key after the commit. A note under Valkey says that when Valkey is slow or down the service uses a short timeout and treats the error as a miss. At the bottom, the failure, marked with a cross: a stampede, where a hot key expires, hundreds of requests miss at once and all reach the database, shown as a short dashed red arrow into the database.">
+  <svg viewBox="0 0 1000 460">
+    <defs>
+      <marker id="cache-aside-paths-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="cache-aside-paths-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+      <marker id="cache-aside-paths-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-fail" /></marker>
+    </defs>
+    <text x="20" y="28" class="dg-group">1 · SERVICE</text>
+    <text x="600" y="28" class="dg-group">2 · VALKEY</text>
+    <text x="600" y="240" class="dg-group">3 · DATABASE</text>
+
+    <rect x="20" y="40" width="200" height="310" rx="8" class="dg-box" />
+    <text x="36" y="68" class="dg-title">Service</text>
+    <text x="36" y="94" class="dg-detail">@Cacheable or</text>
+    <text x="36" y="114" class="dg-detail">cache-aside code</text>
+    <text x="36" y="300" class="dg-detail">timeouts and an</text>
+    <text x="36" y="320" class="dg-detail">error handler</text>
+
+    <rect x="600" y="40" width="380" height="130" rx="6" class="dg-box dg-emphasis" />
+    <text x="616" y="68" class="dg-title">Valkey</text>
+    <text x="616" y="94" class="dg-detail">keys like products::v2:42</text>
+    <text x="616" y="116" class="dg-detail">a time to live on every entry</text>
+    <text x="616" y="138" class="dg-detail">maxmemory, allkeys-lru</text>
+    <text x="600" y="192" class="dg-note">slow or down: short timeout, treat as a miss</text>
+
+    <rect x="600" y="250" width="380" height="100" rx="6" class="dg-box" />
+    <text x="616" y="278" class="dg-title">PostgreSQL</text>
+    <text x="616" y="302" class="dg-detail">the source of truth</text>
+
+    <text x="240" y="58" class="dg-note dg-accent">1 · get the key; a hit returns here</text>
+    <path d="M220 66 H598" class="dg-line dg-accent" marker-end="url(#cache-aside-paths-accent)" />
+    <text x="240" y="98" class="dg-note dg-accent">3 · set the key with a time to live</text>
+    <path d="M220 106 H598" class="dg-line dg-accent" marker-end="url(#cache-aside-paths-accent)" />
+    <text x="240" y="138" class="dg-note">5 · after the commit, delete the key</text>
+    <path d="M220 146 H598" class="dg-line" marker-end="url(#cache-aside-paths-arrow)" />
+
+    <text x="240" y="267" class="dg-note dg-accent">2 · only on a miss, read the row</text>
+    <path d="M220 275 H598" class="dg-line dg-accent" marker-end="url(#cache-aside-paths-accent)" />
+    <text x="240" y="312" class="dg-note">4 · write and commit</text>
+    <path d="M220 320 H598" class="dg-line" marker-end="url(#cache-aside-paths-arrow)" />
+
+    <rect x="250" y="384" width="730" height="60" rx="6" class="dg-box dg-fail" />
+    <text x="266" y="408" class="dg-title">✕ Stampede</text>
+    <text x="266" y="430" class="dg-detail">a hot key expires, hundreds of requests miss at once and all reach the database</text>
+    <path d="M790 384 V352" class="dg-line dg-fail" marker-end="url(#cache-aside-paths-fail)" />
+  </svg>
+</Diagram>

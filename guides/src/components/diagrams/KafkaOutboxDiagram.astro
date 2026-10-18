@@ -1,0 +1,62 @@
+---
+// Flow: the transactional outbox from the service's database to the consumer and the failure it replaces.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="kafka-outbox-flow"
+  caption="The outbox: the event is saved with the data, then Debezium publishes it from the database log."
+  description="Four numbered stages from left to right. 1, service: one database transaction writes the business row and an outbox row together; the outbox row is kept until it is published. 2, capture: Debezium reads the database write-ahead log through a replication slot and its outbox event router turns each outbox row into a Kafka record, keyed by the aggregate id. 3, topic: the Kafka topic is partitioned by that key, so events of one aggregate stay in order; above it, a schema registry (Karapace) holds the Avro schemas and the records carry a schema id. 4, consumer: the listener handles each event idempotently by event id, commits after processing and retries with backoff; a record that keeps failing goes to a dead letter topic named after the original topic with the suffix -dlt, where it can be replayed. Failure path, short dash: save then send, where the service commits and then calls Kafka itself; a crash or error between the two loses the event or sends it twice.">
+  <svg viewBox="0 0 1000 440">
+    <defs>
+      <marker id="kafka-outbox-flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="kafka-outbox-flow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+      <marker id="kafka-outbox-flow-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-fail" /></marker>
+    </defs>
+    <text x="20" y="32" class="dg-group">1 · SERVICE</text>
+    <text x="302" y="32" class="dg-group">2 · CAPTURE</text>
+    <text x="512" y="32" class="dg-group">3 · TOPIC</text>
+    <text x="752" y="32" class="dg-group">4 · CONSUMER</text>
+
+    <rect x="20" y="48" width="250" height="250" rx="8" class="dg-frame" />
+    <text x="36" y="72" class="dg-note">one database transaction</text>
+    <rect x="36" y="86" width="218" height="70" rx="6" class="dg-box" />
+    <text x="52" y="112" class="dg-title">Business row</text>
+    <text x="52" y="136" class="dg-detail">insert or update</text>
+    <rect x="36" y="176" width="218" height="96" rx="6" class="dg-box dg-emphasis" />
+    <text x="52" y="202" class="dg-title">Outbox row</text>
+    <text x="52" y="226" class="dg-detail">same transaction</text>
+    <text x="52" y="248" class="dg-detail">kept until published</text>
+
+    <path d="M254 224 H300" class="dg-line dg-accent" marker-end="url(#kafka-outbox-flow-accent)" />
+    <rect x="302" y="150" width="180" height="126" rx="6" class="dg-box dg-emphasis" />
+    <text x="318" y="176" class="dg-title">Debezium</text>
+    <text x="318" y="200" class="dg-detail">reads the WAL</text>
+    <text x="318" y="220" class="dg-detail">outbox event router</text>
+    <text x="318" y="240" class="dg-detail">key: aggregate id</text>
+    <text x="302" y="296" class="dg-note">through a replication slot</text>
+
+    <path d="M482 213 H510" class="dg-line dg-accent" marker-end="url(#kafka-outbox-flow-accent)" />
+    <rect x="512" y="48" width="200" height="70" rx="6" class="dg-box" />
+    <text x="528" y="74" class="dg-title">Schema registry</text>
+    <text x="528" y="98" class="dg-detail">Karapace, Avro</text>
+    <path d="M612 118 V148" class="dg-line dg-dash" marker-end="url(#kafka-outbox-flow-arrow)" />
+    <rect x="512" y="150" width="200" height="126" rx="6" class="dg-box" />
+    <text x="528" y="176" class="dg-title">Kafka topic</text>
+    <text x="528" y="200" class="dg-detail">partitioned by key</text>
+    <text x="528" y="220" class="dg-detail">ordered per key</text>
+    <text x="528" y="240" class="dg-detail">schema id per record</text>
+
+    <path d="M712 213 H750" class="dg-line dg-accent" marker-end="url(#kafka-outbox-flow-accent)" />
+    <rect x="752" y="150" width="226" height="126" rx="6" class="dg-box dg-emphasis" />
+    <text x="768" y="176" class="dg-title">Consumer</text>
+    <text x="768" y="200" class="dg-detail">idempotent by event id</text>
+    <text x="768" y="220" class="dg-detail">commit after processing</text>
+    <text x="768" y="240" class="dg-detail">retries with backoff</text>
+    <path d="M865 276 V308" class="dg-line" marker-end="url(#kafka-outbox-flow-arrow)" />
+    <rect x="752" y="310" width="226" height="70" rx="6" class="dg-box" />
+    <text x="768" y="336" class="dg-title">Dead letter topic</text>
+    <text x="768" y="360" class="dg-detail">topic-dlt, replayable</text>
+
+    <path d="M145 298 V410 H612 V278" class="dg-line dg-fail" marker-end="url(#kafka-outbox-flow-fail)" />
+    <text x="160" y="400" class="dg-note dg-fail">✕ save, then send: a crash in between loses or doubles the event</text>
+  </svg>
+</Diagram>

@@ -1,0 +1,63 @@
+---
+// Topology: what runs in the browser, in the Next.js server and in the Spring Boot service.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="next-runtime-split"
+  caption="What runs where: the browser gets pages and a session cookie, the Next.js server holds the token and calls the service."
+  description="Three numbered columns from left to right. 1, browser: renders pages and client components and holds only a session cookie. 2, Next.js server, in its own image and Deployment under frontends/web: server components fetch data and read the session; below them the client generated from the service's OpenAPI document adds the access token to each call; below that the OIDC library runs the code flow and keeps the session in an httpOnly cookie, so the access token stays on the server. 3, backend: the Spring Boot service receives each call with a Bearer token and a traceparent header and validates the token; the identity provider talks to the OIDC library over the code flow. A failure path, dashed, goes from the browser to a box marked with a cross: calling the API from the browser puts the token in JavaScript. A note at the bottom says the browser only sees HTML, components and a session cookie while tokens and API calls stay on the server.">
+  <svg viewBox="0 0 1000 390">
+    <defs>
+      <marker id="next-runtime-split-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="next-runtime-split-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+      <marker id="next-runtime-split-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-fail" /></marker>
+    </defs>
+    <text x="20" y="30" class="dg-group">1 · BROWSER</text>
+    <text x="240" y="30" class="dg-group">2 · NEXT.JS SERVER</text>
+    <text x="680" y="30" class="dg-group">3 · BACKEND</text>
+
+    <rect x="20" y="80" width="190" height="96" rx="6" class="dg-box" />
+    <text x="36" y="106" class="dg-title">Browser</text>
+    <text x="36" y="130" class="dg-detail">pages, client components</text>
+    <text x="36" y="152" class="dg-detail">session cookie only</text>
+    <path d="M210 111 H252" class="dg-line" marker-end="url(#next-runtime-split-arrow)" />
+
+    <path d="M115 176 V258" class="dg-line dg-fail" marker-end="url(#next-runtime-split-fail)" />
+    <rect x="20" y="264" width="190" height="62" rx="6" class="dg-box dg-fail" />
+    <text x="36" y="288" class="dg-title">✕ API from browser</text>
+    <text x="36" y="310" class="dg-detail">token in JavaScript</text>
+
+    <rect x="240" y="48" width="340" height="296" rx="8" class="dg-frame" />
+    <text x="256" y="68" class="dg-note">frontends/web: own image, own Deployment</text>
+
+    <rect x="256" y="80" width="308" height="62" rx="6" class="dg-box dg-emphasis" />
+    <text x="272" y="104" class="dg-title">Server components</text>
+    <text x="272" y="126" class="dg-detail">fetch data, read the session</text>
+    <path d="M410 142 V166" class="dg-line dg-accent" marker-end="url(#next-runtime-split-accent)" />
+
+    <rect x="256" y="172" width="308" height="62" rx="6" class="dg-box dg-emphasis" />
+    <text x="272" y="196" class="dg-title">Generated client</text>
+    <text x="272" y="218" class="dg-detail">types from openapi.yaml, adds token</text>
+
+    <rect x="256" y="264" width="308" height="62" rx="6" class="dg-box dg-emphasis" />
+    <text x="272" y="288" class="dg-title">OIDC library</text>
+    <text x="272" y="310" class="dg-detail">httpOnly session, token on server</text>
+
+    <path d="M564 203 H676" class="dg-line dg-accent" marker-end="url(#next-runtime-split-accent)" />
+    <text x="574" y="194" class="dg-note dg-accent">Bearer token</text>
+    <text x="574" y="222" class="dg-note dg-accent">traceparent</text>
+
+    <rect x="680" y="160" width="200" height="86" rx="6" class="dg-box" />
+    <text x="696" y="186" class="dg-title">Spring Boot</text>
+    <text x="696" y="210" class="dg-detail">REST API, validates</text>
+    <text x="696" y="230" class="dg-detail">the Bearer token</text>
+
+    <path d="M564 295 H676" class="dg-line" marker-start="url(#next-runtime-split-arrow)" marker-end="url(#next-runtime-split-arrow)" />
+    <text x="574" y="286" class="dg-note">OIDC code flow</text>
+
+    <rect x="680" y="264" width="200" height="62" rx="6" class="dg-box" />
+    <text x="696" y="288" class="dg-title">Identity provider</text>
+    <text x="696" y="310" class="dg-detail">issues the tokens</text>
+
+    <text x="20" y="372" class="dg-note">The browser only sees HTML, components and a session cookie. Tokens and API calls stay on the server.</text>
+  </svg>
+</Diagram>

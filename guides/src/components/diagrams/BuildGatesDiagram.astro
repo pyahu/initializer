@@ -1,0 +1,68 @@
+---
+// Flow: what ./gradlew build runs, in order and what each gate stops.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="bld-build-gates"
+  caption="What one ./gradlew build runs: five gates, each one stops a different mistake before it ships."
+  description="Five boxes from left to right, joined by arrows. 1, wrapper: Gradle 9.8.1 is downloaded and its checksum checked and the build compiles with the JDK 25 toolchain; a checksum that differs stops the build. 2, resolve: every version comes from the version catalog and three BOMs, from repositories declared only in settings; a repository declared in a project is an error. 3, compile, highlighted: javac runs Error Prone and NullAway in JSpecify mode; a known bug pattern or a possible null is a compile error. 4, check: the JUnit tests and spotlessCheck; a failing test or unformatted code fails the check. 5, SBOM: cyclonedxBom writes build/sbom/bom.json and the build ends with the jar and its SBOM. A note at the bottom says the first failing task stops the build.">
+  <svg viewBox="0 0 1000 290">
+    <defs>
+      <marker id="bld-build-gates-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+      <marker id="bld-build-gates-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-fail" /></marker>
+    </defs>
+    <text x="20" y="40" class="dg-group">1 · WRAPPER</text>
+    <text x="212" y="40" class="dg-group">2 · RESOLVE</text>
+    <text x="404" y="40" class="dg-group">3 · COMPILE</text>
+    <text x="596" y="40" class="dg-group">4 · CHECK</text>
+    <text x="788" y="40" class="dg-group">5 · SBOM</text>
+
+    <rect x="20" y="60" width="170" height="110" rx="6" class="dg-box" />
+    <text x="34" y="90" class="dg-title">Gradle 9.8.1</text>
+    <text x="34" y="116" class="dg-detail">checksum checked</text>
+    <text x="34" y="136" class="dg-detail">JDK 25 toolchain</text>
+    <path d="M190 115 H210" class="dg-line dg-accent" marker-end="url(#bld-build-gates-accent)" />
+
+    <rect x="212" y="60" width="170" height="110" rx="6" class="dg-box" />
+    <text x="226" y="90" class="dg-title">Dependencies</text>
+    <text x="226" y="116" class="dg-detail">catalog and 3 BOMs</text>
+    <text x="226" y="136" class="dg-detail">settings repos</text>
+    <path d="M382 115 H402" class="dg-line dg-accent" marker-end="url(#bld-build-gates-accent)" />
+
+    <rect x="404" y="60" width="170" height="110" rx="6" class="dg-box dg-emphasis" />
+    <text x="418" y="90" class="dg-title">javac</text>
+    <text x="418" y="116" class="dg-detail">Error Prone</text>
+    <text x="418" y="136" class="dg-detail">NullAway, JSpecify</text>
+    <path d="M574 115 H594" class="dg-line dg-accent" marker-end="url(#bld-build-gates-accent)" />
+
+    <rect x="596" y="60" width="170" height="110" rx="6" class="dg-box" />
+    <text x="610" y="90" class="dg-title">check</text>
+    <text x="610" y="116" class="dg-detail">JUnit tests</text>
+    <text x="610" y="136" class="dg-detail">spotlessCheck</text>
+    <path d="M766 115 H786" class="dg-line dg-accent" marker-end="url(#bld-build-gates-accent)" />
+
+    <rect x="788" y="60" width="170" height="110" rx="6" class="dg-box" />
+    <text x="802" y="90" class="dg-title">cyclonedxBom</text>
+    <text x="802" y="116" class="dg-detail">build/sbom/</text>
+    <text x="802" y="136" class="dg-detail">bom.json</text>
+
+    <path d="M40 170 V198" class="dg-line dg-fail" marker-end="url(#bld-build-gates-fail)" />
+    <text x="20" y="218" class="dg-note dg-fail">✕ checksum differs</text>
+    <text x="20" y="234" class="dg-note dg-fail">the build stops</text>
+
+    <path d="M232 170 V198" class="dg-line dg-fail" marker-end="url(#bld-build-gates-fail)" />
+    <text x="212" y="218" class="dg-note dg-fail">✕ repo in a project</text>
+    <text x="212" y="234" class="dg-note dg-fail">is an error</text>
+
+    <path d="M424 170 V198" class="dg-line dg-fail" marker-end="url(#bld-build-gates-fail)" />
+    <text x="404" y="218" class="dg-note dg-fail">✕ bug pattern or null</text>
+    <text x="404" y="234" class="dg-note dg-fail">is a compile error</text>
+
+    <path d="M616 170 V198" class="dg-line dg-fail" marker-end="url(#bld-build-gates-fail)" />
+    <text x="596" y="218" class="dg-note dg-fail">✕ failing test or</text>
+    <text x="596" y="234" class="dg-note dg-fail">unformatted code</text>
+
+    <text x="788" y="218" class="dg-note dg-accent">jar and its SBOM</text>
+
+    <text x="20" y="276" class="dg-note">The first failing task stops the build, so nothing that fails a gate reaches the image.</text>
+  </svg>
+</Diagram>

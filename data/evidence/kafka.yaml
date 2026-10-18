@@ -1,0 +1,71 @@
+# Evidence records for the kafka guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-kafka-why-outbox-1
+  card: kafka-why-outbox
+  claim: "Writing the event to an outbox table in the same database transaction as the data and publishing it from the write-ahead log with Debezium, removes the gap where a commit succeeds and the send fails."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Debezium outbox event router documentation."
+  reason: "The example service has no Kafka and no outbox yet, so no test crashes a service between commit and send."
+- id: ev-kafka-outbox-table-1
+  card: kafka-outbox-table
+  claim: "The Debezium outbox event router expects the columns id, aggregatetype, aggregateid, type and payload. It filters out DELETE operations on the outbox table."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Debezium outbox event router documentation; no connector runs here."
+  reason: "No Debezium connector or outbox table exists in the example service yet."
+- id: ev-kafka-outbox-table-2
+  card: kafka-outbox-table
+  claim: "Keeping outbox rows and deleting only below a published watermark lets a new snapshot publish events again after a lost replication slot, which insert then delete in one transaction cannot."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "A design rule; the replay after slot loss is not run."
+  reason: "No test drops a replication slot and replays retained rows yet."
+- id: ev-kafka-schemas-1
+  card: kafka-schemas
+  claim: "Karapace is Apache 2.0 licensed and compatible with the Confluent Schema Registry API. Its default compatibility level is BACKWARD."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Karapace README; the default level is taken from its example output."
+  reason: "No schema registry runs in this repository yet."
+- id: ev-kafka-topics-1
+  card: kafka-topics
+  claim: "By default the outbox event router routes by aggregatetype to the topic outbox.event.<aggregatetype> and uses aggregateid as the record key, so events of one aggregate keep their order."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Debezium outbox event router documentation."
+  reason: "No connector publishes outbox rows in this repository yet."
+- id: ev-kafka-producer-1
+  card: kafka-producer
+  claim: "The Kafka 4.2 producer defaults to acks=all with idempotence enabled. A conflicting setting without explicit idempotence turns idempotence off."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Kafka 4.2 producer configuration reference."
+  reason: "No producer runs against a broker in this repository yet."
+- id: ev-kafka-producer-2
+  card: kafka-producer
+  claim: "In Spring Boot 4.1.1 spring.kafka.template.observation-enabled defaults to false, so the template sends no trace context until it is enabled."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the spring-boot-kafka 4.1.1 configuration metadata."
+  reason: "No test checks trace propagation through Kafka yet."
+- id: ev-kafka-consumers-1
+  card: kafka-consumers
+  claim: "Spring Kafka sets enable.auto.commit to false unless configured and its default AckMode is BATCH, so records polled but not committed are delivered again after a crash."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Spring for Apache Kafka reference."
+  reason: "No consumer runs in the example service yet."
+- id: ev-kafka-errors-1
+  card: kafka-errors
+  claim: "The DefaultErrorHandler retries a failed record with FixedBackOff(0, 9) by default, skips retries for fatal exceptions such as DeserializationException. The DeadLetterPublishingRecoverer publishes to <topic>-dlt on the same partition."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Spring for Apache Kafka error handling reference."
+  reason: "No listener or dead letter topic exists in the example service yet."
+- id: ev-kafka-lag-replay-1
+  card: kafka-lag-replay
+  claim: "The consumer reports lag as records-lag-max. kafka-consumer-groups.sh can reset a group's offsets to a point in time with --reset-offsets --to-datetime."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Kafka 4.2 monitoring and operations documentation."
+  reason: "No consumer group runs in this repository yet, so no replay is tested."

@@ -1,0 +1,330 @@
+---
+title: Architecture styles compared
+description: Hexagonal, DDD layered, classic layered, Onion, Clean, vertical slice, BCE and MVC, compared on one scenario and on their consequences.
+tableOfContents: { maxHeadingLevel: 2 }
+guide:
+  id: architecture-styles
+  prefix: STYLE
+  state: explanatory
+  baseline: v0.1-b1
+  components: [java, spring-boot, spring-modulith, archunit]
+  verification: null
+  questions:
+    - id: STYLE-Q1
+      text: "How do I compare styles fairly?"
+      answeredIn: style-scenario
+    - id: STYLE-Q2
+      text: "What do the styles really disagree about?"
+      answeredIn: style-direction
+    - id: STYLE-Q3
+      text: "When is classic layered enough?"
+      answeredIn: style-layered
+    - id: STYLE-Q4
+      text: "Are hexagonal, Onion and Clean the same thing?"
+      answeredIn: style-inward
+    - id: STYLE-Q5
+      text: "Where does DDD layered fit?"
+      answeredIn: style-ddd-layered
+    - id: STYLE-Q6
+      text: "When does vertical slice make sense?"
+      answeredIn: style-vertical-slice
+    - id: STYLE-Q7
+      text: "What are BCE and MVC and are they service architectures?"
+      answeredIn: style-bce-mvc
+    - id: STYLE-Q8
+      text: "What can no architecture test prove?"
+      answeredIn: style-limits
+---
+import GuideStatus from '../../../components/GuideStatus.astro';
+import Checklist from '../../../components/Checklist.astro';
+import GuideReferences from '../../../components/GuideReferences.astro';
+import DiagramLegend from '../../../components/DiagramLegend.astro';
+import StyleArrowsDiagram from '../../../components/diagrams/StyleArrowsDiagram.astro';
+
+Every team meeting about architecture ends the same way. One person draws hexagons, another draws circles, a third
+says "we just need controllers, services and repositories". Each picture looks reasonable and nobody can say what
+would actually change in the code.
+
+This guide compares eight styles on the same small problem and on what each one costs when the code changes. It
+explains; it does not generate. For the two styles the Initializer generates, read
+[Architecture: hexagonal and DDD layered](/guides/architecture/).
+
+<GuideStatus guide="architecture-styles" />
+
+<a id="style-scenario"></a>
+
+## 1. How do I compare styles fairly?
+
+**In short:** run every style through the same scenario and ask what changes when the requirements change, not
+what the folders look like.
+
+### What's going on
+
+Folder trees are easy to compare and tell you almost nothing. Two services with identical folders can behave very
+differently when a rule changes. So this guide uses one scenario for every style:
+
+- **A business rule:** an order may not exceed the customer's credit limit.
+- **A transaction boundary:** placing the order checks the limit and saves the order as one unit.
+- **A persistence operation:** load the customer, save the order.
+- **Two capabilities talking:** billing must learn that an order was placed.
+
+Then it asks three questions of every style: what changes when a rule is added, when the database access is
+replaced and when the API changes.
+
+### Do this
+
+1. Write your own scenario from your domain, with one rule, one transaction, one save and one interaction.
+2. Sketch it in each candidate style and count the files you would touch for each of the three changes.
+3. Decide on consequences: who owns the transaction, what the domain depends on, how you test the rule.
+
+### When this is not for you
+
+- You are not choosing a style today: skip to the step about the style you already use.
+
+<a id="style-direction"></a>
+
+## 2. What do the styles really disagree about?
+
+**In short:** mostly about which way the dependency arrows point: toward the database or toward the domain.
+
+### What's going on
+
+Draw an arrow from each piece of code to the code it uses. In classic layered code the arrows run down from the
+web to the service to the repository to the database, so the business rules depend on persistence. In hexagonal,
+Onion and Clean code every arrow points toward the domain and the database is a detail at the edge. Vertical
+slice turns the picture sideways: arrows stay inside one feature.
+
+<StyleArrowsDiagram />
+<DiagramLegend items={['recommended', 'context']} />
+
+Everything else, the names, the number of rings, the folder layout, follows from that one choice.
+
+### Do this
+
+1. Draw the arrows for your scenario before picking names.
+2. Ask: can I test the credit limit rule without a database? If not, the arrows point the wrong way for you.
+3. Ask: if the database client changes, how many packages change?
+
+### When this is not for you
+
+- A thin service with almost no rules: the direction of the arrows matters less when there is little at the
+  centre to protect.
+
+<a id="style-layered"></a>
+
+## 3. When is classic layered enough?
+
+**In short:** when the service is mostly reading and writing records with few rules and each module stays small.
+
+### What's going on
+
+Classic layered code has three familiar layers: web, service and repository. It is quick to write, every Spring
+developer knows it and the frameworks lead you there. In our scenario the credit check sits in `OrderService`,
+which calls `CustomerRepository` directly, so testing the rule means a database or a mock of the repository.
+
+Martin Fowler notes that layering by presentation, domain and data at the top level is fine for small systems,
+but once a layer grows too big you should split the top level into domain oriented modules that are layered
+inside. That is the "layered, organised by capability" shape: one package per capability, with web, service and
+repository inside.
+
+| Change | What you touch |
+| ------ | -------------- |
+| Add a rule | The service class, often the repository query too |
+| Replace persistence | Every service that uses the repository types |
+| Change the API | The controller and often the service signatures |
+
+### Do this
+
+1. Organise by capability first, layers second.
+2. Declare the layers with ArchUnit's `layeredArchitecture()`: web, service, repository, no skipping.
+3. Move to an inward style when rules start to need tests without a database.
+
+### When this is not for you
+
+- Rich business rules that change often: they end up scattered across services and queries.
+- Several ways in and out of the same logic, such as REST, messages and batch jobs: each one tends to grow its own
+  copy of the rules.
+
+<a id="style-inward"></a>
+
+## 4. Are hexagonal, Onion and Clean the same thing?
+
+**In short:** nearly. All three keep the domain at the centre and point every dependency inward. They differ in
+names and in how many rings they draw.
+
+### What's going on
+
+- **Hexagonal** (Alistair Cockburn, ports and adapters): the application talks to the world through ports and
+  adapters plug users, tests, databases and other systems into them.
+- **Onion** (Jeffrey Palermo): "all coupling is toward the center", with the domain model in the middle and the
+  database outside: "The database is not the center. It is external."
+- **Clean** (Robert C. Martin): "source code dependencies can only point inwards", with entities, use cases,
+  interface adapters and frameworks and drivers as concentric circles.
+
+In our scenario all three put the credit rule in the domain, let a use case own the transaction and hide the
+database behind an interface the use case defines. The rule can be tested with plain Java.
+
+| Change | What you touch |
+| ------ | -------------- |
+| Add a rule | The domain and the use case that applies it |
+| Replace persistence | One adapter |
+| Change the API | One inbound adapter |
+
+### Do this
+
+1. Pick one vocabulary and stick to it; mixing "ports", "rings" and "use case interactors" confuses reviewers.
+2. Use a library that checks it: jMolecules ships ArchUnit rules for hexagonal and Onion.
+3. Budget for the ceremony: more interfaces and more mapping code than classic layered.
+
+### When this is not for you
+
+- Simple record keeping: the extra interfaces cost more than they protect.
+- A team that has never used these styles: start with one capability and review it together first.
+
+<a id="style-ddd-layered"></a>
+
+## 5. Where does DDD layered fit?
+
+**In short:** it is Evans' layered architecture: user interface, application, domain and infrastructure. Used
+with the dependency inverted, it behaves almost like hexagonal with more familiar names.
+
+### What's going on
+
+Eric Evans' DDD Reference describes partitioning a program into layers where each one depends "only on the layers
+below", with all domain code concentrated in one layer and isolated from the user interface, application and
+infrastructure code. In the original ordering infrastructure is the lowest layer, so the domain may use it.
+
+Most teams today invert that last arrow: infrastructure implements interfaces that the domain or application
+layer declares. Then the credit rule lives in the domain, the application service owns the transaction and the
+database code sits in infrastructure pointing upward. The consequences match the inward styles in step 4.
+
+### Do this
+
+1. Use the four layer names inside each capability.
+2. Decide explicitly whether the domain may depend on infrastructure. If not, write that rule yourself.
+3. Do not rely on a layering rule that "allows every layer below": it allows domain to infrastructure.
+
+### When this is not for you
+
+- Your domain is thin: four layers for a few records is ceremony.
+- DDD is more than layers. Bounded contexts and a shared language matter more than folder names.
+
+<a id="style-vertical-slice"></a>
+
+## 6. When does vertical slice make sense?
+
+**In short:** when features are mostly independent requests and you want each one easy to change on its own.
+
+### What's going on
+
+Jimmy Bogard's vertical slice architecture organises code by request instead of by layer, with one rule:
+"Minimize coupling between slices, and maximize coupling in a slice." "Place order" holds its own handler,
+validation and data access; "cancel order" holds its own.
+
+In our scenario the credit rule lives in the "place order" slice. That is fast to change while only one slice
+needs it. When "change order" needs the same rule, you either copy it or extract it into a shared domain, which
+brings you back toward the other styles.
+
+| Change | What you touch |
+| ------ | -------------- |
+| Add a rule | One slice, if only one slice needs it |
+| Replace persistence | Every slice that talks to the database |
+| Change the API | One slice |
+
+### Do this
+
+1. Use it inside a capability where the requests share little logic.
+2. Extract shared rules into a domain package as soon as a second slice needs them.
+3. Keep the module boundaries from Spring Modulith even with slices inside.
+
+### When this is not for you
+
+- Rules shared by many requests: they get copied or pulled into a common layer anyway.
+- The Initializer does not generate it: it is covered here as an explained comparison only.
+
+<a id="style-bce-mvc"></a>
+
+## 7. What are BCE and MVC and are they service architectures?
+
+**In short:** BCE is a way to find classes from use cases. MVC is a pattern for user interfaces. Neither
+tells you how to arrange a whole backend service.
+
+### What's going on
+
+**BCE**, boundary, control and entity, comes from Ivar Jacobson's use case driven method of 1992. For each use
+case you find boundary objects that talk to actors, control objects that run the use case and entity objects that
+hold the data. It maps well onto hexagonal: boundaries are adapters, controls are application services, entities
+are the domain. It is a design method more than a package layout.
+
+**MVC**, model, view and controller, came from Smalltalk-80 user interfaces. Martin Fowler describes its key idea
+as Separated Presentation: a clear split between domain objects and the objects you see on screen. In a Spring
+service a `@Controller` is a presentation adapter. Calling the whole service "MVC" says nothing about where the
+credit rule lives.
+
+### Do this
+
+1. Use BCE to find the classes of a use case, then place them in your chosen style.
+2. Treat Spring MVC controllers as inbound adapters or presentation code, nothing more.
+
+### When this is not for you
+
+- You are designing a frontend: MVC and its successors are about exactly that. The Next.js guide covers it.
+
+<a id="style-limits"></a>
+
+## 8. What can no architecture test prove?
+
+**In short:** that the boundaries are good, that the DDD is meaningful and that a module could be deployed on its
+own.
+
+### What's going on
+
+ArchUnit checks arrows between classes. Spring Modulith checks arrows between modules. Both can prove that the
+code respects the boundaries you drew. Neither can tell you whether you drew them in the right place.
+
+- **Good boundaries:** a service split into "core", "common" and "util" can pass every check.
+- **Meaningful DDD:** a class in `domain` with only getters and setters passes the rules and holds no rules.
+- **Independent deployability:** modules in one process share a database and a release. Passing `verify()` does
+  not mean a module could become its own service tomorrow.
+
+### Do this
+
+1. Label every architectural claim you make: a definition from a source, a team policy, a check that runs or
+   judgment.
+2. Review boundaries with the people who know the business, not only with the build.
+3. Treat passing architecture tests as the minimum, not the goal.
+
+### When this is not for you
+
+- It always applies, whatever style you pick.
+
+## Put it all together
+
+The eight styles side by side, for the same scenario.
+
+### The comparison at a glance
+
+| Style | Arrows point to | Owns the transaction | Test the rule without a database | Ceremony | Reject it when |
+| ----- | --------------- | -------------------- | -------------------------------- | -------- | -------------- |
+| Classic layered | The database | Service | Hard | Low | Rules are rich or shared |
+| DDD layered, inverted | The domain | Application service | Yes | Medium | The domain is thin |
+| Hexagonal | The domain | Application service | Yes | Medium | One entry point, no outbound systems |
+| Onion | The domain | Application service | Yes | Medium | Same as hexagonal |
+| Clean | The domain | Use case interactor | Yes | High | The team wants fewer layers |
+| Vertical slice | Inside each slice | Each handler | Depends on the slice | Low | Rules are shared across requests |
+| BCE | A design method | Control objects | Yes, if entities are plain | Low | You need a package layout |
+| MVC | A UI pattern | Not its concern | Not its concern | Low | You are designing a backend |
+
+### What the Initializer offers
+
+- Hexagonal and DDD layered, inverted, are generated and checked by tests.
+- Classic layered, organised by capability, comes in a later release.
+- Onion, Clean, vertical slice, BCE and MVC are explained here only.
+
+## Checklist
+
+<Checklist guide="architecture-styles" />
+
+## References
+
+<GuideReferences guide="architecture-styles" />

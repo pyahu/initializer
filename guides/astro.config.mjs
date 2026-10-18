@@ -17,39 +17,59 @@ export default defineConfig({
       // Until the pilot format is approved.
       head: [{ tag: "meta", attrs: { name: "robots", content: "noindex" } }],
       sidebar: [
+        { label: "Start here", items: [{ label: "The course", slug: "course" }] },
         {
-          label: "Guides",
+          label: "1. Foundations",
           items: [
-            {
-              label: "Run on the JVM",
-              items: [
-                { label: "The JVM in containers", slug: "guides/jvm-in-containers" },
-                { label: "Virtual threads", slug: "guides/virtual-threads" },
-              ],
-            },
-            {
-              label: "Data and calls",
-              items: [
-                { label: "The database", slug: "guides/database" },
-                { label: "HTTP clients", slug: "guides/http-clients" },
-              ],
-            },
-            {
-              label: "Operate",
-              items: [
-                { label: "Observability", slug: "guides/observability" },
-                { label: "Configuration and secrets", slug: "guides/configuration" },
-                { label: "Security hardening", slug: "guides/security" },
-              ],
-            },
-            {
-              label: "Ship",
-              items: [
-                { label: "The container image", slug: "guides/container-image" },
-                { label: "Deploying to Kubernetes", slug: "guides/kubernetes-deployment" },
-                { label: "Kubernetes manifests", slug: "guides/kubernetes-manifests" },
-              ],
-            },
+            { label: "Build and code quality", slug: "guides/build-quality" },
+            { label: "Architecture", slug: "guides/architecture" },
+            { label: "Architecture styles compared", slug: "guides/architecture-styles" },
+            { label: "Testing a Spring Boot service", slug: "guides/testing" },
+          ],
+        },
+        {
+          label: "2. Build the service",
+          items: [
+            { label: "REST APIs, contract first", slug: "guides/rest-apis" },
+            { label: "gRPC services", slug: "guides/grpc" },
+            { label: "The database in production", slug: "guides/database" },
+            { label: "JPA and jOOQ", slug: "guides/jpa-and-jooq" },
+            { label: "HTTP clients and resilience", slug: "guides/http-clients" },
+            { label: "Virtual threads and concurrency", slug: "guides/virtual-threads" },
+          ],
+        },
+        {
+          label: "3. Events and data",
+          items: [
+            { label: "Kafka with the outbox", slug: "guides/kafka" },
+            { label: "RabbitMQ", slug: "guides/rabbitmq" },
+            { label: "Caching with Valkey", slug: "guides/caching" },
+          ],
+        },
+        {
+          label: "4. Run in production",
+          items: [
+            { label: "The JVM in containers", slug: "guides/jvm-in-containers" },
+            { label: "Configuration and secrets", slug: "guides/configuration" },
+            { label: "Observability", slug: "guides/observability" },
+            { label: "Security hardening", slug: "guides/security" },
+          ],
+        },
+        {
+          label: "5. Ship",
+          items: [
+            { label: "The container image and supply chain", slug: "guides/container-image" },
+            { label: "CI pipelines", slug: "guides/ci-pipelines" },
+            { label: "Deploying to Kubernetes", slug: "guides/kubernetes-deployment" },
+            { label: "Kubernetes manifests", slug: "guides/kubernetes-manifests" },
+          ],
+        },
+        {
+          label: "6. Grow",
+          items: [
+            { label: "Local development", slug: "guides/local-development" },
+            { label: "Monorepos with several services", slug: "guides/monorepo" },
+            { label: "Next.js next to the service", slug: "guides/nextjs" },
           ],
         },
         { label: "Reference", items: [{ label: "Reference docs", slug: "reference/docs" }] },
@@ -66,12 +86,13 @@ export default defineConfig({
           details: [
             `- [The JVM in containers](${site}/guides/jvm-in-containers/): memory, CPU, GC and startup for a JVM in a pod.`,
             `- [Observability](${site}/guides/observability/): traces, metrics and logs over OTLP with Spring Boot 4.1.`,
+            `- [The course](${site}/course/): production Spring Boot in six modules, from the first build to a frontend next to the service.`,
             `- [Reference docs](${site}/reference/docs/): official documentation for the exact versions of the baseline.`,
           ].join("\n"),
           minify: { details: false },
           pageSeparator: "\n\n<!-- page -->\n\n",
           customSelectors: { all: [".dg-dialog", ".dg-hint"] },
-          promote: ["guides/**", "reference/**"],
+          promote: ["course", "guides/**", "reference/**"],
         }),
       ],
     }),

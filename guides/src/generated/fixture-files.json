@@ -15,11 +15,53 @@
       "sha256": "49e3e047c4d5f9d17df005dc59b0335b7076dea279e55db5b9fafc892bfe7df4"
     },
     {
+      "path": "fixtures/single-hexagonal/gradle/libs.versions.toml",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "toml",
+      "sha256": "c663edc94df6a6b22ce6a4b767236743cdc9ea94f1e92bdcc34aa485a066fc99"
+    },
+    {
+      "path": "fixtures/single-hexagonal/gradle/wrapper/gradle-wrapper.properties",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "ini",
+      "sha256": "b9c24447093e4fab2b1f37bfb461d2a1eb14157a4808dff50e0f954801a8f8f1"
+    },
+    {
+      "path": "fixtures/single-hexagonal/settings.gradle.kts",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "kotlin",
+      "sha256": "2451e79aeb59fb66dbd5d05b9625bec176e90206ca69b3137cd37e001f37a704"
+    },
+    {
       "path": "fixtures/single-hexagonal/src/main/java/io/pyahu/fixture/hexagonal/config/OpenTelemetryLoggingConfig.java",
       "fixture": "single-hexagonal",
       "baseline": "v0.1-b1",
       "lang": "java",
       "sha256": "ef61d922e683bc7fdfdf4e0fd60a9c956cb207631618d76bcfc60bf2738de2c1"
+    },
+    {
+      "path": "fixtures/single-hexagonal/src/main/java/io/pyahu/fixture/hexagonal/package-info.java",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "java",
+      "sha256": "6891b88762c1d1faa04774a7322b39ef19f5856fcbd216bfad6dc0732a7dfb28"
+    },
+    {
+      "path": "fixtures/single-hexagonal/src/main/java/io/pyahu/fixture/hexagonal/ping/adapter/in/web/PingController.java",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "java",
+      "sha256": "442fb2fb4f1dafc918b59238363f276e853af8a0b8d66cc6d4b9a1bf53066c0e"
+    },
+    {
+      "path": "fixtures/single-hexagonal/src/main/java/io/pyahu/fixture/hexagonal/ping/domain/package-info.java",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "java",
+      "sha256": "a3ee31d398ef215436d87d790d1b3901c15d389321157f8f1f15e231fe08f850"
     },
     {
       "path": "fixtures/single-hexagonal/src/main/resources/application.yaml",
@@ -34,6 +76,27 @@
       "baseline": "v0.1-b1",
       "lang": "xml",
       "sha256": "32a8db5b0c579cbf3f76ad95dda755b1211b286d52da0092119e8736de8cb88b"
+    },
+    {
+      "path": "fixtures/single-hexagonal/src/test/java/io/pyahu/fixture/hexagonal/ApplicationTest.java",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "java",
+      "sha256": "410a51c94a95b1bb721409f87e464052134ebffd6c92b7642625f3b06d96c82e"
+    },
+    {
+      "path": "fixtures/single-hexagonal/src/test/java/io/pyahu/fixture/hexagonal/ArchitectureTest.java",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "java",
+      "sha256": "a42f6ecfae03af260fa5a86dcb44fd51c4f65c8a8cc61a1ac433999a8959a810"
+    },
+    {
+      "path": "fixtures/single-hexagonal/src/test/java/io/pyahu/fixture/hexagonal/ModulithTest.java",
+      "fixture": "single-hexagonal",
+      "baseline": "v0.1-b1",
+      "lang": "java",
+      "sha256": "537a3f467627d0e9f5eac6a1b2302b4174deb6fe701a79703a2f36b492b6dade"
     }
   ],
   "generatedBy": "guidekit generate"

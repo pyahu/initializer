@@ -1,0 +1,51 @@
+---
+// What one transaction does with JPA: load into the persistence context, change in memory, flush at commit.
+// Below, the N+1 trap and its fix. Behaviour from the Hibernate ORM 7.4 user guide (flushing, fetching).
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="orm-unit-of-work"
+  caption="JPA keeps every loaded entity in memory and writes the changes at commit; a lazy loop turns one query into many."
+  description="Three numbered stages from left to right inside one transaction. 1, load: find Order 42 runs a SELECT and keeps a copy of the row as a snapshot. 2, change: order.ship() changes a field in memory and no SQL runs yet. 3, commit: Hibernate flushes, compares each entity with its snapshot and sends an UPDATE only for what changed. A band below the stages is the persistence context: every entity loaded in this transaction, tracked until it ends. Bottom left, the failure, marked with a cross: a loop over 100 orders that calls order.getLines() on a lazy collection runs one SELECT per order, 101 queries in total, the N+1 trap. Bottom right, the recommendation: decide what to load before the loop with JOIN FETCH, an entity graph or a projection, so the page needs one planned query.">
+  <svg viewBox="0 0 1000 400">
+    <text x="40" y="36" class="dg-group">1 · LOAD</text>
+    <text x="360" y="36" class="dg-group">2 · CHANGE</text>
+    <text x="680" y="36" class="dg-group">3 · COMMIT</text>
+
+    <rect x="40" y="52" width="280" height="96" rx="6" class="dg-box" />
+    <text x="56" y="82" class="dg-title">find(Order, 42)</text>
+    <text x="56" y="108" class="dg-detail">runs one SELECT</text>
+    <text x="56" y="128" class="dg-detail">keeps a copy as a snapshot</text>
+
+    <rect x="360" y="52" width="280" height="96" rx="6" class="dg-box" />
+    <text x="376" y="82" class="dg-title">order.ship()</text>
+    <text x="376" y="108" class="dg-detail">changes a field in memory</text>
+    <text x="376" y="128" class="dg-detail">no SQL runs yet</text>
+
+    <rect x="680" y="52" width="280" height="96" rx="6" class="dg-box dg-emphasis" />
+    <text x="696" y="82" class="dg-title">Flush</text>
+    <text x="696" y="108" class="dg-detail">compares with the snapshot</text>
+    <text x="696" y="128" class="dg-detail">UPDATE only what changed</text>
+
+    <path d="M320 100 L352 100" class="dg-line" marker-end="url(#orm-unit-of-work-arrow)" />
+    <path d="M640 100 L672 100" class="dg-line dg-accent" marker-end="url(#orm-unit-of-work-accent)" />
+
+    <rect x="40" y="168" width="920" height="48" rx="6" class="dg-frame" />
+    <text x="56" y="197" class="dg-note">Persistence context: every entity loaded in this transaction, tracked until it ends</text>
+
+    <rect x="40" y="248" width="440" height="112" rx="6" class="dg-box dg-fail" />
+    <text x="56" y="278" class="dg-title">✕ for (order : orders) getLines()</text>
+    <text x="56" y="304" class="dg-detail">lazy collection: one SELECT per order</text>
+    <text x="56" y="326" class="dg-detail">100 orders, 101 queries</text>
+    <text x="56" y="346" class="dg-note dg-fail">the N+1 trap</text>
+
+    <rect x="520" y="248" width="440" height="112" rx="6" class="dg-box dg-emphasis" />
+    <text x="536" y="278" class="dg-title">One planned query</text>
+    <text x="536" y="304" class="dg-detail">JOIN FETCH, an entity graph or a projection</text>
+    <text x="536" y="326" class="dg-detail">decides what to load before the loop</text>
+
+    <defs>
+      <marker id="orm-unit-of-work-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="orm-unit-of-work-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+    </defs>
+  </svg>
+</Diagram>

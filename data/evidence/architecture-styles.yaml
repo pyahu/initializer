@@ -1,0 +1,57 @@
+# Evidence records for the architecture styles guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-style-scenario-1
+  card: style-scenario
+  claim: "Comparing styles on one scenario with a rule, a transaction, a save and an interaction between capabilities shows consequences that folder trees hide."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "A Pyahu method for this page."
+  reason: "An explained comparison; the Initializer generates none of the compared variants of the scenario."
+- id: ev-style-direction-1
+  card: style-direction
+  claim: "Classic layered code points dependencies toward persistence; hexagonal, Onion and Clean point them toward the domain; vertical slice keeps them inside a slice."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Summarised from Cockburn, Palermo, Martin and Bogard."
+  reason: "An explained comparison; nothing in it is generated or tested."
+- id: ev-style-layered-1
+  card: style-layered
+  claim: "Fowler advises splitting the top level into domain oriented modules that are layered inside once a presentation, domain or data layer grows too big."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From martinfowler.com, PresentationDomainDataLayering."
+  reason: "Classic layered is not generated yet, so no fixture exists."
+- id: ev-style-inward-1
+  card: style-inward
+  claim: "Onion states that all coupling is toward the center and Clean that source code dependencies can only point inwards; hexagonal isolates the application behind ports."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Quoted from the original articles by Palermo, Martin and Cockburn."
+  reason: "An explained comparison; Onion and Clean are not generated."
+- id: ev-style-ddd-layered-1
+  card: style-ddd-layered
+  claim: "Evans' layered architecture lets each layer depend only on the layers below, with the domain isolated from user interface, application and infrastructure code."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Domain-Driven Design Reference, 2015, Layered Architecture."
+  reason: "No DDD layered fixture exists yet."
+- id: ev-style-vertical-slice-1
+  card: style-vertical-slice
+  claim: "Vertical slice architecture minimises coupling between slices and maximises coupling inside a slice."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Quoted from Jimmy Bogard, Vertical Slice Architecture."
+  reason: "An explained comparison; vertical slice is not generated."
+- id: ev-style-bce-mvc-1
+  card: style-bce-mvc
+  claim: "MVC's key idea is Separated Presentation, a split between domain objects and presentation objects; BCE finds boundary, control and entity objects from use cases."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "MVC from Fowler, GUI Architectures; BCE from Jacobson's 1992 book, which has no online primary source."
+  reason: "An explained comparison; neither is generated."
+- id: ev-style-limits-1
+  card: style-limits
+  claim: "ArchUnit and Spring Modulith check dependencies; they cannot prove good boundaries, meaningful DDD or independent deployability."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Engineering judgment, consistent with what both tools document they check."
+  reason: "A statement about the limits of the tools; there is nothing to run."

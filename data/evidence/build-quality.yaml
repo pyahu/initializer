@@ -1,0 +1,148 @@
+# Evidence records for the build-quality guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-bld-wrapper-1
+  card: bld-wrapper
+  claim: "In a fresh container, ./gradlew downloads Gradle 9.8.1, checks it against the committed distributionSha256Sum and builds with the Java 25 toolchain."
+  badge: compiled
+  capabilities: [compile]
+  components: [gradle, java, temurin-jdk-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ApplicationTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "A passing build shows the checksum matched; no test feeds a wrong checksum to see the build fail."
+- id: ev-bld-wrapper-2
+  card: bld-wrapper
+  claim: "The Setup Gradle GitHub action validates gradle-wrapper.jar automatically."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Gradle 9.8.1 wrapper documentation."
+  reason: "The repository CI runs Gradle inside the JDK image and does not use the Setup Gradle action."
+- id: ev-bld-version-catalog-1
+  card: bld-version-catalog
+  claim: "Every library and plugin resolves from gradle/libs.versions.toml, with repositories declared only in settings and repositoriesMode FAIL_ON_PROJECT_REPOS."
+  badge: compiled
+  capabilities: [compile]
+  components: [gradle]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ApplicationTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "Proves the catalog and settings resolve; no test adds a project repository to see the error."
+- id: ev-bld-boms-1
+  card: bld-boms
+  claim: "Spring Boot, Spring Modulith and jMolecules versions resolve from their BOMs imported with platform(), without the io.spring.dependency-management plugin."
+  badge: compiled
+  capabilities: [compile]
+  components: [gradle, spring-boot, spring-modulith, jmolecules-bom]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ApplicationTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "The fixture workflow also compares the resolved versions in the SBOM with the baseline; this record covers the build only."
+- id: ev-bld-boms-2
+  card: bld-boms
+  claim: "A platform constrains only the configuration it is declared in and the configurations that extend it."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Boot 4.1 Gradle plugin documentation."
+  reason: "No test removes a platform from one configuration to show the unmanaged version."
+- id: ev-bld-error-prone-1
+  card: bld-error-prone
+  claim: "Main code compiles on JDK 25 with Error Prone 2.50.0 through the net.ltgt.errorprone plugin 5.1.1."
+  badge: compiled
+  capabilities: [compile]
+  components: [java, error-prone, errorprone-gradle-plugin]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ApplicationTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "Shows the code passes the checks; no test plants a known bug pattern to see the build fail."
+- id: ev-bld-nullaway-1
+  card: bld-nullaway
+  claim: "Main code compiles with NullAway 0.14.2 as an error, OnlyNullMarked and JSpecifyMode on and @NullMarked on every package."
+  badge: compiled
+  capabilities: [compile]
+  components: [nullaway, jspecify, error-prone]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ApplicationTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "Shows the marked code passes; no test returns null from a marked method to see the build fail."
+- id: ev-bld-nullaway-2
+  card: bld-nullaway
+  claim: "@NullMarked on a package does not apply to its subpackages and with OnlyNullMarked NullAway does not check code outside marked packages."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the JSpecify NullMarked documentation and the NullAway configuration wiki."
+  reason: "No test adds an unmarked package to show it goes unchecked."
+- id: ev-bld-format-1
+  card: bld-format
+  claim: "spotlessCheck with palantir-java-format 2.102.0 runs as part of check and passes on the fixture code."
+  badge: compiled
+  capabilities: [compile]
+  components: [spotless-gradle-plugin, palantir-java-format]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ApplicationTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "Shows the code is formatted; no test commits unformatted code to see the check fail."
+- id: ev-bld-sbom-1
+  card: bld-sbom
+  claim: "./gradlew build runs cyclonedxBom and writes a CycloneDX JSON SBOM to build/sbom/bom.json."
+  badge: compiled
+  capabilities: [compile]
+  components: [cyclonedx-gradle-plugin]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ApplicationTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "The fixture workflow reads build/sbom/bom.json in the same run to compare versions with the baseline; the SBOM content is not otherwise checked."
+- id: ev-bld-updates-1
+  card: bld-updates
+  claim: "Renovate with config:recommended and minimumReleaseAge opens update pull requests for gradle/libs.versions.toml and the Gradle wrapper."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Renovate 44.166.0 documentation for the gradle and gradle-wrapper managers."
+  reason: "The example service has no Renovate configuration and no test runs Renovate."

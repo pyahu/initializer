@@ -1,0 +1,66 @@
+---
+// Before and after: a gRPC client behind a cluster IP Service sends every call to one pod; a headless Service with
+// round_robin spreads the calls over all pods.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="grpc-conn-balance"
+  caption="A cluster IP Service balances connections; gRPC keeps one connection, so balance the calls instead."
+  description="Two panels. Left, the failure, marked with a cross: a gRPC client opens one HTTP/2 connection to a Kubernetes Service with a cluster IP; the Service picks one pod for that connection, so pod 1 receives every call while pods 2 and 3 stay idle. Right, the recommendation: the client resolves a headless Service through DNS, gets one address per pod, opens a connection to each and uses the round_robin policy, so each of the three pods receives about a third of the calls. A note at the bottom says that a cluster IP balances connections, gRPC keeps one connection open, so calls must be balanced in the client or by a service mesh.">
+  <svg viewBox="0 0 1000 400">
+    <defs>
+      <marker id="grpc-conn-balance-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="grpc-conn-balance-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+      <marker id="grpc-conn-balance-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-fail" /></marker>
+    </defs>
+
+    <rect x="16" y="16" width="476" height="330" rx="8" class="dg-frame" />
+    <text x="32" y="42" class="dg-group">✕ BEFORE · CLUSTER IP SERVICE</text>
+
+    <rect x="32" y="150" width="124" height="80" rx="6" class="dg-box" />
+    <text x="46" y="178" class="dg-title">Client</text>
+    <text x="46" y="200" class="dg-detail">one HTTP/2</text>
+    <text x="46" y="218" class="dg-detail">connection</text>
+    <path d="M156 190 H184" class="dg-line dg-fail" marker-end="url(#grpc-conn-balance-fail)" />
+
+    <rect x="186" y="150" width="124" height="80" rx="6" class="dg-box" />
+    <text x="200" y="178" class="dg-title">Service</text>
+    <text x="200" y="200" class="dg-detail">cluster IP,</text>
+    <text x="200" y="218" class="dg-detail">picks one pod</text>
+
+    <path d="M310 190 C326 190 322 103 340 103" class="dg-line dg-fail" fill="none" marker-end="url(#grpc-conn-balance-fail)" />
+    <rect x="342" y="70" width="134" height="66" rx="6" class="dg-box dg-fail" />
+    <text x="356" y="96" class="dg-title">✕ Pod 1</text>
+    <text x="356" y="120" class="dg-detail">every call</text>
+    <rect x="342" y="158" width="134" height="66" rx="6" class="dg-box" />
+    <text x="356" y="184" class="dg-title">Pod 2</text>
+    <text x="356" y="208" class="dg-detail">idle</text>
+    <rect x="342" y="246" width="134" height="66" rx="6" class="dg-box" />
+    <text x="356" y="272" class="dg-title">Pod 3</text>
+    <text x="356" y="296" class="dg-detail">idle</text>
+
+    <rect x="508" y="16" width="476" height="330" rx="8" class="dg-frame" />
+    <text x="524" y="42" class="dg-group">AFTER · HEADLESS SERVICE + ROUND ROBIN</text>
+
+    <rect x="524" y="140" width="150" height="100" rx="6" class="dg-box dg-emphasis" />
+    <text x="538" y="168" class="dg-title">Client</text>
+    <text x="538" y="190" class="dg-detail">round_robin,</text>
+    <text x="538" y="208" class="dg-detail">a connection</text>
+    <text x="538" y="226" class="dg-detail">to each pod</text>
+    <text x="524" y="264" class="dg-note">DNS: one address per pod</text>
+
+    <path d="M674 175 C720 175 740 103 806 103" class="dg-line dg-accent" fill="none" marker-end="url(#grpc-conn-balance-accent)" />
+    <path d="M674 190 H806" class="dg-line dg-accent" marker-end="url(#grpc-conn-balance-accent)" />
+    <path d="M674 205 C720 205 740 279 806 279" class="dg-line dg-accent" fill="none" marker-end="url(#grpc-conn-balance-accent)" />
+    <rect x="808" y="70" width="160" height="66" rx="6" class="dg-box" />
+    <text x="822" y="96" class="dg-title">Pod 1</text>
+    <text x="822" y="120" class="dg-detail">a third of calls</text>
+    <rect x="808" y="158" width="160" height="66" rx="6" class="dg-box" />
+    <text x="822" y="184" class="dg-title">Pod 2</text>
+    <text x="822" y="208" class="dg-detail">a third of calls</text>
+    <rect x="808" y="246" width="160" height="66" rx="6" class="dg-box" />
+    <text x="822" y="272" class="dg-title">Pod 3</text>
+    <text x="822" y="296" class="dg-detail">a third of calls</text>
+
+    <text x="20" y="378" class="dg-note">A cluster IP balances connections. gRPC keeps one open, so balance the calls in the client or in a mesh.</text>
+  </svg>
+</Diagram>

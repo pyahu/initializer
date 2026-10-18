@@ -1,0 +1,64 @@
+# Evidence records for the grpc guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-grpc-when-1
+  card: grpc-when
+  claim: "gRPC carries Protocol Buffers messages over HTTP/2, many calls share one connection and a call can stream in either direction."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the gRPC core concepts documentation."
+  reason: "The example service has no gRPC endpoint, so no test calls one."
+- id: ev-grpc-contract-1
+  card: grpc-contract
+  claim: "buf breaking --against a previous version fails when a field changes type. Reusing a field number breaks old readers."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Taken from the buf breaking documentation and the Protocol Buffers dos and don'ts."
+  reason: "No .proto file exists in this repository and buf is not pinned in the baseline."
+- id: ev-grpc-boot-setup-1
+  card: grpc-boot-setup
+  claim: "With spring-boot-starter-grpc-server, Spring Boot 4.1.1 serves @GrpcService beans on a Netty server on port 9090, separate from the servlet container."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Boot 4.1 gRPC reference and the spring-boot-grpc-server 4.1.1 sources; the BOM manages Spring gRPC 1.1.1, gRPC Java 1.83.1 and Protocol Buffers 4.35.1."
+  reason: "The example service has no gRPC dependency, so nothing starts the server in a test."
+- id: ev-grpc-deadlines-1
+  card: grpc-deadlines
+  claim: "gRPC sets no deadline by default; spring.grpc.client.channel.<name>.default.deadline gives every call on a channel one."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Default behaviour from the gRPC deadlines guide; the property from the spring-boot-grpc-client 4.1.1 sources."
+  reason: "No client channel exists in the example service, so no test lets a call hit its deadline."
+- id: ev-grpc-status-1
+  card: grpc-status
+  claim: "gRPC Java enables retries but has no default retry policy, so a call is retried only when the service config sets one."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the gRPC retry guide; the retry fields from the Boot 4.1.1 ServiceConfig record."
+  reason: "No gRPC client in the example service, so no test exercises a retry."
+- id: ev-grpc-health-1
+  card: grpc-health
+  claim: "Boot 4.1.1 starts the gRPC health service when the app has a gRPC service, refreshes it from application health every 5 seconds and turns server reflection on by default."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the spring-boot-grpc-server 4.1.1 configuration metadata and auto-configuration conditions."
+  reason: "The example service has no gRPC server, so the health service never starts in a test."
+- id: ev-grpc-health-2
+  card: grpc-health
+  claim: "Kubernetes probes can call the gRPC health checking protocol directly with the grpc probe type, stable since Kubernetes 1.27."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Kubernetes probe documentation."
+  reason: "No cluster runs the example service in a test yet."
+- id: ev-grpc-load-balancing-1
+  card: grpc-load-balancing
+  claim: "Behind a cluster IP Service a gRPC client sends every call to one pod; a headless Service with a dns target and round_robin spreads the calls."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the gRPC load balancing article, the Kubernetes Service documentation and Boot's round_robin channel default."
+  reason: "Needs a cluster with several gRPC pods and a call counter per pod; no such test exists."
+- id: ev-grpc-observe-secure-1
+  card: grpc-observe-secure
+  claim: "Boot 4.1.1 records Micrometer observations for gRPC servers and clients by default and reads TLS settings from an SSL bundle on the server and on each channel."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the spring-boot-grpc-server and spring-boot-grpc-client 4.1.1 configuration metadata."
+  reason: "The example service has no gRPC traffic to trace or encrypt."

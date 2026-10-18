@@ -1,0 +1,342 @@
+---
+title: Testing a Spring Boot service
+description: What to test at each layer and with which tool, from fast domain tests to tests against the built image.
+tableOfContents: { maxHeadingLevel: 2 }
+guide:
+  id: testing
+  prefix: TEST
+  state: draft
+  baseline: v0.1-b1
+  components: [java, spring-boot, spring-framework, testcontainers, postgres-image, spring-modulith, archunit, jmolecules-archunit, temurin-jre-image]
+  verification: null
+  questions:
+    - id: TEST-Q1
+      text: "Where should most of my tests live?"
+      answeredIn: test-layers
+    - id: TEST-Q2
+      text: "How do I test business rules without starting Spring?"
+      answeredIn: test-domain
+    - id: TEST-Q3
+      text: "How do I test one endpoint quickly?"
+      answeredIn: test-slices
+    - id: TEST-Q4
+      text: "How do I stop the architecture from drifting?"
+      answeredIn: test-architecture
+    - id: TEST-Q5
+      text: "How do I test against a real database?"
+      answeredIn: test-real-database
+    - id: TEST-Q6
+      text: "How do I test calls to other services?"
+      answeredIn: test-outbound-http
+    - id: TEST-Q7
+      text: "Why is my test suite so slow?"
+      answeredIn: test-context-cache
+    - id: TEST-Q8
+      text: "How do I know the image really works?"
+      answeredIn: test-image
+---
+import GuideStatus from '../../../components/GuideStatus.astro';
+import Recipe from '../../../components/Recipe.astro';
+import Checklist from '../../../components/Checklist.astro';
+import GuideReferences from '../../../components/GuideReferences.astro';
+import DiagramLegend from '../../../components/DiagramLegend.astro';
+import TestPyramidDiagram from '../../../components/diagrams/TestPyramidDiagram.astro';
+
+The build takes twelve minutes and half of that is tests that start the whole application to check one `if`. A
+change to a controller breaks a test about the database. A bug still reaches production, because the one thing
+nobody tested was the image that actually runs.
+
+This guide puts each kind of test where it pays: many fast tests for the logic, a few focused ones for each layer of
+Spring, rules that keep the architecture honest and a small number of slow tests against real PostgreSQL and the
+built image.
+
+<GuideStatus guide="testing" />
+
+<a id="test-layers"></a>
+
+## 1. Where should most of my tests live?
+
+**In short:** at the bottom. Many fast tests for the domain, fewer for each layer of Spring and only a handful that
+start everything.
+
+### What's going on
+
+Think of tests as a pyramid. The bottom is wide: tests that run in milliseconds and check one rule each. The top is
+narrow: tests that start the whole application, a database or a container. They take seconds or minutes.
+
+Each layer catches what the one below cannot. A domain test cannot see a wrong URL mapping; a slice test can. A slice
+test cannot see a broken image; only a test against the image can. Upside down, with every test a
+`@SpringBootTest`, the suite gets slow and a failure no longer tells you which layer broke.
+
+<TestPyramidDiagram />
+<DiagramLegend items={['recommended', 'context', 'failure']} />
+
+### Do this
+
+1. Write a domain test for every business rule (step 2).
+2. Give each adapter a slice test: web (step 3), database (step 5), outbound HTTP (step 6).
+3. Add architecture rules once and let them run on every build (step 4).
+4. Keep `@SpringBootTest` for a few tests that prove the wiring and test the built image last (step 8).
+
+### When this is not for you
+
+- A thin service that only maps one API onto another: most of its risk is in the adapters, so slices and a few
+  integration tests carry more weight than domain tests.
+
+<a id="test-domain"></a>
+
+## 2. How do I test business rules without starting Spring?
+
+**In short:** keep the domain free of Spring and test it with plain JUnit and AssertJ.
+
+### What's going on
+
+A rule such as "an order over the credit limit is rejected" does not need a web server, a database or a Spring
+context. If the domain classes are plain Java, a test creates them with `new`, calls a method and checks the result.
+It runs in milliseconds, so you can have hundreds.
+
+This only works if the domain does not reach for Spring. The [architecture guide](/guides/architecture/) shows how
+the rules in step 4 keep it that way.
+
+### Do this
+
+1. Put business rules in domain classes, not in controllers or repositories.
+2. Test them with JUnit and AssertJ, which `spring-boot-starter-test` already brings. No annotations on the test
+   class.
+3. Test the rule and its edges: the limit itself, just under it and just over it.
+
+### When this is not for you
+
+- Logic that is mostly SQL: a domain test cannot prove the query. Test it against PostgreSQL (step 5).
+
+<a id="test-slices"></a>
+
+## 3. How do I test one endpoint quickly?
+
+**In short:** use a slice test such as `@WebMvcTest`. It starts only the web layer. Replace what the controller
+calls with `@MockitoBean`.
+
+```java
+@WebMvcTest(PingController.class)
+class PingControllerTest {
+
+    @Autowired
+    MockMvcTester mvc;
+
+    @MockitoBean
+    Ping ping;
+
+    @Test
+    void answersPong() {
+        given(ping.ping()).willReturn(new Pong("pong"));
+        assertThat(mvc.get().uri("/ping")).hasStatusOk().hasBodyTextEqualTo("pong");
+    }
+}
+```
+
+### What's going on
+
+A slice starts one layer of Spring and nothing else. `@WebMvcTest` brings up the controllers, JSON and the MVC
+machinery, with no database and no services. The test checks the mapping, the status code and the body, the things
+a domain test cannot see.
+
+In Spring Boot 4 each slice lives in its own test module with its own starter: `spring-boot-starter-webmvc-test`
+for `@WebMvcTest`, `spring-boot-starter-data-jdbc-test` for `@DataJdbcTest` and
+`spring-boot-starter-restclient-test` for `@RestClientTest`. `MockMvcTester` wraps MockMvc with AssertJ.
+
+### Do this
+
+1. Add the test starter for each slice you use, for example `spring-boot-starter-webmvc-test`.
+2. Name the controller in `@WebMvcTest`, so only it starts.
+3. Replace its collaborators with `@MockitoBean`, from Spring Framework's test support.
+4. Assert the status, the headers and the body, including the error responses.
+
+### When this is not for you
+
+- You need to see two layers work together, such as a controller and a real query: that is an integration test
+  (step 5).
+- `@MockitoBean` changes the Spring context, so each different set of mocks costs a new context. Step 7 explains why
+  that matters.
+
+<a id="test-architecture"></a>
+
+## 4. How do I stop the architecture from drifting?
+
+**In short:** turn the rules into tests. ArchUnit and the jMolecules rules check the layers; Spring Modulith checks
+the modules. They fail the build when someone takes a shortcut.
+
+### What's going on
+
+An architecture lives in people's heads until a deadline. Then a controller calls a repository directly or the
+domain imports a web class and nobody notices for months.
+
+These tests do not start the application. They read the compiled classes and check who depends on whom.
+`ApplicationModules.verify()` fails when one module reaches into another's internals or when modules form a cycle.
+The jMolecules rule fails when a port depends on an adapter. Your own ArchUnit rules cover what the libraries do not.
+
+### Do this
+
+1. Add `spring-modulith-starter-test`, `archunit-junit5` and `jmolecules-archunit`.
+2. Write one test that calls `ApplicationModules.of(Application.class).verify()`.
+3. Add an ArchUnit test class with the jMolecules rule for your style and a rule for anything it misses, such as
+   what the domain may depend on.
+4. Run both in the normal build. The [architecture guide](/guides/architecture/) explains the rules themselves.
+
+### When this is not for you
+
+- These tests prove the dependencies, not that the boundaries are good ones. A wrong module split passes them
+  happily.
+
+<a id="test-real-database"></a>
+
+## 5. How do I test against a real database?
+
+**In short:** start PostgreSQL in a container with Testcontainers 2 and let `@ServiceConnection` wire it in. Never
+test SQL against a database that runs in memory.
+
+### What's going on
+
+A database that runs in memory, such as H2, hides the problems that matter: locks, types, timeouts and statements that only PostgreSQL has.
+Testcontainers starts the real thing in Docker for the test run. `@ServiceConnection` on the container tells Spring
+Boot where it is, so the test has no URL or password in it.
+
+Declare the container as a `@Bean` in a `@TestConfiguration` and import it: Spring then starts it once and shares it
+with every test that uses the same context. The [database guide](/guides/database/) covers the database side:
+migrations, versions and pools.
+
+### Do this
+
+1. Add `spring-boot-testcontainers` and `testcontainers-postgresql`.
+2. Declare a `@Bean` returning `org.testcontainers.postgresql.PostgreSQLContainer` with your production major
+   version and annotate it with `@ServiceConnection`.
+3. Use `@DataJdbcTest` for repository tests or `@SpringBootTest` for the full path. Import the same
+   configuration in both. `@DataJdbcTest` keeps a `@ServiceConnection` database instead of swapping in an embedded
+   one.
+4. Let the real migrations run in the test, so a broken changeset fails the build.
+
+### When this is not for you
+
+- The build machine has no Docker: run these tests in CI only and keep the rest of the suite runnable without
+  it.
+
+<a id="test-outbound-http"></a>
+
+## 6. How do I test calls to other services?
+
+**In short:** use `@RestClientTest`, which gives you a `MockRestServiceServer` to stand in for the other service.
+
+### What's going on
+
+Your client code builds a URL, sends headers, parses the answer and handles errors. Calling the real service in a
+test is slow, flaky and sometimes impossible. `@RestClientTest` starts only your client class and a fake server that
+answers what you tell it to, so you can test the happy path and the failures: a 500, a slow answer, a bad body.
+
+### Do this
+
+1. Add `spring-boot-starter-restclient-test`.
+2. Build your client from the `RestClient.Builder` that Boot provides.
+3. Name the client in `@RestClientTest`, then set expectations on `MockRestServiceServer`: the request it should
+   see and the response it gives back.
+4. Test the error paths, not just the happy one. The [HTTP clients guide](/guides/http-clients/) lists which ones
+   matter.
+
+### When this is not for you
+
+- Timeouts and connection pools are not exercised by a mock server. Check those against a real network, such as a
+  container that answers slowly.
+
+<a id="test-context-cache"></a>
+
+## 7. Why is my test suite so slow?
+
+**In short:** usually because Spring starts a new context for many test classes. Keep the configuration of your
+Spring tests the same, so they share one cached context.
+
+### What's going on
+
+Starting a Spring context takes seconds. Spring caches each context and reuses it for every test class with the
+same configuration, in the same JVM. The cache key includes the active profiles, test properties, dynamic property
+sources and bean overrides such as `@MockitoBean`. Change any of them and you pay for a new context.
+
+The cache holds 32 contexts by default and closes the least recently used one when it is full. If the build forks
+a new JVM per test class, nothing is cached at all.
+
+### Do this
+
+1. Put shared setup, such as the database container, in one `@TestConfiguration` that every integration test
+   imports.
+2. Keep `@MockitoBean` in slice tests, not in `@SpringBootTest` classes.
+3. Avoid `@DirtiesContext`; it throws the context away.
+4. Run the tests in one JVM. Gradle does by default; `forkEvery` or more than one `maxParallelForks` splits them
+   across JVMs and each JVM builds its own cache.
+
+### When this is not for you
+
+- A test that truly needs a different setup, such as another profile: give it its own context and keep the number
+  of such tests small.
+
+<a id="test-image"></a>
+
+## 8. How do I know the image really works?
+
+**In short:** test the built image, the way production runs it: start it with Docker and check what it does from
+the outside.
+
+### What's going on
+
+Every test so far runs your code inside the test JVM. None of them runs the Dockerfile, the JVM flags in the
+`ENTRYPOINT`, the user the container runs as or a read-only disk. Those break in production and nowhere else.
+
+This repository's example service is checked that way: Go tests start its image with Docker as user 10001 on a
+read-only root filesystem, then assert that `/readyz` answers. Others send a request and look for its trace, metric and
+log in a real observability backend.
+
+### Do this
+
+1. Build the image in CI, then run a small suite against it before pushing it.
+2. Start it like production: the same `ENTRYPOINT`, a read-only root filesystem, a user other than root and the
+   same memory limit.
+3. Assert behaviour from outside: a probe answers, a request succeeds, telemetry arrives.
+4. Keep this suite small. It is the top of the pyramid.
+
+### When this is not for you
+
+- A library or a service that is never shipped as an image: stop at the integration tests.
+
+## Put it all together
+
+The example service has the tests from steps 1, 4 and 8. Its build runs them on every change.
+
+### The application starts and answers
+
+One `@SpringBootTest` proves the wiring: the context starts and the use case answers through its port.
+
+<Recipe id="test-application" path="fixtures/single-hexagonal/src/test/java/io/pyahu/fixture/hexagonal/ApplicationTest.java" start="@SpringBootTest" end="}" lang="java" />
+
+**Check it:** `./gradlew build` reports `ApplicationTest: 1 tests, 0 failures`.
+
+### The modules and the layers stay in place
+
+`ApplicationModules.verify()` checks the module structure. The ArchUnit class checks the hexagonal rule, what the
+domain may depend on and that nothing outside the adapters sees them (step 4).
+
+<Recipe id="test-modulith" path="fixtures/single-hexagonal/src/test/java/io/pyahu/fixture/hexagonal/ModulithTest.java" start="@Test" end="}" lang="java" />
+
+<Recipe id="test-architecture-rules" path="fixtures/single-hexagonal/src/test/java/io/pyahu/fixture/hexagonal/ArchitectureTest.java" start="@AnalyzeClasses" end="}" lang="java" />
+
+**Check it:** add an import of an adapter class to a domain class and run `./gradlew test`: `ArchitectureTest`
+fails and names the class.
+
+### In CI
+
+- The Gradle build runs the domain, slice and architecture tests on every push (steps 2 to 4).
+- Integration tests with Testcontainers run where Docker is available (step 5).
+- After the image is built, a small suite starts it as production does and checks it from outside (step 8).
+
+## Checklist
+
+<Checklist guide="testing" />
+
+## References
+
+<GuideReferences guide="testing" />

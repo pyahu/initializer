@@ -21,8 +21,8 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1, ev-vt-enable-1]
-            runtime: [ev-img-non-root-1, ev-jvm-aot-cache-2, ev-jvm-aot-cache-3, ev-jvm-cpu-count-1, ev-jvm-flag-placement-1, ev-jvm-gc-explicit-1, ev-jvm-gc-explicit-2, ev-jvm-gc-explicit-3, ev-jvm-gc-explicit-4, ev-jvm-heap-sizing-1, ev-kube-probes-1, ev-vt-cpu-work-1]
+            compile: [ev-bld-error-prone-1, ev-bld-wrapper-1, ev-ci-pinned-jdk-1, ev-obs-starter-not-agent-1, ev-test-slices-1, ev-vt-enable-1]
+            runtime: [ev-ci-test-order-1, ev-img-non-root-1, ev-jvm-aot-cache-2, ev-jvm-aot-cache-3, ev-jvm-cpu-count-1, ev-jvm-flag-placement-1, ev-jvm-gc-explicit-1, ev-jvm-gc-explicit-2, ev-jvm-gc-explicit-3, ev-jvm-gc-explicit-4, ev-jvm-heap-sizing-1, ev-kube-probes-1, ev-vt-cpu-work-1]
       temurin-jdk-image:
         version: "25.0.4.1_1-jdk-noble"
         kind: image
@@ -35,7 +35,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
+            compile: [ev-bld-wrapper-1, ev-ci-pinned-jdk-1, ev-obs-starter-not-agent-1]
             image: [ev-img-layers-1, ev-jvm-aot-cache-1]
       temurin-jre-image:
         version: "25.0.4.1_1-jre-noble"
@@ -49,8 +49,8 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            image: [ev-img-layers-1, ev-img-non-root-1, ev-jvm-aot-cache-1, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-sec-pod-hardening-1]
-            runtime: [ev-img-non-root-1, ev-jvm-aot-cache-2, ev-jvm-aot-cache-3, ev-jvm-cpu-count-1, ev-jvm-flag-placement-1, ev-jvm-gc-explicit-1, ev-jvm-gc-explicit-2, ev-jvm-gc-explicit-3, ev-jvm-gc-explicit-4, ev-jvm-heap-sizing-1, ev-kube-probes-1, ev-sec-pod-hardening-1, ev-vt-cpu-work-1]
+            image: [ev-ci-test-order-1, ev-img-layers-1, ev-img-non-root-1, ev-jvm-aot-cache-1, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-sec-pod-hardening-1, ev-test-image-1]
+            runtime: [ev-ci-test-order-1, ev-img-non-root-1, ev-jvm-aot-cache-2, ev-jvm-aot-cache-3, ev-jvm-cpu-count-1, ev-jvm-flag-placement-1, ev-jvm-gc-explicit-1, ev-jvm-gc-explicit-2, ev-jvm-gc-explicit-3, ev-jvm-gc-explicit-4, ev-jvm-heap-sizing-1, ev-kube-probes-1, ev-sec-pod-hardening-1, ev-test-image-1, ev-vt-cpu-work-1]
       gradle:
         version: "9.8.1"
         kind: tool
@@ -62,7 +62,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-img-sbom-1, ev-obs-starter-not-agent-1]
+            compile: [ev-bld-boms-1, ev-bld-version-catalog-1, ev-bld-wrapper-1, ev-ci-pinned-jdk-1, ev-img-sbom-1, ev-obs-starter-not-agent-1]
       spring-boot:
         version: "4.1.1"
         kind: maven-bom
@@ -75,8 +75,8 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-img-sbom-1, ev-obs-starter-not-agent-1, ev-vt-enable-1]
-            runtime: [ev-img-non-root-1, ev-jvm-aot-cache-3, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-obs-actuator-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1, ev-sec-pod-hardening-1]
+            compile: [ev-arch-capabilities-1, ev-bld-boms-1, ev-img-sbom-1, ev-obs-starter-not-agent-1, ev-test-slices-1, ev-vt-enable-1]
+            runtime: [ev-ci-test-order-1, ev-img-non-root-1, ev-jvm-aot-cache-3, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-local-same-config-1, ev-local-telemetry-1, ev-obs-actuator-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1, ev-sec-pod-hardening-1, ev-test-image-1]
       spring-framework:
         version: "7.0.9"
         kind: maven
@@ -88,8 +88,8 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1, ev-vt-enable-1]
-            runtime: [ev-img-non-root-1, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
+            compile: [ev-obs-starter-not-agent-1, ev-test-slices-1, ev-vt-enable-1]
+            runtime: [ev-ci-test-order-1, ev-img-non-root-1, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
       spring-data:
         version: "2026.0.1"
         kind: maven-bom
@@ -171,7 +171,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
+            compile: [ev-arch-pure-domain-1, ev-bld-nullaway-1, ev-obs-starter-not-agent-1]
       liquibase:
         version: "5.0.3"
         kind: maven
@@ -214,9 +214,10 @@ revisions:
         guides: []
         claims: [compile, test]
         qualification:
-          state: partial
+          state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
+            compile: [ev-arch-capabilities-1, ev-arch-rules-tested-1, ev-bld-boms-1, ev-obs-starter-not-agent-1]
+            test: [ev-arch-capabilities-1, ev-arch-rules-tested-1, ev-test-architecture-1]
       jmolecules-bom:
         version: "2025.0.2"
         kind: maven-bom
@@ -228,7 +229,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
+            compile: [ev-arch-hexagonal-1, ev-bld-boms-1, ev-obs-starter-not-agent-1]
       jmolecules-archunit:
         version: "0.33.0"
         kind: maven
@@ -238,8 +239,9 @@ revisions:
         guides: []
         claims: [test]
         qualification:
-          state: provisional
-          capabilities: {}
+          state: qualified
+          capabilities:
+            test: [ev-arch-hexagonal-1, ev-arch-rules-tested-1, ev-rest-generate-1, ev-test-architecture-2]
       archunit:
         version: "1.5.1"
         kind: maven
@@ -249,8 +251,9 @@ revisions:
         guides: []
         claims: [test]
         qualification:
-          state: provisional
-          capabilities: {}
+          state: qualified
+          capabilities:
+            test: [ev-arch-hexagonal-1, ev-arch-pure-domain-1, ev-arch-rules-tested-1, ev-rest-generate-1, ev-test-architecture-2]
       error-prone:
         version: "2.50.0"
         kind: maven
@@ -262,7 +265,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
+            compile: [ev-bld-error-prone-1, ev-bld-nullaway-1, ev-obs-starter-not-agent-1]
       errorprone-gradle-plugin:
         version: "5.1.1"
         kind: gradle-plugin
@@ -274,7 +277,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
+            compile: [ev-bld-error-prone-1, ev-obs-starter-not-agent-1]
       nullaway:
         version: "0.14.2"
         kind: maven
@@ -286,7 +289,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
+            compile: [ev-bld-nullaway-1, ev-obs-starter-not-agent-1]
       spotless-gradle-plugin:
         version: "8.10.4"
         kind: gradle-plugin
@@ -298,7 +301,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
+            compile: [ev-bld-format-1, ev-obs-starter-not-agent-1]
       palantir-java-format:
         version: "2.102.0"
         kind: maven
@@ -310,7 +313,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
+            compile: [ev-bld-format-1, ev-obs-starter-not-agent-1]
       cyclonedx-gradle-plugin:
         version: "3.5.1"
         kind: gradle-plugin
@@ -322,7 +325,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-img-sbom-1, ev-obs-starter-not-agent-1]
+            compile: [ev-bld-sbom-1, ev-img-sbom-1, ev-obs-starter-not-agent-1]
       openapi-generator-gradle-plugin:
         version: "7.26.0"
         kind: gradle-plugin
@@ -379,7 +382,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            test: [ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
+            test: [ev-local-same-config-1, ev-local-telemetry-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
       kubernetes-1.36:
         version: "1.36.5"
         kind: platform

@@ -73,3 +73,10 @@
   baseline: v0.1-b1
   limitations: "Taken from the ShedLock README; ShedLock is not part of baseline v0.1-b1."
   reason: "The example service has no database and no scheduled task yet."
+- id: ev-kube-diagnose-1
+  card: kube-diagnose
+  claim: "kubectl logs with --previous shows the log of the container instance that crashed. kubectl describe pod lists the events that explain Pending, ImagePullBackOff and failing probes."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Kubernetes debugging documentation and the source guide runbook."
+  reason: "A diagnosis procedure; it needs a cluster and no cluster test runs yet."

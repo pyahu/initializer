@@ -1,0 +1,56 @@
+---
+// Flow: the local loop. The app starts its containers and Boot wires them back as service connections.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="local-loop-stack"
+  caption="The local loop: the app starts its real dependencies and Spring Boot wires them back, with no URLs in your config."
+  description="Three numbered stages from left to right. 1, code: the app runs in your IDE with devtools, which restarts it on every compile. 2, start, recommended: Spring Boot's Docker Compose support reads compose.yml and runs docker compose up when the app starts; optional, dashed: Testcontainers beans started by a TestApplication launcher with bootTestRun do the same from Java. 3, containers: postgres:18.6, the same version as production and grafana/otel-lgtm:0.37.0 with OTLP on port 4318 and Grafana on port 3000. A highlighted path returns from the containers to the app: service connections, where Boot takes the URL, user and password from each container, so the config holds none of them. Failure, at the bottom: mocks or an embedded database pass on the laptop, then the first real query fails in CI or production.">
+  <svg viewBox="0 0 1000 430">
+    <defs>
+      <marker id="local-loop-stack-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="local-loop-stack-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+    </defs>
+    <text x="20" y="32" class="dg-group">1 · CODE</text>
+    <text x="320" y="32" class="dg-group">2 · START</text>
+    <text x="650" y="32" class="dg-group">3 · CONTAINERS</text>
+
+    <rect x="20" y="50" width="250" height="110" rx="6" class="dg-box dg-emphasis" />
+    <text x="36" y="78" class="dg-title">App in your IDE</text>
+    <text x="36" y="104" class="dg-detail">devtools restarts it</text>
+    <text x="36" y="124" class="dg-detail">on every compile</text>
+    <text x="36" y="144" class="dg-detail">same config keys as prod</text>
+
+    <path d="M270 92 H318" class="dg-line dg-accent" marker-end="url(#local-loop-stack-accent)" />
+    <rect x="320" y="50" width="280" height="84" rx="6" class="dg-box dg-emphasis" />
+    <text x="336" y="78" class="dg-title">Docker Compose support</text>
+    <text x="336" y="102" class="dg-detail">reads compose.yml</text>
+    <text x="336" y="122" class="dg-detail">docker compose up at start</text>
+
+    <path d="M200 160 V212 H318" class="dg-line dg-dash" marker-end="url(#local-loop-stack-arrow)" />
+    <rect x="320" y="170" width="280" height="84" rx="6" class="dg-box" />
+    <text x="336" y="198" class="dg-title">or Testcontainers</text>
+    <text x="336" y="222" class="dg-detail">TestApplication launcher</text>
+    <text x="336" y="242" class="dg-detail">./gradlew bootTestRun</text>
+
+    <path d="M600 92 H648" class="dg-line dg-accent" marker-end="url(#local-loop-stack-accent)" />
+    <path d="M600 110 C624 110 624 212 648 212" class="dg-line dg-accent" marker-end="url(#local-loop-stack-accent)" />
+    <path d="M600 212 C624 212 624 100 648 100" class="dg-line dg-dash" />
+    <path d="M600 230 H648" class="dg-line dg-dash" />
+
+    <rect x="650" y="50" width="330" height="84" rx="6" class="dg-box" />
+    <text x="666" y="78" class="dg-title">postgres:18.6</text>
+    <text x="666" y="102" class="dg-detail">the version production runs</text>
+    <text x="666" y="122" class="dg-detail">port mapped by Docker</text>
+    <rect x="650" y="170" width="330" height="84" rx="6" class="dg-box" />
+    <text x="666" y="198" class="dg-title">grafana/otel-lgtm:0.37.0</text>
+    <text x="666" y="222" class="dg-detail">OTLP on :4318</text>
+    <text x="666" y="242" class="dg-detail">Grafana on :3000</text>
+
+    <path d="M815 254 V292 H145 V162" class="dg-line dg-accent" marker-end="url(#local-loop-stack-accent)" />
+    <text x="480" y="312" text-anchor="middle" class="dg-note dg-accent">service connections: Boot takes URL, user and password from each container</text>
+
+    <rect x="20" y="340" width="960" height="64" rx="6" class="dg-box dg-fail" />
+    <text x="36" y="366" class="dg-title">✕ Mocks or an embedded database</text>
+    <text x="36" y="390" class="dg-detail">pass on the laptop, then the first real query fails in CI or production</text>
+  </svg>
+</Diagram>

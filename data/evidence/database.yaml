@@ -90,3 +90,17 @@
   baseline: v0.1-b1
   limitations: "Names read from HikariCP MicrometerMetricsTracker in the source guide."
   reason: "No test checks these metrics yet: the fixture has no data source."
+- id: ev-db-migration-job-1
+  card: db-migration-job
+  claim: "A Kubernetes Job retries failed pods up to backoffLimit (6 by default). activeDeadlineSeconds fails the whole Job once it runs too long."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Kubernetes Job documentation."
+  reason: "Needs a cluster and a database; no migration Job runs in this repository yet."
+- id: ev-db-migration-job-2
+  card: db-migration-job
+  claim: "liquibase release-locks removes a lock left in DATABASECHANGELOGLOCK by an interrupted run."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Liquibase release-locks documentation."
+  reason: "No database test runs in this repository yet."

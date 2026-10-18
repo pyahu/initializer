@@ -34,6 +34,9 @@ guide:
     - id: KUBE-Q8
       text: "Where should scheduled jobs run?"
       answeredIn: kube-scheduled-work
+    - id: KUBE-Q9
+      text: "Why is my pod not ready?"
+      answeredIn: kube-diagnose
   sources:
     - title: "06 · Deploying Spring Boot on Kubernetes"
       origin: spring-boot-production-guides/06-kubernetes-deployment.md
@@ -334,6 +337,54 @@ gives it its own pod, retries and a hard timeout.
 ### When this is not for you
 
 - One replica that will never scale: plain `@Scheduled` works, until the day it scales.
+
+<a id="kube-diagnose"></a>
+
+## 9. Why is my pod not ready?
+
+**In short:** read the pod's events first, then the logs of the container that crashed before, then call the
+probe yourself.
+
+```sh
+kubectl describe pod <pod>
+kubectl logs <pod> -c app --previous
+```
+
+### What's going on
+
+A pod that never becomes ready is stuck at one of a few gates. Each gate leaves a different trace. The status
+is the first clue:
+
+| Status | Usually | Look at |
+| ------ | ------- | ------- |
+| `Pending` | No node has room for the requests or a spread rule cannot be met | The events in `kubectl describe pod` |
+| `ImagePullBackOff` | A wrong tag or digest, no pull rights or an image for another CPU architecture | The events in `kubectl describe pod` |
+| `CrashLoopBackOff` | A missing setting or secret or the database unreachable at startup | `kubectl logs --previous` |
+| `OOMKilled`, exit code 137 | The limit is too small for the heap plus native memory | The container's last state, then the [JVM guide](/guides/jvm-in-containers/#jvm-heap-sizing) |
+| Running but not ready | The readiness probe fails or times out | The events, then the probe itself |
+
+The `--previous` flag matters. After a crash, plain `kubectl logs` shows the new container, which has not failed
+yet.
+
+### Do this
+
+1. Run `kubectl describe pod <pod>` and read the events at the bottom.
+2. For a crash, read `kubectl logs <pod> -c app --previous` and the container's last state in the same
+   `describe` output.
+3. For a failing probe, forward the ports with `kubectl port-forward pod/<pod> 8080 8081` and call `/livez` and
+   `/readyz` with `curl -v`.
+4. For a ready pod that gets no traffic, list the Service's endpoints with
+   `kubectl get endpointslices -l kubernetes.io/service-name=<service>`, then compare the Service selector and port
+   name with the pod. Check that a NetworkPolicy admits the caller.
+5. For a JVM problem in an image without a shell, attach a debug container that shares the app's processes:
+   `kubectl debug -it <pod> --image=<jdk image> --target=app -- jcmd 1 Thread.print`. It needs the right to create
+   ephemeral containers and the same user ID as the JVM.
+
+### When this is not for you
+
+- A probe that fails only under load points to thread starvation or long GC pauses, not to the probe itself: see
+  step 1 and the [JVM guide](/guides/jvm-in-containers/).
+- Spring Security that blocks `/livez` looks exactly like a failing probe: permit the probe paths.
 
 ## Put it all together
 

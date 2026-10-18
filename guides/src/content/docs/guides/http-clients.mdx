@@ -359,6 +359,9 @@ tested file.
 - `spring.http.serviceclient.<group>.base-url` from an environment variable, tighter timeouts and
   `redirects: dont-follow` per group (steps 1 and 2).
 - Histograms for `http.client.requests` (step 8).
+- `spring.http.serviceclient.<group>.ssl.bundle` when a downstream system requires mTLS.
+  [Security hardening, step 9](/guides/security/#sec-tls) explains SSL bundles and why a renewed client
+  certificate needs a pod restart.
 
 ### In the code
 
