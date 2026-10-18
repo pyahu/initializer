@@ -1,0 +1,119 @@
+---
+title: How we keep it current
+description: How the guides, their versions, their links and the generator stay up to date and the steps we follow to do it.
+tableOfContents: { maxHeadingLevel: 2 }
+---
+
+Production advice ages fast. A default changes in a minor release, a library moves, a link starts pointing to
+the wrong version. A guide that was right last year can quietly turn wrong.
+
+This page shows how we keep that from happening. It is also our own runbook: when we update the guides we follow
+these steps and everything they mention is public, from the versions to the test runs.
+
+## Four things that go out of date
+
+| What | How we notice | What we do |
+| ---- | ------------- | ---------- |
+| Versions | Renovate watches every dependency | Tooling updates merge on their own pull request. The versions the guides are written for change together in a new baseline revision. |
+| Advice | A guide's components change or someone reports a problem | The guide shows "Re-verify" until we read it again and the tests pass. |
+| Links to official docs | A check on every change and every Monday | We fix the link or record an exception that expires. |
+| The generator (planned) | It follows the baseline | A generator release ships only versions the guides were proven on. |
+
+## The baseline: one frozen list of versions
+
+Every guide is written for a **baseline revision**: a list of exact versions such as Java 25 and Spring Boot
+4.1.1, kept in [`data/versions.yaml`](https://github.com/pyahu/initializer/blob/main/data/versions.yaml). Today it
+is `v0.1-b1`.
+
+A revision never changes once it is published. New versions arrive as a new revision appended to the list, so
+every guide always says which versions it was checked against. Each version in a revision also carries how well
+the tests cover it: **qualified** when every claim about it has a passing test, **partial** when some do and
+**provisional** when none do yet.
+
+The [reference docs](/reference/docs/) list the active revision with the official documentation for each version.
+
+## Updates we take right away
+
+Some dependencies only run our own tooling: the GitHub Actions in CI, the Go modules of the checks and the
+packages that build this site. Renovate opens one pull request per group for their minor and patch updates.
+It waits three days after each release, so a broken release has time to be pulled. CI has to pass before the
+merge, like any other change.
+
+This is the setup the [build quality guide](/guides/build-quality/) recommends, applied to this repository.
+
+## Updates that wait for a new revision
+
+Updates to the baseline are different. The service that proves the guides runs exactly the versions of the
+baseline and its CI fails when they differ. The versions also appear in the guides' text and in the test results.
+Bumping one file would leave the rest saying something else.
+
+So Renovate does not open pull requests for them. It lists them on the
+[Dependency Dashboard](https://github.com/pyahu/initializer/issues?q=is%3Aissue%20%22Dependency%20Dashboard%22),
+an issue it keeps up to date. The same applies to the Go and Node.js toolchains, which are pinned in several
+files at once. We cut a new revision when enough has piled up or when one update matters.
+
+**Security fixes do not wait.** Renovate opens a pull request for them right away. It fails CI on purpose and
+that is the signal to cut a revision with the fix.
+
+## Cutting a new revision
+
+These are the steps we follow, in order.
+
+1. **Pick the updates** from the Dependency Dashboard. Read the release notes of each one.
+2. **Append the revision** to `data/versions.yaml`, for example `v0.1-b2`, with the new versions and image
+   digests. Make it `active`.
+3. **Update the service** in `fixtures/` to the same versions: the version catalog, the Gradle wrapper and the
+   Dockerfile.
+4. **Run the tests.** The fixture workflow builds the service and its image, runs every behaviour test and fails
+   if any resolved version differs from the revision. Then `guidekit qualify` records how well each version is
+   covered.
+5. **Read every guide that shows "Re-verify".** It lists the components that changed. Check each step that
+   depends on them, fix the text and the version numbers, then move the guide's `baseline` forward and record
+   the run that verified it.
+6. **Check the references.** Add the new revision to the official documentation entries. `guidekit check`
+   fails for every entry whose documentation version no longer matches a new version; give those a new entry
+   and keep the old one for the old revision.
+7. **Commit.** The site, the [Agent Skill](https://github.com/pyahu/initializer/tree/main/skills) and
+   `llms.txt` are generated from the same data, so all of them change together.
+
+## Keeping the advice right
+
+- **Re-verify.** A guide shows it when a later revision changed one of its components or when an open
+  invalidation names it. It stays until the guide is checked against the new versions.
+- **Stale.** A guide shows it when its baseline is more than two revisions behind the active one.
+- **Invalidations.** When we learn that advice is wrong, for example because of an upstream bug or a changed
+  default, we record it in
+  [`data/invalidations.yaml`](https://github.com/pyahu/initializer/blob/main/data/invalidations.yaml) with the
+  reason. Every guide it touches shows "Re-verify" until the record is closed.
+- **Untested claims say so.** Some claims need a cluster or a load test that has not run yet. Their records in
+  [`data/evidence`](https://github.com/pyahu/initializer/tree/main/data/evidence) say "not exercised" and why.
+- **Steps are retired, not deleted.** A removed step keeps its anchor in
+  [`data/retired.yaml`](https://github.com/pyahu/initializer/blob/main/data/retired.yaml), so links to it keep
+  working.
+
+## Keeping the links alive
+
+Every external link is checked on every change and again every Monday, together with the versions that a BOM
+manages. A link that is down for a reason we accept gets an exception with that reason. So does a security
+advisory with no fix yet. Every exception expires after at most 30 days, so none of them lasts by accident. They
+are in [`data/link-exceptions.yaml`](https://github.com/pyahu/initializer/blob/main/data/link-exceptions.yaml)
+and [`data/audit-exceptions.yaml`](https://github.com/pyahu/initializer/blob/main/data/audit-exceptions.yaml).
+
+## The generator
+
+The generator is still being built. It will produce the same code as the services that prove the guides, so a new
+project starts on a baseline that passed every test here. Each generator release will follow a baseline revision
+and no option will reach it before its guide and its tested service exist.
+
+A project you generate is yours from then on. Keep it current with Renovate in your own repository, as the
+[build quality guide](/guides/build-quality/) shows.
+
+## See it for yourself
+
+- [Dependency Dashboard](https://github.com/pyahu/initializer/issues?q=is%3Aissue%20%22Dependency%20Dashboard%22):
+  updates waiting for the next revision.
+- [`data/versions.yaml`](https://github.com/pyahu/initializer/blob/main/data/versions.yaml): every baseline
+  revision and how well each version is tested.
+- [CI runs](https://github.com/pyahu/initializer/actions): every build, test and link check.
+- [`renovate.json`](https://github.com/pyahu/initializer/blob/main/renovate.json): the rules on this page, as
+  Renovate reads them.

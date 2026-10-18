@@ -95,6 +95,7 @@ const proof = [
   { title: "Exact versions", text: "Each guide is written for one baseline: a frozen list of versions, such as Java 25 and Spring Boot 4.1.1. The reference page lists them with the official docs for each." },
   { title: "A real service behind the code", text: "Code in a guide comes from a small service in the repository. CI builds it and runs it on every change, so an upgrade that breaks the advice turns CI red first." },
   { title: "A test behind each claim", text: "Each claim is tied to a test, its command and its result, such as a 768 MiB heap in a 1 GiB pod. The records live on GitHub next to the CI runs that produced them." },
+  { title: "Kept current", text: "Renovate watches every dependency. New versions arrive as a new baseline and pass the same tests before any guide moves to it." },
   { title: "Gaps said out loud", text: "Some claims need a cluster or a load test that has not run yet. Their records say \"not exercised\" and why, so nothing untested passes as proven." },
 ];
 
@@ -199,7 +200,7 @@ const roadmap = [
         <article><strong>{p.title}</strong><p>{p.text}</p></article>
       ))}
     </div>
-    <a class="text-link" href="https://github.com/pyahu/initializer/tree/main/data/evidence">See the evidence on GitHub <Icon name="arrow" size={15} /></a>
+    <a class="text-link" href="/maintenance/">How we keep it current <Icon name="arrow" size={15} /></a>
   </section>
 
   <section class="section proof-section" id="roadmap" aria-labelledby="roadmap-title">

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Repository tooling gets pull requests. The baseline and the toolchains only appear on the Dependency Dashboard: they change through a new baseline revision. See https://initializer.pyahu.io/maintenance/.",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "timezone": "Europe/Berlin",
+  "minimumReleaseAge": "3 days",
+  "rangeStrategy": "pin",
+  "dependencyDashboardTitle": "Dependency Dashboard",
+  "dependencyDashboardHeader": "Tooling updates open pull requests. Baseline and toolchain updates wait here until we cut a new baseline revision: https://initializer.pyahu.io/maintenance/",
+  "packageRules": [
+    {
+      "description": "GitHub Actions: one pull request for minor and patch updates.",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "groupName": "GitHub Actions",
+      "labels": ["tooling"]
+    },
+    {
+      "description": "Go modules of guidekit and the acceptance tests: one pull request for minor and patch updates.",
+      "matchManagers": ["gomod"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "groupName": "Go modules",
+      "labels": ["tooling"]
+    },
+    {
+      "description": "The site: one pull request for minor and patch updates.",
+      "matchManagers": ["npm"],
+      "matchFileNames": ["guides/package.json"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Site dependencies",
+      "labels": ["tooling"]
+    },
+    {
+      "description": "Toolchains are pinned in several files at once (go.mod, the workflows, guides/.node-version, the toolchain script): listed only, bumped by hand.",
+      "matchDepTypes": ["golang", "toolchain"],
+      "dependencyDashboardApproval": true,
+      "labels": ["toolchain"]
+    },
+    {
+      "description": "Toolchains, continued: Node.js.",
+      "matchManagers": ["nodenv"],
+      "dependencyDashboardApproval": true,
+      "labels": ["toolchain"]
+    },
+    {
+      "description": "The baseline: fixtures run exactly the versions of data/versions.yaml, so their updates are listed only and land as a new baseline revision.",
+      "matchFileNames": ["fixtures/**"],
+      "dependencyDashboardApproval": true,
+      "labels": ["baseline"]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "dependencyDashboardApproval": false,
+    "minimumReleaseAge": null,
+    "labels": ["security"]
+  }
+}

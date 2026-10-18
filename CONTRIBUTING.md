@@ -157,6 +157,10 @@ who want the detail read these files. A record counts toward qualification only 
 
 ## Baselines
 
+The process, step by step, is public at https://initializer.pyahu.io/maintenance/. Renovate
+(`renovate.json`) opens pull requests for tooling only; baseline and toolchain updates wait on the
+Dependency Dashboard for the next revision.
+
 `data/versions.yaml` holds revisions, oldest first; `active` is the one the site and new
 fixtures use. A revision is frozen once it is on `main`: a bump is a new revision appended to
 the list. Only each component's `qualification` block changes and only through
