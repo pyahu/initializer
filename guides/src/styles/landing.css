@@ -107,6 +107,10 @@ pre { overflow-x: auto; font-size: .82rem; line-height: 1.85; }
 .subheading { margin: 3rem 0 1.2rem; color: var(--ink); }
 .planned-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .panel-gap { margin-top: 1.6rem; }
+.guide-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: .5rem; }
+.guide-card { display: block; transition: border-color .15s ease; }
+.guide-card:hover { border-color: var(--blue); }
+.guide-card code { color: var(--ink); font-family: var(--font); font-size: 1rem; font-weight: 600; }
 
 .profiles-section { display: grid; grid-template-columns: .78fr 1.22fr; gap: 4.5rem; align-items: start; }
 .profiles-copy { position: sticky; top: 2rem; }

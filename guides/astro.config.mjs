@@ -20,8 +20,36 @@ export default defineConfig({
         {
           label: "Guides",
           items: [
-            { label: "The JVM in containers", slug: "guides/jvm-in-containers" },
-            { label: "Observability", slug: "guides/observability" },
+            {
+              label: "Run on the JVM",
+              items: [
+                { label: "The JVM in containers", slug: "guides/jvm-in-containers" },
+                { label: "Virtual threads", slug: "guides/virtual-threads" },
+              ],
+            },
+            {
+              label: "Data and calls",
+              items: [
+                { label: "The database", slug: "guides/database" },
+                { label: "HTTP clients", slug: "guides/http-clients" },
+              ],
+            },
+            {
+              label: "Operate",
+              items: [
+                { label: "Observability", slug: "guides/observability" },
+                { label: "Configuration and secrets", slug: "guides/configuration" },
+                { label: "Security hardening", slug: "guides/security" },
+              ],
+            },
+            {
+              label: "Ship",
+              items: [
+                { label: "The container image", slug: "guides/container-image" },
+                { label: "Deploying to Kubernetes", slug: "guides/kubernetes-deployment" },
+                { label: "Kubernetes manifests", slug: "guides/kubernetes-manifests" },
+              ],
+            },
           ],
         },
         { label: "Reference", items: [{ label: "Reference docs", slug: "reference/docs" }] },

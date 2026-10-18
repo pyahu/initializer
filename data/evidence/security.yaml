@@ -1,0 +1,103 @@
+# Evidence records for the security guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-sec-token-audience-1
+  card: sec-token-audience
+  claim: "With issuer-uri and audiences set, Spring Boot 4.1 rejects a token issued for another audience with 401."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Spring Boot 4.1.1 decoder configuration and Spring Security 7.1.1 validators in the source guide."
+  reason: "The example service has no Spring Security yet, so no test sends tokens to it."
+- id: ev-sec-token-audience-2
+  card: sec-token-audience
+  claim: "With issuer-uri set, Boot 4.1 resolves the discovery document and signing keys on the first request, not at startup."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Boot 4.1.1 source in the source guide."
+  reason: "No test starts the service against a slow or missing identity provider yet."
+- id: ev-sec-authorities-1
+  card: sec-authorities
+  claim: "A DelegatingJwtGrantedAuthoritiesConverter maps scp to SCOPE_ and roles to ROLE_, so user and app tokens both pass rules that accept either authority."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Microsoft Entra ID claim shapes come from Microsoft's token reference, not from a live tenant."
+  reason: "No test runs the converter against signed tokens yet."
+- id: ev-sec-deny-default-1
+  card: sec-deny-default
+  claim: "An API chain that ends with anyRequest().denyAll() rejects a path no rule names."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Documented Spring Security behaviour."
+  reason: "The example service has no Spring Security yet."
+- id: ev-sec-deny-default-2
+  card: sec-deny-default
+  claim: "A catch-all exception handler that does not rethrow AccessDeniedException turns a denied call into a 500."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from Spring MVC exception handling in the source guide."
+  reason: "No test runs method security yet."
+- id: ev-sec-csrf-cors-1
+  card: sec-csrf-cors
+  claim: "With a stateless session policy and CSRF disabled, a bearer token API accepts state-changing requests without a CSRF token and creates no HTTP session."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Documented Spring Security behaviour."
+  reason: "The example service has no Spring Security yet."
+- id: ev-sec-headers-1
+  card: sec-headers
+  claim: "Spring Security sends HSTS only when the request is secure, so behind a TLS ingress HSTS needs trusted forwarded headers."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Documented Spring Security behaviour."
+  reason: "No test runs the service behind an ingress yet."
+- id: ev-sec-headers-2
+  card: sec-headers
+  claim: "Tomcat's default internal-proxies trusts every private address range, so any pod in the cluster can fake X-Forwarded-For."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Boot 4.1.1 configuration metadata in the source guide."
+  reason: "Needs a cluster; no cluster test runs yet."
+- id: ev-sec-errors-1
+  card: sec-errors
+  claim: "In Spring Boot 4.1 the spring.web.error defaults hide the stack trace, the message and binding errors; spring.mvc.problemdetails.enabled defaults to false."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Boot 4.1.1 configuration metadata in the source guide."
+  reason: "No test triggers an error response from the example service yet."
+- id: ev-sec-ssrf-1
+  card: sec-ssrf
+  claim: "A client built with InetAddressFilter.externalAddresses() fails with FilteredHostException when a URL resolves to 169.254.169.254 or a private address."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Boot 4.1.1 http client source in the source guide."
+  reason: "The example service makes no outbound calls yet."
+- id: ev-sec-pod-hardening-1
+  card: sec-pod-hardening
+  claim: "The image starts with a read-only root filesystem, /tmp as tmpfs and as UID 10001: /readyz answers 200 within 60 s."
+  badge: reproduced
+  capabilities: [image, runtime]
+  components: [temurin-jre-image, spring-boot]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestHardenedStartup
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestHardenedStartup$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s"
+  limitations: "Docker flags stand in for the pod security context; dropped capabilities, seccomp and the service account token are not checked."
+- id: ev-sec-pod-hardening-2
+  card: sec-pod-hardening
+  claim: "The pod security context passes Pod Security admission in a namespace that enforces restricted."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "The source guide checked its manifest with kubeconform only."
+  reason: "Needs a cluster; no cluster test runs yet."
+- id: ev-sec-pod-hardening-3
+  card: sec-pod-hardening
+  claim: "A default-deny NetworkPolicy with explicit allows blocks the metadata service at 169.254.169.254."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "A deployment prerequisite; it depends on the cluster's network plugin."
+  reason: "Needs a cluster with a NetworkPolicy-enforcing network plugin."

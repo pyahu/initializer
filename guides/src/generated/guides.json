@@ -2,6 +2,1824 @@
   "active": "v0.1-b1",
   "generatedBy": "guidekit generate",
   "guides": {
+    "configuration": {
+      "id": "configuration",
+      "title": "Configuration and secrets",
+      "state": "draft",
+      "baseline": "v0.1-b1",
+      "status": {
+        "reverify": false,
+        "reverifyReasons": [],
+        "stale": false
+      },
+      "verification": "",
+      "coverage": "10 claims: 10 not exercised",
+      "sources": [
+        {
+          "title": "09 · Configuration and secrets",
+          "origin": "spring-boot-production-guides/09-configuration-and-secrets.md",
+          "revision": "sha256:4e96090375f08150243ab2418789b52e723a5033e1f6ab81f357e1263b8d40f9",
+          "date": "2026-10-04",
+          "author": "Terson Rigaud",
+          "license": "CC BY 4.0"
+        }
+      ],
+      "questions": [
+        {
+          "id": "CFG-Q1",
+          "text": "Where should the differences between environments live?",
+          "answeredIn": "cfg-one-file",
+          "cardTitle": "1. Where should the differences between environments live?"
+        },
+        {
+          "id": "CFG-Q2",
+          "text": "What is the environment variable for a property?",
+          "answeredIn": "cfg-env-names",
+          "cardTitle": "2. What is the environment variable for a property?"
+        },
+        {
+          "id": "CFG-Q3",
+          "text": "How do I catch a bad setting before the pod takes traffic?",
+          "answeredIn": "cfg-typed-properties",
+          "cardTitle": "3. How do I catch a bad setting before the pod takes traffic?"
+        },
+        {
+          "id": "CFG-Q4",
+          "text": "Why did a missing secret not stop the app?",
+          "answeredIn": "cfg-placeholder-guard",
+          "cardTitle": "4. Why did a missing secret not stop the app?"
+        },
+        {
+          "id": "CFG-Q5",
+          "text": "Where should secrets come from?",
+          "answeredIn": "cfg-secrets-as-files",
+          "cardTitle": "5. Where should secrets come from?"
+        },
+        {
+          "id": "CFG-Q6",
+          "text": "How do I keep secrets out of logs and Actuator?",
+          "answeredIn": "cfg-secret-exposure",
+          "cardTitle": "6. How do I keep secrets out of logs and Actuator?"
+        },
+        {
+          "id": "CFG-Q7",
+          "text": "How does a running app pick up a change?",
+          "answeredIn": "cfg-restart-to-reload",
+          "cardTitle": "7. How does a running app pick up a change?"
+        },
+        {
+          "id": "CFG-Q8",
+          "text": "When is a feature flag better than a setting?",
+          "answeredIn": "cfg-feature-flags",
+          "cardTitle": "8. When is a feature flag better than a setting?"
+        }
+      ],
+      "cards": {
+        "cfg-env-names": {
+          "title": "2. What is the environment variable for a property?",
+          "coverage": "2 claims: 2 not exercised",
+          "records": [
+            {
+              "id": "ev-cfg-env-names-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-cfg-env-names-1 · not exercised · baseline v0.1-b1. Relaxed binding maps orders.payment-service.base-url to ORDERS_PAYMENTSERVICE_BASEURL; a variable that keeps the dashes binds to nothing. Limitations: Naming rules from the Spring Boot reference; the env: import resolver was read in the Boot 4.1.1 jar by the source guide.",
+              "reason": "No test binds a property from an environment variable yet."
+            },
+            {
+              "id": "ev-cfg-env-names-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-cfg-env-names-2 · not exercised · baseline v0.1-b1. Kubernetes service link variables such as SERVER_PORT=tcp://10.0.12.7:8080 break server.port unless enableServiceLinks is false. Limitations: Reasoned from the Kubernetes documentation on service environment variables and Spring relaxed binding.",
+              "reason": "Needs a cluster with a Service named server. No cluster test runs yet."
+            }
+          ]
+        },
+        "cfg-feature-flags": {
+          "title": "8. When is a feature flag better than a setting?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-cfg-feature-flags-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-cfg-feature-flags-1 · not exercised · baseline v0.1-b1. Flags evaluated through OpenFeature with a coded safe default keep working when the flag service is unreachable. Limitations: Design guidance from the source guide; provider maturity varies.",
+              "reason": "The example service uses no feature flags."
+            }
+          ]
+        },
+        "cfg-one-file": {
+          "title": "1. Where should the differences between environments live?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-cfg-one-file-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-cfg-one-file-1 · not exercised · baseline v0.1-b1. Environment variables outrank application.yaml, so one file with safe defaults plus a ConfigMap per environment covers every environment without profiles. Limitations: Property source order is taken from the Spring Boot reference on externalized configuration.",
+              "reason": "No test overrides a setting from the environment yet. The example service runs with its defaults only."
+            }
+          ]
+        },
+        "cfg-placeholder-guard": {
+          "title": "4. Why did a missing secret not stop the app?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-cfg-placeholder-guard-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-cfg-placeholder-guard-1 · not exercised · baseline v0.1-b1. The binder leaves an unresolvable placeholder as literal text, so @NotBlank passes and the @Pattern guard is what stops startup. Limitations: The source guide read ignoreUnresolvablePlaceholders = true in PropertySourcesPlaceholdersResolver of Spring Boot 4.1.1.",
+              "reason": "No test binds a record with a missing secret yet."
+            }
+          ]
+        },
+        "cfg-restart-to-reload": {
+          "title": "7. How does a running app pick up a change?",
+          "coverage": "2 claims: 2 not exercised",
+          "records": [
+            {
+              "id": "ev-cfg-restart-to-reload-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-cfg-restart-to-reload-1 · not exercised · baseline v0.1-b1. A running app keeps configtree values and environment variables from startup, so a rotated secret or changed ConfigMap needs a rolling restart. Limitations: Caching read in ConfigTreePropertySource (no ALWAYS_READ) in Spring Boot 4.1.1 by the source guide.",
+              "reason": "No test rotates a mounted secret yet."
+            },
+            {
+              "id": "ev-cfg-restart-to-reload-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-cfg-restart-to-reload-2 · not exercised · baseline v0.1-b1. SSL bundle reload on update covers the Tomcat and Netty web servers only; outbound HTTP clients keep their SSLContext until a restart. Limitations: Reproduced by the source guide on Spring Boot 4.1.1, not in this repository.",
+              "reason": "The example service has no TLS bundle or outbound client yet."
+            }
+          ]
+        },
+        "cfg-secret-exposure": {
+          "title": "6. How do I keep secrets out of logs and Actuator?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-cfg-secret-exposure-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-cfg-secret-exposure-1 · not exercised · baseline v0.1-b1. Actuator masks every env and configprops value by default in Spring Boot 4.1.1 (show-values: never). Limitations: Default read from the Spring Boot 4.1.1 configuration metadata by the source guide.",
+              "reason": "No test reads the env or configprops endpoints yet; the example service does not expose them."
+            }
+          ]
+        },
+        "cfg-secrets-as-files": {
+          "title": "5. Where should secrets come from?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-cfg-secrets-as-files-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-cfg-secrets-as-files-1 · not exercised · baseline v0.1-b1. spring.config.import with optional:configtree: turns each file under /mnt/secrets into a property named after the file, trailing newline trimmed, read once at startup. Limitations: The source guide read ConfigTreeConfigDataLoader and ConfigTreePropertySource in the Spring Boot 4.1.1 source.",
+              "reason": "The example service mounts no secret files yet. The CSI driver and a vault need a cluster."
+            }
+          ]
+        },
+        "cfg-typed-properties": {
+          "title": "3. How do I catch a bad setting before the pod takes traffic?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-cfg-typed-properties-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-cfg-typed-properties-1 · not exercised · baseline v0.1-b1. A @ConfigurationProperties record with @Validated fails application startup when a value breaks a constraint. Limitations: Behaviour from the Spring Boot reference on @ConfigurationProperties validation.",
+              "reason": "The example service has no @ConfigurationProperties record yet, so no fail fast test exists."
+            }
+          ]
+        }
+      },
+      "contents": [
+        {
+          "id": "cfg-one-file",
+          "title": "1. Where should the differences between environments live?"
+        },
+        {
+          "id": "cfg-env-names",
+          "title": "2. What is the environment variable for a property?"
+        },
+        {
+          "id": "cfg-typed-properties",
+          "title": "3. How do I catch a bad setting before the pod takes traffic?"
+        },
+        {
+          "id": "cfg-placeholder-guard",
+          "title": "4. Why did a missing secret not stop the app?"
+        },
+        {
+          "id": "cfg-secrets-as-files",
+          "title": "5. Where should secrets come from?"
+        },
+        {
+          "id": "cfg-secret-exposure",
+          "title": "6. How do I keep secrets out of logs and Actuator?"
+        },
+        {
+          "id": "cfg-restart-to-reload",
+          "title": "7. How does a running app pick up a change?"
+        },
+        {
+          "id": "cfg-feature-flags",
+          "title": "8. When is a feature flag better than a setting?"
+        }
+      ],
+      "checklist": [
+        {
+          "id": "CFG-01",
+          "type": "generated-config",
+          "card": "cfg-one-file",
+          "text": "Single application.yaml with production safe defaults; no dev, qa or prod profiles.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-02",
+          "type": "generated-config",
+          "card": "cfg-typed-properties",
+          "text": "All app settings bound through @ConfigurationProperties records with @Validated, @Valid on nested records and @DefaultValue for defaults.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-03",
+          "type": "generated-config",
+          "card": "cfg-placeholder-guard",
+          "text": "Secret components guarded against unresolved placeholders, with no other format constraint and toString() overridden.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-04",
+          "type": "generated-config",
+          "card": "cfg-typed-properties",
+          "text": "@ConfigurationPropertiesScan enabled; configuration processor on the annotation processor path.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-05",
+          "type": "deployment-prerequisite",
+          "card": "cfg-one-file",
+          "text": "Per environment values in a versioned ConfigMap loaded with envFrom; a config change triggers a rollout.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-06",
+          "type": "deployment-prerequisite",
+          "card": "cfg-env-names",
+          "text": "enableServiceLinks: false on every pod spec.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-07",
+          "type": "deployment-prerequisite",
+          "card": "cfg-secrets-as-files",
+          "text": "Secrets in a vault, mounted by the CSI driver with a workload identity; spring.config.import: optional:configtree:...",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-08",
+          "type": "deployment-prerequisite",
+          "card": "cfg-secrets-as-files",
+          "text": "No secretObjects sync unless something other than the app needs a Kubernetes Secret.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-09",
+          "type": "deployment-prerequisite",
+          "card": "cfg-secrets-as-files",
+          "text": "Token authentication preferred over stored secrets for databases and cloud services.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-10",
+          "type": "operator-task",
+          "card": "cfg-restart-to-reload",
+          "text": "Secret rotation runbook: add the new credential, update the vault, roll the pods, revoke the old one.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-11",
+          "type": "generated-config",
+          "card": "cfg-secret-exposure",
+          "text": "management.endpoint.env.show-values and configprops.show-values are never or a SanitizingFunction bean exists.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-12",
+          "type": "generated-config",
+          "card": "cfg-secret-exposure",
+          "text": "Only health and info exposed over the web, on the management port.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-13",
+          "type": "deployment-prerequisite",
+          "card": "cfg-secret-exposure",
+          "text": "No secret in manifests, images, ConfigMaps, logs or exception messages.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-14",
+          "type": "verified-behaviour",
+          "card": "cfg-typed-properties",
+          "text": "An invalid setting makes the application context fail to start.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "CFG-15",
+          "type": "operator-task",
+          "card": "cfg-feature-flags",
+          "text": "Feature flags evaluated through OpenFeature with safe defaults; stale flags removed.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        }
+      ],
+      "references": [
+        {
+          "id": "spring-boot-application-properties-appendix",
+          "title": "Application properties appendix",
+          "url": "https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Application properties appendix."
+        },
+        {
+          "id": "spring-boot-actuator",
+          "title": "Actuator (production-ready features)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/index.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Actuator (production-ready features)."
+        },
+        {
+          "id": "spring-boot-actuator-endpoints",
+          "title": "Actuator endpoints (incl. Kubernetes probes anchor, verified)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Actuator endpoints (incl. Kubernetes probes anchor, verified)."
+        },
+        {
+          "id": "spring-boot-actuator-rest-api",
+          "title": "Actuator REST API",
+          "url": "https://docs.spring.io/spring-boot/4.1/api/rest/actuator/index.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Actuator REST API."
+        }
+      ]
+    },
+    "container-image": {
+      "id": "container-image",
+      "title": "The container image and supply chain",
+      "state": "draft",
+      "baseline": "v0.1-b1",
+      "status": {
+        "reverify": false,
+        "reverifyReasons": [],
+        "stale": false
+      },
+      "verification": "",
+      "coverage": "11 claims: 2 reproduced, 1 compiled, 8 not exercised",
+      "sources": [
+        {
+          "title": "07 · Container image and supply chain",
+          "origin": "spring-boot-production-guides/07-container-image-and-supply-chain.md",
+          "revision": "sha256:99283e1d1f86f14e54113d2cccb156e9b6eabd55d07d8ec29a730887723d17af",
+          "date": "2026-10-04",
+          "author": "Terson Rigaud",
+          "license": "CC BY 4.0"
+        }
+      ],
+      "questions": [
+        {
+          "id": "IMG-Q1",
+          "text": "Why does every release push the whole app again?",
+          "answeredIn": "img-layers",
+          "cardTitle": "1. Why does every release push the whole app again?"
+        },
+        {
+          "id": "IMG-Q2",
+          "text": "Which base image should I start from?",
+          "answeredIn": "img-base-image",
+          "cardTitle": "2. Which base image should I start from?"
+        },
+        {
+          "id": "IMG-Q3",
+          "text": "How do I stop the base image from changing under me?",
+          "answeredIn": "img-pinning",
+          "cardTitle": "3. How do I stop the base image from changing under me?"
+        },
+        {
+          "id": "IMG-Q4",
+          "text": "How do I run the app without root on a read-only disk?",
+          "answeredIn": "img-non-root",
+          "cardTitle": "4. How do I run the app without root on a read-only disk?"
+        },
+        {
+          "id": "IMG-Q5",
+          "text": "How do I keep secrets out of the image?",
+          "answeredIn": "img-build-context",
+          "cardTitle": "5. How do I keep secrets out of the image?"
+        },
+        {
+          "id": "IMG-Q6",
+          "text": "How do I know which libraries an image ships?",
+          "answeredIn": "img-sbom",
+          "cardTitle": "6. How do I know which libraries an image ships?"
+        },
+        {
+          "id": "IMG-Q7",
+          "text": "How do I catch known vulnerabilities before they ship?",
+          "answeredIn": "img-scanning",
+          "cardTitle": "7. How do I catch known vulnerabilities before they ship?"
+        },
+        {
+          "id": "IMG-Q8",
+          "text": "How does the cluster know an image is really ours?",
+          "answeredIn": "img-signing",
+          "cardTitle": "8. How does the cluster know an image is really ours?"
+        }
+      ],
+      "cards": {
+        "img-base-image": {
+          "title": "2. Which base image should I start from?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-img-base-image-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-img-base-image-1 · not exercised · baseline v0.1-b1. Temurin JRE on Ubuntu noble is a sensible default; the plain 25-jre tag moved to Ubuntu 26.04 during 2026, so the codename belongs in the tag. Limitations: The base image comparison comes from registry manifests read by the source guide on 2026-10-04.",
+              "reason": "A comparison of images, not a behaviour a test can run."
+            }
+          ]
+        },
+        "img-build-context": {
+          "title": "5. How do I keep secrets out of the image?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-img-build-context-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-img-build-context-1 · not exercised · baseline v0.1-b1. Files sent in the build context can end up in a layer and ARG and ENV values stay in the image history; an allow list .dockerignore and BuildKit secret mounts avoid both. Limitations: Documented Docker and BuildKit behaviour.",
+              "reason": "The example service's .dockerignore is not an allow list yet and no test inspects the image for secrets."
+            }
+          ]
+        },
+        "img-layers": {
+          "title": "1. Why does every release push the whole app again?",
+          "coverage": "2 claims: 1 reproduced, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-img-layers-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-img-layers-1 · reproduced · baseline v0.1-b1 · 2026-10-17. The image built from the layered extract (extract --layers without --launcher, started with java -jar) has a usable AOT cache: -XX:AOTMode=on exits 0. Result: AOTMode=on with the image's GC and class path: exit 0 (openjdk version \"25.0.4.1\" 2026-08-18 LTS). Limitations: Proves the layout works with the AOT cache, not the layer sizes.",
+              "test": "acceptance/jvm::TestAOTCacheFailFast",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestAOTCacheFailFast$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39062105063 attempt 1, commit b3eac84",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/b3eac8404f59d5951cc889234340baf4ac545d4b"
+            },
+            {
+              "id": "ev-img-layers-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-img-layers-2 · not exercised · baseline v0.1-b1. With the layered layout a code change only replaces the application jar and AOT cache layers; compressed sizes for one service were about 105 MB base, 48.5 MB dependencies, 0.1 MB application and 23.6 MB AOT cache. Limitations: Sizes come from the source guide's registry push of one service on linux/arm64.",
+              "reason": "No test compares the layers of two builds yet."
+            }
+          ]
+        },
+        "img-non-root": {
+          "title": "4. How do I run the app without root on a read-only disk?",
+          "coverage": "2 claims: 1 reproduced, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-img-non-root-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-img-non-root-1 · reproduced · baseline v0.1-b1 · 2026-10-17. The image starts with a read-only root filesystem, /tmp as tmpfs, as UID 10001 and with an unreachable OTLP endpoint: /readyz answers 200 within 60 s. Result: read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s. Limitations: Docker flags stand in for the pod security context; no cluster run yet.",
+              "test": "acceptance/jvm::TestHardenedStartup",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestHardenedStartup$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39062105063 attempt 1, commit b3eac84",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/b3eac8404f59d5951cc889234340baf4ac545d4b"
+            },
+            {
+              "id": "ev-img-non-root-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-img-non-root-2 · not exercised · baseline v0.1-b1. Without a writable /tmp the embedded Tomcat fails to start with Unable to start web server. Limitations: Observed by the source guide with Spring Boot 4.1.1.",
+              "reason": "No test starts the image without a writable /tmp yet."
+            }
+          ]
+        },
+        "img-pinning": {
+          "title": "3. How do I stop the base image from changing under me?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-img-pinning-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-img-pinning-1 · not exercised · baseline v0.1-b1. Pinning base images as tag and digest keeps builds stable and Renovate (docker:pinDigests) or Dependabot opens a pull request when the digest behind the tag moves. Limitations: Documented Renovate and Dependabot behaviour.",
+              "reason": "No test runs the update bots against the example service yet."
+            }
+          ]
+        },
+        "img-sbom": {
+          "title": "6. How do I know which libraries an image ships?",
+          "coverage": "2 claims: 1 compiled, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-img-sbom-1",
+              "badge": "compiled",
+              "canonical": "Evidence ev-img-sbom-1 · compiled · baseline v0.1-b1 · 2026-10-17. The build applies the CycloneDX Gradle plugin and writes a CycloneDX JSON SBOM of the resolved libraries as part of build. Result: io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped. Limitations: build depends on cyclonedxBom and the fixture workflow reads build/sbom/bom.json in the same run; that the SBOM is also packed into the jar is not checked.",
+              "test": "gradle/single-hexagonal::ApplicationTest",
+              "commands": [
+                "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39062105063 attempt 1, commit b3eac84",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/b3eac8404f59d5951cc889234340baf4ac545d4b"
+            },
+            {
+              "id": "ev-img-sbom-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-img-sbom-2 · not exercised · baseline v0.1-b1. Syft scans the finished image and lists OS packages and the JRE as well as the Java libraries, in CycloneDX JSON. Limitations: Verified by the source guide with Syft 1.54.0; the baseline pins 1.54.1.",
+              "reason": "The fixture workflow does not run Syft yet."
+            }
+          ]
+        },
+        "img-scanning": {
+          "title": "7. How do I catch known vulnerabilities before they ship?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-img-scanning-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-img-scanning-1 · not exercised · baseline v0.1-b1. A Trivy gate on fixable high and critical findings stops new problems in CI; in a fresh Spring Boot image the findings were in libraries, not in the Ubuntu layer. Limitations: Observed by the source guide with Trivy 0.74.0; the baseline pins 0.76.0.",
+              "reason": "The fixture workflow does not run Trivy yet."
+            }
+          ]
+        },
+        "img-signing": {
+          "title": "8. How does the cluster know an image is really ours?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-img-signing-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-img-signing-1 · not exercised · baseline v0.1-b1. cosign keyless signing in GitHub Actions signs an image by digest with the workflow's OIDC identity and cosign attest attaches the SBOM. Limitations: Commands checked by the source guide against cosign v3.1.3 help output.",
+              "reason": "The example service's image is not pushed or signed yet."
+            }
+          ]
+        }
+      },
+      "contents": [
+        {
+          "id": "img-layers",
+          "title": "1. Why does every release push the whole app again?"
+        },
+        {
+          "id": "img-base-image",
+          "title": "2. Which base image should I start from?"
+        },
+        {
+          "id": "img-pinning",
+          "title": "3. How do I stop the base image from changing under me?"
+        },
+        {
+          "id": "img-non-root",
+          "title": "4. How do I run the app without root on a read-only disk?"
+        },
+        {
+          "id": "img-build-context",
+          "title": "5. How do I keep secrets out of the image?"
+        },
+        {
+          "id": "img-sbom",
+          "title": "6. How do I know which libraries an image ships?"
+        },
+        {
+          "id": "img-scanning",
+          "title": "7. How do I catch known vulnerabilities before they ship?"
+        },
+        {
+          "id": "img-signing",
+          "title": "8. How does the cluster know an image is really ours?"
+        }
+      ],
+      "checklist": [
+        {
+          "id": "IMG-01",
+          "type": "generated-config",
+          "card": "img-layers",
+          "text": "Dockerfile with several stages; no JDK, Gradle or source code in the final image.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "IMG-02",
+          "type": "generated-config",
+          "card": "img-layers",
+          "text": "extract --layers without --launcher; layers copied dependencies, loader, snapshots, application.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "IMG-03",
+          "type": "verified-behaviour",
+          "card": "img-layers",
+          "text": "AOT cache trained in the runtime stage with remote calls disabled; CI fails if -XX:AOTMode=on rejects it.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "IMG-04",
+          "type": "generated-config",
+          "card": "img-pinning",
+          "text": "Base images pinned as tag@sha256:digest in plain FROM lines with the distro codename in the tag, auxiliary images included.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "IMG-05",
+          "type": "deployment-prerequisite",
+          "card": "img-pinning",
+          "text": "Every workload running the app image (Deployment, migration Job, CronJob) references the release digest, not a tag.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "IMG-06",
+          "type": "operator-task",
+          "card": "img-pinning",
+          "text": "Renovate or Dependabot updates base digests and action SHAs; JDK major bumps blocked.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "IMG-07",
+          "type": "generated-config",
+          "card": "img-non-root",
+          "text": "Numeric non-root USER 10001:10001 and exec form ENTRYPOINT.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "IMG-08",
+          "type": "deployment-prerequisite",
+          "card": "img-non-root",
+          "text": "Runs with readOnlyRootFilesystem: true and /tmp as an emptyDir with a sizeLimit.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "IMG-09",
+          "type": "generated-config",
+          "card": "img-build-context",
+          "text": "Allow list .dockerignore; no secrets through ARG or ENV.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "IMG-10",
+          "type": "generated-config",
+          "card": "img-sbom",
+          "text": "CycloneDX plugin applied; app SBOM written by the build. /actuator/sbom not exposed by default; if it is, management port only and authenticated.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "IMG-11",
+          "type": "operator-task",
+          "card": "img-sbom",
+          "text": "Image SBOM (Syft, CycloneDX) attached as a signed attestation.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "IMG-12",
+          "type": "operator-task",
+          "card": "img-scanning",
+          "text": "Trivy or Grype gate on fixable high and critical findings in CI; a registry or cluster scanner rescans shipped images.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "IMG-13",
+          "type": "deployment-prerequisite",
+          "card": "img-signing",
+          "text": "Image signed by digest in CI; Deployments reference digests; an admission policy verifies the signature.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        }
+      ],
+      "references": [
+        {
+          "id": "spring-boot-container-images",
+          "title": "Container images",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Container images."
+        },
+        {
+          "id": "spring-boot-efficient-container-images",
+          "title": "Efficient container images (layering)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Efficient container images (layering)."
+        },
+        {
+          "id": "spring-boot-dockerfiles",
+          "title": "Dockerfiles",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Dockerfiles."
+        },
+        {
+          "id": "spring-boot-cloud-native-buildpacks",
+          "title": "Cloud Native Buildpacks",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Cloud Native Buildpacks."
+        },
+        {
+          "id": "spring-boot-efficient-deployments",
+          "title": "Efficient deployments",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Efficient deployments."
+        },
+        {
+          "id": "spring-boot-gradle-plugin-packaging-oci-images",
+          "title": "Gradle plugin: packaging OCI images",
+          "url": "https://docs.spring.io/spring-boot/4.1/gradle-plugin/packaging-oci-image.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Gradle plugin: packaging OCI images."
+        },
+        {
+          "id": "ci-openid-connect-in-actions",
+          "title": "OpenID Connect in Actions (keyless cosign)",
+          "url": "https://docs.github.com/en/actions/concepts/security/openid-connect",
+          "version": "n/a",
+          "pinned": false,
+          "purpose": "OpenID Connect in Actions (keyless cosign)."
+        },
+        {
+          "id": "supply-chain-slsa-spec-v1-2",
+          "title": "SLSA spec v1.2 (current; /spec/ and /spec/latest/ both redirect to v1.2)",
+          "url": "https://slsa.dev/spec/v1.2/",
+          "version": "1.2",
+          "pinned": true,
+          "purpose": "SLSA spec v1.2 (current; /spec/ and /spec/latest/ both redirect to v1.2)."
+        },
+        {
+          "id": "supply-chain-slsa-v1-2-provenance",
+          "title": "SLSA v1.2 Provenance",
+          "url": "https://slsa.dev/spec/v1.2/provenance",
+          "version": "1.2",
+          "pinned": true,
+          "purpose": "SLSA v1.2 Provenance."
+        },
+        {
+          "id": "supply-chain-sigstore-docs",
+          "title": "Sigstore docs",
+          "url": "https://docs.sigstore.dev/",
+          "version": "3.1.3 (docs 3)",
+          "pinned": false,
+          "purpose": "Sigstore docs."
+        },
+        {
+          "id": "supply-chain-cosign-signing-containers",
+          "title": "cosign: signing containers",
+          "url": "https://docs.sigstore.dev/cosign/signing/signing_with_containers/",
+          "version": "3.1.3 (docs 3)",
+          "pinned": false,
+          "purpose": "cosign: signing containers."
+        },
+        {
+          "id": "supply-chain-cosign-verifying",
+          "title": "cosign: verifying",
+          "url": "https://docs.sigstore.dev/cosign/verifying/verify/",
+          "version": "3.1.3 (docs 3)",
+          "pinned": false,
+          "purpose": "cosign: verifying."
+        },
+        {
+          "id": "supply-chain-cosign-in-toto-attestations",
+          "title": "cosign: in-toto attestations",
+          "url": "https://docs.sigstore.dev/cosign/verifying/attestation/",
+          "version": "3.1.3 (docs 3)",
+          "pinned": false,
+          "purpose": "cosign: in-toto attestations."
+        },
+        {
+          "id": "supply-chain-cosign-release-v3-1-3",
+          "title": "cosign release v3.1.3",
+          "url": "https://github.com/sigstore/cosign/releases/tag/v3.1.3",
+          "version": "3.1.3",
+          "pinned": true,
+          "purpose": "cosign release v3.1.3."
+        },
+        {
+          "id": "supply-chain-syft-docs",
+          "title": "Syft docs (Anchore OSS site)",
+          "url": "https://oss.anchore.com/docs/guides/sbom/",
+          "version": "1.54.1",
+          "pinned": false,
+          "purpose": "Syft docs (Anchore OSS site)."
+        },
+        {
+          "id": "supply-chain-syft-cli-reference",
+          "title": "Syft CLI reference",
+          "url": "https://oss.anchore.com/docs/reference/syft/cli/",
+          "version": "1.54.1",
+          "pinned": false,
+          "purpose": "Syft CLI reference."
+        },
+        {
+          "id": "supply-chain-trivy-docs",
+          "title": "Trivy docs",
+          "url": "https://trivy.dev/docs/v0.76/guide/",
+          "version": "0.76.0 (docs 0.76)",
+          "pinned": true,
+          "purpose": "Trivy docs."
+        },
+        {
+          "id": "supply-chain-trivy-release-v0-76-0",
+          "title": "Trivy release v0.76.0",
+          "url": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.0",
+          "version": "0.76.0",
+          "pinned": true,
+          "purpose": "Trivy release v0.76.0."
+        },
+        {
+          "id": "dependencies-renovate-docs",
+          "title": "Renovate docs",
+          "url": "https://docs.renovatebot.com/",
+          "version": "44.166.0",
+          "pinned": false,
+          "purpose": "Renovate docs."
+        },
+        {
+          "id": "dependencies-renovate-configuration-options",
+          "title": "Renovate configuration options",
+          "url": "https://docs.renovatebot.com/configuration-options/",
+          "version": "44.166.0 (docs latest)",
+          "pinned": false,
+          "purpose": "Renovate configuration options."
+        }
+      ]
+    },
+    "database": {
+      "id": "database",
+      "title": "The database in production",
+      "state": "draft",
+      "baseline": "v0.1-b1",
+      "status": {
+        "reverify": false,
+        "reverifyReasons": [],
+        "stale": false
+      },
+      "verification": "",
+      "coverage": "13 claims: 13 not exercised",
+      "sources": [
+        {
+          "title": "03 · Database in production",
+          "origin": "spring-boot-production-guides/03-database-in-production.md",
+          "revision": "sha256:786645abd267ce1b819c333ecd1fca35616d9e46042f64d8a8c3e0f7429c6f6c",
+          "date": "2026-10-04",
+          "author": "Terson Rigaud",
+          "license": "CC BY 4.0"
+        }
+      ],
+      "questions": [
+        {
+          "id": "DB-Q1",
+          "text": "How many connections can my pods open?",
+          "answeredIn": "db-connection-budget",
+          "cardTitle": "1. How many connections can my pods open?"
+        },
+        {
+          "id": "DB-Q2",
+          "text": "How long should a request wait for a connection?",
+          "answeredIn": "db-pool-timeouts",
+          "cardTitle": "2. How long should a request wait for a connection?"
+        },
+        {
+          "id": "DB-Q3",
+          "text": "How do I stop one slow query from holding everything?",
+          "answeredIn": "db-query-timeouts",
+          "cardTitle": "3. How do I stop one slow query from holding everything?"
+        },
+        {
+          "id": "DB-Q4",
+          "text": "Who should be allowed to change the schema?",
+          "answeredIn": "db-roles",
+          "cardTitle": "4. Who should be allowed to change the schema?"
+        },
+        {
+          "id": "DB-Q5",
+          "text": "When should migrations run?",
+          "answeredIn": "db-migrations",
+          "cardTitle": "5. When should migrations run?"
+        },
+        {
+          "id": "DB-Q6",
+          "text": "How do I change the schema without downtime?",
+          "answeredIn": "db-expand-contract",
+          "cardTitle": "6. How do I change the schema without downtime?"
+        },
+        {
+          "id": "DB-Q7",
+          "text": "How do I test against a real database?",
+          "answeredIn": "db-testing",
+          "cardTitle": "7. How do I test against a real database?"
+        },
+        {
+          "id": "DB-Q8",
+          "text": "How do I know the pool is in trouble?",
+          "answeredIn": "db-pool-metrics",
+          "cardTitle": "8. How do I know the pool is in trouble?"
+        }
+      ],
+      "cards": {
+        "db-connection-budget": {
+          "title": "1. How many connections can my pods open?",
+          "coverage": "2 claims: 2 not exercised",
+          "records": [
+            {
+              "id": "ev-db-connection-budget-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-connection-budget-1 · not exercised · baseline v0.1-b1. Every pod has its own pool, so during a rolling update the database sees the pools of the running, surge and draining pods together. Limitations: Arithmetic and Kubernetes rollout behaviour from the source guide.",
+              "reason": "No test runs this yet: the fixture has no database."
+            },
+            {
+              "id": "ev-db-connection-budget-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-connection-budget-2 · not exercised · baseline v0.1-b1. A CONNECTION LIMIT on the runtime role makes a pod that would overrun the budget fail with a clear error instead of exhausting the server. Limitations: PostgreSQL documented behaviour.",
+              "reason": "No test runs this yet: the fixture has no database."
+            }
+          ]
+        },
+        "db-expand-contract": {
+          "title": "6. How do I change the schema without downtime?",
+          "coverage": "2 claims: 2 not exercised",
+          "records": [
+            {
+              "id": "ev-db-expand-contract-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-expand-contract-1 · not exercised · baseline v0.1-b1. During a rolling update the old and new release run against the same schema, so each schema change must work with both. Limitations: Reasoned from Kubernetes rolling updates; the source guide ran the full rename sequence on PostgreSQL 17 with Flyway, not Liquibase.",
+              "reason": "No migration test runs in this repository yet."
+            },
+            {
+              "id": "ev-db-expand-contract-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-expand-contract-2 · not exercised · baseline v0.1-b1. CREATE INDEX blocks writes for the whole build while CREATE INDEX CONCURRENTLY does not. The concurrent form cannot run inside a transaction. Limitations: PostgreSQL documented behaviour.",
+              "reason": "No migration test runs in this repository yet."
+            }
+          ]
+        },
+        "db-migrations": {
+          "title": "5. When should migrations run?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-db-migrations-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-migrations-1 · not exercised · baseline v0.1-b1. With spring.liquibase.enabled true, the Spring Boot default, every pod runs the changelog at startup and Liquibase serialises them with its DATABASECHANGELOGLOCK table. Limitations: Default and table name read from the Spring Boot Liquibase configuration metadata; locking behaviour from the Liquibase documentation.",
+              "reason": "No test runs this yet: the fixture has no database or Liquibase."
+            }
+          ]
+        },
+        "db-pool-metrics": {
+          "title": "8. How do I know the pool is in trouble?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-db-pool-metrics-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-pool-metrics-1 · not exercised · baseline v0.1-b1. HikariCP publishes hikaricp.connections.pending, timeout, active, max, usage and acquire through Micrometer, tagged with the pool name. Limitations: Names read from HikariCP MicrometerMetricsTracker in the source guide.",
+              "reason": "No test checks these metrics yet: the fixture has no data source."
+            }
+          ]
+        },
+        "db-pool-timeouts": {
+          "title": "2. How long should a request wait for a connection?",
+          "coverage": "3 claims: 3 not exercised",
+          "records": [
+            {
+              "id": "ev-db-pool-timeouts-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-pool-timeouts-1 · not exercised · baseline v0.1-b1. HikariCP waits 30 seconds for a connection by default; connection-timeout of 2000 to 5000 ms turns pool saturation into fast errors. Limitations: Default read from the HikariCP 7.0.2 source in the source guide.",
+              "reason": "No load test against a database runs in this repository yet."
+            },
+            {
+              "id": "ev-db-pool-timeouts-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-pool-timeouts-2 · not exercised · baseline v0.1-b1. The spring.datasource.hikari timeouts are Long values in milliseconds in Spring Boot 4.1.1, so 3s does not bind. Limitations: Read from the Spring Boot 4.1.1 configuration metadata, not from a run.",
+              "reason": "No test binds these properties yet: the fixture has no data source."
+            },
+            {
+              "id": "ev-db-pool-timeouts-3",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-pool-timeouts-3 · not exercised · baseline v0.1-b1. HikariCP 7 pings idle connections every 2 minutes by default (keepalive-time); HikariCP 5 had it off. Limitations: Read from the HikariCP source in the source guide.",
+              "reason": "No test runs this yet: the fixture has no database."
+            }
+          ]
+        },
+        "db-query-timeouts": {
+          "title": "3. How do I stop one slow query from holding everything?",
+          "coverage": "2 claims: 2 not exercised",
+          "records": [
+            {
+              "id": "ev-db-query-timeouts-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-query-timeouts-1 · not exercised · baseline v0.1-b1. Inside a transaction with a timeout, JdbcTemplate sets each statement timeout to the time left in the transaction, overriding spring.jdbc.template.query-timeout. Limitations: Read from DataSourceUtils.applyTimeout in Spring Framework 7.0.9; not run.",
+              "reason": "No test runs this yet: the fixture has no database."
+            },
+            {
+              "id": "ev-db-query-timeouts-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-query-timeouts-2 · not exercised · baseline v0.1-b1. A statement_timeout set on the runtime role cancels a query on the server even when the client is gone. Limitations: PostgreSQL documented behaviour.",
+              "reason": "No test runs this yet: the fixture has no database."
+            }
+          ]
+        },
+        "db-roles": {
+          "title": "4. Who should be allowed to change the schema?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-db-roles-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-roles-1 · not exercised · baseline v0.1-b1. With the migration user owning the schema and default privileges for the runtime user, the runtime user can insert but DROP TABLE fails with must be owner of table. Limitations: Tested by the source guide on PostgreSQL 17, not in this repository.",
+              "reason": "No test runs this yet: the fixture has no database."
+            }
+          ]
+        },
+        "db-testing": {
+          "title": "7. How do I test against a real database?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-db-testing-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-db-testing-1 · not exercised · baseline v0.1-b1. Testcontainers 2.0.5 provides org.testcontainers.postgresql.PostgreSQLContainer in the renamed testcontainers-postgresql artifact. @ServiceConnection points the data source at it. Limitations: Read from the Testcontainers 2.0.5 artifacts in the source guide.",
+              "reason": "No database test runs in this repository yet."
+            }
+          ]
+        }
+      },
+      "contents": [
+        {
+          "id": "db-connection-budget",
+          "title": "1. How many connections can my pods open?"
+        },
+        {
+          "id": "db-pool-timeouts",
+          "title": "2. How long should a request wait for a connection?"
+        },
+        {
+          "id": "db-query-timeouts",
+          "title": "3. How do I stop one slow query from holding everything?"
+        },
+        {
+          "id": "db-roles",
+          "title": "4. Who should be allowed to change the schema?"
+        },
+        {
+          "id": "db-migrations",
+          "title": "5. When should migrations run?"
+        },
+        {
+          "id": "db-expand-contract",
+          "title": "6. How do I change the schema without downtime?"
+        },
+        {
+          "id": "db-testing",
+          "title": "7. How do I test against a real database?"
+        },
+        {
+          "id": "db-pool-metrics",
+          "title": "8. How do I know the pool is in trouble?"
+        }
+      ],
+      "checklist": [
+        {
+          "id": "DB-01",
+          "type": "deployment-prerequisite",
+          "card": "db-connection-budget",
+          "text": "Connection budget computed: every pool times HPA maximum, surge and draining pods, plus migrations and admin, fits the user connections of each database server.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "database: postgres"
+          ]
+        },
+        {
+          "id": "DB-02",
+          "type": "generated-config",
+          "card": "db-connection-budget",
+          "text": "Fixed pool: maximum-pool-size equals minimum-idle, 10 or less unless measured otherwise.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "database: postgres"
+          ]
+        },
+        {
+          "id": "DB-03",
+          "type": "generated-config",
+          "card": "db-pool-timeouts",
+          "text": "connection-timeout between 2000 and 5000 ms, max-lifetime below every connection age cap, keepalive-time below network idle timeouts, leak-detection-threshold set.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "database: postgres"
+          ]
+        },
+        {
+          "id": "DB-04",
+          "type": "generated-config",
+          "card": "db-query-timeouts",
+          "text": "spring.transaction.default-timeout and spring.jdbc.template.query-timeout set.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "database: postgres"
+          ]
+        },
+        {
+          "id": "DB-05",
+          "type": "deployment-prerequisite",
+          "card": "db-query-timeouts",
+          "text": "Runtime role has statement_timeout and idle_in_transaction_session_timeout.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "database: postgres"
+          ]
+        },
+        {
+          "id": "DB-06",
+          "type": "deployment-prerequisite",
+          "card": "db-roles",
+          "text": "Separate migration and runtime users; the runtime user cannot change the schema.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "database: postgres"
+          ]
+        },
+        {
+          "id": "DB-07",
+          "type": "generated-config",
+          "card": "db-migrations",
+          "text": "Migrations run in a Job before the rollout; the application sets spring.liquibase.enabled to false.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "database: postgres"
+          ]
+        },
+        {
+          "id": "DB-08",
+          "type": "operator-task",
+          "card": "db-expand-contract",
+          "text": "Every schema change reviewed as expand and contract; no rename or drop in the same release as the code change.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "database: postgres"
+          ]
+        },
+        {
+          "id": "DB-09",
+          "type": "generated-config",
+          "card": "db-expand-contract",
+          "text": "Transactional changesets start with SET LOCAL lock_timeout; changesets that ran are never edited.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "database: postgres"
+          ]
+        },
+        {
+          "id": "DB-10",
+          "type": "verified-behaviour",
+          "card": "db-testing",
+          "text": "Integration tests run the real changelog on Testcontainers with the production PostgreSQL major version.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "database: postgres"
+          ]
+        },
+        {
+          "id": "DB-11",
+          "type": "operator-task",
+          "card": "db-pool-metrics",
+          "text": "Alerts on hikaricp.connections.pending and hikaricp.connections.timeout.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "database: postgres"
+          ]
+        },
+        {
+          "id": "DB-12",
+          "type": "operator-task",
+          "card": "db-pool-metrics",
+          "text": "Point in time restore rehearsed in the last quarter.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "database: postgres"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "id": "spring-boot-testcontainers-support",
+          "title": "Testcontainers support",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Testcontainers support."
+        },
+        {
+          "id": "spring-boot-sql-databases",
+          "title": "SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/data/sql.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)."
+        },
+        {
+          "id": "spring-boot-database-initialization",
+          "title": "Database initialization (Liquibase)",
+          "url": "https://docs.spring.io/spring-boot/4.1/how-to/data-initialization.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Database initialization (Liquibase)."
+        },
+        {
+          "id": "spring-data-relational-reference",
+          "title": "Spring Data Relational reference",
+          "url": "https://docs.spring.io/spring-data/relational/reference/4.1/index.html",
+          "version": "2026.0.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Spring Data Relational reference."
+        },
+        {
+          "id": "spring-data-jdbc-section",
+          "title": "JDBC section",
+          "url": "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html",
+          "version": "2026.0.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "JDBC section."
+        },
+        {
+          "id": "database-what-is-a-changelog",
+          "title": "What is a changelog (Community)",
+          "url": "https://docs.liquibase.com/community/user-guide-5-0-4/what-is-a-changelog",
+          "version": "5.0.3 (docs 5.0.4)",
+          "pinned": true,
+          "purpose": "What is a changelog (Community)."
+        },
+        {
+          "id": "database-install-with-spring-boot",
+          "title": "Install with Spring Boot (Community)",
+          "url": "https://docs.liquibase.com/community/get-started-5-0-4/install-liquibase-with-spring-boot",
+          "version": "5.0.3 (docs 5.0.4)",
+          "pinned": true,
+          "purpose": "Install with Spring Boot (Community)."
+        },
+        {
+          "id": "database-connect-with-postgresql",
+          "title": "Connect with PostgreSQL (Community)",
+          "url": "https://docs.liquibase.com/community/integration-guide-5-0-4/connect-liquibase-with-postgresql",
+          "version": "5.0.3 (docs 5.0.4)",
+          "pinned": true,
+          "purpose": "Connect with PostgreSQL (Community)."
+        },
+        {
+          "id": "database-community-5-0-3-release-notes",
+          "title": "Community 5.0.3 release notes",
+          "url": "https://docs.liquibase.com/community/release-notes/liquibase-community-5-0-3-release-notes",
+          "version": "5.0.3",
+          "pinned": true,
+          "purpose": "Community 5.0.3 release notes."
+        },
+        {
+          "id": "database-documentation",
+          "title": "Documentation",
+          "url": "https://www.postgresql.org/docs/18/index.html",
+          "version": "18.6 (docs 18)",
+          "pinned": true,
+          "purpose": "Documentation."
+        },
+        {
+          "id": "database-release-18-notes",
+          "title": "Release 18 notes",
+          "url": "https://www.postgresql.org/docs/18/release-18.html",
+          "version": "18.6 (docs 18)",
+          "pinned": true,
+          "purpose": "Release 18 notes."
+        },
+        {
+          "id": "database-pgjdbc-documentation",
+          "title": "pgJDBC documentation",
+          "url": "https://jdbc.postgresql.org/documentation/",
+          "version": "42.7.13 (docs 42.7)",
+          "pinned": false,
+          "purpose": "pgJDBC documentation."
+        },
+        {
+          "id": "testing-testcontainers-for-java-docs",
+          "title": "Testcontainers for Java docs",
+          "url": "https://java.testcontainers.org/",
+          "version": "2.0.5",
+          "pinned": false,
+          "purpose": "Testcontainers for Java docs."
+        },
+        {
+          "id": "testing-postgres-module",
+          "title": "Postgres module",
+          "url": "https://java.testcontainers.org/modules/databases/postgres/",
+          "version": "2.0.5",
+          "pinned": false,
+          "purpose": "Postgres module."
+        }
+      ]
+    },
+    "http-clients": {
+      "id": "http-clients",
+      "title": "HTTP clients and resilience",
+      "state": "draft",
+      "baseline": "v0.1-b1",
+      "status": {
+        "reverify": false,
+        "reverifyReasons": [],
+        "stale": false
+      },
+      "verification": "",
+      "coverage": "10 claims: 10 not exercised",
+      "sources": [
+        {
+          "title": "04 · HTTP clients and resilience",
+          "origin": "spring-boot-production-guides/04-http-clients-and-resilience.md",
+          "revision": "sha256:ad8f281dd4f0db9bcda8ac964162a1e75919575ccd9693e7368224958e47e44a",
+          "date": "2026-10-04",
+          "author": "Terson Rigaud",
+          "license": "CC BY 4.0"
+        }
+      ],
+      "questions": [
+        {
+          "id": "HTTP-Q1",
+          "text": "Which HTTP client should I use?",
+          "answeredIn": "http-client-choice",
+          "cardTitle": "1. Which HTTP client should I use?"
+        },
+        {
+          "id": "HTTP-Q2",
+          "text": "Which timeouts does every call need?",
+          "answeredIn": "http-timeouts",
+          "cardTitle": "2. Which timeouts does every call need?"
+        },
+        {
+          "id": "HTTP-Q3",
+          "text": "Why do calls wait minutes for a connection?",
+          "answeredIn": "http-pool",
+          "cardTitle": "3. Why do calls wait minutes for a connection?"
+        },
+        {
+          "id": "HTTP-Q4",
+          "text": "Does a read timeout stop a slow call?",
+          "answeredIn": "http-deadline",
+          "cardTitle": "4. Does a read timeout stop a slow call?"
+        },
+        {
+          "id": "HTTP-Q5",
+          "text": "When is it safe to retry?",
+          "answeredIn": "http-retry",
+          "cardTitle": "5. When is it safe to retry?"
+        },
+        {
+          "id": "HTTP-Q6",
+          "text": "How do I retry a payment without charging it twice?",
+          "answeredIn": "http-idempotency",
+          "cardTitle": "6. How do I retry a payment without charging it twice?"
+        },
+        {
+          "id": "HTTP-Q7",
+          "text": "How do I stop one slow service from taking mine down?",
+          "answeredIn": "http-bulkhead",
+          "cardTitle": "7. How do I stop one slow service from taking mine down?"
+        },
+        {
+          "id": "HTTP-Q8",
+          "text": "Why do some calls have no metrics or traces?",
+          "answeredIn": "http-observability",
+          "cardTitle": "8. Why do some calls have no metrics or traces?"
+        }
+      ],
+      "cards": {
+        "http-bulkhead": {
+          "title": "7. How do I stop one slow service from taking mine down?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-http-bulkhead-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-http-bulkhead-1 · not exercised · baseline v0.1-b1. @ConcurrencyLimit with policy REJECT throws InvocationRejectedException over the limit; a class-level limit is shared by all methods of the bean and counts per JVM. Limitations: Checked in ConcurrencyLimitBeanPostProcessor on Framework 7.0.9 by the source guide.",
+              "reason": "No test runs this yet: the example service has no downstream call to limit."
+            }
+          ]
+        },
+        "http-client-choice": {
+          "title": "1. Which HTTP client should I use?",
+          "coverage": "2 claims: 2 not exercised",
+          "records": [
+            {
+              "id": "ev-http-client-choice-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-http-client-choice-1 · not exercised · baseline v0.1-b1. RestClient behind HTTP Service Client groups (@ImportHttpServices) is the default blocking client in Framework 7.0 and Boot 4.1; RestTemplate is not yet @Deprecated in 7.0.9. Limitations: The source guide checked the Framework 7.0.9 and Boot 4.1.1 classes and metadata; nothing in this repository compiles an HTTP client.",
+              "reason": "No test runs this yet: the example service makes no outbound HTTP call."
+            },
+            {
+              "id": "ev-http-client-choice-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-http-client-choice-2 · not exercised · baseline v0.1-b1. With redirects: dont-follow, an unfollowed 302 is not an error: RestClient returns an empty or decoded body unless a status handler rejects 3xx. Limitations: Reproduced by the source guide against the Framework 7.0.9 jars, not in this repository.",
+              "reason": "No test runs this yet: the example service makes no outbound HTTP call."
+            }
+          ]
+        },
+        "http-deadline": {
+          "title": "4. Does a read timeout stop a slow call?",
+          "coverage": "2 claims: 2 not exercised",
+          "records": [
+            {
+              "id": "ev-http-deadline-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-http-deadline-1 · not exercised · baseline v0.1-b1. Apache's read timeout is inactivity between packets (a trickling response ran 4.1 s under a 1 s timeout) while the JDK client's is a deadline (the same response failed after 1.02 s). Limitations: Measured by the source guide against the Framework 7.0.9 and Boot 4.1.1 jars, not in this repository.",
+              "reason": "No test runs this yet: the example service makes no outbound HTTP call."
+            },
+            {
+              "id": "ev-http-deadline-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-http-deadline-2 · not exercised · baseline v0.1-b1. The timeout of @Retryable stops new attempts but never interrupts one in flight, so the worst case is the timeout plus one attempt. Limitations: Reproduced by the source guide against Framework 7.0.9 through RetryTemplate and a proxied @Retryable method.",
+              "reason": "No test runs this yet: the example service uses no retry."
+            }
+          ]
+        },
+        "http-idempotency": {
+          "title": "6. How do I retry a payment without charging it twice?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-http-idempotency-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-http-idempotency-1 · not exercised · baseline v0.1-b1. A key passed as a method argument is sent unchanged on every attempt, because @Retryable invokes the method again with the same arguments. Limitations: Follows from how the retry interceptor works; no provider behaviour is tested. The Idempotency-Key header is an IETF draft.",
+              "reason": "No test runs this yet: the example service makes no outbound HTTP call."
+            }
+          ]
+        },
+        "http-observability": {
+          "title": "8. Why do some calls have no metrics or traces?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-http-observability-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-http-observability-1 · not exercised · baseline v0.1-b1. Clients from Boot's RestClient.Builder or HTTP Service groups record http.client.requests and send traceparent; a client from RestClient.create() does neither. Limitations: From the Boot 4.1.1 auto-configuration (ObservationRestClientCustomizer) as read by the source guide.",
+              "reason": "No test runs this yet: the example service makes no outbound HTTP call."
+            }
+          ]
+        },
+        "http-pool": {
+          "title": "3. Why do calls wait minutes for a connection?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-http-pool-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-http-pool-1 · not exercised · baseline v0.1-b1. Apache HttpClient 5.6 defaults to 25 connections in total, 5 per route and a 3 minute connection request timeout; Boot has no property for either. Limitations: Defaults read from httpclient5 5.6.4 by the source guide; the version Boot manages may differ.",
+              "reason": "No test runs this yet: the example service has no Apache HttpClient dependency."
+            }
+          ]
+        },
+        "http-retry": {
+          "title": "5. When is it safe to retry?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-http-retry-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-http-retry-1 · not exercised · baseline v0.1-b1. A bare @Retryable retries any exception 3 times with a fixed 1 s delay and it does nothing without @EnableResilientMethods, which Boot 4.1 does not enable. Limitations: Annotation defaults read with javap on Framework 7.0.9 and Boot 4.1.1 jars by the source guide.",
+              "reason": "No test runs this yet: the example service uses no retry."
+            }
+          ]
+        },
+        "http-timeouts": {
+          "title": "2. Which timeouts does every call need?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-http-timeouts-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-http-timeouts-1 · not exercised · baseline v0.1-b1. Boot 4.1 binds connect and read timeouts from spring.http.clients.* and spring.http.serviceclient.<group>.* and group values fall back to the global ones; spring.http.client.* is deprecated. Limitations: Read from the Boot 4.1.1 configuration metadata by the source guide.",
+              "reason": "No test runs this yet: the example service makes no outbound HTTP call."
+            }
+          ]
+        }
+      },
+      "contents": [
+        {
+          "id": "http-client-choice",
+          "title": "1. Which HTTP client should I use?"
+        },
+        {
+          "id": "http-timeouts",
+          "title": "2. Which timeouts does every call need?"
+        },
+        {
+          "id": "http-pool",
+          "title": "3. Why do calls wait minutes for a connection?"
+        },
+        {
+          "id": "http-deadline",
+          "title": "4. Does a read timeout stop a slow call?"
+        },
+        {
+          "id": "http-retry",
+          "title": "5. When is it safe to retry?"
+        },
+        {
+          "id": "http-idempotency",
+          "title": "6. How do I retry a payment without charging it twice?"
+        },
+        {
+          "id": "http-bulkhead",
+          "title": "7. How do I stop one slow service from taking mine down?"
+        },
+        {
+          "id": "http-observability",
+          "title": "8. Why do some calls have no metrics or traces?"
+        }
+      ],
+      "checklist": [
+        {
+          "id": "HTTP-01",
+          "type": "generated-config",
+          "card": "http-client-choice",
+          "text": "RestClient and HTTP Service Clients for new code; no new RestTemplate usage.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-02",
+          "type": "generated-config",
+          "card": "http-client-choice",
+          "text": "One @ImportHttpServices group per downstream system, with base-url from configuration.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-03",
+          "type": "generated-config",
+          "card": "http-client-choice",
+          "text": "redirects dont-follow for calls between services, plus a status handler that rejects 3xx.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-04",
+          "type": "generated-config",
+          "card": "http-timeouts",
+          "text": "spring.http.clients connect-timeout and read-timeout set globally, tighter per group.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-05",
+          "type": "generated-config",
+          "card": "http-timeouts",
+          "text": "HTTP library chosen explicitly with spring.http.clients.imperative.factory.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-06",
+          "type": "generated-config",
+          "card": "http-pool",
+          "text": "Apache pool with maxConnPerRoute at or above the concurrency limit, a connection request timeout of 1 s or less and a connection TTL.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-07",
+          "type": "verified-behaviour",
+          "card": "http-deadline",
+          "text": "Each attempt is bounded by the client; the retry timeout plus one attempt fits the caller's own timeout.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-08",
+          "type": "generated-config",
+          "card": "http-retry",
+          "text": "@EnableResilientMethods present whenever @Retryable or @ConcurrencyLimit is used.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-09",
+          "type": "generated-config",
+          "card": "http-retry",
+          "text": "Every @Retryable sets includes, maxRetries of 2 or less, multiplier, jitter and timeout.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-10",
+          "type": "verified-behaviour",
+          "card": "http-retry",
+          "text": "Only one layer in the call chain retries a given dependency.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-11",
+          "type": "verified-behaviour",
+          "card": "http-idempotency",
+          "text": "POST and PATCH are retried only with an idempotency key created outside the retry.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-12",
+          "type": "generated-config",
+          "card": "http-bulkhead",
+          "text": "@ConcurrencyLimit with policy REJECT on the class for each downstream system, rejection mapped to 503 or 429.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-13",
+          "type": "deployment-prerequisite",
+          "card": "http-bulkhead",
+          "text": "Circuit breaker or rate limiter only with a written reason, using resilience4j-spring-boot4.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-14",
+          "type": "verified-behaviour",
+          "card": "http-bulkhead",
+          "text": "Fallbacks never invent business results.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "HTTP-15",
+          "type": "generated-config",
+          "card": "http-observability",
+          "text": "Clients come from Boot builders or HTTP Service groups, with histograms on http.client.requests.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        }
+      ],
+      "references": [
+        {
+          "id": "spring-boot-migration-guide-3-x-to-4-0",
+          "title": "Migration guide 3.x to 4.0 (wiki)",
+          "url": "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide",
+          "version": "4.1.1 (docs 4.0)",
+          "pinned": true,
+          "purpose": "Migration guide 3.x to 4.0 (wiki)."
+        },
+        {
+          "id": "spring-boot-application-properties-appendix",
+          "title": "Application properties appendix",
+          "url": "https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Application properties appendix."
+        },
+        {
+          "id": "spring-boot-tracing",
+          "title": "Tracing (names spring-boot-starter-opentelemetry, OTLP export)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Tracing (names spring-boot-starter-opentelemetry, OTLP export)."
+        },
+        {
+          "id": "spring-boot-metrics",
+          "title": "Metrics (incl. #actuator.metrics.export.otlp)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Metrics (incl. #actuator.metrics.export.otlp)."
+        },
+        {
+          "id": "spring-boot-virtual-threads",
+          "title": "Virtual threads (anchor verified)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Virtual threads (anchor verified)."
+        },
+        {
+          "id": "spring-framework-reference",
+          "title": "Reference",
+          "url": "https://docs.spring.io/spring-framework/reference/7.0/index.html",
+          "version": "7.0.9 (docs 7.0)",
+          "pinned": true,
+          "purpose": "Reference."
+        },
+        {
+          "id": "spring-framework-7-0-release-notes",
+          "title": "7.0 release notes (wiki, also covers upgrading)",
+          "url": "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes",
+          "version": "7.0.9 (docs 7.0)",
+          "pinned": true,
+          "purpose": "7.0 release notes (wiki, also covers upgrading)."
+        },
+        {
+          "id": "observability-semconv-http-spans",
+          "title": "Semconv HTTP spans",
+          "url": "https://opentelemetry.io/docs/specs/semconv/http/http-spans/",
+          "version": "1.44.0",
+          "pinned": false,
+          "purpose": "Semconv HTTP spans."
+        }
+      ]
+    },
     "jvm-in-containers": {
       "id": "jvm-in-containers",
       "title": "The JVM in containers",
@@ -663,6 +2481,751 @@
         }
       ]
     },
+    "kubernetes-deployment": {
+      "id": "kubernetes-deployment",
+      "title": "Deploying to Kubernetes",
+      "state": "draft",
+      "baseline": "v0.1-b1",
+      "status": {
+        "reverify": false,
+        "reverifyReasons": [],
+        "stale": false
+      },
+      "verification": "",
+      "coverage": "9 claims: 1 reproduced, 8 not exercised",
+      "sources": [
+        {
+          "title": "06 · Deploying Spring Boot on Kubernetes",
+          "origin": "spring-boot-production-guides/06-kubernetes-deployment.md",
+          "revision": "sha256:7a98a86b2d92db30c9b7b8330fe80f40ae74de91d952324e223715b767b41696",
+          "date": "2026-10-04",
+          "author": "Terson Rigaud",
+          "license": "CC BY 4.0"
+        }
+      ],
+      "questions": [
+        {
+          "id": "KUBE-Q1",
+          "text": "What should each probe check?",
+          "answeredIn": "kube-probes",
+          "cardTitle": "1. What should each probe check?"
+        },
+        {
+          "id": "KUBE-Q2",
+          "text": "How do I stop a pod without failing requests?",
+          "answeredIn": "kube-graceful-shutdown",
+          "cardTitle": "2. How do I stop a pod without failing requests?"
+        },
+        {
+          "id": "KUBE-Q3",
+          "text": "How much CPU and memory should the pod ask for?",
+          "answeredIn": "kube-resources",
+          "cardTitle": "3. How much CPU and memory should the pod ask for?"
+        },
+        {
+          "id": "KUBE-Q4",
+          "text": "How do I roll out a new version without losing capacity?",
+          "answeredIn": "kube-rollout",
+          "cardTitle": "4. How do I roll out a new version without losing capacity?"
+        },
+        {
+          "id": "KUBE-Q5",
+          "text": "How do I survive node drains and cluster upgrades?",
+          "answeredIn": "kube-disruption",
+          "cardTitle": "5. How do I survive node drains and cluster upgrades?"
+        },
+        {
+          "id": "KUBE-Q6",
+          "text": "How should the service scale?",
+          "answeredIn": "kube-autoscaling",
+          "cardTitle": "6. How should the service scale?"
+        },
+        {
+          "id": "KUBE-Q7",
+          "text": "How do I keep replicas from failing together?",
+          "answeredIn": "kube-spread",
+          "cardTitle": "7. How do I keep replicas from failing together?"
+        },
+        {
+          "id": "KUBE-Q8",
+          "text": "Where should scheduled jobs run?",
+          "answeredIn": "kube-scheduled-work",
+          "cardTitle": "8. Where should scheduled jobs run?"
+        }
+      ],
+      "cards": {
+        "kube-autoscaling": {
+          "title": "6. How should the service scale?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-kube-autoscaling-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-kube-autoscaling-1 · not exercised · baseline v0.1-b1. A cap on how fast pods are added and a 60 to 70% CPU target keep cold JVMs from cascading the replica count to its maximum after a burst. Limitations: Behaviour described in the source guide and the HorizontalPodAutoscaler documentation; no numbers measured here.",
+              "reason": "Needs a cluster, an autoscaler and a load profile; no such test runs yet."
+            }
+          ]
+        },
+        "kube-disruption": {
+          "title": "5. How do I survive node drains and cluster upgrades?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-kube-disruption-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-kube-disruption-1 · not exercised · baseline v0.1-b1. A PodDisruptionBudget with maxUnavailable 1 and unhealthyPodEvictionPolicy AlwaysAllow lets a drain proceed one pod at a time, even with a pod that is not ready. Limitations: Reasoned from the Kubernetes disruption and PodDisruptionBudget documentation.",
+              "reason": "Needs a cluster with several nodes to drain; no such test runs yet."
+            }
+          ]
+        },
+        "kube-graceful-shutdown": {
+          "title": "2. How do I stop a pod without failing requests?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-kube-graceful-shutdown-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-kube-graceful-shutdown-1 · not exercised · baseline v0.1-b1. A 10 s preStop sleep, a 20 s shutdown phase and a 45 s grace period let a rollout under load finish with no failed requests. Limitations: Timings come from the source guide and the Kubernetes pod lifecycle documentation.",
+              "reason": "Needs a cluster, a router and steady load during a rollout; no such test runs yet."
+            }
+          ]
+        },
+        "kube-probes": {
+          "title": "1. What should each probe check?",
+          "coverage": "2 claims: 1 reproduced, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-kube-probes-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-kube-probes-1 · reproduced · baseline v0.1-b1 · 2026-10-17. With management.endpoint.health.probes.add-additional-paths true and Actuator on port 8081, /readyz answers 200 on the main port 8080. Result: read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s. Limitations: Docker only: the kubelet does not call the probe here and /livez is not requested.",
+              "test": "acceptance/jvm::TestHardenedStartup",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestHardenedStartup$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39062105063 attempt 1, commit b3eac84",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/b3eac8404f59d5951cc889234340baf4ac545d4b"
+            },
+            {
+              "id": "ev-kube-probes-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-kube-probes-2 · not exercised · baseline v0.1-b1. Liveness and readiness hold only Boot's availability states, so a database failover takes no pod out of rotation and restarts none. Limitations: Reasoned from the Spring Boot 4.1.1 health configuration and the Kubernetes probe documentation.",
+              "reason": "Needs a cluster and a database that fails over; the example service has neither yet."
+            }
+          ]
+        },
+        "kube-resources": {
+          "title": "3. How much CPU and memory should the pod ask for?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-kube-resources-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-kube-resources-1 · not exercised · baseline v0.1-b1. With no CPU limit the JVM is not throttled by the CFS quota. Memory request equal to limit keeps the pod from overcommitting the node. Limitations: The JVM side of sizing is proven in the JVM guide; this claim is about the scheduler and the kernel.",
+              "reason": "Needs a cluster and a throttling measurement under load; no such test runs yet."
+            }
+          ]
+        },
+        "kube-rollout": {
+          "title": "4. How do I roll out a new version without losing capacity?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-kube-rollout-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-kube-rollout-1 · not exercised · baseline v0.1-b1. maxSurge 1 with maxUnavailable 0 and minReadySeconds 10 never drops serving pods below the desired count during a rollout. Limitations: Reasoned from the Deployment rolling update documentation.",
+              "reason": "Needs a cluster; the example service has no manifests yet."
+            }
+          ]
+        },
+        "kube-scheduled-work": {
+          "title": "8. Where should scheduled jobs run?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-kube-scheduled-work-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-kube-scheduled-work-1 · not exercised · baseline v0.1-b1. @Scheduled with ShedLock runs a task once per trigger across replicas, using the database clock. Limitations: Taken from the ShedLock README; ShedLock is not part of baseline v0.1-b1.",
+              "reason": "The example service has no database and no scheduled task yet."
+            }
+          ]
+        },
+        "kube-spread": {
+          "title": "7. How do I keep replicas from failing together?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-kube-spread-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-kube-spread-1 · not exercised · baseline v0.1-b1. A zone spread with maxSkew 1, DoNotSchedule and matchLabelKeys pod-template-hash places 3 replicas in 3 zones and keeps new pods balanced during a rollout. Limitations: Reasoned from the topology spread constraints documentation.",
+              "reason": "Needs a cluster with nodes in several zones; no such test runs yet."
+            }
+          ]
+        }
+      },
+      "contents": [
+        {
+          "id": "kube-probes",
+          "title": "1. What should each probe check?"
+        },
+        {
+          "id": "kube-graceful-shutdown",
+          "title": "2. How do I stop a pod without failing requests?"
+        },
+        {
+          "id": "kube-resources",
+          "title": "3. How much CPU and memory should the pod ask for?"
+        },
+        {
+          "id": "kube-rollout",
+          "title": "4. How do I roll out a new version without losing capacity?"
+        },
+        {
+          "id": "kube-disruption",
+          "title": "5. How do I survive node drains and cluster upgrades?"
+        },
+        {
+          "id": "kube-autoscaling",
+          "title": "6. How should the service scale?"
+        },
+        {
+          "id": "kube-spread",
+          "title": "7. How do I keep replicas from failing together?"
+        },
+        {
+          "id": "kube-scheduled-work",
+          "title": "8. Where should scheduled jobs run?"
+        }
+      ],
+      "checklist": [
+        {
+          "id": "KUBE-01",
+          "type": "generated-config",
+          "card": "kube-probes",
+          "text": "/livez and /readyz served on the main port (add-additional-paths) and open to the kubelet without authentication.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "KUBE-02",
+          "type": "generated-config",
+          "card": "kube-probes",
+          "text": "Liveness group holds livenessState only; no database, broker or HTTP dependency.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "KUBE-03",
+          "type": "generated-config",
+          "card": "kube-probes",
+          "text": "Readiness group holds readinessState; any added dependency is local to the pod and documented.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "KUBE-04",
+          "type": "generated-config",
+          "card": "kube-probes",
+          "text": "Probe timeoutSeconds is at least 2; startupProbe instead of initialDelaySeconds.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "KUBE-05",
+          "type": "generated-config",
+          "card": "kube-graceful-shutdown",
+          "text": "preStop sleep of at least 10 s with the native sleep action.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "KUBE-06",
+          "type": "generated-config",
+          "card": "kube-graceful-shutdown",
+          "text": "timeout-per-shutdown-phase set to 20s and terminationGracePeriodSeconds at least preStop plus the phase timeout plus 15 s.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "KUBE-07",
+          "type": "generated-config",
+          "card": "kube-resources",
+          "text": "Memory request equals memory limit; CPU request set and no CPU limit or a documented reason for one.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "KUBE-08",
+          "type": "generated-config",
+          "card": "kube-rollout",
+          "text": "maxSurge 1, maxUnavailable 0 and minReadySeconds set; no spec.replicas when an autoscaler exists.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "KUBE-09",
+          "type": "generated-config",
+          "card": "kube-disruption",
+          "text": "PodDisruptionBudget with maxUnavailable 1 and unhealthyPodEvictionPolicy AlwaysAllow.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "KUBE-10",
+          "type": "generated-config",
+          "card": "kube-autoscaling",
+          "text": "HorizontalPodAutoscaler with explicit behavior and a capped scale up; minReplicas at least 3 in production; one autoscaler per Deployment.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "KUBE-11",
+          "type": "generated-config",
+          "card": "kube-spread",
+          "text": "Zone spread with DoNotSchedule and node spread with ScheduleAnyway, both with matchLabelKeys pod-template-hash.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "KUBE-12",
+          "type": "operator-task",
+          "card": "kube-scheduled-work",
+          "text": "Recurring work uses ShedLock or a CronJob with concurrencyPolicy Forbid.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "KUBE-13",
+          "type": "verified-behaviour",
+          "card": "kube-graceful-shutdown",
+          "text": "A rollout under steady load has finished with zero failed requests at least once.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        }
+      ],
+      "references": [
+        {
+          "id": "spring-boot-actuator-endpoints",
+          "title": "Actuator endpoints (incl. Kubernetes probes anchor, verified)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Actuator endpoints (incl. Kubernetes probes anchor, verified)."
+        },
+        {
+          "id": "kubernetes-probes",
+          "title": "Probes (concept)",
+          "url": "https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Probes (concept)."
+        },
+        {
+          "id": "kubernetes-configure-liveness-readiness-startup-probes",
+          "title": "Configure liveness/readiness/startup probes (task)",
+          "url": "https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Configure liveness/readiness/startup probes (task)."
+        },
+        {
+          "id": "kubernetes-disruptions",
+          "title": "Disruptions (PDB concept)",
+          "url": "https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/disruptions/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Disruptions (PDB concept)."
+        },
+        {
+          "id": "kubernetes-configure-a-poddisruptionbudget",
+          "title": "Configure a PodDisruptionBudget",
+          "url": "https://v1-36.docs.kubernetes.io/docs/tasks/run-application/configure-pdb/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Configure a PodDisruptionBudget."
+        },
+        {
+          "id": "kubernetes-pod-topology-spread-constraints",
+          "title": "Pod topology spread constraints",
+          "url": "https://v1-36.docs.kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Pod topology spread constraints."
+        },
+        {
+          "id": "kubernetes-pod-lifecycle",
+          "title": "Pod lifecycle (graceful termination)",
+          "url": "https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Pod lifecycle (graceful termination)."
+        },
+        {
+          "id": "kubernetes-resource-management",
+          "title": "Resource management",
+          "url": "https://v1-36.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Resource management."
+        }
+      ]
+    },
+    "kubernetes-manifests": {
+      "id": "kubernetes-manifests",
+      "title": "Kubernetes manifests: plain, Helm or Kustomize",
+      "state": "draft",
+      "baseline": "v0.1-b1",
+      "status": {
+        "reverify": false,
+        "reverifyReasons": [],
+        "stale": false
+      },
+      "verification": "",
+      "coverage": "7 claims: 7 not exercised",
+      "sources": [
+        {
+          "title": "10 · Kubernetes manifests: plain YAML, Helm and Kustomize",
+          "origin": "spring-boot-production-guides/10-kubernetes-manifests-plain-helm-kustomize.md",
+          "revision": "sha256:07f048def5030e2d4df156c79d271303809a7238422abb0b0f5dc36ea4b23b42",
+          "date": "2026-10-04",
+          "author": "Terson Rigaud",
+          "license": "CC BY 4.0"
+        }
+      ],
+      "questions": [
+        {
+          "id": "MAN-Q1",
+          "text": "Plain YAML, Helm or Kustomize: which one should I use?",
+          "answeredIn": "man-packaging",
+          "cardTitle": "1. Plain YAML, Helm or Kustomize: which one should I use?"
+        },
+        {
+          "id": "MAN-Q2",
+          "text": "How do I change a few values per environment without copying everything?",
+          "answeredIn": "man-overlays",
+          "cardTitle": "2. How do I change a few values per environment without copying everything?"
+        },
+        {
+          "id": "MAN-Q3",
+          "text": "Which labels go on every object and which go in the selector?",
+          "answeredIn": "man-labels",
+          "cardTitle": "3. Which labels go on every object and which go in the selector?"
+        },
+        {
+          "id": "MAN-Q4",
+          "text": "Why did my config change not reach the pods?",
+          "answeredIn": "man-config-rollout",
+          "cardTitle": "4. Why did my config change not reach the pods?"
+        },
+        {
+          "id": "MAN-Q5",
+          "text": "How do I make sure the cluster runs the image I tested?",
+          "answeredIn": "man-image-digest",
+          "cardTitle": "5. How do I make sure the cluster runs the image I tested?"
+        },
+        {
+          "id": "MAN-Q6",
+          "text": "How should I apply manifests to the cluster?",
+          "answeredIn": "man-server-side-apply",
+          "cardTitle": "6. How should I apply manifests to the cluster?"
+        },
+        {
+          "id": "MAN-Q7",
+          "text": "How do I catch broken manifests before they reach a cluster?",
+          "answeredIn": "man-validation",
+          "cardTitle": "7. How do I catch broken manifests before they reach a cluster?"
+        }
+      ],
+      "cards": {
+        "man-config-rollout": {
+          "title": "4. Why did my config change not reach the pods?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-man-config-rollout-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-man-config-rollout-1 · not exercised · baseline v0.1-b1. A configMapGenerator hash or a checksum/config annotation changes the pod template when config changes, so the pods roll; a fixed ConfigMap name does not. Limitations: Reasoned from the source guide and upstream documentation.",
+              "reason": "No test changes a ConfigMap and watches the rollout; that needs a cluster and manifests the example service does not have yet."
+            }
+          ]
+        },
+        "man-image-digest": {
+          "title": "5. How do I make sure the cluster runs the image I tested?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-man-image-digest-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-man-image-digest-1 · not exercised · baseline v0.1-b1. The Kustomize images transformer with a digest renders repo@sha256 references and kustomize edit set image updates it. Limitations: Reasoned from the source guide and upstream documentation.",
+              "reason": "No test renders an overlay and checks the image reference yet."
+            }
+          ]
+        },
+        "man-labels": {
+          "title": "3. Which labels go on every object and which go in the selector?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-man-labels-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-man-labels-1 · not exercised · baseline v0.1-b1. A selector limited to name, instance and component survives version changes, while adding a label to an existing selector fails with field is immutable. Limitations: Reasoned from the source guide and upstream documentation.",
+              "reason": "No test applies a Deployment twice with different labels; the example service has no manifests yet."
+            }
+          ]
+        },
+        "man-overlays": {
+          "title": "2. How do I change a few values per environment without copying everything?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-man-overlays-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-man-overlays-1 · not exercised · baseline v0.1-b1. A Kustomize base with components and per-environment overlays renders each environment without copying the base, using only labels, patches and replacements. Limitations: Reasoned from the source guide and upstream documentation.",
+              "reason": "The example service has no Kustomize base or overlays yet, so nothing renders them in CI."
+            }
+          ]
+        },
+        "man-packaging": {
+          "title": "1. Plain YAML, Helm or Kustomize: which one should I use?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-man-packaging-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-man-packaging-1 · not exercised · baseline v0.1-b1. Helm, Kustomize and plain YAML can render the same production resources, so the choice of tool does not change what runs in the cluster. Limitations: Reasoned from the source guide and upstream documentation.",
+              "reason": "The source guide proved this with a normalised diff of three renderings of one service; this repository has no manifests yet."
+            }
+          ]
+        },
+        "man-server-side-apply": {
+          "title": "6. How should I apply manifests to the cluster?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-man-server-side-apply-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-man-server-side-apply-1 · not exercised · baseline v0.1-b1. Server-side apply with a named field manager records field ownership and leaving spec.replicas out lets an HPA scale without conflicts. Limitations: Reasoned from the source guide and upstream documentation.",
+              "reason": "Needs a cluster and an HPA. No cluster test runs in CI yet."
+            }
+          ]
+        },
+        "man-validation": {
+          "title": "7. How do I catch broken manifests before they reach a cluster?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-man-validation-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-man-validation-1 · not exercised · baseline v0.1-b1. kubeconform in strict mode with CRD schemas, kube-linter, trivy config and pluto catch invalid or risky rendered manifests before they reach a cluster. Limitations: Reasoned from the source guide and upstream documentation.",
+              "reason": "No CI job renders and validates manifests yet; the example service has no manifests."
+            }
+          ]
+        }
+      },
+      "contents": [
+        {
+          "id": "man-packaging",
+          "title": "1. Plain YAML, Helm or Kustomize: which one should I use?"
+        },
+        {
+          "id": "man-overlays",
+          "title": "2. How do I change a few values per environment without copying everything?"
+        },
+        {
+          "id": "man-labels",
+          "title": "3. Which labels go on every object and which go in the selector?"
+        },
+        {
+          "id": "man-config-rollout",
+          "title": "4. Why did my config change not reach the pods?"
+        },
+        {
+          "id": "man-image-digest",
+          "title": "5. How do I make sure the cluster runs the image I tested?"
+        },
+        {
+          "id": "man-server-side-apply",
+          "title": "6. How should I apply manifests to the cluster?"
+        },
+        {
+          "id": "man-validation",
+          "title": "7. How do I catch broken manifests before they reach a cluster?"
+        }
+      ],
+      "checklist": [
+        {
+          "id": "MAN-01",
+          "type": "generated-config",
+          "card": "man-packaging",
+          "text": "One packaging tool per service: Kustomize for a service the team deploys itself, Helm when others install it with their own values. The choice is written down.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "MAN-02",
+          "type": "generated-config",
+          "card": "man-validation",
+          "text": "CI renders every environment and validates the rendered output, not the templates.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "MAN-03",
+          "type": "generated-config",
+          "card": "man-labels",
+          "text": "Recommended app.kubernetes.io labels on every object. Selectors use name, instance and component only, never version.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "MAN-04",
+          "type": "generated-config",
+          "card": "man-server-side-apply",
+          "text": "No spec.replicas in any manifest when an HPA manages the Deployment.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "MAN-05",
+          "type": "generated-config",
+          "card": "man-image-digest",
+          "text": "Production images pinned by digest through the Kustomize images transformer.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "MAN-06",
+          "type": "generated-config",
+          "card": "man-config-rollout",
+          "text": "Config changes roll the pods: configMapGenerator hash or checksum/config. Plain YAML has an explicit restart step.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "MAN-07",
+          "type": "generated-config",
+          "card": "man-overlays",
+          "text": "Kustomize uses labels, patches and replacements only, with components for optional features. No deprecated fields.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "MAN-08",
+          "type": "operator-task",
+          "card": "man-server-side-apply",
+          "text": "Applied with --server-side and a named field manager. Drift checked with kubectl diff --server-side or a GitOps controller.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "MAN-09",
+          "type": "generated-config",
+          "card": "man-validation",
+          "text": "kubeconform -strict with CRD schemas for Kubernetes 1.36 and 1.37, plus pluto for the newest version.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "MAN-10",
+          "type": "generated-config",
+          "card": "man-validation",
+          "text": "kube-linter and trivy config pass. Every suppression has a written reason.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        }
+      ],
+      "references": [
+        {
+          "id": "kubernetes-docs-home",
+          "title": "Docs home",
+          "url": "https://v1-36.docs.kubernetes.io/docs/home/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Docs home."
+        },
+        {
+          "id": "kubernetes-kustomize-via-kubectl",
+          "title": "Kustomize via kubectl (task)",
+          "url": "https://v1-36.docs.kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Kustomize via kubectl (task)."
+        },
+        {
+          "id": "kubernetes-changelog-1-36",
+          "title": "CHANGELOG 1.36",
+          "url": "https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.36.md",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "CHANGELOG 1.36."
+        },
+        {
+          "id": "kubernetes-kustomize-reference",
+          "title": "Kustomize reference",
+          "url": "https://kubectl.docs.kubernetes.io/references/kustomize/",
+          "version": "5.8.3 (docs 5.8)",
+          "pinned": false,
+          "purpose": "Kustomize reference."
+        },
+        {
+          "id": "kubernetes-kustomization-yaml-reference",
+          "title": "kustomization.yaml reference",
+          "url": "https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/",
+          "version": "5.8.3 (docs 5.8)",
+          "pinned": false,
+          "purpose": "kustomization.yaml reference."
+        },
+        {
+          "id": "kubernetes-release-kustomize-v5-8-3",
+          "title": "Release kustomize/v5.8.3",
+          "url": "https://github.com/kubernetes-sigs/kustomize/releases/tag/kustomize%2Fv5.8.3",
+          "version": "5.8.3",
+          "pinned": true,
+          "purpose": "Release kustomize/v5.8.3."
+        },
+        {
+          "id": "supply-chain-trivy-docs",
+          "title": "Trivy docs",
+          "url": "https://trivy.dev/docs/v0.76/guide/",
+          "version": "0.76.0 (docs 0.76)",
+          "pinned": true,
+          "purpose": "Trivy docs."
+        },
+        {
+          "id": "supply-chain-trivy-release-v0-76-0",
+          "title": "Trivy release v0.76.0",
+          "url": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.0",
+          "version": "0.76.0",
+          "pinned": true,
+          "purpose": "Trivy release v0.76.0."
+        }
+      ]
+    },
     "observability": {
       "id": "observability",
       "title": "Observability",
@@ -1240,6 +3803,829 @@
           "version": "1.7.1 (docs 1.7)",
           "pinned": true,
           "purpose": "Micrometer Tracing reference."
+        }
+      ]
+    },
+    "security": {
+      "id": "security",
+      "title": "Security hardening",
+      "state": "draft",
+      "baseline": "v0.1-b1",
+      "status": {
+        "reverify": false,
+        "reverifyReasons": [],
+        "stale": false
+      },
+      "verification": "",
+      "coverage": "13 claims: 1 reproduced, 12 not exercised",
+      "sources": [
+        {
+          "title": "08 · Security hardening",
+          "origin": "spring-boot-production-guides/08-security-hardening.md",
+          "revision": "sha256:0e83bf120c612d5f8c53da785a38c948eedd2acf92970b96832a9e9da7bcea1b",
+          "date": "2026-10-04",
+          "author": "Terson Rigaud",
+          "license": "CC BY 4.0"
+        }
+      ],
+      "questions": [
+        {
+          "id": "SEC-Q1",
+          "text": "Which tokens should the service accept?",
+          "answeredIn": "sec-token-audience",
+          "cardTitle": "1. Which tokens should the service accept?"
+        },
+        {
+          "id": "SEC-Q2",
+          "text": "How do token claims become permissions?",
+          "answeredIn": "sec-authorities",
+          "cardTitle": "2. How do token claims become permissions?"
+        },
+        {
+          "id": "SEC-Q3",
+          "text": "Who may call what?",
+          "answeredIn": "sec-deny-default",
+          "cardTitle": "3. Who may call what?"
+        },
+        {
+          "id": "SEC-Q4",
+          "text": "Do I need CSRF protection and CORS?",
+          "answeredIn": "sec-csrf-cors",
+          "cardTitle": "4. Do I need CSRF protection and CORS?"
+        },
+        {
+          "id": "SEC-Q5",
+          "text": "Which headers should every response carry?",
+          "answeredIn": "sec-headers",
+          "cardTitle": "5. Which headers should every response carry?"
+        },
+        {
+          "id": "SEC-Q6",
+          "text": "What should an error tell the client?",
+          "answeredIn": "sec-errors",
+          "cardTitle": "6. What should an error tell the client?"
+        },
+        {
+          "id": "SEC-Q7",
+          "text": "How do I stop a URL fetch from reaching inside the network?",
+          "answeredIn": "sec-ssrf",
+          "cardTitle": "7. How do I stop a URL fetch from reaching inside the network?"
+        },
+        {
+          "id": "SEC-Q8",
+          "text": "How locked down should the pod be?",
+          "answeredIn": "sec-pod-hardening",
+          "cardTitle": "8. How locked down should the pod be?"
+        }
+      ],
+      "cards": {
+        "sec-authorities": {
+          "title": "2. How do token claims become permissions?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-sec-authorities-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-sec-authorities-1 · not exercised · baseline v0.1-b1. A DelegatingJwtGrantedAuthoritiesConverter maps scp to SCOPE_ and roles to ROLE_, so user and app tokens both pass rules that accept either authority. Limitations: Microsoft Entra ID claim shapes come from Microsoft's token reference, not from a live tenant.",
+              "reason": "No test runs the converter against signed tokens yet."
+            }
+          ]
+        },
+        "sec-csrf-cors": {
+          "title": "4. Do I need CSRF protection and CORS?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-sec-csrf-cors-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-sec-csrf-cors-1 · not exercised · baseline v0.1-b1. With a stateless session policy and CSRF disabled, a bearer token API accepts state-changing requests without a CSRF token and creates no HTTP session. Limitations: Documented Spring Security behaviour.",
+              "reason": "The example service has no Spring Security yet."
+            }
+          ]
+        },
+        "sec-deny-default": {
+          "title": "3. Who may call what?",
+          "coverage": "2 claims: 2 not exercised",
+          "records": [
+            {
+              "id": "ev-sec-deny-default-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-sec-deny-default-1 · not exercised · baseline v0.1-b1. An API chain that ends with anyRequest().denyAll() rejects a path no rule names. Limitations: Documented Spring Security behaviour.",
+              "reason": "The example service has no Spring Security yet."
+            },
+            {
+              "id": "ev-sec-deny-default-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-sec-deny-default-2 · not exercised · baseline v0.1-b1. A catch-all exception handler that does not rethrow AccessDeniedException turns a denied call into a 500. Limitations: Reasoned from Spring MVC exception handling in the source guide.",
+              "reason": "No test runs method security yet."
+            }
+          ]
+        },
+        "sec-errors": {
+          "title": "6. What should an error tell the client?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-sec-errors-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-sec-errors-1 · not exercised · baseline v0.1-b1. In Spring Boot 4.1 the spring.web.error defaults hide the stack trace, the message and binding errors; spring.mvc.problemdetails.enabled defaults to false. Limitations: Read from the Boot 4.1.1 configuration metadata in the source guide.",
+              "reason": "No test triggers an error response from the example service yet."
+            }
+          ]
+        },
+        "sec-headers": {
+          "title": "5. Which headers should every response carry?",
+          "coverage": "2 claims: 2 not exercised",
+          "records": [
+            {
+              "id": "ev-sec-headers-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-sec-headers-1 · not exercised · baseline v0.1-b1. Spring Security sends HSTS only when the request is secure, so behind a TLS ingress HSTS needs trusted forwarded headers. Limitations: Documented Spring Security behaviour.",
+              "reason": "No test runs the service behind an ingress yet."
+            },
+            {
+              "id": "ev-sec-headers-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-sec-headers-2 · not exercised · baseline v0.1-b1. Tomcat's default internal-proxies trusts every private address range, so any pod in the cluster can fake X-Forwarded-For. Limitations: Read from the Boot 4.1.1 configuration metadata in the source guide.",
+              "reason": "Needs a cluster; no cluster test runs yet."
+            }
+          ]
+        },
+        "sec-pod-hardening": {
+          "title": "8. How locked down should the pod be?",
+          "coverage": "3 claims: 1 reproduced, 2 not exercised",
+          "records": [
+            {
+              "id": "ev-sec-pod-hardening-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-sec-pod-hardening-1 · reproduced · baseline v0.1-b1 · 2026-10-17. The image starts with a read-only root filesystem, /tmp as tmpfs and as UID 10001: /readyz answers 200 within 60 s. Result: read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s. Limitations: Docker flags stand in for the pod security context; dropped capabilities, seccomp and the service account token are not checked.",
+              "test": "acceptance/jvm::TestHardenedStartup",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestHardenedStartup$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39062105063 attempt 1, commit b3eac84",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/b3eac8404f59d5951cc889234340baf4ac545d4b"
+            },
+            {
+              "id": "ev-sec-pod-hardening-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-sec-pod-hardening-2 · not exercised · baseline v0.1-b1. The pod security context passes Pod Security admission in a namespace that enforces restricted. Limitations: The source guide checked its manifest with kubeconform only.",
+              "reason": "Needs a cluster; no cluster test runs yet."
+            },
+            {
+              "id": "ev-sec-pod-hardening-3",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-sec-pod-hardening-3 · not exercised · baseline v0.1-b1. A default-deny NetworkPolicy with explicit allows blocks the metadata service at 169.254.169.254. Limitations: A deployment prerequisite; it depends on the cluster's network plugin.",
+              "reason": "Needs a cluster with a NetworkPolicy-enforcing network plugin."
+            }
+          ]
+        },
+        "sec-ssrf": {
+          "title": "7. How do I stop a URL fetch from reaching inside the network?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-sec-ssrf-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-sec-ssrf-1 · not exercised · baseline v0.1-b1. A client built with InetAddressFilter.externalAddresses() fails with FilteredHostException when a URL resolves to 169.254.169.254 or a private address. Limitations: Read from the Boot 4.1.1 http client source in the source guide.",
+              "reason": "The example service makes no outbound calls yet."
+            }
+          ]
+        },
+        "sec-token-audience": {
+          "title": "1. Which tokens should the service accept?",
+          "coverage": "2 claims: 2 not exercised",
+          "records": [
+            {
+              "id": "ev-sec-token-audience-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-sec-token-audience-1 · not exercised · baseline v0.1-b1. With issuer-uri and audiences set, Spring Boot 4.1 rejects a token issued for another audience with 401. Limitations: Read from the Spring Boot 4.1.1 decoder configuration and Spring Security 7.1.1 validators in the source guide.",
+              "reason": "The example service has no Spring Security yet, so no test sends tokens to it."
+            },
+            {
+              "id": "ev-sec-token-audience-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-sec-token-audience-2 · not exercised · baseline v0.1-b1. With issuer-uri set, Boot 4.1 resolves the discovery document and signing keys on the first request, not at startup. Limitations: Read from the Boot 4.1.1 source in the source guide.",
+              "reason": "No test starts the service against a slow or missing identity provider yet."
+            }
+          ]
+        }
+      },
+      "contents": [
+        {
+          "id": "sec-token-audience",
+          "title": "1. Which tokens should the service accept?"
+        },
+        {
+          "id": "sec-authorities",
+          "title": "2. How do token claims become permissions?"
+        },
+        {
+          "id": "sec-deny-default",
+          "title": "3. Who may call what?"
+        },
+        {
+          "id": "sec-csrf-cors",
+          "title": "4. Do I need CSRF protection and CORS?"
+        },
+        {
+          "id": "sec-headers",
+          "title": "5. Which headers should every response carry?"
+        },
+        {
+          "id": "sec-errors",
+          "title": "6. What should an error tell the client?"
+        },
+        {
+          "id": "sec-ssrf",
+          "title": "7. How do I stop a URL fetch from reaching inside the network?"
+        },
+        {
+          "id": "sec-pod-hardening",
+          "title": "8. How locked down should the pod be?"
+        }
+      ],
+      "checklist": [
+        {
+          "id": "SEC-01",
+          "type": "generated-config",
+          "card": "sec-token-audience",
+          "text": "issuer-uri and audiences set; jws-algorithms explicit.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "auth: true"
+          ]
+        },
+        {
+          "id": "SEC-02",
+          "type": "generated-config",
+          "card": "sec-authorities",
+          "text": "scp mapped to SCOPE_ and roles to ROLE_; oid as the principal; the API registration issues v2 tokens.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "auth: true"
+          ]
+        },
+        {
+          "id": "SEC-03",
+          "type": "generated-config",
+          "card": "sec-deny-default",
+          "text": "The API chain ends with anyRequest().denyAll(); business rules use @PreAuthorize; a catch-all handler rethrows security exceptions.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "auth: true"
+          ]
+        },
+        {
+          "id": "SEC-04",
+          "type": "generated-config",
+          "card": "sec-csrf-cors",
+          "text": "Stateless sessions; CSRF off only because no endpoint uses cookie authentication; CORS with exact origins or none.",
+          "claim": "documented",
+          "tests": [],
+          "tags": [
+            "auth: true"
+          ]
+        },
+        {
+          "id": "SEC-05",
+          "type": "verified-behaviour",
+          "card": "sec-headers",
+          "text": "Content-Security-Policy, Referrer-Policy and HSTS present on responses through the ingress.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "SEC-06",
+          "type": "deployment-prerequisite",
+          "card": "sec-headers",
+          "text": "server.forward-headers-strategy pinned; server.tomcat.remoteip.internal-proxies narrowed to the ingress addresses.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "SEC-07",
+          "type": "generated-config",
+          "card": "sec-errors",
+          "text": "spring.web.error.* at defaults; spring.mvc.problemdetails.enabled true; a catch-all handler returns a fixed text.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "SEC-08",
+          "type": "generated-config",
+          "card": "sec-errors",
+          "text": "Validation 400s carry errors with field and message, never the rejected value; request sizes bounded on purpose.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "SEC-09",
+          "type": "generated-config",
+          "card": "sec-ssrf",
+          "text": "URLs that users supply go through a client with InetAddressFilter.externalAddresses(), no redirects and https only.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "SEC-10",
+          "type": "generated-config",
+          "card": "sec-pod-hardening",
+          "text": "Pod runs non-root with a read-only root filesystem and /tmp emptyDir, drops ALL capabilities, uses RuntimeDefault and mounts no service account token.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "SEC-11",
+          "type": "deployment-prerequisite",
+          "card": "sec-pod-hardening",
+          "text": "The namespace enforces Pod Security restricted; a NetworkPolicy denies by default with explicit allows and blocks 169.254.169.254.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        }
+      ],
+      "references": [
+        {
+          "id": "spring-boot-actuator-endpoints",
+          "title": "Actuator endpoints (incl. Kubernetes probes anchor, verified)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Actuator endpoints (incl. Kubernetes probes anchor, verified)."
+        },
+        {
+          "id": "spring-boot-oauth2",
+          "title": "OAuth2 (resource server auto-config)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/security/oauth2.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "OAuth2 (resource server auto-config)."
+        },
+        {
+          "id": "spring-security-reference",
+          "title": "Reference",
+          "url": "https://docs.spring.io/spring-security/reference/7.1/index.html",
+          "version": "7.1.1 (docs 7.1)",
+          "pinned": true,
+          "purpose": "Reference."
+        },
+        {
+          "id": "spring-security-oauth-2-0-resource-server",
+          "title": "OAuth 2.0 Resource Server",
+          "url": "https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/index.html",
+          "version": "7.1.1 (docs 7.1)",
+          "pinned": true,
+          "purpose": "OAuth 2.0 Resource Server."
+        },
+        {
+          "id": "spring-security-resource-server-jwt",
+          "title": "Resource Server JWT",
+          "url": "https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/jwt.html",
+          "version": "7.1.1 (docs 7.1)",
+          "pinned": true,
+          "purpose": "Resource Server JWT."
+        },
+        {
+          "id": "spring-security-what-s-new-in-7-1",
+          "title": "What's new in 7.1",
+          "url": "https://docs.spring.io/spring-security/reference/7.1/whats-new.html",
+          "version": "7.1.1 (docs 7.1)",
+          "pinned": true,
+          "purpose": "What's new in 7.1."
+        },
+        {
+          "id": "kubernetes-pod-security-standards",
+          "title": "Pod Security Standards",
+          "url": "https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Pod Security Standards."
+        },
+        {
+          "id": "kubernetes-pod-security-admission",
+          "title": "Pod Security Admission",
+          "url": "https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-admission/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "Pod Security Admission."
+        },
+        {
+          "id": "kubernetes-networkpolicy",
+          "title": "NetworkPolicy",
+          "url": "https://v1-36.docs.kubernetes.io/docs/concepts/services-networking/network-policies/",
+          "version": "1.36.5 (docs 1.36)",
+          "pinned": true,
+          "purpose": "NetworkPolicy."
+        },
+        {
+          "id": "identity-rfc-6750-bearer-token-usage",
+          "title": "RFC 6750 Bearer Token Usage",
+          "url": "https://www.rfc-editor.org/rfc/rfc6750.html",
+          "version": "final",
+          "pinned": true,
+          "purpose": "RFC 6750 Bearer Token Usage."
+        },
+        {
+          "id": "identity-rfc-9068-jwt-profile-for-oauth-2-0-access-tokens",
+          "title": "RFC 9068 JWT Profile for OAuth 2.0 Access Tokens",
+          "url": "https://www.rfc-editor.org/rfc/rfc9068.html",
+          "version": "final",
+          "pinned": true,
+          "purpose": "RFC 9068 JWT Profile for OAuth 2.0 Access Tokens."
+        },
+        {
+          "id": "identity-rfc-9700-oauth-2-0-security-bcp",
+          "title": "RFC 9700 OAuth 2.0 Security BCP",
+          "url": "https://www.rfc-editor.org/rfc/rfc9700.html",
+          "version": "final",
+          "pinned": true,
+          "purpose": "RFC 9700 OAuth 2.0 Security BCP."
+        }
+      ]
+    },
+    "virtual-threads": {
+      "id": "virtual-threads",
+      "title": "Virtual threads and concurrency",
+      "state": "draft",
+      "baseline": "v0.1-b1",
+      "status": {
+        "reverify": false,
+        "reverifyReasons": [],
+        "stale": false
+      },
+      "verification": "",
+      "coverage": "10 claims: 1 reproduced, 1 compiled, 8 not exercised",
+      "sources": [
+        {
+          "title": "02 · Virtual threads and concurrency in Spring Boot 4",
+          "origin": "spring-boot-production-guides/02-virtual-threads-and-concurrency.md",
+          "revision": "sha256:a2d9be00a05d6059a1693e91621a1aeecf7ac964344b0b6f6fcdb011111489f8",
+          "date": "2026-10-04",
+          "author": "Terson Rigaud",
+          "license": "CC BY 4.0"
+        }
+      ],
+      "questions": [
+        {
+          "id": "VT-Q1",
+          "text": "Should I turn on virtual threads?",
+          "answeredIn": "vt-enable",
+          "cardTitle": "1. Should I turn on virtual threads?"
+        },
+        {
+          "id": "VT-Q2",
+          "text": "Why did latency get worse after I turned them on?",
+          "answeredIn": "vt-resource-limits",
+          "cardTitle": "2. Why did latency get worse after I turned them on?"
+        },
+        {
+          "id": "VT-Q3",
+          "text": "How do I keep a slow service from drowning in my calls?",
+          "answeredIn": "vt-downstream-limits",
+          "cardTitle": "3. How do I keep a slow service from drowning in my calls?"
+        },
+        {
+          "id": "VT-Q4",
+          "text": "Where does CPU heavy work go?",
+          "answeredIn": "vt-cpu-work",
+          "cardTitle": "4. Where does CPU heavy work go?"
+        },
+        {
+          "id": "VT-Q5",
+          "text": "Why does my @Async code still run on old threads?",
+          "answeredIn": "vt-executors",
+          "cardTitle": "5. Why does my @Async code still run on old threads?"
+        },
+        {
+          "id": "VT-Q6",
+          "text": "Why do my logs lose the trace ID in async work?",
+          "answeredIn": "vt-context",
+          "cardTitle": "6. Why do my logs lose the trace ID in async work?"
+        },
+        {
+          "id": "VT-Q7",
+          "text": "How do I call two services at once with one deadline?",
+          "answeredIn": "vt-fan-out",
+          "cardTitle": "7. How do I call two services at once with one deadline?"
+        },
+        {
+          "id": "VT-Q8",
+          "text": "Is synchronized still a problem?",
+          "answeredIn": "vt-pinning",
+          "cardTitle": "8. Is synchronized still a problem?"
+        }
+      ],
+      "cards": {
+        "vt-context": {
+          "title": "6. Why do my logs lose the trace ID in async work?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-vt-context-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-vt-context-1 · not exercised · baseline v0.1-b1. Work handed to another thread loses MDC and the trace context unless a TaskDecorator or Micrometer context propagation carries them. Limitations: From the Micrometer context propagation documentation and the source guide.",
+              "reason": "The example service has no async work yet."
+            }
+          ]
+        },
+        "vt-cpu-work": {
+          "title": "4. Where does CPU heavy work go?",
+          "coverage": "2 claims: 1 reproduced, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-vt-cpu-work-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-vt-cpu-work-1 · reproduced · baseline v0.1-b1 · 2026-10-17. With no CPU limit, -XX:ActiveProcessorCount=1 overrides the CPU count the JVM detects, which also sets the number of carrier threads. Result: no CPU limit, nproc 2; -XX:ActiveProcessorCount=1 reports Effective CPU Count: 1. Limitations: Proves the override only; the carrier count following it is from the JDK documentation.",
+              "test": "acceptance/jvm::TestActiveProcessorCountOverride",
+              "commands": [
+                "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal",
+                "go test -tags acceptance -count=1 -run '^TestActiveProcessorCountOverride$' ./acceptance/jvm"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39062105063 attempt 1, commit b3eac84",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/b3eac8404f59d5951cc889234340baf4ac545d4b"
+            },
+            {
+              "id": "ev-vt-cpu-work-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-vt-cpu-work-2 · not exercised · baseline v0.1-b1. A virtual thread doing CPU work holds its carrier until it blocks, so CPU heavy requests starve the others. Limitations: From JEP 444 and the source guide.",
+              "reason": "No CPU bound workload test runs yet."
+            }
+          ]
+        },
+        "vt-downstream-limits": {
+          "title": "3. How do I keep a slow service from drowning in my calls?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-vt-downstream-limits-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-vt-downstream-limits-1 · not exercised · baseline v0.1-b1. @ConcurrencyLimit, enabled by @EnableResilientMethods, caps concurrent calls through a method. Limitations: From the Spring Framework 7 resilience documentation.",
+              "reason": "The example service makes no outbound calls yet."
+            }
+          ]
+        },
+        "vt-enable": {
+          "title": "1. Should I turn on virtual threads?",
+          "coverage": "2 claims: 1 compiled, 1 not exercised",
+          "records": [
+            {
+              "id": "ev-vt-enable-1",
+              "badge": "compiled",
+              "canonical": "Evidence ev-vt-enable-1 · compiled · baseline v0.1-b1 · 2026-10-17. The example service builds and its Spring context starts with spring.threads.virtual.enabled: true. Result: io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped. Limitations: Proves the setting is accepted, not that requests run on virtual threads; no test logs the request thread yet.",
+              "test": "gradle/single-hexagonal::ApplicationTest",
+              "commands": [
+                "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1",
+              "run": "run 39062105063 attempt 1, commit b3eac84",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/b3eac8404f59d5951cc889234340baf4ac545d4b"
+            },
+            {
+              "id": "ev-vt-enable-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-vt-enable-2 · not exercised · baseline v0.1-b1. With spring.threads.virtual.enabled: true, Spring Boot 4.1 runs web requests, @Async tasks and @Scheduled tasks on virtual threads. Limitations: From the Spring Boot 4.1 reference and configuration metadata.",
+              "reason": "No test checks which thread handles a request or a task yet."
+            }
+          ]
+        },
+        "vt-executors": {
+          "title": "5. Why does my @Async code still run on old threads?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-vt-executors-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-vt-executors-1 · not exercised · baseline v0.1-b1. A TaskExecutor bean declared by the application replaces the virtual thread executor Boot configures for @Async; spring.main.keep-alive keeps an app with no web server running. Limitations: From the Spring Boot 4.1 reference and configuration metadata.",
+              "reason": "The example service has no @Async or @Scheduled code yet."
+            }
+          ]
+        },
+        "vt-fan-out": {
+          "title": "7. How do I call two services at once with one deadline?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-vt-fan-out-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-vt-fan-out-1 · not exercised · baseline v0.1-b1. Waiting on each Future with one shared deadline and cancelling late tasks returns within the deadline, while a try with resources executor waits for every task on close. Limitations: From the JDK 25 ExecutorService API and the source guide.",
+              "reason": "No fan out test runs yet."
+            }
+          ]
+        },
+        "vt-pinning": {
+          "title": "8. Is synchronized still a problem?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-vt-pinning-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-vt-pinning-1 · not exercised · baseline v0.1-b1. On JDK 25, synchronized no longer pins a virtual thread; JFR jdk.VirtualThreadPinned events show only native frames or class initialization. Limitations: From JEP 491 and the source guide.",
+              "reason": "No JFR recording runs under load yet."
+            }
+          ]
+        },
+        "vt-resource-limits": {
+          "title": "2. Why did latency get worse after I turned them on?",
+          "coverage": "1 claim: 1 not exercised",
+          "records": [
+            {
+              "id": "ev-vt-resource-limits-1",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-vt-resource-limits-1 · not exercised · baseline v0.1-b1. With virtual threads, a HikariCP pool sized from the database budget with a 3 second connection timeout keeps tail latency bounded under load. Limitations: Reasoned from HikariCP behaviour and the source guide; server.tomcat.threads.max having no effect is from Boot's property description.",
+              "reason": "The example service has no database yet and no load test runs."
+            }
+          ]
+        }
+      },
+      "contents": [
+        {
+          "id": "vt-enable",
+          "title": "1. Should I turn on virtual threads?"
+        },
+        {
+          "id": "vt-resource-limits",
+          "title": "2. Why did latency get worse after I turned them on?"
+        },
+        {
+          "id": "vt-downstream-limits",
+          "title": "3. How do I keep a slow service from drowning in my calls?"
+        },
+        {
+          "id": "vt-cpu-work",
+          "title": "4. Where does CPU heavy work go?"
+        },
+        {
+          "id": "vt-executors",
+          "title": "5. Why does my @Async code still run on old threads?"
+        },
+        {
+          "id": "vt-context",
+          "title": "6. Why do my logs lose the trace ID in async work?"
+        },
+        {
+          "id": "vt-fan-out",
+          "title": "7. How do I call two services at once with one deadline?"
+        },
+        {
+          "id": "vt-pinning",
+          "title": "8. Is synchronized still a problem?"
+        }
+      ],
+      "checklist": [
+        {
+          "id": "VT-01",
+          "type": "generated-config",
+          "card": "vt-enable",
+          "text": "spring.threads.virtual.enabled is true only for I/O bound services; the decision is recorded.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "VT-02",
+          "type": "generated-config",
+          "card": "vt-resource-limits",
+          "text": "HikariCP maximum-pool-size comes from the database connection budget; connection-timeout is 5 s or less.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "VT-03",
+          "type": "verified-behaviour",
+          "card": "vt-downstream-limits",
+          "text": "Every downstream service has a concurrency limit (@ConcurrencyLimit, Semaphore or bulkhead) and every outbound call has connect and read timeouts.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "VT-04",
+          "type": "verified-behaviour",
+          "card": "vt-cpu-work",
+          "text": "CPU heavy work runs on a platform pool sized to the cores.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "VT-05",
+          "type": "deployment-prerequisite",
+          "card": "vt-cpu-work",
+          "text": "Pod CPU request of at least 1; either -XX:ActiveProcessorCount of at least 2 with no CPU limit or a CPU limit of at least 2.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "VT-06",
+          "type": "verified-behaviour",
+          "card": "vt-executors",
+          "text": "No custom executor bean silently replaces the virtual thread @Async executor; spring.main.keep-alive is true for apps without a web server.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "VT-07",
+          "type": "verified-behaviour",
+          "card": "vt-context",
+          "text": "MDC, security and trace context are propagated across async boundaries; no business logic relies on ThreadLocal caching.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "VT-08",
+          "type": "verified-behaviour",
+          "card": "vt-fan-out",
+          "text": "Fan out uses a long lived, context wrapped executor and cancels the tasks that miss the deadline.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        },
+        {
+          "id": "VT-09",
+          "type": "operator-task",
+          "card": "vt-pinning",
+          "text": "A JFR pinning check runs once under load; dashboards show pool pending connections and GC.",
+          "claim": "documented",
+          "tests": [],
+          "tags": []
+        }
+      ],
+      "references": [
+        {
+          "id": "java-virtual-threads-guide",
+          "title": "Virtual threads guide (Core Libraries)",
+          "url": "https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html",
+          "version": "25.0.4.1+1 (docs 25)",
+          "pinned": true,
+          "purpose": "Virtual threads guide (Core Libraries)."
+        },
+        {
+          "id": "jep-444",
+          "title": "JEP 444: Virtual Threads",
+          "url": "https://openjdk.org/jeps/444",
+          "version": "JDK 21",
+          "pinned": true,
+          "purpose": "What JEP 444 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "jep-491",
+          "title": "JEP 491: Synchronize Virtual Threads without Pinning",
+          "url": "https://openjdk.org/jeps/491",
+          "version": "JDK 24",
+          "pinned": true,
+          "purpose": "What JEP 491 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "jep-505",
+          "title": "JEP 505: Structured Concurrency (Fifth Preview), the preview in JDK 25",
+          "url": "https://openjdk.org/jeps/505",
+          "version": "JDK 25",
+          "pinned": true,
+          "purpose": "What JEP 505 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "jep-506",
+          "title": "JEP 506: Scoped Values (final)",
+          "url": "https://openjdk.org/jeps/506",
+          "version": "JDK 25",
+          "pinned": true,
+          "purpose": "What JEP 506 changes and in which JDK it was delivered."
+        },
+        {
+          "id": "spring-boot-virtual-threads",
+          "title": "Virtual threads (anchor verified)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Virtual threads (anchor verified)."
+        },
+        {
+          "id": "spring-boot-task-execution",
+          "title": "Task execution (virtual-thread executors)",
+          "url": "https://docs.spring.io/spring-boot/4.1/reference/features/task-execution-and-scheduling.html",
+          "version": "4.1.1 (docs 4.1)",
+          "pinned": true,
+          "purpose": "Task execution (virtual-thread executors)."
         }
       ]
     }

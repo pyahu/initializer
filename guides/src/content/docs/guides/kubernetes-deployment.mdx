@@ -1,0 +1,375 @@
+---
+title: Deploying to Kubernetes
+description: Probes, shutdown, resources, rollouts, disruption, scaling and placement for a Spring Boot 4.1 service in a pod.
+tableOfContents: { maxHeadingLevel: 2 }
+guide:
+  id: kubernetes-deployment
+  prefix: KUBE
+  state: draft
+  baseline: v0.1-b1
+  components: [spring-boot, java, temurin-jre-image, kubernetes-1.36, kubernetes-1.37]
+  verification: null
+  questions:
+    - id: KUBE-Q1
+      text: "What should each probe check?"
+      answeredIn: kube-probes
+    - id: KUBE-Q2
+      text: "How do I stop a pod without failing requests?"
+      answeredIn: kube-graceful-shutdown
+    - id: KUBE-Q3
+      text: "How much CPU and memory should the pod ask for?"
+      answeredIn: kube-resources
+    - id: KUBE-Q4
+      text: "How do I roll out a new version without losing capacity?"
+      answeredIn: kube-rollout
+    - id: KUBE-Q5
+      text: "How do I survive node drains and cluster upgrades?"
+      answeredIn: kube-disruption
+    - id: KUBE-Q6
+      text: "How should the service scale?"
+      answeredIn: kube-autoscaling
+    - id: KUBE-Q7
+      text: "How do I keep replicas from failing together?"
+      answeredIn: kube-spread
+    - id: KUBE-Q8
+      text: "Where should scheduled jobs run?"
+      answeredIn: kube-scheduled-work
+  sources:
+    - title: "06 · Deploying Spring Boot on Kubernetes"
+      origin: spring-boot-production-guides/06-kubernetes-deployment.md
+      revision: sha256:7a98a86b2d92db30c9b7b8330fe80f40ae74de91d952324e223715b767b41696
+      date: "2026-10-04"
+      author: Terson Rigaud
+      license: CC BY 4.0
+---
+import GuideStatus from '../../../components/GuideStatus.astro';
+import Recipe from '../../../components/Recipe.astro';
+import Checklist from '../../../components/Checklist.astro';
+import GuideReferences from '../../../components/GuideReferences.astro';
+import DiagramLegend from '../../../components/DiagramLegend.astro';
+import ShutdownTimelineDiagram from '../../../components/diagrams/ShutdownTimelineDiagram.astro';
+
+The database fails over at 3 a.m. Thirty seconds later every pod of your service restarts at once and each one
+hits the database while it is still recovering. Next day a routine deploy returns a burst of 502s. Nothing in the
+code changed: the Deployment and the app disagree about how pods start, stop and fail.
+
+This guide sets the eight Deployment decisions that make them agree: probes, shutdown, resources, rollouts,
+disruptions, scaling, placement and scheduled work. How the manifests are packaged is in
+[Kubernetes manifests](/guides/kubernetes-manifests/) and JVM sizing is in
+[The JVM in containers](/guides/jvm-in-containers/).
+
+<GuideStatus guide="kubernetes-deployment" />
+
+<a id="kube-probes"></a>
+
+## 1. What should each probe check?
+
+**In short:** liveness asks "is this process broken?", readiness asks "should this pod get traffic now?". Neither
+checks the database.
+
+```yaml
+management.endpoint.health.probes.add-additional-paths: true
+```
+
+### What's going on
+
+Kubernetes asks your pod three questions and does something different with each answer:
+
+| Probe | Question | On failure |
+| ----- | -------- | ---------- |
+| `startupProbe` | Has the process finished starting? | Waits up to its budget, then restarts the container |
+| `livenessProbe` | Is the process broken in a way only a restart fixes? | Restarts the container |
+| `readinessProbe` | Should this pod receive new requests right now? | Takes the pod out of the Service, no restart |
+
+Spring Boot answers from its own lifecycle, not from health checks. Liveness is `CORRECT` once the context has
+started. Readiness turns to "accepting traffic" when startup finishes and back to "refusing" the moment shutdown
+begins.
+
+Now picture the database in liveness. The database fails over and every pod fails the check. Kubernetes restarts
+all of them together. A database in readiness is gentler but still takes every pod out of rotation at once, so the
+gateway returns 503 even for routes that never touch the database.
+
+### Do this
+
+1. Set `add-additional-paths: true`, so `/livez` and `/readyz` are served on the main port 8080. A probe on the
+   management port would still pass while the main connector is stuck.
+2. Point liveness at `/livez` and readiness at `/readyz`. Leave both groups at their defaults.
+3. Use a `startupProbe` instead of `initialDelaySeconds`, sized from measured startup, as in
+   [step 8 of the JVM guide](/guides/jvm-in-containers/#jvm-startup-probe).
+4. Set `timeoutSeconds: 2` on every probe. The default of 1 second can fail during a long GC pause.
+5. If Spring Security is on, let `/livez` and `/readyz` through without authentication.
+
+### When this is not for you
+
+- A dependency that can fail for one pod only, such as a cache local to the node: add it to readiness with
+  `group.readiness.include: readinessState,<name>`. Keep `readinessState` in the list or the pod never leaves
+  rotation at shutdown.
+- The main port uses mutual TLS that the kubelet cannot present: probe the management port instead.
+
+<a id="kube-graceful-shutdown"></a>
+
+## 2. How do I stop a pod without failing requests?
+
+**In short:** give the routers 10 seconds to forget the pod before it stops and fit the whole shutdown inside the
+grace period.
+
+```yaml
+spring.lifecycle.timeout-per-shutdown-phase: 20s
+```
+
+### What's going on
+
+When a pod is deleted, two things start at the same time and nothing orders them. The routers (kube-proxy, the
+gateway, a load balancer) learn that the pod is going away, which takes from under a second to several seconds.
+Meanwhile the kubelet tells the app to stop.
+
+It is like closing a shop while the sign outside still says "open": if you lock the door right away, the customers
+already walking over find it shut. A short wait before locking fixes that.
+
+<ShutdownTimelineDiagram />
+<DiagramLegend items={['recommended', 'context', 'failure']} />
+
+Spring Boot's defaults do not fit Kubernetes' defaults: Boot allows 30 seconds per shutdown phase while Kubernetes
+kills the pod after 30 seconds in total.
+
+### Do this
+
+1. Add a `preStop` hook with the native `sleep` action of 10 seconds. It needs no shell, so it works in distroless
+   images.
+2. Set `spring.lifecycle.timeout-per-shutdown-phase: 20s`. Graceful shutdown itself is already the default.
+3. Set `terminationGracePeriodSeconds: 45`. It counts from deletion and includes the `preStop` time.
+4. Make sure the JVM is PID 1 with an exec form `ENTRYPOINT`. `sh -c "java ..."` swallows the signal.
+
+### When this is not for you
+
+- Long requests such as uploads or streaming: raise the phase timeout and the grace period together.
+- An external load balancer that updates slowly: measure how long it takes and lengthen the `preStop` sleep.
+- Clusters older than Kubernetes 1.34: use `exec` with `sleep 10` instead, which needs a shell in the image.
+
+<a id="kube-resources"></a>
+
+## 3. How much CPU and memory should the pod ask for?
+
+**In short:** memory request equal to the limit; a CPU request and no CPU limit.
+
+```yaml
+resources:
+  requests: { cpu: "1", memory: 1Gi }
+  limits:   { memory: 1Gi }
+```
+
+### What's going on
+
+Memory cannot be shared or slowed down. If the request is below the limit, the node is promised more memory than
+it has. When it runs short, something gets killed.
+
+CPU can be shared and a limit hurts the JVM more than it helps. Kubernetes enforces it as a quota every 100
+milliseconds. The JVM runs many threads at once, so it can spend a 1 CPU quota in the first 25 milliseconds and then
+wait 75. That shows up as latency spikes and longer GC pauses while the CPU graph looks calm.
+
+The request is what the scheduler reserves for you and under contention it guarantees your share.
+
+### Do this
+
+1. Set the memory request equal to the limit and size the heap from it as in
+   [step 1 of the JVM guide](/guides/jvm-in-containers/#jvm-heap-sizing).
+2. Set an honest CPU request. The autoscaler measures CPU as a percentage of it.
+3. Leave out the CPU limit and set `-XX:ActiveProcessorCount`, as in
+   [step 3 of the JVM guide](/guides/jvm-in-containers/#jvm-cpu-count).
+
+### When this is not for you
+
+- A namespace quota requires CPU limits: set the limit to about twice the request and drop `ActiveProcessorCount`.
+  Watch the throttling ratio.
+- Without a CPU limit the pod is `Burstable`, not `Guaranteed`. With memory request equal to the limit, it still
+  never uses more memory than it asked for.
+
+<a id="kube-rollout"></a>
+
+## 4. How do I roll out a new version without losing capacity?
+
+**In short:** add one new pod, wait until it is ready, remove one old pod, repeat.
+
+```yaml
+strategy:
+  rollingUpdate: { maxSurge: 1, maxUnavailable: 0 }
+minReadySeconds: 10
+```
+
+### What's going on
+
+The default rolling update may take pods away before their replacements serve. With `maxUnavailable: 0` the
+service never drops below the number of pods you run. `minReadySeconds` makes Kubernetes wait a little after
+a pod turns ready, so a pod that crashes right after starting stops the rollout.
+
+The cost is time: one step per pod and room in the cluster for one extra pod.
+
+### Do this
+
+1. Set `maxSurge: 1` and `maxUnavailable: 0`.
+2. Set `minReadySeconds: 10`.
+3. Leave `spec.replicas` out of the Deployment when an autoscaler owns the count. Otherwise every deploy resets it.
+
+### When this is not for you
+
+- Deployments with 20 or more replicas: use `maxSurge: 25%` or a rollout takes an hour.
+
+<a id="kube-disruption"></a>
+
+## 5. How do I survive node drains and cluster upgrades?
+
+**In short:** a PodDisruptionBudget that lets one pod go at a time and never blocks a drain.
+
+```yaml
+spec:
+  maxUnavailable: 1
+  unhealthyPodEvictionPolicy: AlwaysAllow
+```
+
+### What's going on
+
+Node upgrades and the cluster autoscaler drain nodes, evicting the pods on them. A PodDisruptionBudget says how
+many of your pods may be evicted at once. It covers only these planned evictions, not a node that crashes.
+
+Two settings go wrong often. `minAvailable: 3` on a service with 3 replicas blocks every drain, so cluster
+upgrades hang. And a pod stuck crashing can block a drain too, unless the budget allows evicting pods that are
+running but not ready.
+
+### Do this
+
+1. Create a PodDisruptionBudget with `maxUnavailable: 1`. It works at any replica count.
+2. Set `unhealthyPodEvictionPolicy: AlwaysAllow`, so a broken pod cannot hold a node upgrade hostage.
+3. Run at least 3 replicas in production.
+
+### When this is not for you
+
+- It always applies to services. A single replica job has nothing to protect: skip the budget there.
+
+<a id="kube-autoscaling"></a>
+
+## 6. How should the service scale?
+
+**In short:** let a HorizontalPodAutoscaler own the replica count, on CPU at about 70% of the request, with a cap on how
+fast it adds pods.
+
+### What's going on
+
+The autoscaler compares the measured CPU with your target and adds or removes pods. The JVM makes this tricky: a
+new JVM runs slower code for its first minutes, so it burns more CPU per request. Once it is ready, the CPU it spends
+warming up counts as load and can trigger another round of scaling up, which adds more cold pods.
+
+By default the autoscaler adds pods right away and waits 5 minutes before scaling down.
+
+### Do this
+
+1. Target 60 to 70% CPU, so new pods have room while they warm up.
+2. Set `behavior` explicitly: cap how many pods may be added per minute when scaling up and remove at most one
+   pod per minute when scaling down.
+3. Set `minReplicas` to at least 3 in production.
+4. Shorten the warmup with the AOT cache from [step 6 of the JVM guide](/guides/jvm-in-containers/#jvm-aot-cache)
+   or warm hot paths in an `ApplicationRunner`, which runs before the pod turns ready.
+
+### When this is not for you
+
+- Services that mostly wait on I/O or consume a queue: CPU is a poor signal. Scale on request rate or queue depth
+  with KEDA, which creates its own autoscaler. Never keep both on one Deployment.
+
+<a id="kube-spread"></a>
+
+## 7. How do I keep replicas from failing together?
+
+**In short:** spread replicas across zones strictly and across nodes loosely.
+
+```yaml
+topologySpreadConstraints:
+  - { maxSkew: 1, topologyKey: topology.kubernetes.io/zone, whenUnsatisfiable: DoNotSchedule,
+      labelSelector: { matchLabels: { app.kubernetes.io/name: orders-service } },
+      matchLabelKeys: [pod-template-hash] }
+```
+
+### What's going on
+
+Three replicas on one node or in one zone fail together when that node or zone goes down. Spread constraints
+tell the scheduler to keep the count per zone balanced: 3 replicas land in 3 zones and stay balanced as the
+service scales.
+
+`matchLabelKeys: [pod-template-hash]` makes the scheduler count each version separately. Without it, a rollout
+counts old and new pods together and can stack the new ones in one zone.
+
+### Do this
+
+1. Add a zone constraint with `maxSkew: 1` and `DoNotSchedule`.
+2. Add a node constraint on `kubernetes.io/hostname` with `ScheduleAnyway`, so two replicas avoid one node without
+   blocking scheduling.
+3. Put `matchLabelKeys: [pod-template-hash]` on both.
+
+### When this is not for you
+
+- A dev cluster with one zone or nodes without the zone label: a strict zone rule can leave pods pending. Relax
+  it there.
+- Prefer spread constraints to `podAntiAffinity`: a required `podAntiAffinity` caps replicas at the number of nodes.
+
+<a id="kube-scheduled-work"></a>
+
+## 8. Where should scheduled jobs run?
+
+**In short:** short housekeeping in the service with a lock; heavy batch work in a Kubernetes `CronJob`.
+
+### What's going on
+
+A method with `@Scheduled` runs in every replica. With 3 replicas it runs 3 times, which is rarely what you want.
+A lock in the database fixes that: every replica tries, one wins. ShedLock is the usual library for it.
+
+Heavy work is different. A batch that runs for minutes competes with requests for CPU and memory. A `CronJob`
+gives it its own pod, retries and a hard timeout.
+
+### Do this
+
+1. For short frequent tasks, use `@Scheduled` with ShedLock and the database clock. Set `lockAtMostFor` longer than
+   the slowest run and shorter than the interval.
+2. For batch work, use a `CronJob` with `concurrencyPolicy: Forbid` and an explicit `timeZone`, reusing the
+   service's image and configuration.
+3. Make jobs idempotent either way: a job can run more than once.
+
+### When this is not for you
+
+- One replica that will never scale: plain `@Scheduled` works, until the day it scales.
+
+## Put it all together
+
+The app settings live in `application.yaml`; everything else goes in the Deployment and its neighbours.
+
+### Probes and shutdown in the app
+
+The example service serves `/livez` and `/readyz` on the main port (step 1) and bounds each shutdown phase to 20
+seconds (step 2).
+
+<Recipe id="kube-shutdown-phase" path="fixtures/single-hexagonal/src/main/resources/application.yaml" start="lifecycle:" end="timeout-per-shutdown-phase: 20s" lang="yaml" />
+
+<Recipe id="kube-probe-paths" path="fixtures/single-hexagonal/src/main/resources/application.yaml" start="endpoint:" end="add-additional-paths: true" lang="yaml" />
+
+**Check it:** start the service and run `curl -s localhost:8080/readyz`. It answers `{"status":"UP"}` on the main
+port, while Actuator itself listens on 8081.
+
+### In the Deployment
+
+- Probes: `startupProbe` and `livenessProbe` on `/livez`, `readinessProbe` on `/readyz`, all with
+  `timeoutSeconds: 2` (step 1).
+- `preStop` with `sleep` for 10 seconds and `terminationGracePeriodSeconds: 45` (step 2).
+- Memory request equal to the limit, a CPU request and no CPU limit (step 3).
+- `maxSurge: 1`, `maxUnavailable: 0`, `minReadySeconds: 10` and no `spec.replicas` (step 4).
+- Zone and node spread with `matchLabelKeys: [pod-template-hash]` (step 7).
+
+### Next to the Deployment
+
+- A PodDisruptionBudget with `maxUnavailable: 1` and `unhealthyPodEvictionPolicy: AlwaysAllow` (step 5).
+- A HorizontalPodAutoscaler on CPU with explicit `behavior` and `minReplicas: 3` in production (step 6).
+- A `CronJob` for batch work, if the service has any (step 8).
+
+## Checklist
+
+<Checklist guide="kubernetes-deployment" />
+
+## References
+
+<GuideReferences guide="kubernetes-deployment" />

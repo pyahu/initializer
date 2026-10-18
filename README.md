@@ -4,8 +4,8 @@ Production guides for Spring Boot services and later a generator that applies th
 every decision is a card with the failure it prevents and every claim carries the test that proves it.
 
 - Site: https://initializer.pyahu.io
-- Guides: [The JVM in containers](https://initializer.pyahu.io/guides/jvm-in-containers/),
-  [Observability](https://initializer.pyahu.io/guides/observability/)
+- Guides: ten, from [the JVM in containers](https://initializer.pyahu.io/guides/jvm-in-containers/) to
+  [Kubernetes manifests](https://initializer.pyahu.io/guides/kubernetes-manifests/)
 - How to contribute: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## How a claim is proven

@@ -1,0 +1,380 @@
+---
+title: Configuration and secrets
+description: Typed settings that fail fast, one source per kind of value and secrets that never show up in logs or manifests.
+tableOfContents: { maxHeadingLevel: 2 }
+guide:
+  id: configuration
+  prefix: CFG
+  state: draft
+  baseline: v0.1-b1
+  components: [spring-boot]
+  verification: null
+  questions:
+    - id: CFG-Q1
+      text: "Where should the differences between environments live?"
+      answeredIn: cfg-one-file
+    - id: CFG-Q2
+      text: "What is the environment variable for a property?"
+      answeredIn: cfg-env-names
+    - id: CFG-Q3
+      text: "How do I catch a bad setting before the pod takes traffic?"
+      answeredIn: cfg-typed-properties
+    - id: CFG-Q4
+      text: "Why did a missing secret not stop the app?"
+      answeredIn: cfg-placeholder-guard
+    - id: CFG-Q5
+      text: "Where should secrets come from?"
+      answeredIn: cfg-secrets-as-files
+    - id: CFG-Q6
+      text: "How do I keep secrets out of logs and Actuator?"
+      answeredIn: cfg-secret-exposure
+    - id: CFG-Q7
+      text: "How does a running app pick up a change?"
+      answeredIn: cfg-restart-to-reload
+    - id: CFG-Q8
+      text: "When is a feature flag better than a setting?"
+      answeredIn: cfg-feature-flags
+  sources:
+    - title: "09 · Configuration and secrets"
+      origin: spring-boot-production-guides/09-configuration-and-secrets.md
+      revision: sha256:4e96090375f08150243ab2418789b52e723a5033e1f6ab81f357e1263b8d40f9
+      date: "2026-10-04"
+      author: Terson Rigaud
+      license: CC BY 4.0
+---
+import GuideStatus from '../../../components/GuideStatus.astro';
+import Recipe from '../../../components/Recipe.astro';
+import Checklist from '../../../components/Checklist.astro';
+import GuideReferences from '../../../components/GuideReferences.astro';
+import DiagramLegend from '../../../components/DiagramLegend.astro';
+import PropertySourcesDiagram from '../../../components/diagrams/PropertySourcesDiagram.astro';
+
+A typo in a ConfigMap key binds to nothing and the default quietly wins. A missing secret leaves the text
+`${payment-api-key}` in a request header. A property that only exists in `application-prod.yaml` was never run
+before production. None of these fail loudly. They fail at 3 a.m., on the first request that needs the value.
+
+This guide makes configuration typed and checked at startup, gives each kind of value one obvious home and keeps
+secrets out of manifests, logs and Actuator. Eight decisions, each with the files to copy at the end.
+
+<GuideStatus guide="configuration" />
+
+<a id="cfg-one-file"></a>
+
+## 1. Where should the differences between environments live?
+
+**In short:** in environment variables from a ConfigMap. Keep one `application.yaml` with production safe defaults
+and no `dev`, `qa` or `prod` profiles.
+
+### What's going on
+
+Spring Boot looks for a value in a stack of sources. Think of it as sheets of paper on top of each other: Spring
+reads from the top and the first sheet that mentions the key wins. Environment variables sit above
+`application.yaml`, so a ConfigMap can change any setting without touching the jar.
+
+<PropertySourcesDiagram />
+<DiagramLegend items={['recommended', 'context', 'failure']} />
+
+Environment profiles break this. `application-prod.yaml` runs for the first time in production, so a property that
+only lives there is never tested. Profiles also multiply (`prod,eu,canary`) and the order between profile files
+surprises people.
+
+### Do this
+
+1. Keep one `application.yaml` whose defaults are safe in production: secure settings, no dev tooling, no mock
+   beans.
+2. Put the values that differ per environment, such as URLs, pool sizes and log levels, in a ConfigMap loaded with
+   `envFrom`.
+3. Use profiles only for `local` and tests. Never set `SPRING_PROFILES_ACTIVE` in the cluster.
+4. Version the ConfigMap, for example with a generated name suffix, so every change is a rollout (step 7).
+
+### When this is not for you
+
+- Large structured settings, such as routing tables: mount a YAML file from a ConfigMap and import it with
+  `spring.config.import: optional:file:/config/routing.yaml`.
+- Local developer setups: profile groups such as `spring.profiles.group.local: local-db, local-mocks` are fine.
+  Keep them out of production.
+
+<a id="cfg-env-names"></a>
+
+## 2. What is the environment variable for a property?
+
+**In short:** replace the dots with underscores, remove the dashes and write it in capitals.
+
+```text
+orders.payment-service.base-url  →  ORDERS_PAYMENTSERVICE_BASEURL
+```
+
+### What's going on
+
+Spring matches environment variables to properties with a few fixed rules, called relaxed binding. Keep a dash and
+the variable matches nothing: `ORDERS_MAX-ITEMS-PER-ORDER` is ignored and the default wins without a word.
+
+| Property | Environment variable |
+| -------- | -------------------- |
+| `spring.datasource.hikari.maximum-pool-size` | `SPRING_DATASOURCE_HIKARI_MAXIMUMPOOLSIZE` |
+| `orders.payment-service.base-url` | `ORDERS_PAYMENTSERVICE_BASEURL` |
+| `orders.allowed-countries[0]` | `ORDERS_ALLOWEDCOUNTRIES_0` |
+| `logging.level.com.example.orders` | `LOGGING_LEVEL_COM_EXAMPLE_ORDERS` |
+
+Kubernetes adds variables of its own. For every Service in the namespace it injects `<SERVICE>_PORT` and friends
+and relaxed binding reads them too. A Service named `server` produces `SERVER_PORT=tcp://10.0.12.7:8080` and the
+app no longer starts.
+
+### Do this
+
+1. Name each variable with the rule above.
+2. Set `enableServiceLinks: false` on every pod spec. The app finds Services through DNS anyway.
+3. Check what the container received, names only, never values:
+
+   ```sh
+   kubectl exec deploy/orders-service -- sh -c 'env | cut -d= -f1 | sort'
+   ```
+
+4. Keep maps in YAML: map keys lose their case and dots in variable names. Or pass a whole YAML document in one
+   variable with `spring.config.import: "optional:env:ORDERS_EXTRA_CONFIG[.yaml]"`.
+
+### When this is not for you
+
+- You rely on `spring.config.activate.on-cloud-platform: kubernetes`: Boot detects Kubernetes from
+  `KUBERNETES_SERVICE_HOST` and `KUBERNETES_SERVICE_PORT`. After turning off service links, check that detection
+  still works or set `spring.main.cloud-platform: kubernetes`.
+
+<a id="cfg-typed-properties"></a>
+
+## 3. How do I catch a bad setting before the pod takes traffic?
+
+**In short:** bind your settings into `@ConfigurationProperties` records with `@Validated`. A bad value then stops
+startup instead of a request.
+
+### What's going on
+
+With `@Value` spread across the code, a wrong value surfaces the first time some request reads it. A validated
+record is checked once, while the app starts, like a preflight checklist before takeoff. If a value is wrong, the
+app exits with a clear message and the pod never turns Ready. With `maxUnavailable: 0` the old pods keep serving and
+the rollout simply stalls.
+
+```java
+@ConfigurationProperties("orders")
+@Validated
+public record OrdersProperties(
+        @Valid @NotNull PaymentService paymentService,
+        @DefaultValue("100") @Min(1) @Max(1000) int maxItemsPerOrder) {
+
+    public record PaymentService(
+            @NotNull URI baseUrl,
+            @DefaultValue("2s") @NotNull Duration connectTimeout) {}
+}
+```
+
+### Do this
+
+1. Add `spring-boot-starter-validation` and `spring-boot-configuration-processor` on the annotation processor path
+   for IDE hints.
+2. Write one record per group of settings with `@ConfigurationProperties` and `@Validated`. Put `@Valid` on nested
+   records or their constraints are not checked.
+3. Give defaults with `@DefaultValue`. It is the only way for record components.
+4. Add `@ConfigurationPropertiesScan` to the application class and inject the record instead of using `@Value`.
+5. Write a test where an invalid value makes the context fail to start. Boot's `ApplicationContextRunner` makes it
+   a millisecond test.
+
+### When this is not for you
+
+- A value that must change without a restart: that is a feature flag (step 8).
+- Watch durations: always write the unit (`5s`, `250ms`). A bare number means milliseconds in your own records but
+  some Boot properties default to seconds, such as `spring.transaction.default-timeout`.
+
+<a id="cfg-placeholder-guard"></a>
+
+## 4. Why did a missing secret not stop the app?
+
+**In short:** Spring leaves an unresolved `${...}` as plain text. Add a guard to every secret field.
+
+```java
+@NotBlank @Pattern(regexp = "^(?!\\$\\{).*", message = "unresolved placeholder") String apiKey
+```
+
+### What's going on
+
+When the binder meets `${payment-api-key}` and nothing provides that value, it does not fail. It puts the text
+`${payment-api-key}` into the field. `@NotBlank` is happy, the app starts and sends that text as its API key.
+`@Value("${x}")` behaves the other way and fails, so mixing the two styles gives two different behaviours.
+
+Two more ways a secret leaks at this point. When validation fails, Boot prints the rejected value in its failure
+message. And a record prints every component in its default `toString()`.
+
+### Do this
+
+1. Put the `@Pattern` guard above on every secret component and no other format rule. A size or format check
+   would print a real but malformed secret to the log.
+2. Override `toString()` in records that hold a secret, masking it.
+3. Skip the guard for `spring.datasource.password`: a wrong password fails when the pool starts, just as fast.
+4. Never log the `Environment` or a whole properties object.
+
+### When this is not for you
+
+- It always applies to secrets bound through records. The guard only ever prints the placeholder text, never the
+  secret.
+
+<a id="cfg-secrets-as-files"></a>
+
+## 5. Where should secrets come from?
+
+**In short:** from a secret vault, mounted as files by the Secrets Store CSI driver and read with `configtree:`. No
+Kubernetes Secret and no vault SDK in the app.
+
+```yaml
+spring:
+  config:
+    import: "optional:configtree:${SECRETS_DIR:/mnt/secrets}/"
+```
+
+### What's going on
+
+The CSI driver fetches each secret from the vault, for example Azure Key Vault and writes it as a file before the
+container starts. With `configtree:`, Spring turns each file into a property: the file name is the key, the content
+is the value. Vault names often allow only letters, digits and dashes, so you point at them with a placeholder:
+`password: ${orders-db-password}` reads the file `/mnt/secrets/orders-db-password`.
+
+If the vault refuses or is down, the volume never mounts and the pod waits in `ContainerCreating` with a
+`FailedMount` event. The app never starts, which is what you want.
+
+### Do this
+
+1. Store the secrets in the vault and give the pod a workload identity that may read them (Workload ID on AKS).
+2. Mount them read only at `/mnt/secrets` with a `SecretProviderClass` and the CSI driver.
+3. Import them with the `configtree:` line above. Keep `optional:` so local runs work; the guard from step 4 catches
+   a missing file in production.
+4. Do not add `secretObjects` to the `SecretProviderClass` unless something else needs a Kubernetes Secret. Syncing
+   copies the secret into etcd, readable by anyone allowed to `get secrets`.
+5. Better than any secret is none: with workload identity the app can log in to PostgreSQL, Service Bus or Storage
+   with a token (Microsoft Entra on Azure), with no password to store.
+
+### When this is not for you
+
+- No CSI driver, such as App Service or plain VMs: Spring Cloud Azure can read Key Vault as a property source. It
+  adds the Azure SDK and a network call at startup; check that it supports Spring Boot 4.1.1 before adopting it.
+- Tools that need a real Kubernetes Secret, such as image pulls or ingress TLS: sync one with an operator. The app
+  still reads files.
+- Keep secret property names distinctive: an environment variable with the same relaxed name outranks the mounted
+  file.
+
+<a id="cfg-secret-exposure"></a>
+
+## 6. How do I keep secrets out of logs and Actuator?
+
+**In short:** leave Actuator's value masking on, expose only `health` and `info` on the management port and never
+write a secret into a manifest.
+
+### What's going on
+
+Actuator's `env` and `configprops` endpoints list every property. In Spring Boot 4.1.1 they mask every value by
+default (`show-values: never`). Switch that to `always` or `when-authorized` and masking turns off for every value,
+secrets included, unless you add a `SanitizingFunction`.
+
+Manifests leak too. A secret written as a literal `env.value` shows up in `kubectl describe pod` and in
+`kubectl get pod -o yaml`.
+
+### Do this
+
+1. Leave `management.endpoint.env.show-values` and `management.endpoint.configprops.show-values` at `never`.
+2. If you must show values, add a `SanitizingFunction` bean, such as
+   `SanitizingFunction.sanitizeValue().ifLikelySensitive()`.
+3. Never expose `env`, `configprops` or `heapdump` on the public port. Keep Actuator on its own port, as in the
+   [observability guide](/guides/observability/#obs-actuator).
+4. Give secrets to the pod as files (step 5) or at least through `secretKeyRef`, never as `env.value`.
+5. Add a CI check that fails on a literal `value:` under `env:` whose name contains password, secret, token or key.
+
+### When this is not for you
+
+- It always applies. Read values through the masked endpoints with a port forward to 8081, never through the public
+  port.
+
+<a id="cfg-restart-to-reload"></a>
+
+## 7. How does a running app pick up a change?
+
+**In short:** it restarts. Every configuration change rolls the pods.
+
+### What's going on
+
+A running JVM does not see most changes. Environment variables never change inside a running process. Secret files
+are read once at startup and cached, so a rotated file goes unnoticed. Even a tool that refreshes the `Environment`
+does not rebuild a `DataSource` or an HTTP client that was created at startup.
+
+A rolling restart avoids all of that. It takes seconds, every replica ends up with the same values and a bad value
+stalls the rollout (step 3) instead of breaking live pods.
+
+### Do this
+
+1. Make a config change trigger a rollout: a ConfigMap hash in a pod annotation or a generated name suffix.
+2. After a secret rotation in the vault, restart the pods from your pipeline or with a controller such as Reloader.
+   Turning on CSI rotation alone is not enough.
+3. Rotate a database password in this order: create the new one, update the vault, let the CSI driver refresh the
+   file, roll the Deployment, then revoke the old one once the old pods are gone.
+4. For server certificates, live reload exists: `spring.ssl.bundle.pem.<name>.reload-on-update: true`. It covers
+   the Tomcat and Netty web servers only. Outbound HTTP clients keep their old certificate until a restart.
+
+### When this is not for you
+
+- Many values tuned at runtime and a team already on Spring Cloud: `@RefreshScope` works but each bean gets a proxy
+  and replicas refresh at different moments.
+
+<a id="cfg-feature-flags"></a>
+
+## 8. When is a feature flag better than a setting?
+
+**In short:** when behaviour must change without a deployment: a kill switch, a percentage rollout or a beta for one
+customer.
+
+### What's going on
+
+A setting changes with a deployment. A flag changes without one, from a flag service. A "flag" stored as a Boot
+property needs a restart to change, so it is really a setting and belongs in the ConfigMap, not in a flag
+dashboard.
+
+### Do this
+
+1. Use a flag service through the vendor neutral OpenFeature Java SDK. Providers exist for flagd, Unleash,
+   LaunchDarkly, Azure App Configuration and others.
+2. Evaluate flags locally with cached rules.
+3. Code a safe default for every flag, used when the flag service cannot be reached.
+4. Delete each flag once it has done its job.
+
+### When this is not for you
+
+- A value that only differs per environment: it is configuration. Put it in the ConfigMap (step 1).
+- Check the maturity of the OpenFeature provider for your flag service before choosing it.
+
+## Put it all together
+
+The settings live in one `application.yaml`; each environment only changes values from outside the jar.
+
+### One file with safe defaults
+
+The example service keeps every setting in a single `application.yaml`, with no profile files (step 1). Values that
+change per environment are placeholders with a default, such as `${TRACING_SAMPLING_PROBABILITY:0.1}`, so a
+Deployment overrides them with an environment variable. Actuator is on its own port with only `health` and `info`
+exposed (step 6).
+
+<Recipe id="cfg-application-yaml" path="fixtures/single-hexagonal/src/main/resources/application.yaml" start="spring:" end="http.server.requests: true" lang="yaml" />
+
+**Check it:** start the app with `-e DEPLOYMENT_ENVIRONMENT=staging`. Its traces carry
+`deployment.environment.name=staging`: the variable won over the default in the file.
+
+### In the Deployment
+
+- `envFrom` a versioned ConfigMap with the values for this environment and no `SPRING_PROFILES_ACTIVE` (steps 1
+  and 7).
+- `enableServiceLinks: false` (step 2).
+- A read only CSI volume at `/mnt/secrets` from a `SecretProviderClass` and a service account with a workload
+  identity (step 5).
+- No secret as a literal `env.value` (step 6).
+- `maxUnavailable: 0`, so a bad setting stalls the rollout while the old pods keep serving (step 3).
+
+## Checklist
+
+<Checklist guide="configuration" />
+
+## References
+
+<GuideReferences guide="configuration" />

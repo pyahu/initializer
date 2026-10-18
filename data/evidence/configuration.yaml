@@ -1,0 +1,71 @@
+# Evidence records for the configuration guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-cfg-one-file-1
+  card: cfg-one-file
+  claim: "Environment variables outrank application.yaml, so one file with safe defaults plus a ConfigMap per environment covers every environment without profiles."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Property source order is taken from the Spring Boot reference on externalized configuration."
+  reason: "No test overrides a setting from the environment yet. The example service runs with its defaults only."
+- id: ev-cfg-env-names-1
+  card: cfg-env-names
+  claim: "Relaxed binding maps orders.payment-service.base-url to ORDERS_PAYMENTSERVICE_BASEURL; a variable that keeps the dashes binds to nothing."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Naming rules from the Spring Boot reference; the env: import resolver was read in the Boot 4.1.1 jar by the source guide."
+  reason: "No test binds a property from an environment variable yet."
+- id: ev-cfg-env-names-2
+  card: cfg-env-names
+  claim: "Kubernetes service link variables such as SERVER_PORT=tcp://10.0.12.7:8080 break server.port unless enableServiceLinks is false."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Kubernetes documentation on service environment variables and Spring relaxed binding."
+  reason: "Needs a cluster with a Service named server. No cluster test runs yet."
+- id: ev-cfg-typed-properties-1
+  card: cfg-typed-properties
+  claim: "A @ConfigurationProperties record with @Validated fails application startup when a value breaks a constraint."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Behaviour from the Spring Boot reference on @ConfigurationProperties validation."
+  reason: "The example service has no @ConfigurationProperties record yet, so no fail fast test exists."
+- id: ev-cfg-placeholder-guard-1
+  card: cfg-placeholder-guard
+  claim: "The binder leaves an unresolvable placeholder as literal text, so @NotBlank passes and the @Pattern guard is what stops startup."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "The source guide read ignoreUnresolvablePlaceholders = true in PropertySourcesPlaceholdersResolver of Spring Boot 4.1.1."
+  reason: "No test binds a record with a missing secret yet."
+- id: ev-cfg-secrets-as-files-1
+  card: cfg-secrets-as-files
+  claim: "spring.config.import with optional:configtree: turns each file under /mnt/secrets into a property named after the file, trailing newline trimmed, read once at startup."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "The source guide read ConfigTreeConfigDataLoader and ConfigTreePropertySource in the Spring Boot 4.1.1 source."
+  reason: "The example service mounts no secret files yet. The CSI driver and a vault need a cluster."
+- id: ev-cfg-secret-exposure-1
+  card: cfg-secret-exposure
+  claim: "Actuator masks every env and configprops value by default in Spring Boot 4.1.1 (show-values: never)."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Default read from the Spring Boot 4.1.1 configuration metadata by the source guide."
+  reason: "No test reads the env or configprops endpoints yet; the example service does not expose them."
+- id: ev-cfg-restart-to-reload-1
+  card: cfg-restart-to-reload
+  claim: "A running app keeps configtree values and environment variables from startup, so a rotated secret or changed ConfigMap needs a rolling restart."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Caching read in ConfigTreePropertySource (no ALWAYS_READ) in Spring Boot 4.1.1 by the source guide."
+  reason: "No test rotates a mounted secret yet."
+- id: ev-cfg-restart-to-reload-2
+  card: cfg-restart-to-reload
+  claim: "SSL bundle reload on update covers the Tomcat and Netty web servers only; outbound HTTP clients keep their SSLContext until a restart."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reproduced by the source guide on Spring Boot 4.1.1, not in this repository."
+  reason: "The example service has no TLS bundle or outbound client yet."
+- id: ev-cfg-feature-flags-1
+  card: cfg-feature-flags
+  claim: "Flags evaluated through OpenFeature with a coded safe default keep working when the flag service is unreachable."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Design guidance from the source guide; provider maturity varies."
+  reason: "The example service uses no feature flags."

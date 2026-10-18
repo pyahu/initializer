@@ -1,0 +1,71 @@
+# Evidence records for the http-clients guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-http-client-choice-1
+  card: http-client-choice
+  claim: "RestClient behind HTTP Service Client groups (@ImportHttpServices) is the default blocking client in Framework 7.0 and Boot 4.1; RestTemplate is not yet @Deprecated in 7.0.9."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "The source guide checked the Framework 7.0.9 and Boot 4.1.1 classes and metadata; nothing in this repository compiles an HTTP client."
+  reason: "No test runs this yet: the example service makes no outbound HTTP call."
+- id: ev-http-client-choice-2
+  card: http-client-choice
+  claim: "With redirects: dont-follow, an unfollowed 302 is not an error: RestClient returns an empty or decoded body unless a status handler rejects 3xx."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reproduced by the source guide against the Framework 7.0.9 jars, not in this repository."
+  reason: "No test runs this yet: the example service makes no outbound HTTP call."
+- id: ev-http-timeouts-1
+  card: http-timeouts
+  claim: "Boot 4.1 binds connect and read timeouts from spring.http.clients.* and spring.http.serviceclient.<group>.* and group values fall back to the global ones; spring.http.client.* is deprecated."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Boot 4.1.1 configuration metadata by the source guide."
+  reason: "No test runs this yet: the example service makes no outbound HTTP call."
+- id: ev-http-pool-1
+  card: http-pool
+  claim: "Apache HttpClient 5.6 defaults to 25 connections in total, 5 per route and a 3 minute connection request timeout; Boot has no property for either."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Defaults read from httpclient5 5.6.4 by the source guide; the version Boot manages may differ."
+  reason: "No test runs this yet: the example service has no Apache HttpClient dependency."
+- id: ev-http-deadline-1
+  card: http-deadline
+  claim: "Apache's read timeout is inactivity between packets (a trickling response ran 4.1 s under a 1 s timeout) while the JDK client's is a deadline (the same response failed after 1.02 s)."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Measured by the source guide against the Framework 7.0.9 and Boot 4.1.1 jars, not in this repository."
+  reason: "No test runs this yet: the example service makes no outbound HTTP call."
+- id: ev-http-deadline-2
+  card: http-deadline
+  claim: "The timeout of @Retryable stops new attempts but never interrupts one in flight, so the worst case is the timeout plus one attempt."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reproduced by the source guide against Framework 7.0.9 through RetryTemplate and a proxied @Retryable method."
+  reason: "No test runs this yet: the example service uses no retry."
+- id: ev-http-retry-1
+  card: http-retry
+  claim: "A bare @Retryable retries any exception 3 times with a fixed 1 s delay and it does nothing without @EnableResilientMethods, which Boot 4.1 does not enable."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Annotation defaults read with javap on Framework 7.0.9 and Boot 4.1.1 jars by the source guide."
+  reason: "No test runs this yet: the example service uses no retry."
+- id: ev-http-idempotency-1
+  card: http-idempotency
+  claim: "A key passed as a method argument is sent unchanged on every attempt, because @Retryable invokes the method again with the same arguments."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Follows from how the retry interceptor works; no provider behaviour is tested. The Idempotency-Key header is an IETF draft."
+  reason: "No test runs this yet: the example service makes no outbound HTTP call."
+- id: ev-http-bulkhead-1
+  card: http-bulkhead
+  claim: "@ConcurrencyLimit with policy REJECT throws InvocationRejectedException over the limit; a class-level limit is shared by all methods of the bean and counts per JVM."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Checked in ConcurrencyLimitBeanPostProcessor on Framework 7.0.9 by the source guide."
+  reason: "No test runs this yet: the example service has no downstream call to limit."
+- id: ev-http-observability-1
+  card: http-observability
+  claim: "Clients from Boot's RestClient.Builder or HTTP Service groups record http.client.requests and send traceparent; a client from RestClient.create() does neither."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Boot 4.1.1 auto-configuration (ObservationRestClientCustomizer) as read by the source guide."
+  reason: "No test runs this yet: the example service makes no outbound HTTP call."

@@ -1,0 +1,60 @@
+---
+// Flow: three ways to write manifests, one rendered YAML that is validated and applied.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="man-render-flow"
+  caption="Three ways to write manifests, one rendered YAML: that is what you validate and apply."
+  description="Four numbered stages from left to right. 1, source in Git: plain YAML files, a Helm chart with a values file or a Kustomize base with components and an overlay. 2, render: plain YAML is already rendered, Helm renders with helm template and Kustomize with kustomize build; all three paths end in the same rendered YAML, highlighted as the thing to review. 3, validate the rendered YAML: kubeconform in strict mode with CRD schemas for Kubernetes 1.36 and 1.37, kube-linter, trivy config and pluto. 4, apply: kubectl apply with server-side apply and a named field manager or a GitOps controller, sends the documents to the API server, which records who owns each field.">
+  <svg viewBox="0 0 1000 400">
+    <defs>
+      <marker id="man-render-flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="man-render-flow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+    </defs>
+    <text x="20" y="32" class="dg-group">1 · SOURCE IN GIT</text>
+    <text x="300" y="32" class="dg-group">2 · RENDER</text>
+    <text x="540" y="32" class="dg-group">3 · VALIDATE</text>
+    <text x="780" y="32" class="dg-group">4 · APPLY</text>
+
+    <rect x="20" y="56" width="210" height="70" rx="6" class="dg-box" />
+    <text x="36" y="84" class="dg-title">Plain YAML</text>
+    <text x="36" y="108" class="dg-detail">one file per resource</text>
+    <rect x="20" y="146" width="210" height="70" rx="6" class="dg-box" />
+    <text x="36" y="174" class="dg-title">Helm chart</text>
+    <text x="36" y="198" class="dg-detail">templates + values file</text>
+    <rect x="20" y="236" width="210" height="70" rx="6" class="dg-box dg-emphasis" />
+    <text x="36" y="264" class="dg-title">Kustomize</text>
+    <text x="36" y="288" class="dg-detail">base + components + overlay</text>
+
+    <path d="M230 91 C 270 91, 270 181, 300 181" class="dg-line" marker-end="url(#man-render-flow-arrow)" />
+    <path d="M230 181 H300" class="dg-line" marker-end="url(#man-render-flow-arrow)" />
+    <path d="M230 271 C 270 271, 270 181, 300 181" class="dg-line dg-accent" marker-end="url(#man-render-flow-accent)" />
+
+    <rect x="302" y="136" width="200" height="90" rx="6" class="dg-box dg-emphasis" />
+    <text x="318" y="166" class="dg-title">Rendered YAML</text>
+    <text x="318" y="190" class="dg-detail">what the cluster gets;</text>
+    <text x="318" y="210" class="dg-detail">review this</text>
+
+    <path d="M502 181 H540" class="dg-line dg-accent" marker-end="url(#man-render-flow-accent)" />
+    <rect x="542" y="86" width="210" height="190" rx="6" class="dg-box" />
+    <text x="558" y="114" class="dg-title">Checks in CI</text>
+    <text x="558" y="142" class="dg-detail">kubeconform -strict,</text>
+    <text x="558" y="162" class="dg-detail">CRD schemas, 1.36 + 1.37</text>
+    <text x="558" y="192" class="dg-detail">kube-linter</text>
+    <text x="558" y="216" class="dg-detail">trivy config</text>
+    <text x="558" y="240" class="dg-detail">pluto</text>
+
+    <path d="M752 181 H780" class="dg-line dg-accent" marker-end="url(#man-render-flow-accent)" />
+    <rect x="782" y="86" width="196" height="90" rx="6" class="dg-box dg-emphasis" />
+    <text x="798" y="114" class="dg-title">Server-side apply</text>
+    <text x="798" y="138" class="dg-detail">named field manager,</text>
+    <text x="798" y="158" class="dg-detail">or a GitOps controller</text>
+    <path d="M880 176 V214" class="dg-line" marker-end="url(#man-render-flow-arrow)" />
+    <rect x="782" y="216" width="196" height="90" rx="6" class="dg-box" />
+    <text x="798" y="244" class="dg-title">API server</text>
+    <text x="798" y="268" class="dg-detail">records who owns</text>
+    <text x="798" y="288" class="dg-detail">each field</text>
+
+    <text x="20" y="344" class="dg-note">Helm renders with helm template, Kustomize with kustomize build.</text>
+    <text x="20" y="362" class="dg-note">The tool only changes how the YAML is written. The cluster sees the same documents.</text>
+  </svg>
+</Diagram>

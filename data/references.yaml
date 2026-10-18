@@ -172,7 +172,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Virtual threads guide (Core Libraries)."
-    guides: ["jvm-in-containers"]
+    guides: ["jvm-in-containers", "virtual-threads"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -252,7 +252,7 @@ entries:
     pinned: true
     pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
     purpose: "What JEP 444 changes and in which JDK it was delivered."
-    guides: []
+    guides: ["virtual-threads"]
     appliesWhen: {}
     jep: {number: 444, title: "Virtual Threads", status: "Closed / Delivered", release: "21"}
     llms: null
@@ -268,7 +268,7 @@ entries:
     pinned: true
     pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
     purpose: "What JEP 491 changes and in which JDK it was delivered."
-    guides: []
+    guides: ["virtual-threads"]
     appliesWhen: {}
     jep: {number: 491, title: "Synchronize Virtual Threads without Pinning", status: "Closed / Delivered", release: "24"}
     llms: null
@@ -284,7 +284,7 @@ entries:
     pinned: true
     pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
     purpose: "What JEP 505 changes and in which JDK it was delivered."
-    guides: []
+    guides: ["virtual-threads"]
     appliesWhen: {}
     jep: {number: 505, title: "Structured Concurrency", status: "Closed / Delivered", release: "25"}
     llms: null
@@ -316,7 +316,7 @@ entries:
     pinned: true
     pinNote: "JEP page; status and release read on 2026-10-17 (HTTP 200)."
     purpose: "What JEP 506 changes and in which JDK it was delivered."
-    guides: []
+    guides: ["virtual-threads"]
     appliesWhen: {}
     jep: {number: 506, title: "Scoped Values", status: "Closed / Delivered", release: "25"}
     llms: null
@@ -750,7 +750,7 @@ entries:
     pinned: true
     pinNote: "The 3.x to 4.0 migration guide applies to every 4.x line. Status on 2026-10-17: pinned; checked: 200."
     purpose: "Migration guide 3.x to 4.0 (wiki)."
-    guides: []
+    guides: ["http-clients"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -817,7 +817,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Application properties appendix."
-    guides: []
+    guides: ["http-clients", "configuration"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -834,7 +834,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Actuator (production-ready features)."
-    guides: ["observability"]
+    guides: ["observability", "configuration"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -851,7 +851,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Actuator endpoints (incl. Kubernetes probes anchor, verified)."
-    guides: ["jvm-in-containers", "observability"]
+    guides: ["jvm-in-containers", "observability", "configuration", "security", "kubernetes-deployment"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -868,7 +868,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Actuator REST API."
-    guides: ["observability"]
+    guides: ["observability", "configuration"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -902,7 +902,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Tracing (names spring-boot-starter-opentelemetry, OTLP export)."
-    guides: ["observability"]
+    guides: ["observability", "http-clients"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -919,7 +919,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Metrics (incl. #actuator.metrics.export.otlp)."
-    guides: ["observability"]
+    guides: ["observability", "http-clients"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -936,7 +936,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Container images."
-    guides: ["jvm-in-containers"]
+    guides: ["jvm-in-containers", "container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -953,7 +953,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Efficient container images (layering)."
-    guides: ["jvm-in-containers"]
+    guides: ["jvm-in-containers", "container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -970,7 +970,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Dockerfiles."
-    guides: ["jvm-in-containers"]
+    guides: ["jvm-in-containers", "container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -987,7 +987,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Cloud Native Buildpacks."
-    guides: ["jvm-in-containers"]
+    guides: ["jvm-in-containers", "container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1004,7 +1004,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Efficient deployments."
-    guides: ["jvm-in-containers"]
+    guides: ["jvm-in-containers", "container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1055,7 +1055,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Virtual threads (anchor verified)."
-    guides: ["jvm-in-containers"]
+    guides: ["jvm-in-containers", "virtual-threads", "http-clients"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1072,7 +1072,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Task execution (virtual-thread executors)."
-    guides: []
+    guides: ["virtual-threads"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1089,7 +1089,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Testcontainers support."
-    guides: []
+    guides: ["database"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1106,7 +1106,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)."
-    guides: []
+    guides: ["database"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: null
@@ -1123,7 +1123,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Database initialization (Liquibase)."
-    guides: []
+    guides: ["database"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: null
@@ -1140,7 +1140,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "OAuth2 (resource server auto-config)."
-    guides: []
+    guides: ["security"]
     appliesWhen: {auth: [true]}
     jep: null
     llms: null
@@ -1191,7 +1191,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Gradle plugin: packaging OCI images."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1225,7 +1225,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned (minor); checked: 200 via redirect."
     expect: "7.0.9"
     purpose: "Reference."
-    guides: []
+    guides: ["http-clients"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1274,7 +1274,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "7.0 release notes (wiki, also covers upgrading)."
-    guides: []
+    guides: ["http-clients"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1291,7 +1291,7 @@ entries:
     pinNote: "Spring Data JDBC 4.1.1 ships in the Spring Data 2026.0.1 train that Boot manages. Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "Spring Data Relational reference."
-    guides: []
+    guides: ["database"]
     appliesWhen: {persistence: ["jdbc"]}
     jep: null
     llms: null
@@ -1308,7 +1308,7 @@ entries:
     pinNote: "Spring Data JDBC 4.1.1 ships in the Spring Data 2026.0.1 train that Boot manages. Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "4.1.1"
     purpose: "JDBC section."
-    guides: []
+    guides: ["database"]
     appliesWhen: {persistence: ["jdbc"]}
     jep: null
     llms: null
@@ -1375,7 +1375,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "7.1.1"
     purpose: "Reference."
-    guides: []
+    guides: ["security"]
     appliesWhen: {auth: [true]}
     jep: null
     llms: null
@@ -1392,7 +1392,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "7.1.1"
     purpose: "OAuth 2.0 Resource Server."
-    guides: []
+    guides: ["security"]
     appliesWhen: {auth: [true]}
     jep: null
     llms: null
@@ -1409,7 +1409,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "7.1.1"
     purpose: "Resource Server JWT."
-    guides: []
+    guides: ["security"]
     appliesWhen: {auth: [true]}
     jep: null
     llms: null
@@ -1426,7 +1426,7 @@ entries:
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
     expect: "7.1.1"
     purpose: "What's new in 7.1."
-    guides: []
+    guides: ["security"]
     appliesWhen: {auth: [true]}
     jep: null
     llms: null
@@ -1707,7 +1707,7 @@ entries:
     pinned: true
     pinNote: "Community docs exist for 5.0.4 only; Boot 4.1.1 manages 5.0.3. Status on 2026-10-17: pinned (5.0.4, one patch above Boot's 5.0.3); checked: 200."
     purpose: "What is a changelog (Community)."
-    guides: []
+    guides: ["database"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: {txt: "https://docs.liquibase.com/llms.txt"}
@@ -1723,7 +1723,7 @@ entries:
     pinned: true
     pinNote: "Community docs exist for 5.0.4 only; Boot 4.1.1 manages 5.0.3. Status on 2026-10-17: pinned; checked: 200."
     purpose: "Install with Spring Boot (Community)."
-    guides: []
+    guides: ["database"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: {txt: "https://docs.liquibase.com/llms.txt"}
@@ -1739,7 +1739,7 @@ entries:
     pinned: true
     pinNote: "Community docs exist for 5.0.4 only; Boot 4.1.1 manages 5.0.3. Status on 2026-10-17: pinned; checked: 200."
     purpose: "Connect with PostgreSQL (Community)."
-    guides: []
+    guides: ["database"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: {txt: "https://docs.liquibase.com/llms.txt"}
@@ -1755,7 +1755,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Community 5.0.3 release notes."
-    guides: []
+    guides: ["database"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: {txt: "https://docs.liquibase.com/llms.txt"}
@@ -1803,7 +1803,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned (major); checked: 200 (\"PostgreSQL 18.6 Documentation\")."
     purpose: "Documentation."
-    guides: []
+    guides: ["database"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: null
@@ -1819,7 +1819,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Release 18 notes."
-    guides: []
+    guides: ["database"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: null
@@ -1867,7 +1867,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned (site is latest only); checked: 200."
     purpose: "pgJDBC documentation."
-    guides: []
+    guides: ["database"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: null
@@ -1883,7 +1883,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned (site serves latest only); checked: 200."
     purpose: "Testcontainers for Java docs."
-    guides: []
+    guides: ["database"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -1899,7 +1899,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Postgres module."
-    guides: []
+    guides: ["database"]
     appliesWhen: {database: ["postgres"]}
     jep: null
     llms: null
@@ -2091,7 +2091,7 @@ entries:
     pinned: false
     pinNote: "Semantic conventions 1.44.0; not tied to a stack pin. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Semconv HTTP spans."
-    guides: ["observability"]
+    guides: ["observability", "http-clients"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://opentelemetry.io/llms.txt"}
@@ -2507,7 +2507,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Docs home."
-    guides: []
+    guides: ["kubernetes-manifests"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2523,7 +2523,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect (lands on `/docs/concepts/workloads/pods/probes/` on the same v1-36 host)."
     purpose: "Probes (concept)."
-    guides: ["jvm-in-containers"]
+    guides: ["jvm-in-containers", "kubernetes-deployment"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2539,7 +2539,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Configure liveness/readiness/startup probes (task)."
-    guides: ["jvm-in-containers"]
+    guides: ["jvm-in-containers", "kubernetes-deployment"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2555,7 +2555,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Pod Security Standards."
-    guides: []
+    guides: ["security"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2571,7 +2571,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Pod Security Admission."
-    guides: []
+    guides: ["security"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2587,7 +2587,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "NetworkPolicy."
-    guides: []
+    guides: ["security"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2603,7 +2603,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Disruptions (PDB concept)."
-    guides: []
+    guides: ["kubernetes-deployment"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2619,7 +2619,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Configure a PodDisruptionBudget."
-    guides: []
+    guides: ["kubernetes-deployment"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2635,7 +2635,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Pod topology spread constraints."
-    guides: []
+    guides: ["kubernetes-deployment"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2651,7 +2651,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Pod lifecycle (graceful termination)."
-    guides: ["jvm-in-containers"]
+    guides: ["jvm-in-containers", "kubernetes-deployment"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2667,7 +2667,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Resource management."
-    guides: ["jvm-in-containers"]
+    guides: ["jvm-in-containers", "kubernetes-deployment"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2683,7 +2683,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Kustomize via kubectl (task)."
-    guides: []
+    guides: ["kubernetes-manifests"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2699,7 +2699,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned (file per minor); checked: 200."
     purpose: "CHANGELOG 1.36."
-    guides: []
+    guides: ["kubernetes-manifests"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2715,7 +2715,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned (single living site); checked: 200."
     purpose: "Kustomize reference."
-    guides: []
+    guides: ["kubernetes-manifests"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2731,7 +2731,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "kustomization.yaml reference."
-    guides: []
+    guides: ["kubernetes-manifests"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2747,7 +2747,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Release kustomize/v5.8.3."
-    guides: []
+    guides: ["kubernetes-manifests"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -2907,7 +2907,7 @@ entries:
     pinned: true
     pinNote: "Final specification, not versioned with the stack. Status on 2026-10-17: pinned; checked: 200."
     purpose: "RFC 6750 Bearer Token Usage."
-    guides: []
+    guides: ["security"]
     appliesWhen: {auth: [true]}
     jep: null
     llms: null
@@ -2939,7 +2939,7 @@ entries:
     pinned: true
     pinNote: "Final specification, not versioned with the stack. Status on 2026-10-17: pinned; checked: 200."
     purpose: "RFC 9068 JWT Profile for OAuth 2.0 Access Tokens."
-    guides: []
+    guides: ["security"]
     appliesWhen: {auth: [true]}
     jep: null
     llms: null
@@ -2955,7 +2955,7 @@ entries:
     pinned: true
     pinNote: "Final specification, not versioned with the stack. Status on 2026-10-17: pinned; checked: 200."
     purpose: "RFC 9700 OAuth 2.0 Security BCP."
-    guides: []
+    guides: ["security"]
     appliesWhen: {auth: [true]}
     jep: null
     llms: null
@@ -3019,7 +3019,7 @@ entries:
     pinned: false
     pinNote: "GitHub documentation is unversioned. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "OpenID Connect in Actions (keyless cosign)."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: {txt: "https://docs.github.com/llms.txt"}
@@ -3035,7 +3035,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "SLSA spec v1.2 (current; /spec/ and /spec/latest/ both redirect to v1.2)."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3067,7 +3067,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "SLSA v1.2 Provenance."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3115,7 +3115,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Sigstore docs."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3131,7 +3131,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "cosign: signing containers."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3147,7 +3147,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "cosign: verifying."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3163,7 +3163,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "cosign: in-toto attestations."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3179,7 +3179,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "cosign release v3.1.3."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3195,7 +3195,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Syft docs (Anchore OSS site)."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3211,7 +3211,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Syft CLI reference."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3259,7 +3259,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned (minor); checked: 200 (`/docs/latest/guide/` also 200; `/latest/` returns 404)."
     purpose: "Trivy docs."
-    guides: []
+    guides: ["container-image", "kubernetes-manifests"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3275,7 +3275,7 @@ entries:
     pinned: true
     pinNote: "Status on 2026-10-17: pinned; checked: 200."
     purpose: "Trivy release v0.76.0."
-    guides: []
+    guides: ["container-image", "kubernetes-manifests"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3291,7 +3291,7 @@ entries:
     pinned: false
     pinNote: "Status on 2026-10-17: not version-pinned (living docs); checked: 200."
     purpose: "Renovate docs."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: null
@@ -3307,7 +3307,7 @@ entries:
     pinned: false
     pinNote: "Living documentation. Status on 2026-10-17: not version-pinned; checked: 200."
     purpose: "Renovate configuration options."
-    guides: []
+    guides: ["container-image"]
     appliesWhen: {}
     jep: null
     llms: null

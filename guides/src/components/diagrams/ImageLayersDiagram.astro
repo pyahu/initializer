@@ -1,0 +1,45 @@
+---
+// Before and after: one fat jar layer against layers ordered by how often they change.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="img-image-layers"
+  caption="Why a one line code change should push kilobytes, not the whole app."
+  description="Two images side by side, each drawn as a stack of layers with the base image at the bottom. Left, failure: the base image, then one layer holding the fat jar with the app and every library, about 49 MB, marked with a cross because a commit changes it and the whole layer is pushed again. Right, recommended: the base image (about 105 MB, changes on a base digest update), then the dependencies (48.5 MB, change when a dependency changes), then the Spring Boot loader and snapshot dependencies (almost empty), then the thin application jar (0.1 MB) and the AOT cache (23.6 MB), both highlighted because only these two change on a commit. Sizes are compressed, measured from a registry push of one service.">
+  <svg viewBox="0 0 1000 400">
+    <text x="20" y="30" class="dg-group">✕ BEFORE · ONE FAT JAR</text>
+    <text x="500" y="30" class="dg-group">AFTER · LAYERED</text>
+    <rect x="10" y="44" width="460" height="340" rx="8" class="dg-frame" />
+    <rect x="490" y="44" width="500" height="340" rx="8" class="dg-frame" />
+
+    <rect x="40" y="110" width="230" height="170" rx="6" class="dg-box dg-fail" />
+    <text x="54" y="140" class="dg-title">✕ application.jar</text>
+    <text x="54" y="164" class="dg-detail">the app and every library</text>
+    <text x="54" y="184" class="dg-detail">in one layer, about 49 MB</text>
+    <rect x="40" y="290" width="230" height="74" rx="6" class="dg-box" />
+    <text x="54" y="320" class="dg-title">Base image</text>
+    <text x="54" y="344" class="dg-detail">OS and JRE, about 105 MB</text>
+    <text x="286" y="180" class="dg-note">a commit changes it:</text>
+    <text x="286" y="198" class="dg-note">the whole layer is</text>
+    <text x="286" y="216" class="dg-note">pushed again</text>
+
+    <rect x="520" y="60" width="230" height="44" rx="6" class="dg-box dg-emphasis" />
+    <text x="534" y="88" class="dg-title">app.aot  23.6 MB</text>
+    <rect x="520" y="112" width="230" height="44" rx="6" class="dg-box dg-emphasis" />
+    <text x="534" y="140" class="dg-title">application.jar  0.1 MB</text>
+    <rect x="520" y="164" width="230" height="44" rx="6" class="dg-box" />
+    <text x="534" y="186" class="dg-title">loader, snapshots</text>
+    <text x="534" y="201" class="dg-detail">almost empty</text>
+    <rect x="520" y="216" width="230" height="66" rx="6" class="dg-box" />
+    <text x="534" y="244" class="dg-title">dependencies</text>
+    <text x="534" y="266" class="dg-detail">lib/*.jar, 48.5 MB</text>
+    <rect x="520" y="290" width="230" height="74" rx="6" class="dg-box" />
+    <text x="534" y="320" class="dg-title">Base image</text>
+    <text x="534" y="344" class="dg-detail">OS and JRE, about 105 MB</text>
+
+    <text x="766" y="88" class="dg-note">every commit</text>
+    <text x="766" y="140" class="dg-note">every commit</text>
+    <text x="766" y="190" class="dg-note">rarely</text>
+    <text x="766" y="254" class="dg-note">a dependency bump</text>
+    <text x="766" y="326" class="dg-note">a base digest update</text>
+  </svg>
+</Diagram>

@@ -1,0 +1,75 @@
+# Evidence records for the kubernetes-deployment guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-kube-probes-1
+  card: kube-probes
+  claim: "With management.endpoint.health.probes.add-additional-paths true and Actuator on port 8081, /readyz answers 200 on the main port 8080."
+  badge: reproduced
+  capabilities: [image, runtime]
+  components: [java, temurin-jre-image, spring-boot, spring-framework]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestHardenedStartup
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestHardenedStartup$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s"
+  limitations: "Docker only: the kubelet does not call the probe here and /livez is not requested."
+- id: ev-kube-probes-2
+  card: kube-probes
+  claim: "Liveness and readiness hold only Boot's availability states, so a database failover takes no pod out of rotation and restarts none."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Spring Boot 4.1.1 health configuration and the Kubernetes probe documentation."
+  reason: "Needs a cluster and a database that fails over; the example service has neither yet."
+- id: ev-kube-graceful-shutdown-1
+  card: kube-graceful-shutdown
+  claim: "A 10 s preStop sleep, a 20 s shutdown phase and a 45 s grace period let a rollout under load finish with no failed requests."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Timings come from the source guide and the Kubernetes pod lifecycle documentation."
+  reason: "Needs a cluster, a router and steady load during a rollout; no such test runs yet."
+- id: ev-kube-resources-1
+  card: kube-resources
+  claim: "With no CPU limit the JVM is not throttled by the CFS quota. Memory request equal to limit keeps the pod from overcommitting the node."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "The JVM side of sizing is proven in the JVM guide; this claim is about the scheduler and the kernel."
+  reason: "Needs a cluster and a throttling measurement under load; no such test runs yet."
+- id: ev-kube-rollout-1
+  card: kube-rollout
+  claim: "maxSurge 1 with maxUnavailable 0 and minReadySeconds 10 never drops serving pods below the desired count during a rollout."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Deployment rolling update documentation."
+  reason: "Needs a cluster; the example service has no manifests yet."
+- id: ev-kube-disruption-1
+  card: kube-disruption
+  claim: "A PodDisruptionBudget with maxUnavailable 1 and unhealthyPodEvictionPolicy AlwaysAllow lets a drain proceed one pod at a time, even with a pod that is not ready."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Kubernetes disruption and PodDisruptionBudget documentation."
+  reason: "Needs a cluster with several nodes to drain; no such test runs yet."
+- id: ev-kube-autoscaling-1
+  card: kube-autoscaling
+  claim: "A cap on how fast pods are added and a 60 to 70% CPU target keep cold JVMs from cascading the replica count to its maximum after a burst."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Behaviour described in the source guide and the HorizontalPodAutoscaler documentation; no numbers measured here."
+  reason: "Needs a cluster, an autoscaler and a load profile; no such test runs yet."
+- id: ev-kube-spread-1
+  card: kube-spread
+  claim: "A zone spread with maxSkew 1, DoNotSchedule and matchLabelKeys pod-template-hash places 3 replicas in 3 zones and keeps new pods balanced during a rollout."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the topology spread constraints documentation."
+  reason: "Needs a cluster with nodes in several zones; no such test runs yet."
+- id: ev-kube-scheduled-work-1
+  card: kube-scheduled-work
+  claim: "@Scheduled with ShedLock runs a task once per trigger across replicas, using the database clock."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Taken from the ShedLock README; ShedLock is not part of baseline v0.1-b1."
+  reason: "The example service has no database and no scheduled task yet."

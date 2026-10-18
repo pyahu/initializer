@@ -1,0 +1,400 @@
+---
+title: The database in production
+description: Connection pools, timeouts, roles, migrations and tests for a Spring Boot service on PostgreSQL.
+tableOfContents: { maxHeadingLevel: 2 }
+guide:
+  id: database
+  prefix: DB
+  state: draft
+  baseline: v0.1-b1
+  components: [spring-boot, spring-data, pgjdbc, liquibase, testcontainers, postgres-image, micrometer]
+  verification: null
+  questions:
+    - id: DB-Q1
+      text: "How many connections can my pods open?"
+      answeredIn: db-connection-budget
+    - id: DB-Q2
+      text: "How long should a request wait for a connection?"
+      answeredIn: db-pool-timeouts
+    - id: DB-Q3
+      text: "How do I stop one slow query from holding everything?"
+      answeredIn: db-query-timeouts
+    - id: DB-Q4
+      text: "Who should be allowed to change the schema?"
+      answeredIn: db-roles
+    - id: DB-Q5
+      text: "When should migrations run?"
+      answeredIn: db-migrations
+    - id: DB-Q6
+      text: "How do I change the schema without downtime?"
+      answeredIn: db-expand-contract
+    - id: DB-Q7
+      text: "How do I test against a real database?"
+      answeredIn: db-testing
+    - id: DB-Q8
+      text: "How do I know the pool is in trouble?"
+      answeredIn: db-pool-metrics
+  sources:
+    - title: "03 · Database in production"
+      origin: spring-boot-production-guides/03-database-in-production.md
+      revision: sha256:786645abd267ce1b819c333ecd1fca35616d9e46042f64d8a8c3e0f7429c6f6c
+      date: "2026-10-04"
+      author: Terson Rigaud
+      license: CC BY 4.0
+---
+import GuideStatus from '../../../components/GuideStatus.astro';
+import Checklist from '../../../components/Checklist.astro';
+import GuideReferences from '../../../components/GuideReferences.astro';
+import DiagramLegend from '../../../components/DiagramLegend.astro';
+import DbConnectionBudgetDiagram from '../../../components/diagrams/DbConnectionBudgetDiagram.astro';
+
+You deploy on a Friday afternoon. Halfway through the rollout the new pods stop getting ready and PostgreSQL
+answers `FATAL: sorry, too many clients already`. Nothing changed in the database. The deployment itself used up
+every connection.
+
+Most database outages in Kubernetes start like this, inside your own deployment. Configuration and process prevent
+them; a bigger database does not. This guide walks through the eight decisions that matter for a Spring Boot service on
+PostgreSQL: pools, timeouts, roles, migrations, tests and the metrics that warn you first.
+
+<GuideStatus guide="database" />
+
+<a id="db-connection-budget"></a>
+
+## 1. How many connections can my pods open?
+
+**In short:** add up every pool that can be open at once, including pods that are starting or shutting down and
+keep the total below what the database allows.
+
+```text
+pool × (max replicas + surge pods + draining pods) × services + migrations + admin ≤ user connections
+```
+
+### What's going on
+
+Every pod has its own HikariCP pool. PostgreSQL does not see your service; it sees the sum of all those pools.
+
+The pods people forget are the ones in motion. During a rolling update a new pod opens its pool before an old one
+is gone and the old pod keeps its whole pool while it drains. So at full scale there can be one extra pool per
+surge pod, plus one more for each pod still shutting down.
+
+<DbConnectionBudgetDiagram />
+<DiagramLegend items={['recommended', 'context', 'failure']} />
+
+A bigger budget is not the goal either. A database runs only a handful of queries truly in parallel, about two per
+database core. If every connection goes active at once, the work queues inside PostgreSQL, where you can neither
+see it nor shed it. A small pool makes the queue form in HikariCP instead, where it is visible and bounded.
+
+### Do this
+
+1. Keep pools small and fixed: `maximum-pool-size` equal to `minimum-idle`, 10 or less unless you measured
+   otherwise.
+2. Compute the budget for every service that uses the same server, with the HPA maximum, the surge and the
+   draining pods.
+3. Leave room for migrations, monitoring and a human with `psql`.
+4. Cap the runtime role in the database, so an overrun fails fast with a clear error:
+   `ALTER ROLE orders_app CONNECTION LIMIT <n>`.
+
+### When this is not for you
+
+- Many services, jobs that start and stop all day or scale to zero: the sum will not fit. Put PgBouncer in
+  front and read its limits first: transaction mode drops session state such as session locks and `SET`.
+- A single small service with one replica: the default pool fits but still count the surge pod.
+
+<a id="db-pool-timeouts"></a>
+
+## 2. How long should a request wait for a connection?
+
+**In short:** a few seconds at most. Also retire connections before the network does.
+
+```yaml
+spring.datasource.hikari:
+  connection-timeout: 3000   # milliseconds
+  max-lifetime: 1500000      # 25 min
+  keepalive-time: 120000     # 2 min
+```
+
+### What's going on
+
+When every connection is busy, a request waits for one. HikariCP's default wait is 30 seconds, so a saturated pool
+turns every request into a 30 second hang that usually outlives the ingress timeout. A wait of 2 to 5 seconds
+turns the same overload into fast errors the caller can retry.
+
+Connections can also die quietly. A load balancer, NAT gateway or firewall drops a connection that sat idle too
+long and the pool hands it out anyway. Two settings prevent that: `keepalive-time` pings idle connections and
+`max-lifetime` retires every connection before any limit on connection age in the path.
+
+One trap: these HikariCP settings are plain numbers in milliseconds. Unlike most Spring Boot properties, `3s` does
+not work here.
+
+### Do this
+
+1. Set `connection-timeout` between 2000 and 5000.
+2. Keep `keepalive-time` below the shortest idle timeout on the network path. HikariCP 7 already defaults to
+   2 minutes; HikariCP 5 had it off.
+3. Set `max-lifetime` below every connection age cap you know of, such as a pooler's server lifetime or credential
+   expiry.
+4. Set `leak-detection-threshold: 60000`. It logs the stack trace of code that holds a connection for over a
+   minute. It does not take the connection back.
+5. Read the startup log: HikariCP warns and disables a setting with a value out of range.
+
+### When this is not for you
+
+- It always applies. `idle-timeout` is the one setting you can skip: it has no effect on a fixed pool.
+
+<a id="db-query-timeouts"></a>
+
+## 3. How do I stop one slow query from holding everything?
+
+**In short:** give every layer a timeout, each one shorter than the layer outside it and keep one in PostgreSQL
+as the last line.
+
+```yaml
+spring:
+  transaction.default-timeout: 10s
+  jdbc.template.query-timeout: 5s
+```
+
+### What's going on
+
+A query without a timeout holds its connection for as long as it runs. A few of those and the pool is empty and
+every other request waits behind them.
+
+Timeouts work like nested boxes. The HTTP call has the outer limit, the transaction a shorter one, each statement
+a shorter one still. When a transaction has a timeout, Spring gives each JDBC statement only the time left in that
+transaction. PostgreSQL then has its own `statement_timeout`, which fires on the server even when the client is
+gone.
+
+| Layer | Setting | Value |
+| ----- | ------- | ----- |
+| HTTP | ingress or client timeout | 30 s |
+| Transaction | `spring.transaction.default-timeout` | 10 s |
+| Statement | `spring.jdbc.template.query-timeout` | 5 s |
+| PostgreSQL | `statement_timeout` on the runtime role | 15 s |
+| PostgreSQL | `idle_in_transaction_session_timeout` on the runtime role | 60 s |
+
+### Do this
+
+1. Set `spring.transaction.default-timeout` and `spring.jdbc.template.query-timeout` in `application.yaml`.
+2. Set the server timeouts on the runtime role, so they apply on every connection:
+
+   ```sql
+   ALTER ROLE orders_app IN DATABASE orders SET statement_timeout = '15s';
+   ALTER ROLE orders_app IN DATABASE orders SET idle_in_transaction_session_timeout = '60s';
+   ```
+
+3. Never wrap a call to another service in a transaction. It holds a connection while it waits on the network.
+
+### When this is not for you
+
+- A report or batch job that needs long queries: give it its own role and its own limits, not looser ones for
+  everyone.
+- Avoid the `options=-c statement_timeout=...` URL parameter: PgBouncer in transaction mode does not pass it on,
+  while role settings always apply.
+
+<a id="db-roles"></a>
+
+## 4. Who should be allowed to change the schema?
+
+**In short:** two database users. A migration user owns the schema; the runtime user can only read and write
+data.
+
+### What's going on
+
+If the application connects as the owner of its tables, any bug or injected query can drop them. And every pod
+carries credentials that can change the schema.
+
+Split the jobs. The migration user creates and alters tables and owns them. The runtime user gets `SELECT`,
+`INSERT`, `UPDATE` and `DELETE`, nothing more. The source guide tested this split on PostgreSQL 17: `DROP TABLE` as
+the runtime user failed with `must be owner of table orders`.
+
+### Do this
+
+1. Create both roles once per database, as an admin:
+
+   ```sql
+   CREATE ROLE orders_migrator LOGIN PASSWORD '...';
+   CREATE ROLE orders_app LOGIN PASSWORD '...';
+   REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+   CREATE SCHEMA orders AUTHORIZATION orders_migrator;
+   GRANT USAGE ON SCHEMA orders TO orders_app;
+   ALTER DEFAULT PRIVILEGES FOR ROLE orders_migrator IN SCHEMA orders
+       GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO orders_app;
+   ALTER DEFAULT PRIVILEGES FOR ROLE orders_migrator IN SCHEMA orders
+       GRANT USAGE, SELECT ON SEQUENCES TO orders_app;
+   ALTER ROLE orders_app IN DATABASE orders SET search_path = orders;
+   ```
+
+2. Give the application only the runtime user's credentials.
+3. Give the migration user's credentials only to whatever runs migrations (step 5).
+
+### When this is not for you
+
+- A local database on your laptop: one user is fine there. Keep the split in every shared environment.
+
+<a id="db-migrations"></a>
+
+## 5. When should migrations run?
+
+**In short:** once per release, in a Kubernetes Job that runs before the rollout, with the migration user. App
+pods do not migrate.
+
+```yaml
+spring.liquibase.enabled: false   # in the application's own configuration
+```
+
+### What's going on
+
+By default Spring Boot runs Liquibase when the application starts. With three replicas, three pods try to migrate
+at once. Liquibase lets one through and makes the others wait on its lock table, `DATABASECHANGELOGLOCK`. A long
+migration then delays every pod's readiness, a failed one fails every pod and every pod needs rights to change
+the schema.
+
+A Job runs the changelog once, before the new pods start. The pods only connect as the runtime user.
+
+### Do this
+
+1. Turn Liquibase off in the application: `spring.liquibase.enabled: false`.
+2. Run the same changelog from a Job, as the migration user, before the rollout. Order it in your pipeline or
+   GitOps tool, such as an Argo CD `PreSync` hook or a Helm `pre-upgrade` hook.
+3. Never edit a changeset that already ran. Add a new one.
+
+### When this is not for you
+
+- One replica, an internal tool or an early prototype: migrating on startup is simpler and fine.
+- An init container is not the fix: it runs once per pod, so the pods still race for the lock.
+
+<a id="db-expand-contract"></a>
+
+## 6. How do I change the schema without downtime?
+
+**In short:** never break the version that is still running. Expand first, switch the code, contract one release
+later.
+
+### What's going on
+
+During a rolling update the old and the new release run at the same time, against the same schema. During a
+rollback the order reverses. So every schema state must work with two versions of the code.
+
+Think of renaming a street. You put up the new sign next to the old one, wait until every map is updated, then
+take the old sign down. A database rename works the same way, across three releases:
+
+1. **Expand:** add the new column, keep both in sync, copy the old data over.
+2. **Switch:** the code reads and writes only the new column.
+3. **Contract:** drop the old column one release later.
+
+Some statements also lock a busy table for the whole time they run. `CREATE INDEX` blocks writes and
+`SET NOT NULL` scans the table under an exclusive lock.
+
+| Change | Safe sequence |
+| ------ | ------------- |
+| Rename a column | New column, sync trigger, backfill, switch code, drop the old one a release later |
+| Add an index | `CREATE INDEX CONCURRENTLY`, in its own changeset that runs outside a transaction |
+| Set `NOT NULL` | `CHECK (col IS NOT NULL) NOT VALID`, then `VALIDATE CONSTRAINT`, then `SET NOT NULL` |
+| Add a foreign key | `NOT VALID` first, `VALIDATE CONSTRAINT` in a later changeset |
+| Drop a column | Remove it from the code first, drop it one release later |
+
+### Do this
+
+1. Review every schema change as expand and contract. No rename or drop in the same release as the code change.
+2. Start transactional changes with `SET LOCAL lock_timeout = '5s'`, so a blocked `ALTER` gives up instead of
+   queueing every later query behind it.
+3. Keep each `CREATE INDEX CONCURRENTLY` in its own changeset, outside a transaction.
+4. Make backfills run in batches and check at the end that no row was left behind.
+
+### When this is not for you
+
+- A table nobody reads during the release, such as a brand new one: change it in one step.
+- Downtime is acceptable for this change: a maintenance window is simpler than three releases.
+
+<a id="db-testing"></a>
+
+## 7. How do I test against a real database?
+
+**In short:** run the real migrations against the same major PostgreSQL version as production, in a container,
+with Testcontainers 2.
+
+### What's going on
+
+A database that runs in memory, such as H2, hides exactly the problems this guide is about: locks, timeouts, types and
+statements that only PostgreSQL has. A test that passes there can still fail on the first deploy.
+
+Testcontainers starts a real PostgreSQL in Docker for the test and Spring Boot's `@ServiceConnection` points the
+application at it without any URL in the test.
+
+### Do this
+
+1. Add `spring-boot-testcontainers`, `testcontainers-junit-jupiter` and `testcontainers-postgresql`. Version 2
+   renamed these artifacts.
+2. Use `org.testcontainers.postgresql.PostgreSQLContainer`, the new class in Testcontainers 2, with the image of
+   your production major version.
+3. Annotate the container with `@ServiceConnection`.
+4. Run the changelog in tests, so a migration that does not apply fails the build.
+
+### When this is not for you
+
+- Pure logic with no SQL: test it without a database. Keep the container for the code that talks to PostgreSQL.
+
+<a id="db-pool-metrics"></a>
+
+## 8. How do I know the pool is in trouble?
+
+**In short:** alert when threads wait for a connection and page when they give up.
+
+### What's going on
+
+A pool in trouble shows it before users do. Threads start waiting for a connection, the wait grows and then
+requests fail with a timeout. HikariCP publishes all of this through Micrometer, tagged with the pool name.
+
+| Metric | What it tells you |
+| ------ | ----------------- |
+| `hikaricp.connections.pending` | Threads are waiting for a connection |
+| `hikaricp.connections.timeout` | Threads gave up waiting: page on any increase |
+| `hikaricp.connections.active` and `.max` | How close the pool is to full |
+| `hikaricp.connections.usage` | How long code holds a connection |
+| `hikaricp.connections.acquire` | How long getting a connection takes, normally under a millisecond |
+
+### Do this
+
+1. Alert when `hikaricp.connections.pending` stays above zero for a few minutes.
+2. Page on any increase of `hikaricp.connections.timeout`.
+3. Watch `hikaricp.connections.usage`: a maximum close to the transaction timeout means slow transactions or
+   remote calls inside them.
+4. Set `ApplicationName` in `spring.datasource.hikari.data-source-properties`, so `pg_stat_activity` shows which
+   service holds each connection.
+
+### When this is not for you
+
+- It always applies. The exported names change with the backend: check them in your metrics explorer before
+  writing alerts.
+
+## Put it all together
+
+Everything above lands in three places: the application's configuration, the database roles and the Deployment.
+
+### In application.yaml
+
+- A fixed pool: `maximum-pool-size` equal to `minimum-idle`, 10 or less (step 1).
+- `connection-timeout`, `max-lifetime`, `keepalive-time` and `leak-detection-threshold`, in milliseconds (step 2).
+- `spring.transaction.default-timeout` and `spring.jdbc.template.query-timeout` (step 3).
+- `spring.liquibase.enabled: false` (step 5).
+- `ApplicationName` in the data source properties (step 8).
+
+### In PostgreSQL
+
+- A migration role that owns the schema and a runtime role with data rights only (step 4).
+- `statement_timeout`, `idle_in_transaction_session_timeout` and a `CONNECTION LIMIT` on the runtime role (steps 1
+  and 3).
+
+### In the Deployment
+
+- A migration Job that runs before the rollout, with the migration user's credentials (step 5).
+- Only the runtime user's credentials in the application pods (step 4).
+- Replicas, surge and HPA maximum that fit the connection budget (step 1).
+
+## Checklist
+
+<Checklist guide="database" />
+
+## References
+
+<GuideReferences guide="database" />

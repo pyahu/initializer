@@ -1,0 +1,72 @@
+---
+// Flow: where each security control sits on a request's way to the controller.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="sec-request-path"
+  caption="Every request passes the same checks before your code runs; a failed check stops it early."
+  description="A request flows from left to right through five numbered stages. First a client sends a request with a bearer token. 1, edge: the ingress ends TLS and adds X-Forwarded headers. 2, server: Tomcat's RemoteIpValve reads those headers but trusts only the ingress addresses. Stages 3 to 5 sit inside the Spring Security filter chain, recommended. 3, token: the decoder checks the signature, expiry, issuer and audience. 4, permissions: the scp claim becomes SCOPE_ authorities and the roles claim becomes ROLE_ authorities. 5, rules: URL rules deny by default and @PreAuthorize checks business rules; only then the request reaches the controller, which validates input and returns fixed error texts. Failure, dotted and marked with a cross: a token issued for another app, expired or from another issuer is rejected with 401 at stage 3 and never reaches the controller.">
+  <svg viewBox="0 0 1000 420">
+    <defs>
+      <marker id="sec-request-path-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="sec-request-path-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+      <marker id="sec-request-path-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-fail" /></marker>
+    </defs>
+    <text x="165" y="32" class="dg-group">1 · EDGE</text>
+    <text x="330" y="32" class="dg-group">2 · SERVER</text>
+    <text x="505" y="32" class="dg-group">3 · TOKEN</text>
+    <text x="665" y="32" class="dg-group">4 · PERMISSIONS</text>
+    <text x="825" y="32" class="dg-group">5 · RULES</text>
+
+    <rect x="20" y="150" width="120" height="80" rx="6" class="dg-box" />
+    <text x="34" y="176" class="dg-title">Client</text>
+    <text x="34" y="200" class="dg-detail">request with</text>
+    <text x="34" y="220" class="dg-detail">a bearer token</text>
+    <path d="M140 190 H163" class="dg-line" marker-end="url(#sec-request-path-arrow)" />
+
+    <rect x="165" y="150" width="140" height="80" rx="6" class="dg-box" />
+    <text x="179" y="176" class="dg-title">Ingress</text>
+    <text x="179" y="200" class="dg-detail">TLS ends here</text>
+    <text x="179" y="220" class="dg-detail">X-Forwarded-*</text>
+    <path d="M305 190 H328" class="dg-line" marker-end="url(#sec-request-path-arrow)" />
+
+    <rect x="330" y="150" width="150" height="80" rx="6" class="dg-box" />
+    <text x="344" y="176" class="dg-title">Tomcat</text>
+    <text x="344" y="200" class="dg-detail">RemoteIpValve</text>
+    <text x="344" y="220" class="dg-detail">trusts the ingress</text>
+    <path d="M480 190 H503" class="dg-line dg-accent" marker-end="url(#sec-request-path-accent)" />
+
+    <rect x="495" y="48" width="490" height="320" rx="8" class="dg-frame" />
+    <text x="505" y="72" class="dg-note">Spring Security filter chain</text>
+
+    <rect x="505" y="150" width="140" height="80" rx="6" class="dg-box dg-emphasis" />
+    <text x="519" y="176" class="dg-title">Token check</text>
+    <text x="519" y="200" class="dg-detail">signature, expiry</text>
+    <text x="519" y="220" class="dg-detail">issuer, audience</text>
+    <path d="M645 190 H663" class="dg-line dg-accent" marker-end="url(#sec-request-path-accent)" />
+
+    <rect x="665" y="150" width="140" height="80" rx="6" class="dg-box dg-emphasis" />
+    <text x="679" y="176" class="dg-title">Permissions</text>
+    <text x="679" y="200" class="dg-detail">scp → SCOPE_x</text>
+    <text x="679" y="220" class="dg-detail">roles → ROLE_x</text>
+    <path d="M805 190 H823" class="dg-line dg-accent" marker-end="url(#sec-request-path-accent)" />
+
+    <rect x="825" y="150" width="150" height="80" rx="6" class="dg-box dg-emphasis" />
+    <text x="839" y="176" class="dg-title">Rules</text>
+    <text x="839" y="200" class="dg-detail">deny by default</text>
+    <text x="839" y="220" class="dg-detail">@PreAuthorize</text>
+    <path d="M900 230 V268" class="dg-line dg-accent" marker-end="url(#sec-request-path-accent)" />
+
+    <rect x="825" y="270" width="150" height="80" rx="6" class="dg-box" />
+    <text x="839" y="296" class="dg-title">Controller</text>
+    <text x="839" y="320" class="dg-detail">validated input</text>
+    <text x="839" y="340" class="dg-detail">fixed error text</text>
+
+    <path d="M575 230 V268" class="dg-line dg-fail" marker-end="url(#sec-request-path-fail)" />
+    <rect x="505" y="270" width="140" height="80" rx="6" class="dg-box dg-fail" />
+    <text x="519" y="296" class="dg-title">✕ 401</text>
+    <text x="519" y="320" class="dg-detail">another app's</text>
+    <text x="519" y="340" class="dg-detail">token or expired</text>
+
+    <text x="20" y="396" class="dg-note">A request that fails a check never reaches your code. Each check is one or two lines of configuration.</text>
+  </svg>
+</Diagram>

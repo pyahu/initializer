@@ -21,8 +21,8 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
-            runtime: [ev-jvm-aot-cache-2, ev-jvm-aot-cache-3, ev-jvm-cpu-count-1, ev-jvm-flag-placement-1, ev-jvm-gc-explicit-1, ev-jvm-gc-explicit-2, ev-jvm-gc-explicit-3, ev-jvm-gc-explicit-4, ev-jvm-heap-sizing-1]
+            compile: [ev-obs-starter-not-agent-1, ev-vt-enable-1]
+            runtime: [ev-img-non-root-1, ev-jvm-aot-cache-2, ev-jvm-aot-cache-3, ev-jvm-cpu-count-1, ev-jvm-flag-placement-1, ev-jvm-gc-explicit-1, ev-jvm-gc-explicit-2, ev-jvm-gc-explicit-3, ev-jvm-gc-explicit-4, ev-jvm-heap-sizing-1, ev-kube-probes-1, ev-vt-cpu-work-1]
       temurin-jdk-image:
         version: "25.0.4.1_1-jdk-noble"
         kind: image
@@ -36,7 +36,7 @@ revisions:
           state: qualified
           capabilities:
             compile: [ev-obs-starter-not-agent-1]
-            image: [ev-jvm-aot-cache-1]
+            image: [ev-img-layers-1, ev-jvm-aot-cache-1]
       temurin-jre-image:
         version: "25.0.4.1_1-jre-noble"
         kind: image
@@ -49,8 +49,8 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            image: [ev-jvm-aot-cache-1, ev-jvm-flag-placement-1]
-            runtime: [ev-jvm-aot-cache-2, ev-jvm-aot-cache-3, ev-jvm-cpu-count-1, ev-jvm-flag-placement-1, ev-jvm-gc-explicit-1, ev-jvm-gc-explicit-2, ev-jvm-gc-explicit-3, ev-jvm-gc-explicit-4, ev-jvm-heap-sizing-1]
+            image: [ev-img-layers-1, ev-img-non-root-1, ev-jvm-aot-cache-1, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-sec-pod-hardening-1]
+            runtime: [ev-img-non-root-1, ev-jvm-aot-cache-2, ev-jvm-aot-cache-3, ev-jvm-cpu-count-1, ev-jvm-flag-placement-1, ev-jvm-gc-explicit-1, ev-jvm-gc-explicit-2, ev-jvm-gc-explicit-3, ev-jvm-gc-explicit-4, ev-jvm-heap-sizing-1, ev-kube-probes-1, ev-sec-pod-hardening-1, ev-vt-cpu-work-1]
       gradle:
         version: "9.8.1"
         kind: tool
@@ -62,7 +62,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
+            compile: [ev-img-sbom-1, ev-obs-starter-not-agent-1]
       spring-boot:
         version: "4.1.1"
         kind: maven-bom
@@ -75,8 +75,8 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
-            runtime: [ev-jvm-aot-cache-3, ev-jvm-flag-placement-1, ev-obs-actuator-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
+            compile: [ev-img-sbom-1, ev-obs-starter-not-agent-1, ev-vt-enable-1]
+            runtime: [ev-img-non-root-1, ev-jvm-aot-cache-3, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-obs-actuator-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1, ev-sec-pod-hardening-1]
       spring-framework:
         version: "7.0.9"
         kind: maven
@@ -88,8 +88,8 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
-            runtime: [ev-jvm-flag-placement-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
+            compile: [ev-obs-starter-not-agent-1, ev-vt-enable-1]
+            runtime: [ev-img-non-root-1, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1]
       spring-data:
         version: "2026.0.1"
         kind: maven-bom
@@ -322,7 +322,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            compile: [ev-obs-starter-not-agent-1]
+            compile: [ev-img-sbom-1, ev-obs-starter-not-agent-1]
       openapi-generator-gradle-plugin:
         version: "7.26.0"
         kind: gradle-plugin

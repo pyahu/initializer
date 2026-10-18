@@ -1,0 +1,75 @@
+---
+// Flow: one outbound call through the limit, the retry, the client and the pool, with the timeout on each hop.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="http-call-path"
+  caption="One outbound call: a limit, a retry, the client, the pool and the network, each with its own bound."
+  description="Six boxes from left to right. 1, your code makes one call. 2, the limit: @ConcurrencyLimit with policy REJECT lets at most 64 calls through and rejects the rest at once. 3, the retry: @Retryable with 2 retries, backoff and jitter; its timeout of 6 seconds stops new attempts but never interrupts one in flight. 4, the client: a RestClient from Boot's builder, which records metrics and sends the traceparent header. 5, the pool: Apache HttpClient with 64 connections per host; the acquisition timeout of 0.5 seconds bounds the wait for a free connection. 6, the remote payments service. Under the hop from the pool to the remote service, the connect timeout of 1 second bounds opening the connection and the read timeout of 3 seconds bounds waiting for the answer. A failure box at the bottom shows the defaults: Apache allows 5 connections per host and waits up to 3 minutes for one and there is no read timeout, so calls queue without any error.">
+  <svg viewBox="0 0 1000 420">
+    <defs>
+      <marker id="http-call-path-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="http-call-path-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+    </defs>
+    <text x="12" y="40" class="dg-group">1 · CALL</text>
+    <text x="176" y="40" class="dg-group">2 · LIMIT</text>
+    <text x="340" y="40" class="dg-group">3 · RETRY</text>
+    <text x="504" y="40" class="dg-group">4 · CLIENT</text>
+    <text x="668" y="40" class="dg-group">5 · POOL</text>
+    <text x="832" y="40" class="dg-group">6 · REMOTE</text>
+
+    <rect x="12" y="60" width="140" height="110" rx="6" class="dg-box" />
+    <text x="26" y="90" class="dg-title">Your code</text>
+    <text x="26" y="116" class="dg-detail">a use case</text>
+    <text x="26" y="136" class="dg-detail">makes one call</text>
+    <path d="M152 115 H174" class="dg-line dg-accent" marker-end="url(#http-call-path-accent)" />
+
+    <rect x="176" y="60" width="140" height="110" rx="6" class="dg-box dg-emphasis" />
+    <text x="190" y="90" class="dg-title">Limit</text>
+    <text x="190" y="116" class="dg-note">@ConcurrencyLimit</text>
+    <text x="190" y="136" class="dg-detail">64 at once</text>
+    <text x="190" y="156" class="dg-detail">REJECT the rest</text>
+    <path d="M316 115 H338" class="dg-line dg-accent" marker-end="url(#http-call-path-accent)" />
+
+    <rect x="340" y="60" width="140" height="110" rx="6" class="dg-box dg-emphasis" />
+    <text x="354" y="90" class="dg-title">Retry</text>
+    <text x="354" y="116" class="dg-note">@Retryable</text>
+    <text x="354" y="136" class="dg-detail">2 retries, jitter</text>
+    <text x="354" y="156" class="dg-detail">timeout 6 s</text>
+    <path d="M480 115 H502" class="dg-line dg-accent" marker-end="url(#http-call-path-accent)" />
+
+    <rect x="504" y="60" width="140" height="110" rx="6" class="dg-box" />
+    <text x="518" y="90" class="dg-title">RestClient</text>
+    <text x="518" y="116" class="dg-detail">from Boot's builder</text>
+    <text x="518" y="136" class="dg-detail">metrics and</text>
+    <text x="518" y="156" class="dg-detail">traceparent</text>
+    <path d="M644 115 H666" class="dg-line dg-accent" marker-end="url(#http-call-path-accent)" />
+
+    <rect x="668" y="60" width="140" height="110" rx="6" class="dg-box dg-emphasis" />
+    <text x="682" y="90" class="dg-title">Pool</text>
+    <text x="682" y="116" class="dg-detail">Apache HttpClient</text>
+    <text x="682" y="136" class="dg-detail">64 per host</text>
+    <path d="M808 115 H830" class="dg-line dg-accent" marker-end="url(#http-call-path-accent)" />
+
+    <rect x="832" y="60" width="140" height="110" rx="6" class="dg-box" />
+    <text x="846" y="90" class="dg-title">payments</text>
+    <text x="846" y="116" class="dg-detail">the other</text>
+    <text x="846" y="136" class="dg-detail">service</text>
+
+    <path d="M340 196 H480" class="dg-line dg-dash" />
+    <text x="340" y="216" class="dg-note">stops new attempts after 6 s,</text>
+    <text x="340" y="232" class="dg-note">never one in flight</text>
+
+    <path d="M668 196 H808" class="dg-line dg-accent" />
+    <text x="668" y="216" class="dg-note dg-accent">wait for a connection:</text>
+    <text x="668" y="232" class="dg-note dg-accent">acquisition 0.5 s</text>
+
+    <path d="M808 258 H972" class="dg-line dg-accent" />
+    <text x="808" y="278" class="dg-note dg-accent">open it: connect 1 s</text>
+    <path d="M808 300 H972" class="dg-line dg-accent" />
+    <text x="808" y="320" class="dg-note dg-accent">wait for the answer: read 3 s</text>
+
+    <rect x="12" y="346" width="960" height="60" rx="6" class="dg-box dg-fail" />
+    <text x="28" y="372" class="dg-title">✕ The defaults</text>
+    <text x="28" y="394" class="dg-detail">Apache allows 5 connections per host and waits up to 3 minutes for one and there is no read timeout: calls queue without any error.</text>
+  </svg>
+</Diagram>

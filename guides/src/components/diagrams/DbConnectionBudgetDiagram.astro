@@ -1,0 +1,71 @@
+---
+// Before and after: every pod of a rolling update opens its own pool and the database sees the sum.
+// Numbers are arithmetic from the source guide's example, not a measurement: 5 pools of 10 is 50, of 5 is 25.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="db-pool-budget"
+  caption="During a rolling update every pod brings its own pool and the database counts them all."
+  description="Two panels, each showing five pods during a rolling update of a service with three replicas: three running pods, one new surge pod and one old pod still draining, all connected to one PostgreSQL server that allows 35 user connections. Left, the failure, marked with a cross: each pod has the default pool of 10 connections, so the pods ask for 50 connections; the database refuses the extra ones with too many clients, new pods fail readiness and the rollout stalls. Right, the recommendation: each pod has a fixed pool of 5, so the same five pods use 25 connections and 10 stay free for migrations and admin tools; a CONNECTION LIMIT on the runtime role makes an overrun fail fast instead of exhausting the server.">
+  <svg viewBox="0 0 1000 420">
+    <rect x="16" y="16" width="476" height="388" rx="8" class="dg-frame" />
+    <text x="32" y="42" class="dg-group">✕ BEFORE · POOL OF 10 PER POD</text>
+    <rect x="508" y="16" width="476" height="388" rx="8" class="dg-frame" />
+    <text x="524" y="42" class="dg-group">AFTER · POOL OF 5 PER POD</text>
+
+    <rect x="36" y="66" width="80" height="54" rx="4" class="dg-box" />
+    <text x="76" y="88" text-anchor="middle" class="dg-detail">pod</text>
+    <text x="76" y="108" text-anchor="middle" class="dg-note">10</text>
+    <rect x="124" y="66" width="80" height="54" rx="4" class="dg-box" />
+    <text x="164" y="88" text-anchor="middle" class="dg-detail">pod</text>
+    <text x="164" y="108" text-anchor="middle" class="dg-note">10</text>
+    <rect x="212" y="66" width="80" height="54" rx="4" class="dg-box" />
+    <text x="252" y="88" text-anchor="middle" class="dg-detail">pod</text>
+    <text x="252" y="108" text-anchor="middle" class="dg-note">10</text>
+    <rect x="300" y="66" width="80" height="54" rx="4" class="dg-box dg-fail" />
+    <text x="340" y="88" text-anchor="middle" class="dg-detail">surge</text>
+    <text x="340" y="108" text-anchor="middle" class="dg-note dg-fail">+10</text>
+    <rect x="388" y="66" width="80" height="54" rx="4" class="dg-box dg-fail" />
+    <text x="428" y="88" text-anchor="middle" class="dg-detail">draining</text>
+    <text x="428" y="108" text-anchor="middle" class="dg-note dg-fail">+10</text>
+
+    <path d="M252 128 L252 220" class="dg-line dg-fail" marker-end="url(#db-pool-budget-fail)" />
+    <text x="262" y="180" class="dg-note dg-fail">50 connections asked</text>
+
+    <rect x="112" y="228" width="280" height="80" rx="6" class="dg-box dg-fail" />
+    <text x="252" y="258" text-anchor="middle" class="dg-title">PostgreSQL</text>
+    <text x="252" y="282" text-anchor="middle" class="dg-detail">35 user connections allowed</text>
+    <text x="36" y="348" class="dg-title">too many clients already</text>
+    <text x="36" y="372" class="dg-detail">New pods fail readiness and the rollout stalls.</text>
+
+    <rect x="528" y="66" width="80" height="54" rx="4" class="dg-box dg-emphasis" />
+    <text x="568" y="88" text-anchor="middle" class="dg-detail">pod</text>
+    <text x="568" y="108" text-anchor="middle" class="dg-note">5</text>
+    <rect x="616" y="66" width="80" height="54" rx="4" class="dg-box dg-emphasis" />
+    <text x="656" y="88" text-anchor="middle" class="dg-detail">pod</text>
+    <text x="656" y="108" text-anchor="middle" class="dg-note">5</text>
+    <rect x="704" y="66" width="80" height="54" rx="4" class="dg-box dg-emphasis" />
+    <text x="744" y="88" text-anchor="middle" class="dg-detail">pod</text>
+    <text x="744" y="108" text-anchor="middle" class="dg-note">5</text>
+    <rect x="792" y="66" width="80" height="54" rx="4" class="dg-box dg-emphasis" />
+    <text x="832" y="88" text-anchor="middle" class="dg-detail">surge</text>
+    <text x="832" y="108" text-anchor="middle" class="dg-note">+5</text>
+    <rect x="880" y="66" width="80" height="54" rx="4" class="dg-box dg-emphasis" />
+    <text x="920" y="88" text-anchor="middle" class="dg-detail">draining</text>
+    <text x="920" y="108" text-anchor="middle" class="dg-note">+5</text>
+
+    <path d="M744 128 L744 220" class="dg-line dg-accent" marker-end="url(#db-pool-budget-accent)" />
+    <text x="754" y="180" class="dg-note">25 connections</text>
+
+    <rect x="604" y="228" width="280" height="80" rx="6" class="dg-box" />
+    <text x="744" y="258" text-anchor="middle" class="dg-title">PostgreSQL</text>
+    <text x="744" y="282" text-anchor="middle" class="dg-detail">35 user connections allowed</text>
+    <text x="528" y="348" class="dg-title">Fits, with 10 to spare</text>
+    <text x="528" y="372" class="dg-detail">Room for migrations and admin. A role</text>
+    <text x="528" y="392" class="dg-detail">CONNECTION LIMIT makes an overrun fail fast.</text>
+
+    <defs>
+      <marker id="db-pool-budget-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-fail" /></marker>
+      <marker id="db-pool-budget-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+    </defs>
+  </svg>
+</Diagram>

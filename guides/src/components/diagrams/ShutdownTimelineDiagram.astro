@@ -1,0 +1,45 @@
+---
+// Timeline: what happens between deleting a pod and the JVM exiting, inside a 45 second grace period.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="kube-shutdown-timeline"
+  caption="Stopping a pod without failing requests: the routers forget the pod while it still serves, then Spring drains."
+  description="A time axis from 0 to 45 seconds after the pod is deleted. Two lanes run in parallel. Top lane, routers: the endpoint is marked as terminating and kube-proxy, the gateway and any load balancer catch up, which takes from under a second to several seconds. Bottom lane, the pod, highlighted: from 0 to 10 seconds the preStop sleep runs and the app still serves every request; at 10 seconds SIGTERM arrives; from 10 to at most 30 seconds Spring Boot refuses new traffic and drains the requests in flight, bounded by timeout-per-shutdown-phase of 20 seconds; then beans close and telemetry is flushed, usually in under 5 seconds; the rest is slack. At 45 seconds, terminationGracePeriodSeconds, the kubelet sends SIGKILL to anything left. Below, the failure: without the preStop sleep, SIGTERM arrives at 0 seconds while the routers still send traffic and every rollout returns 502 errors.">
+  <svg viewBox="0 0 1000 360">
+    <defs>
+      <marker id="kube-shutdown-timeline-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-fail" /></marker>
+    </defs>
+    <text x="20" y="30" class="dg-group">1 · ROUTERS</text>
+    <rect x="100" y="42" width="300" height="66" rx="6" class="dg-box" />
+    <text x="114" y="68" class="dg-title">Endpoint removed</text>
+    <text x="114" y="92" class="dg-detail">routers catch up: under 1 s to several s</text>
+
+    <text x="20" y="138" class="dg-group">2 · POD</text>
+    <rect x="100" y="150" width="185" height="86" rx="6" class="dg-box dg-emphasis" />
+    <text x="114" y="176" class="dg-title">preStop sleep</text>
+    <text x="114" y="200" class="dg-detail">10 s, still serving</text>
+    <text x="114" y="220" class="dg-detail">every request</text>
+    <rect x="291" y="150" width="365" height="86" rx="6" class="dg-box dg-emphasis" />
+    <text x="305" y="176" class="dg-title">SIGTERM: graceful drain</text>
+    <text x="305" y="200" class="dg-detail">refuse new traffic, finish requests in flight</text>
+    <text x="305" y="220" class="dg-detail">at most 20 s (timeout-per-shutdown-phase)</text>
+    <rect x="662" y="150" width="120" height="86" rx="6" class="dg-box" />
+    <text x="676" y="176" class="dg-title">Close</text>
+    <text x="676" y="200" class="dg-detail">beans, pool,</text>
+    <text x="676" y="220" class="dg-detail">telemetry</text>
+    <rect x="788" y="150" width="152" height="86" rx="6" class="dg-frame" />
+    <text x="802" y="176" class="dg-title">Slack</text>
+    <text x="802" y="200" class="dg-detail">until the</text>
+    <text x="802" y="220" class="dg-detail">grace period</text>
+
+    <path d="M100 262 H940" class="dg-line" />
+    <path d="M100 256 V268 M287 256 V268 M660 256 V268 M940 256 V268" class="dg-line" />
+    <text x="92" y="286" class="dg-note">0 s</text>
+    <text x="276" y="286" class="dg-note">10 s</text>
+    <text x="648" y="286" class="dg-note">30 s</text>
+    <text x="876" y="286" class="dg-note">45 s SIGKILL</text>
+
+    <path d="M100 300 V322 H200" class="dg-line dg-fail" marker-end="url(#kube-shutdown-timeline-fail)" />
+    <text x="210" y="326" class="dg-note">✕ no preStop: SIGTERM at 0 s while routers still send traffic, 502s on every rollout</text>
+  </svg>
+</Diagram>

@@ -184,3 +184,787 @@
   claim: documented
   tests: []
   appliesWhen: {}
+- id: VT-01
+  guide: virtual-threads
+  card: vt-enable
+  type: generated-config
+  text: spring.threads.virtual.enabled is true only for I/O bound services; the decision is recorded.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: VT-02
+  guide: virtual-threads
+  card: vt-resource-limits
+  type: generated-config
+  text: HikariCP maximum-pool-size comes from the database connection budget; connection-timeout is 5 s or less.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: VT-03
+  guide: virtual-threads
+  card: vt-downstream-limits
+  type: verified-behaviour
+  text: Every downstream service has a concurrency limit (@ConcurrencyLimit, Semaphore or bulkhead) and every outbound call has connect and read timeouts.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: VT-04
+  guide: virtual-threads
+  card: vt-cpu-work
+  type: verified-behaviour
+  text: CPU heavy work runs on a platform pool sized to the cores.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: VT-05
+  guide: virtual-threads
+  card: vt-cpu-work
+  type: deployment-prerequisite
+  text: Pod CPU request of at least 1; either -XX:ActiveProcessorCount of at least 2 with no CPU limit or a CPU limit of at least 2.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: VT-06
+  guide: virtual-threads
+  card: vt-executors
+  type: verified-behaviour
+  text: No custom executor bean silently replaces the virtual thread @Async executor; spring.main.keep-alive is true for apps without a web server.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: VT-07
+  guide: virtual-threads
+  card: vt-context
+  type: verified-behaviour
+  text: MDC, security and trace context are propagated across async boundaries; no business logic relies on ThreadLocal caching.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: VT-08
+  guide: virtual-threads
+  card: vt-fan-out
+  type: verified-behaviour
+  text: Fan out uses a long lived, context wrapped executor and cancels the tasks that miss the deadline.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: VT-09
+  guide: virtual-threads
+  card: vt-pinning
+  type: operator-task
+  text: A JFR pinning check runs once under load; dashboards show pool pending connections and GC.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: DB-01
+  guide: database
+  card: db-connection-budget
+  type: deployment-prerequisite
+  text: "Connection budget computed: every pool times HPA maximum, surge and draining pods, plus migrations and admin, fits the user connections of each database server."
+  claim: documented
+  tests: []
+  appliesWhen: {database: [postgres]}
+- id: DB-02
+  guide: database
+  card: db-connection-budget
+  type: generated-config
+  text: "Fixed pool: maximum-pool-size equals minimum-idle, 10 or less unless measured otherwise."
+  claim: documented
+  tests: []
+  appliesWhen: {database: [postgres]}
+- id: DB-03
+  guide: database
+  card: db-pool-timeouts
+  type: generated-config
+  text: "connection-timeout between 2000 and 5000 ms, max-lifetime below every connection age cap, keepalive-time below network idle timeouts, leak-detection-threshold set."
+  claim: documented
+  tests: []
+  appliesWhen: {database: [postgres]}
+- id: DB-04
+  guide: database
+  card: db-query-timeouts
+  type: generated-config
+  text: "spring.transaction.default-timeout and spring.jdbc.template.query-timeout set."
+  claim: documented
+  tests: []
+  appliesWhen: {database: [postgres]}
+- id: DB-05
+  guide: database
+  card: db-query-timeouts
+  type: deployment-prerequisite
+  text: "Runtime role has statement_timeout and idle_in_transaction_session_timeout."
+  claim: documented
+  tests: []
+  appliesWhen: {database: [postgres]}
+- id: DB-06
+  guide: database
+  card: db-roles
+  type: deployment-prerequisite
+  text: "Separate migration and runtime users; the runtime user cannot change the schema."
+  claim: documented
+  tests: []
+  appliesWhen: {database: [postgres]}
+- id: DB-07
+  guide: database
+  card: db-migrations
+  type: generated-config
+  text: "Migrations run in a Job before the rollout; the application sets spring.liquibase.enabled to false."
+  claim: documented
+  tests: []
+  appliesWhen: {database: [postgres]}
+- id: DB-08
+  guide: database
+  card: db-expand-contract
+  type: operator-task
+  text: "Every schema change reviewed as expand and contract; no rename or drop in the same release as the code change."
+  claim: documented
+  tests: []
+  appliesWhen: {database: [postgres]}
+- id: DB-09
+  guide: database
+  card: db-expand-contract
+  type: generated-config
+  text: "Transactional changesets start with SET LOCAL lock_timeout; changesets that ran are never edited."
+  claim: documented
+  tests: []
+  appliesWhen: {database: [postgres]}
+- id: DB-10
+  guide: database
+  card: db-testing
+  type: verified-behaviour
+  text: "Integration tests run the real changelog on Testcontainers with the production PostgreSQL major version."
+  claim: documented
+  tests: []
+  appliesWhen: {database: [postgres]}
+- id: DB-11
+  guide: database
+  card: db-pool-metrics
+  type: operator-task
+  text: "Alerts on hikaricp.connections.pending and hikaricp.connections.timeout."
+  claim: documented
+  tests: []
+  appliesWhen: {database: [postgres]}
+- id: DB-12
+  guide: database
+  card: db-pool-metrics
+  type: operator-task
+  text: "Point in time restore rehearsed in the last quarter."
+  claim: documented
+  tests: []
+  appliesWhen: {database: [postgres]}
+- id: HTTP-01
+  guide: http-clients
+  card: http-client-choice
+  type: generated-config
+  text: RestClient and HTTP Service Clients for new code; no new RestTemplate usage.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-02
+  guide: http-clients
+  card: http-client-choice
+  type: generated-config
+  text: One @ImportHttpServices group per downstream system, with base-url from configuration.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-03
+  guide: http-clients
+  card: http-client-choice
+  type: generated-config
+  text: redirects dont-follow for calls between services, plus a status handler that rejects 3xx.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-04
+  guide: http-clients
+  card: http-timeouts
+  type: generated-config
+  text: spring.http.clients connect-timeout and read-timeout set globally, tighter per group.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-05
+  guide: http-clients
+  card: http-timeouts
+  type: generated-config
+  text: HTTP library chosen explicitly with spring.http.clients.imperative.factory.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-06
+  guide: http-clients
+  card: http-pool
+  type: generated-config
+  text: Apache pool with maxConnPerRoute at or above the concurrency limit, a connection request timeout of 1 s or less and a connection TTL.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-07
+  guide: http-clients
+  card: http-deadline
+  type: verified-behaviour
+  text: Each attempt is bounded by the client; the retry timeout plus one attempt fits the caller's own timeout.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-08
+  guide: http-clients
+  card: http-retry
+  type: generated-config
+  text: "@EnableResilientMethods present whenever @Retryable or @ConcurrencyLimit is used."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-09
+  guide: http-clients
+  card: http-retry
+  type: generated-config
+  text: Every @Retryable sets includes, maxRetries of 2 or less, multiplier, jitter and timeout.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-10
+  guide: http-clients
+  card: http-retry
+  type: verified-behaviour
+  text: Only one layer in the call chain retries a given dependency.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-11
+  guide: http-clients
+  card: http-idempotency
+  type: verified-behaviour
+  text: POST and PATCH are retried only with an idempotency key created outside the retry.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-12
+  guide: http-clients
+  card: http-bulkhead
+  type: generated-config
+  text: "@ConcurrencyLimit with policy REJECT on the class for each downstream system, rejection mapped to 503 or 429."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-13
+  guide: http-clients
+  card: http-bulkhead
+  type: deployment-prerequisite
+  text: Circuit breaker or rate limiter only with a written reason, using resilience4j-spring-boot4.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-14
+  guide: http-clients
+  card: http-bulkhead
+  type: verified-behaviour
+  text: Fallbacks never invent business results.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: HTTP-15
+  guide: http-clients
+  card: http-observability
+  type: generated-config
+  text: Clients come from Boot builders or HTTP Service groups, with histograms on http.client.requests.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-01
+  guide: configuration
+  card: cfg-one-file
+  type: generated-config
+  text: "Single application.yaml with production safe defaults; no dev, qa or prod profiles."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-02
+  guide: configuration
+  card: cfg-typed-properties
+  type: generated-config
+  text: "All app settings bound through @ConfigurationProperties records with @Validated, @Valid on nested records and @DefaultValue for defaults."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-03
+  guide: configuration
+  card: cfg-placeholder-guard
+  type: generated-config
+  text: "Secret components guarded against unresolved placeholders, with no other format constraint and toString() overridden."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-04
+  guide: configuration
+  card: cfg-typed-properties
+  type: generated-config
+  text: "@ConfigurationPropertiesScan enabled; configuration processor on the annotation processor path."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-05
+  guide: configuration
+  card: cfg-one-file
+  type: deployment-prerequisite
+  text: "Per environment values in a versioned ConfigMap loaded with envFrom; a config change triggers a rollout."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-06
+  guide: configuration
+  card: cfg-env-names
+  type: deployment-prerequisite
+  text: "enableServiceLinks: false on every pod spec."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-07
+  guide: configuration
+  card: cfg-secrets-as-files
+  type: deployment-prerequisite
+  text: "Secrets in a vault, mounted by the CSI driver with a workload identity; spring.config.import: optional:configtree:..."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-08
+  guide: configuration
+  card: cfg-secrets-as-files
+  type: deployment-prerequisite
+  text: "No secretObjects sync unless something other than the app needs a Kubernetes Secret."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-09
+  guide: configuration
+  card: cfg-secrets-as-files
+  type: deployment-prerequisite
+  text: "Token authentication preferred over stored secrets for databases and cloud services."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-10
+  guide: configuration
+  card: cfg-restart-to-reload
+  type: operator-task
+  text: "Secret rotation runbook: add the new credential, update the vault, roll the pods, revoke the old one."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-11
+  guide: configuration
+  card: cfg-secret-exposure
+  type: generated-config
+  text: "management.endpoint.env.show-values and configprops.show-values are never or a SanitizingFunction bean exists."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-12
+  guide: configuration
+  card: cfg-secret-exposure
+  type: generated-config
+  text: "Only health and info exposed over the web, on the management port."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-13
+  guide: configuration
+  card: cfg-secret-exposure
+  type: deployment-prerequisite
+  text: "No secret in manifests, images, ConfigMaps, logs or exception messages."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-14
+  guide: configuration
+  card: cfg-typed-properties
+  type: verified-behaviour
+  text: "An invalid setting makes the application context fail to start."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: CFG-15
+  guide: configuration
+  card: cfg-feature-flags
+  type: operator-task
+  text: "Feature flags evaluated through OpenFeature with safe defaults; stale flags removed."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: SEC-01
+  guide: security
+  card: sec-token-audience
+  type: generated-config
+  text: "issuer-uri and audiences set; jws-algorithms explicit."
+  claim: documented
+  tests: []
+  appliesWhen: {auth: [true]}
+- id: SEC-02
+  guide: security
+  card: sec-authorities
+  type: generated-config
+  text: "scp mapped to SCOPE_ and roles to ROLE_; oid as the principal; the API registration issues v2 tokens."
+  claim: documented
+  tests: []
+  appliesWhen: {auth: [true]}
+- id: SEC-03
+  guide: security
+  card: sec-deny-default
+  type: generated-config
+  text: "The API chain ends with anyRequest().denyAll(); business rules use @PreAuthorize; a catch-all handler rethrows security exceptions."
+  claim: documented
+  tests: []
+  appliesWhen: {auth: [true]}
+- id: SEC-04
+  guide: security
+  card: sec-csrf-cors
+  type: generated-config
+  text: "Stateless sessions; CSRF off only because no endpoint uses cookie authentication; CORS with exact origins or none."
+  claim: documented
+  tests: []
+  appliesWhen: {auth: [true]}
+- id: SEC-05
+  guide: security
+  card: sec-headers
+  type: verified-behaviour
+  text: "Content-Security-Policy, Referrer-Policy and HSTS present on responses through the ingress."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: SEC-06
+  guide: security
+  card: sec-headers
+  type: deployment-prerequisite
+  text: "server.forward-headers-strategy pinned; server.tomcat.remoteip.internal-proxies narrowed to the ingress addresses."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: SEC-07
+  guide: security
+  card: sec-errors
+  type: generated-config
+  text: "spring.web.error.* at defaults; spring.mvc.problemdetails.enabled true; a catch-all handler returns a fixed text."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: SEC-08
+  guide: security
+  card: sec-errors
+  type: generated-config
+  text: "Validation 400s carry errors with field and message, never the rejected value; request sizes bounded on purpose."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: SEC-09
+  guide: security
+  card: sec-ssrf
+  type: generated-config
+  text: "URLs that users supply go through a client with InetAddressFilter.externalAddresses(), no redirects and https only."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: SEC-10
+  guide: security
+  card: sec-pod-hardening
+  type: generated-config
+  text: "Pod runs non-root with a read-only root filesystem and /tmp emptyDir, drops ALL capabilities, uses RuntimeDefault and mounts no service account token."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: SEC-11
+  guide: security
+  card: sec-pod-hardening
+  type: deployment-prerequisite
+  text: "The namespace enforces Pod Security restricted; a NetworkPolicy denies by default with explicit allows and blocks 169.254.169.254."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-01
+  guide: container-image
+  card: img-layers
+  type: generated-config
+  text: "Dockerfile with several stages; no JDK, Gradle or source code in the final image."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-02
+  guide: container-image
+  card: img-layers
+  type: generated-config
+  text: "extract --layers without --launcher; layers copied dependencies, loader, snapshots, application."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-03
+  guide: container-image
+  card: img-layers
+  type: verified-behaviour
+  text: "AOT cache trained in the runtime stage with remote calls disabled; CI fails if -XX:AOTMode=on rejects it."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-04
+  guide: container-image
+  card: img-pinning
+  type: generated-config
+  text: "Base images pinned as tag@sha256:digest in plain FROM lines with the distro codename in the tag, auxiliary images included."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-05
+  guide: container-image
+  card: img-pinning
+  type: deployment-prerequisite
+  text: "Every workload running the app image (Deployment, migration Job, CronJob) references the release digest, not a tag."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-06
+  guide: container-image
+  card: img-pinning
+  type: operator-task
+  text: "Renovate or Dependabot updates base digests and action SHAs; JDK major bumps blocked."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-07
+  guide: container-image
+  card: img-non-root
+  type: generated-config
+  text: "Numeric non-root USER 10001:10001 and exec form ENTRYPOINT."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-08
+  guide: container-image
+  card: img-non-root
+  type: deployment-prerequisite
+  text: "Runs with readOnlyRootFilesystem: true and /tmp as an emptyDir with a sizeLimit."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-09
+  guide: container-image
+  card: img-build-context
+  type: generated-config
+  text: "Allow list .dockerignore; no secrets through ARG or ENV."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-10
+  guide: container-image
+  card: img-sbom
+  type: generated-config
+  text: "CycloneDX plugin applied; app SBOM written by the build. /actuator/sbom not exposed by default; if it is, management port only and authenticated."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-11
+  guide: container-image
+  card: img-sbom
+  type: operator-task
+  text: "Image SBOM (Syft, CycloneDX) attached as a signed attestation."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-12
+  guide: container-image
+  card: img-scanning
+  type: operator-task
+  text: "Trivy or Grype gate on fixable high and critical findings in CI; a registry or cluster scanner rescans shipped images."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: IMG-13
+  guide: container-image
+  card: img-signing
+  type: deployment-prerequisite
+  text: "Image signed by digest in CI; Deployments reference digests; an admission policy verifies the signature."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-01
+  guide: kubernetes-deployment
+  card: kube-probes
+  type: generated-config
+  text: /livez and /readyz served on the main port (add-additional-paths) and open to the kubelet without authentication.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-02
+  guide: kubernetes-deployment
+  card: kube-probes
+  type: generated-config
+  text: Liveness group holds livenessState only; no database, broker or HTTP dependency.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-03
+  guide: kubernetes-deployment
+  card: kube-probes
+  type: generated-config
+  text: Readiness group holds readinessState; any added dependency is local to the pod and documented.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-04
+  guide: kubernetes-deployment
+  card: kube-probes
+  type: generated-config
+  text: Probe timeoutSeconds is at least 2; startupProbe instead of initialDelaySeconds.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-05
+  guide: kubernetes-deployment
+  card: kube-graceful-shutdown
+  type: generated-config
+  text: preStop sleep of at least 10 s with the native sleep action.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-06
+  guide: kubernetes-deployment
+  card: kube-graceful-shutdown
+  type: generated-config
+  text: timeout-per-shutdown-phase set to 20s and terminationGracePeriodSeconds at least preStop plus the phase timeout plus 15 s.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-07
+  guide: kubernetes-deployment
+  card: kube-resources
+  type: generated-config
+  text: Memory request equals memory limit; CPU request set and no CPU limit or a documented reason for one.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-08
+  guide: kubernetes-deployment
+  card: kube-rollout
+  type: generated-config
+  text: maxSurge 1, maxUnavailable 0 and minReadySeconds set; no spec.replicas when an autoscaler exists.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-09
+  guide: kubernetes-deployment
+  card: kube-disruption
+  type: generated-config
+  text: PodDisruptionBudget with maxUnavailable 1 and unhealthyPodEvictionPolicy AlwaysAllow.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-10
+  guide: kubernetes-deployment
+  card: kube-autoscaling
+  type: generated-config
+  text: HorizontalPodAutoscaler with explicit behavior and a capped scale up; minReplicas at least 3 in production; one autoscaler per Deployment.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-11
+  guide: kubernetes-deployment
+  card: kube-spread
+  type: generated-config
+  text: Zone spread with DoNotSchedule and node spread with ScheduleAnyway, both with matchLabelKeys pod-template-hash.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-12
+  guide: kubernetes-deployment
+  card: kube-scheduled-work
+  type: operator-task
+  text: Recurring work uses ShedLock or a CronJob with concurrencyPolicy Forbid.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: KUBE-13
+  guide: kubernetes-deployment
+  card: kube-graceful-shutdown
+  type: verified-behaviour
+  text: A rollout under steady load has finished with zero failed requests at least once.
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: MAN-01
+  guide: kubernetes-manifests
+  card: man-packaging
+  type: generated-config
+  text: "One packaging tool per service: Kustomize for a service the team deploys itself, Helm when others install it with their own values. The choice is written down."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: MAN-02
+  guide: kubernetes-manifests
+  card: man-validation
+  type: generated-config
+  text: "CI renders every environment and validates the rendered output, not the templates."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: MAN-03
+  guide: kubernetes-manifests
+  card: man-labels
+  type: generated-config
+  text: "Recommended app.kubernetes.io labels on every object. Selectors use name, instance and component only, never version."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: MAN-04
+  guide: kubernetes-manifests
+  card: man-server-side-apply
+  type: generated-config
+  text: "No spec.replicas in any manifest when an HPA manages the Deployment."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: MAN-05
+  guide: kubernetes-manifests
+  card: man-image-digest
+  type: generated-config
+  text: "Production images pinned by digest through the Kustomize images transformer."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: MAN-06
+  guide: kubernetes-manifests
+  card: man-config-rollout
+  type: generated-config
+  text: "Config changes roll the pods: configMapGenerator hash or checksum/config. Plain YAML has an explicit restart step."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: MAN-07
+  guide: kubernetes-manifests
+  card: man-overlays
+  type: generated-config
+  text: "Kustomize uses labels, patches and replacements only, with components for optional features. No deprecated fields."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: MAN-08
+  guide: kubernetes-manifests
+  card: man-server-side-apply
+  type: operator-task
+  text: "Applied with --server-side and a named field manager. Drift checked with kubectl diff --server-side or a GitOps controller."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: MAN-09
+  guide: kubernetes-manifests
+  card: man-validation
+  type: generated-config
+  text: "kubeconform -strict with CRD schemas for Kubernetes 1.36 and 1.37, plus pluto for the newest version."
+  claim: documented
+  tests: []
+  appliesWhen: {}
+- id: MAN-10
+  guide: kubernetes-manifests
+  card: man-validation
+  type: generated-config
+  text: "kube-linter and trivy config pass. Every suppression has a written reason."
+  claim: documented
+  tests: []
+  appliesWhen: {}

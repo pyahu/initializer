@@ -1,0 +1,92 @@
+# Evidence records for the virtual-threads guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-vt-enable-1
+  card: vt-enable
+  claim: "The example service builds and its Spring context starts with spring.threads.virtual.enabled: true."
+  badge: compiled
+  capabilities: [compile]
+  components: [java, spring-boot, spring-framework]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ApplicationTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "Proves the setting is accepted, not that requests run on virtual threads; no test logs the request thread yet."
+- id: ev-vt-enable-2
+  card: vt-enable
+  claim: "With spring.threads.virtual.enabled: true, Spring Boot 4.1 runs web requests, @Async tasks and @Scheduled tasks on virtual threads."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Boot 4.1 reference and configuration metadata."
+  reason: "No test checks which thread handles a request or a task yet."
+- id: ev-vt-resource-limits-1
+  card: vt-resource-limits
+  claim: "With virtual threads, a HikariCP pool sized from the database budget with a 3 second connection timeout keeps tail latency bounded under load."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from HikariCP behaviour and the source guide; server.tomcat.threads.max having no effect is from Boot's property description."
+  reason: "The example service has no database yet and no load test runs."
+- id: ev-vt-downstream-limits-1
+  card: vt-downstream-limits
+  claim: "@ConcurrencyLimit, enabled by @EnableResilientMethods, caps concurrent calls through a method."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Framework 7 resilience documentation."
+  reason: "The example service makes no outbound calls yet."
+- id: ev-vt-cpu-work-1
+  card: vt-cpu-work
+  claim: "With no CPU limit, -XX:ActiveProcessorCount=1 overrides the CPU count the JVM detects, which also sets the number of carrier threads."
+  badge: reproduced
+  capabilities: [runtime]
+  components: [java, temurin-jre-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestActiveProcessorCountOverride
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestActiveProcessorCountOverride$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "no CPU limit, nproc 2; -XX:ActiveProcessorCount=1 reports Effective CPU Count: 1"
+  limitations: "Proves the override only; the carrier count following it is from the JDK documentation."
+- id: ev-vt-cpu-work-2
+  card: vt-cpu-work
+  claim: "A virtual thread doing CPU work holds its carrier until it blocks, so CPU heavy requests starve the others."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From JEP 444 and the source guide."
+  reason: "No CPU bound workload test runs yet."
+- id: ev-vt-executors-1
+  card: vt-executors
+  claim: "A TaskExecutor bean declared by the application replaces the virtual thread executor Boot configures for @Async; spring.main.keep-alive keeps an app with no web server running."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Boot 4.1 reference and configuration metadata."
+  reason: "The example service has no @Async or @Scheduled code yet."
+- id: ev-vt-context-1
+  card: vt-context
+  claim: "Work handed to another thread loses MDC and the trace context unless a TaskDecorator or Micrometer context propagation carries them."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Micrometer context propagation documentation and the source guide."
+  reason: "The example service has no async work yet."
+- id: ev-vt-fan-out-1
+  card: vt-fan-out
+  claim: "Waiting on each Future with one shared deadline and cancelling late tasks returns within the deadline, while a try with resources executor waits for every task on close."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the JDK 25 ExecutorService API and the source guide."
+  reason: "No fan out test runs yet."
+- id: ev-vt-pinning-1
+  card: vt-pinning
+  claim: "On JDK 25, synchronized no longer pins a virtual thread; JFR jdk.VirtualThreadPinned events show only native frames or class initialization."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From JEP 491 and the source guide."
+  reason: "No JFR recording runs under load yet."

@@ -1,0 +1,317 @@
+---
+title: "Kubernetes manifests: plain, Helm or Kustomize"
+description: Package, vary per environment, validate and apply the manifests of a Spring Boot service.
+tableOfContents: { maxHeadingLevel: 2 }
+guide:
+  id: kubernetes-manifests
+  prefix: MAN
+  state: draft
+  baseline: v0.1-b1
+  components: [kustomize, kubernetes-1.36, kubernetes-1.37, trivy]
+  verification: null
+  questions:
+    - id: MAN-Q1
+      text: "Plain YAML, Helm or Kustomize: which one should I use?"
+      answeredIn: man-packaging
+    - id: MAN-Q2
+      text: "How do I change a few values per environment without copying everything?"
+      answeredIn: man-overlays
+    - id: MAN-Q3
+      text: "Which labels go on every object and which go in the selector?"
+      answeredIn: man-labels
+    - id: MAN-Q4
+      text: "Why did my config change not reach the pods?"
+      answeredIn: man-config-rollout
+    - id: MAN-Q5
+      text: "How do I make sure the cluster runs the image I tested?"
+      answeredIn: man-image-digest
+    - id: MAN-Q6
+      text: "How should I apply manifests to the cluster?"
+      answeredIn: man-server-side-apply
+    - id: MAN-Q7
+      text: "How do I catch broken manifests before they reach a cluster?"
+      answeredIn: man-validation
+  sources:
+    - title: "10 · Kubernetes manifests: plain YAML, Helm and Kustomize"
+      origin: spring-boot-production-guides/10-kubernetes-manifests-plain-helm-kustomize.md
+      revision: sha256:07f048def5030e2d4df156c79d271303809a7238422abb0b0f5dc36ea4b23b42
+      date: "2026-10-04"
+      author: Terson Rigaud
+      license: CC BY 4.0
+---
+import GuideStatus from '../../../components/GuideStatus.astro';
+import Checklist from '../../../components/Checklist.astro';
+import GuideReferences from '../../../components/GuideReferences.astro';
+import DiagramLegend from '../../../components/DiagramLegend.astro';
+import ManifestRenderDiagram from '../../../components/diagrams/ManifestRenderDiagram.astro';
+
+A label added to "every object" breaks the next deploy, because it also landed in the Deployment's selector. A
+config change sits in the cluster for a week and no pod ever reads it. Someone ran `kubectl edit` in production and
+nobody knows what is really running.
+
+None of these are bugs in your Java code. They come from how the manifests are written, varied per environment
+and applied. This guide covers that part. What the Deployment itself should contain is in
+[Deploying to Kubernetes](/guides/kubernetes-deployment/).
+
+<GuideStatus guide="kubernetes-manifests" />
+
+<a id="man-packaging"></a>
+
+## 1. Plain YAML, Helm or Kustomize: which one should I use?
+
+**In short:** Kustomize for a service your team deploys itself. Helm when other people install it with their own
+values. Plain YAML for a small set of stable files.
+
+### What's going on
+
+All three tools end in the same place: YAML documents sent to the Kubernetes API server. Helm and Kustomize are
+only different ways of writing that YAML. Think of them as two recipe styles for the same dish: the cluster eats
+the dish, never the recipe.
+
+<ManifestRenderDiagram />
+<DiagramLegend items={['recommended', 'context']} />
+
+So the choice is about how your team works, not about what runs. Kustomize patches plain YAML, so what you read
+is close to what the cluster gets. Helm adds real parameters, a typed values file and a versioned package, at the
+cost of Go templates that are hard to review. Plain YAML is exactly what the API server receives but every
+environment becomes a copy.
+
+### Do this
+
+1. For your own service, use Kustomize. The Initializer will generate Kustomize.
+2. Pick one tool per service and write the choice down.
+3. Whatever you pick, review and validate the rendered YAML (`kustomize build` or `helm template`), not the
+   templates.
+
+### When this is not for you
+
+- Many teams install the same package with their own values or you publish it to others: use a Helm chart with
+  a `values.schema.json`.
+- You need to patch a third party chart: keep it in Helm and change as little as you can around it.
+
+<a id="man-overlays"></a>
+
+## 2. How do I change a few values per environment without copying everything?
+
+**In short:** one Kustomize base, optional components and a small overlay per environment.
+
+```text
+base/           complete, no environment in it
+components/     optional features, mixed in by an overlay
+overlays/dev/   namespace, values, patches
+overlays/prod/
+```
+
+### What's going on
+
+Copying a folder per environment works until dev and prod drift apart without anyone noticing. Kustomize keeps
+one complete base and lets each environment change only what differs: the namespace, a few values, the image and
+the replica range.
+
+Components (`kind: Component`) are optional features an overlay switches on, such as workload identity or a
+public route. Without them, those features end up copied into each overlay or forced into the base.
+
+Kustomize 5 deprecated `commonLabels`, `patchesStrategicMerge`, `patchesJson6902`, `vars` and `imageTags`. They
+still work and print a warning but they will not exist in the next API version.
+
+### Do this
+
+1. Keep the base complete and free of environment details: no namespace, no image digest, no secrets.
+2. Put each optional feature in a component and list it in the overlays that need it.
+3. Use `labels`, `patches` and `replacements` only. `replacements` copies a value from one object into others
+   without string templating.
+4. Run `kustomize edit fix` to move old files off the deprecated fields, then review the diff.
+
+### When this is not for you
+
+- Environments differ in dozens of values that change often: that is what Helm values are for.
+- A single environment: plain YAML may be enough.
+
+<a id="man-labels"></a>
+
+## 3. Which labels go on every object and which go in the selector?
+
+**In short:** the recommended `app.kubernetes.io/*` labels on every object. The selector uses only name, instance
+and component, never the version.
+
+```yaml
+selector:
+  matchLabels:
+    app.kubernetes.io/name: orders-service
+    app.kubernetes.io/instance: orders-service
+    app.kubernetes.io/component: api
+```
+
+### What's going on
+
+A Deployment's selector is how it finds its own pods. Kubernetes never lets you change it after creation. Put
+a label that changes in it, such as the version and the next apply fails with `field is immutable`.
+
+The classic way to get there by accident is Kustomize's old `commonLabels`, which also rewrote selectors. Its
+replacement, `labels`, leaves selectors alone unless you ask.
+
+`component` is in the selector for a reason: a migration Job or a test pod often shares the service's name and
+instance. Without `component`, the Service could send traffic to the Job's pod.
+
+### Do this
+
+1. Put `app.kubernetes.io/name`, `instance`, `component`, `version`, `part-of` and `managed-by` on every object.
+2. Keep the selector to name, instance and component.
+3. In Kustomize, use `labels` with `includeSelectors: false`, plus `includeTemplates: true` where pod templates
+   need the label.
+4. Carry the environment in the namespace, not in a new `app.kubernetes.io/*` label. That prefix is reserved.
+
+### When this is not for you
+
+- A Deployment that already has a different selector: changing it means recreating the Deployment once. Plan that
+  step, do not discover it during a release.
+
+<a id="man-config-rollout"></a>
+
+## 4. Why did my config change not reach the pods?
+
+**In short:** a container reads its environment only when it starts. Make every config change start new pods.
+
+### What's going on
+
+When you change a ConfigMap that a pod uses through `envFrom`, the running pods keep the old values. Nothing
+restarts them, because the pod template did not change.
+
+Each tool has its own fix. Kustomize's `configMapGenerator` adds a hash of the content to the ConfigMap name, so a
+new value means a new name, a changed pod template and a rollout. Helm uses a `checksum/config` annotation on the
+pod template for the same effect. Plain YAML has neither.
+
+### Do this
+
+1. In Kustomize, generate ConfigMaps with `configMapGenerator`. Never set `disableNameSuffixHash`: the hash is the
+   feature.
+2. In Helm, add a `checksum/config` annotation computed from the ConfigMap template.
+3. With plain YAML, add `kubectl rollout restart` to the pipeline after a config change.
+
+### When this is not for you
+
+- The old generated ConfigMaps pile up. A GitOps controller prunes them; plain `kubectl apply` does not.
+
+<a id="man-image-digest"></a>
+
+## 5. How do I make sure the cluster runs the image I tested?
+
+**In short:** pin the image by digest in production, never by tag.
+
+```sh
+kustomize edit set image orders-service=myregistry.azurecr.io/orders-service@sha256:<digest>
+```
+
+### What's going on
+
+A tag is a name someone can move. The same `1.3.2` can point to a different image tomorrow. A digest is the hash
+of the image's content, so it can only ever mean one image: the one CI built, scanned and tested.
+
+Kustomize's `images` transformer writes `repo@sha256:…` when you give it a `digest`. If you set both a tag and a
+digest, you get `repo:tag@sha256:…` and the digest wins when the image is pulled.
+
+### Do this
+
+1. In the prod overlay, set the image with a `digest`.
+2. Let CI write it with `kustomize edit set image` after it builds and pushes the image.
+3. In a Helm chart, take an `image.digest` value and use `repo@sha256:…` when it is set.
+
+### When this is not for you
+
+- A local or dev loop where you rebuild the same tag constantly: a tag is fine there.
+
+<a id="man-server-side-apply"></a>
+
+## 6. How should I apply manifests to the cluster?
+
+**In short:** with server-side apply and a named field manager. Never set `spec.replicas` when an HPA scales
+the Deployment.
+
+```sh
+kustomize build overlays/prod | kubectl apply --server-side --field-manager=orders-ci -f -
+```
+
+### What's going on
+
+With server-side apply, the API server records which tool owns each field. If another manager owns a field you
+try to change, the apply is rejected instead of silently overwriting it. That is how your pipeline and the HPA
+share a Deployment without fighting: the HPA owns the replica count, so the manifests must not set it.
+
+`kubectl` still defaults to the older client-side apply, so you have to ask for server-side. And `kubectl apply`
+does not delete objects you removed from Git: its pruning is still alpha.
+
+### Do this
+
+1. Apply with `--server-side` and a fixed `--field-manager` name.
+2. Leave `spec.replicas` out of every manifest that an HPA manages.
+3. Detect drift in CI with `kubectl diff --server-side` using the same field manager.
+4. To delete objects removed from Git, use a GitOps controller, Helm or an explicit delete step.
+
+### When this is not for you
+
+- Helm 4 already applies server-side for new releases. A release created by Helm 3 stays client-side until you
+  move it once, deliberately.
+- A GitOps controller applies for you: turn on its server-side option instead.
+
+<a id="man-validation"></a>
+
+## 7. How do I catch broken manifests before they reach a cluster?
+
+**In short:** render every environment in CI and check the rendered YAML with kubeconform, kube-linter,
+`trivy config` and pluto.
+
+### What's going on
+
+Most packaging mistakes do not break a build. A chart template drops `readOnlyRootFilesystem` when one value is
+unset. An overlay sets a field with a typo that Kubernetes would reject at deploy time. The only place to catch
+them all is the output, so the checks run on the rendered YAML.
+
+Each tool catches something different:
+
+| Tool | Catches |
+| ---- | ------- |
+| `kubeconform -strict` | Unknown fields, wrong types, duplicate keys, also in custom resources when given their schemas |
+| kube-linter | Missing probes, writable root filesystem, privilege, dangling Services |
+| `trivy config` | Security misconfigurations |
+| pluto | APIs deprecated or removed in a target Kubernetes version |
+
+### Do this
+
+1. Render each environment in CI: `kustomize build overlays/<env>` or `helm template` with each values file.
+2. Run `kubeconform -strict` for Kubernetes 1.36 and 1.37, with schemas for the custom resources you use, such as
+   Gateway API's `HTTPRoute`.
+3. Run kube-linter and `trivy config`. Give every suppression a written reason.
+4. Run pluto against the newest Kubernetes version you support.
+5. For a Helm chart, add `helm lint --strict` and a `values.schema.json` with `additionalProperties: false`, so a
+   typo in a value is an error.
+
+### When this is not for you
+
+- Do not use kubeconform's `-ignore-missing-schemas`: it hides typos in custom resources. Add the schema instead.
+
+## Put it all together
+
+Everything above lives in one folder next to the service and one job in CI.
+
+### The layout
+
+- `base/`: the Deployment, Service, ServiceAccount, HPA, PodDisruptionBudget and NetworkPolicies, with the
+  recommended labels and a `configMapGenerator`, no namespace and no image digest (steps 2, 3 and 4).
+- `components/`: one folder per optional feature, each a `kind: Component` (step 2).
+- `overlays/<env>/`: the namespace, the environment's values, the image by digest and small patches (steps 2 and
+  5).
+
+### In CI
+
+- Render every overlay with `kustomize build` (step 7).
+- Check the output with kubeconform, kube-linter, `trivy config` and pluto (step 7).
+- Set the image digest with `kustomize edit set image` once the image is pushed (step 5).
+- Apply with `kubectl apply --server-side --field-manager=<name>` or let a GitOps controller do it (step 6).
+
+## Checklist
+
+<Checklist guide="kubernetes-manifests" />
+
+## References
+
+<GuideReferences guide="kubernetes-manifests" />

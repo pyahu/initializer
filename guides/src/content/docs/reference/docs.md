@@ -319,6 +319,64 @@ Baseline **v0.1-b1**. Every link points to the documentation for the version in 
 
 ## By guide
 
+### [Configuration and secrets](/guides/configuration/)
+
+- [Application properties appendix](https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html)
+- [Actuator (production-ready features)](https://docs.spring.io/spring-boot/4.1/reference/actuator/index.html)
+- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes)
+- [Actuator REST API](https://docs.spring.io/spring-boot/4.1/api/rest/actuator/index.html)
+
+### [The container image and supply chain](/guides/container-image/)
+
+- [Container images](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html)
+- [Efficient container images (layering)](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html)
+- [Dockerfiles](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html)
+- [Cloud Native Buildpacks](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html)
+- [Efficient deployments](https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html)
+- [Gradle plugin: packaging OCI images](https://docs.spring.io/spring-boot/4.1/gradle-plugin/packaging-oci-image.html)
+- [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect)
+- [SLSA spec v1.2 (current; /spec/ and /spec/latest/ both redirect to v1.2)](https://slsa.dev/spec/v1.2/)
+- [SLSA v1.2 Provenance](https://slsa.dev/spec/v1.2/provenance)
+- [Sigstore docs](https://docs.sigstore.dev/)
+- [cosign: signing containers](https://docs.sigstore.dev/cosign/signing/signing_with_containers/)
+- [cosign: verifying](https://docs.sigstore.dev/cosign/verifying/verify/)
+- [cosign: in-toto attestations](https://docs.sigstore.dev/cosign/verifying/attestation/)
+- [cosign release v3.1.3](https://github.com/sigstore/cosign/releases/tag/v3.1.3)
+- [Syft docs (Anchore OSS site)](https://oss.anchore.com/docs/guides/sbom/)
+- [Syft CLI reference](https://oss.anchore.com/docs/reference/syft/cli/)
+- [Trivy docs](https://trivy.dev/docs/v0.76/guide/)
+- [Trivy release v0.76.0](https://github.com/aquasecurity/trivy/releases/tag/v0.76.0)
+- [Renovate docs](https://docs.renovatebot.com/)
+- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/)
+
+### [The database in production](/guides/database/)
+
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html)
+- [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.1/reference/data/sql.html)
+- [Database initialization (Liquibase)](https://docs.spring.io/spring-boot/4.1/how-to/data-initialization.html)
+- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html)
+- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html)
+- [What is a changelog (Community)](https://docs.liquibase.com/community/user-guide-5-0-4/what-is-a-changelog)
+- [Install with Spring Boot (Community)](https://docs.liquibase.com/community/get-started-5-0-4/install-liquibase-with-spring-boot)
+- [Connect with PostgreSQL (Community)](https://docs.liquibase.com/community/integration-guide-5-0-4/connect-liquibase-with-postgresql)
+- [Community 5.0.3 release notes](https://docs.liquibase.com/community/release-notes/liquibase-community-5-0-3-release-notes)
+- [Documentation](https://www.postgresql.org/docs/18/index.html)
+- [Release 18 notes](https://www.postgresql.org/docs/18/release-18.html)
+- [pgJDBC documentation](https://jdbc.postgresql.org/documentation/)
+- [Testcontainers for Java docs](https://java.testcontainers.org/)
+- [Postgres module](https://java.testcontainers.org/modules/databases/postgres/)
+
+### [HTTP clients and resilience](/guides/http-clients/)
+
+- [Migration guide 3.x to 4.0 (wiki)](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide)
+- [Application properties appendix](https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html)
+- [Tracing (names spring-boot-starter-opentelemetry, OTLP export)](https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html)
+- [Metrics (incl. #actuator.metrics.export.otlp)](https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html)
+- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads)
+- [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html)
+- [7.0 release notes (wiki, also covers upgrading)](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes)
+- [Semconv HTTP spans](https://opentelemetry.io/docs/specs/semconv/http/http-spans/)
+
 ### [The JVM in containers](/guides/jvm-in-containers/)
 
 - [java launcher tool reference](https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html)
@@ -350,6 +408,28 @@ Baseline **v0.1-b1**. Every link points to the documentation for the version in 
 - [Pod lifecycle (graceful termination)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 - [Resource management](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
+### [Deploying to Kubernetes](/guides/kubernetes-deployment/)
+
+- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes)
+- [Probes (concept)](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/)
+- [Configure liveness/readiness/startup probes (task)](https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+- [Disruptions (PDB concept)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/disruptions/)
+- [Configure a PodDisruptionBudget](https://v1-36.docs.kubernetes.io/docs/tasks/run-application/configure-pdb/)
+- [Pod topology spread constraints](https://v1-36.docs.kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
+- [Pod lifecycle (graceful termination)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+- [Resource management](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
+### [Kubernetes manifests: plain, Helm or Kustomize](/guides/kubernetes-manifests/)
+
+- [Docs home](https://v1-36.docs.kubernetes.io/docs/home/)
+- [Kustomize via kubectl (task)](https://v1-36.docs.kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/)
+- [CHANGELOG 1.36](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.36.md)
+- [Kustomize reference](https://kubectl.docs.kubernetes.io/references/kustomize/)
+- [kustomization.yaml reference](https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/)
+- [Release kustomize/v5.8.3](https://github.com/kubernetes-sigs/kustomize/releases/tag/kustomize%2Fv5.8.3)
+- [Trivy docs](https://trivy.dev/docs/v0.76/guide/)
+- [Trivy release v0.76.0](https://github.com/aquasecurity/trivy/releases/tag/v0.76.0)
+
 ### [Observability](/guides/observability/)
 
 - [Actuator (production-ready features)](https://docs.spring.io/spring-boot/4.1/reference/actuator/index.html)
@@ -375,6 +455,31 @@ Baseline **v0.1-b1**. Every link points to the documentation for the version in 
 - [Micrometer OTLP registry](https://docs.micrometer.io/micrometer/reference/1.17/implementations/otlp.html)
 - [Micrometer Observation](https://docs.micrometer.io/micrometer/reference/observation.html)
 - [Micrometer Tracing reference](https://docs.micrometer.io/tracing/reference/1.7/index.html)
+
+### [Security hardening](/guides/security/)
+
+- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes)
+- [OAuth2 (resource server auto-config)](https://docs.spring.io/spring-boot/4.1/reference/security/oauth2.html)
+- [Reference](https://docs.spring.io/spring-security/reference/7.1/index.html)
+- [OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/index.html)
+- [Resource Server JWT](https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/jwt.html)
+- [What's new in 7.1](https://docs.spring.io/spring-security/reference/7.1/whats-new.html)
+- [Pod Security Standards](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/)
+- [Pod Security Admission](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-admission/)
+- [NetworkPolicy](https://v1-36.docs.kubernetes.io/docs/concepts/services-networking/network-policies/)
+- [RFC 6750 Bearer Token Usage](https://www.rfc-editor.org/rfc/rfc6750.html)
+- [RFC 9068 JWT Profile for OAuth 2.0 Access Tokens](https://www.rfc-editor.org/rfc/rfc9068.html)
+- [RFC 9700 OAuth 2.0 Security BCP](https://www.rfc-editor.org/rfc/rfc9700.html)
+
+### [Virtual threads and concurrency](/guides/virtual-threads/)
+
+- [Virtual threads guide (Core Libraries)](https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html)
+- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444)
+- [JEP 491: Synchronize Virtual Threads without Pinning](https://openjdk.org/jeps/491)
+- [JEP 505: Structured Concurrency (Fifth Preview), the preview in JDK 25](https://openjdk.org/jeps/505)
+- [JEP 506: Scoped Values (final)](https://openjdk.org/jeps/506)
+- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads)
+- [Task execution (virtual-thread executors)](https://docs.spring.io/spring-boot/4.1/reference/features/task-execution-and-scheduling.html)
 
 ## Upstream llms.txt
 

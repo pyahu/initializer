@@ -1,0 +1,92 @@
+# Evidence records for the database guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-db-connection-budget-1
+  card: db-connection-budget
+  claim: "Every pod has its own pool, so during a rolling update the database sees the pools of the running, surge and draining pods together."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Arithmetic and Kubernetes rollout behaviour from the source guide."
+  reason: "No test runs this yet: the fixture has no database."
+- id: ev-db-connection-budget-2
+  card: db-connection-budget
+  claim: "A CONNECTION LIMIT on the runtime role makes a pod that would overrun the budget fail with a clear error instead of exhausting the server."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "PostgreSQL documented behaviour."
+  reason: "No test runs this yet: the fixture has no database."
+- id: ev-db-pool-timeouts-1
+  card: db-pool-timeouts
+  claim: "HikariCP waits 30 seconds for a connection by default; connection-timeout of 2000 to 5000 ms turns pool saturation into fast errors."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Default read from the HikariCP 7.0.2 source in the source guide."
+  reason: "No load test against a database runs in this repository yet."
+- id: ev-db-pool-timeouts-2
+  card: db-pool-timeouts
+  claim: "The spring.datasource.hikari timeouts are Long values in milliseconds in Spring Boot 4.1.1, so 3s does not bind."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Spring Boot 4.1.1 configuration metadata, not from a run."
+  reason: "No test binds these properties yet: the fixture has no data source."
+- id: ev-db-pool-timeouts-3
+  card: db-pool-timeouts
+  claim: "HikariCP 7 pings idle connections every 2 minutes by default (keepalive-time); HikariCP 5 had it off."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the HikariCP source in the source guide."
+  reason: "No test runs this yet: the fixture has no database."
+- id: ev-db-query-timeouts-1
+  card: db-query-timeouts
+  claim: "Inside a transaction with a timeout, JdbcTemplate sets each statement timeout to the time left in the transaction, overriding spring.jdbc.template.query-timeout."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from DataSourceUtils.applyTimeout in Spring Framework 7.0.9; not run."
+  reason: "No test runs this yet: the fixture has no database."
+- id: ev-db-query-timeouts-2
+  card: db-query-timeouts
+  claim: "A statement_timeout set on the runtime role cancels a query on the server even when the client is gone."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "PostgreSQL documented behaviour."
+  reason: "No test runs this yet: the fixture has no database."
+- id: ev-db-roles-1
+  card: db-roles
+  claim: "With the migration user owning the schema and default privileges for the runtime user, the runtime user can insert but DROP TABLE fails with must be owner of table."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Tested by the source guide on PostgreSQL 17, not in this repository."
+  reason: "No test runs this yet: the fixture has no database."
+- id: ev-db-migrations-1
+  card: db-migrations
+  claim: "With spring.liquibase.enabled true, the Spring Boot default, every pod runs the changelog at startup and Liquibase serialises them with its DATABASECHANGELOGLOCK table."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Default and table name read from the Spring Boot Liquibase configuration metadata; locking behaviour from the Liquibase documentation."
+  reason: "No test runs this yet: the fixture has no database or Liquibase."
+- id: ev-db-expand-contract-1
+  card: db-expand-contract
+  claim: "During a rolling update the old and new release run against the same schema, so each schema change must work with both."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from Kubernetes rolling updates; the source guide ran the full rename sequence on PostgreSQL 17 with Flyway, not Liquibase."
+  reason: "No migration test runs in this repository yet."
+- id: ev-db-expand-contract-2
+  card: db-expand-contract
+  claim: "CREATE INDEX blocks writes for the whole build while CREATE INDEX CONCURRENTLY does not. The concurrent form cannot run inside a transaction."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "PostgreSQL documented behaviour."
+  reason: "No migration test runs in this repository yet."
+- id: ev-db-testing-1
+  card: db-testing
+  claim: "Testcontainers 2.0.5 provides org.testcontainers.postgresql.PostgreSQLContainer in the renamed testcontainers-postgresql artifact. @ServiceConnection points the data source at it."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Testcontainers 2.0.5 artifacts in the source guide."
+  reason: "No database test runs in this repository yet."
+- id: ev-db-pool-metrics-1
+  card: db-pool-metrics
+  claim: "HikariCP publishes hikaricp.connections.pending, timeout, active, max, usage and acquire through Micrometer, tagged with the pool name."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Names read from HikariCP MicrometerMetricsTracker in the source guide."
+  reason: "No test checks these metrics yet: the fixture has no data source."

@@ -138,9 +138,10 @@ func ParseGuide(path string, s *Schemas, retiredCards map[string]string) (*Guide
 	for i := end + 1; i < len(lines); i++ {
 		l := lines[i]
 		n := i + 1
-		if strings.HasPrefix(l, "```") {
+		// Fences may be indented, as inside a list item.
+		if fl := strings.TrimLeft(l, " "); strings.HasPrefix(fl, "```") {
 			if !inFence {
-				lang := strings.TrimSpace(strings.TrimPrefix(l, "```"))
+				lang := strings.TrimSpace(strings.TrimPrefix(fl, "```"))
 				if lang == "mermaid" {
 					fail(n, "Mermaid is not used; draw the diagram with the kit")
 				}

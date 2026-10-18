@@ -1,0 +1,63 @@
+---
+// Stack: where a Spring Boot property value comes from, highest precedence first (abridged from the Boot reference).
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="cfg-property-sources"
+  caption="Where a value comes from: Spring reads the sources from the top and the first one that has the key wins."
+  description="Eight property sources stacked from highest to lowest precedence, with an arrow down the left side: Spring reads from the top and the first source that has the key wins. 1, command line arguments. 2, SPRING_APPLICATION_JSON. 3, Java system properties. 4, recommended: OS environment variables, which carry the per environment values from a ConfigMap through envFrom. 5, recommended: config data imports, such as configtree for secret files mounted under /mnt/secrets; a stray environment variable with the same relaxed name outranks a mounted secret. 6, failure, marked with a cross: application-prod.yaml and other environment profiles, which never run before production. 7, recommended: application.yaml in the jar, with production safe defaults for every environment. 8, @DefaultValue and field defaults.">
+  <svg viewBox="0 0 1000 470">
+    <defs>
+      <marker id="cfg-property-sources-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="cfg-property-sources-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+      <marker id="cfg-property-sources-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-fail" /></marker>
+    </defs>
+    <text x="70" y="36" class="dg-group">PROPERTY SOURCES · FIRST MATCH WINS</text>
+
+    <path d="M40 64 V430" class="dg-line" marker-end="url(#cfg-property-sources-arrow)" />
+    <text x="30" y="58" class="dg-note">high</text>
+    <text x="30" y="456" class="dg-note">low</text>
+
+    <rect x="70" y="56" width="490" height="38" rx="6" class="dg-box" />
+    <text x="86" y="81" class="dg-title">Command line arguments</text>
+
+    <rect x="70" y="104" width="490" height="38" rx="6" class="dg-box" />
+    <text x="86" y="129" class="dg-title">SPRING_APPLICATION_JSON</text>
+
+    <rect x="70" y="152" width="490" height="38" rx="6" class="dg-box" />
+    <text x="86" y="177" class="dg-title">Java system properties</text>
+
+    <rect x="70" y="200" width="490" height="38" rx="6" class="dg-box dg-emphasis" />
+    <text x="86" y="225" class="dg-title">OS environment variables</text>
+    <text x="544" y="225" text-anchor="end" class="dg-detail">ConfigMap via envFrom</text>
+
+    <rect x="70" y="248" width="490" height="38" rx="6" class="dg-box dg-emphasis" />
+    <text x="86" y="273" class="dg-title">Config data imports</text>
+    <text x="544" y="273" text-anchor="end" class="dg-detail">configtree: secret files</text>
+
+    <rect x="70" y="296" width="490" height="38" rx="6" class="dg-box dg-fail" />
+    <text x="86" y="321" class="dg-title">✕ application-prod.yaml</text>
+    <text x="544" y="321" text-anchor="end" class="dg-detail">environment profiles</text>
+
+    <rect x="70" y="344" width="490" height="38" rx="6" class="dg-box dg-emphasis" />
+    <text x="86" y="369" class="dg-title">application.yaml in the jar</text>
+    <text x="544" y="369" text-anchor="end" class="dg-detail">safe defaults</text>
+
+    <rect x="70" y="392" width="490" height="38" rx="6" class="dg-box" />
+    <text x="86" y="417" class="dg-title">@DefaultValue and field defaults</text>
+
+    <path d="M560 219 H600" class="dg-line dg-accent" marker-end="url(#cfg-property-sources-accent)" />
+    <text x="610" y="214" class="dg-note dg-accent">per environment values,</text>
+    <text x="610" y="230" class="dg-note dg-accent">one ConfigMap per environment</text>
+
+    <path d="M560 267 H600" class="dg-line dg-accent" marker-end="url(#cfg-property-sources-accent)" />
+    <text x="610" y="262" class="dg-note dg-accent">secrets as files under /mnt/secrets</text>
+    <text x="610" y="278" class="dg-note">a stray variable with the same name wins</text>
+
+    <path d="M560 315 H600" class="dg-line dg-fail" marker-end="url(#cfg-property-sources-fail)" />
+    <text x="610" y="320" class="dg-note dg-fail">✕ never runs before production</text>
+
+    <path d="M560 363 H600" class="dg-line dg-accent" marker-end="url(#cfg-property-sources-accent)" />
+    <text x="610" y="358" class="dg-note dg-accent">the same defaults in every</text>
+    <text x="610" y="374" class="dg-note dg-accent">environment, production safe</text>
+  </svg>
+</Diagram>

@@ -1,0 +1,366 @@
+---
+title: The container image and supply chain
+description: Build a small layered image for a Spring Boot service, run it without root and know what it ships and who built it.
+tableOfContents: { maxHeadingLevel: 2 }
+guide:
+  id: container-image
+  prefix: IMG
+  state: draft
+  baseline: v0.1-b1
+  components: [temurin-jdk-image, temurin-jre-image, spring-boot, gradle, cyclonedx-gradle-plugin, syft, trivy, cosign, renovate, slsa]
+  verification: null
+  questions:
+    - id: IMG-Q1
+      text: "Why does every release push the whole app again?"
+      answeredIn: img-layers
+    - id: IMG-Q2
+      text: "Which base image should I start from?"
+      answeredIn: img-base-image
+    - id: IMG-Q3
+      text: "How do I stop the base image from changing under me?"
+      answeredIn: img-pinning
+    - id: IMG-Q4
+      text: "How do I run the app without root on a read-only disk?"
+      answeredIn: img-non-root
+    - id: IMG-Q5
+      text: "How do I keep secrets out of the image?"
+      answeredIn: img-build-context
+    - id: IMG-Q6
+      text: "How do I know which libraries an image ships?"
+      answeredIn: img-sbom
+    - id: IMG-Q7
+      text: "How do I catch known vulnerabilities before they ship?"
+      answeredIn: img-scanning
+    - id: IMG-Q8
+      text: "How does the cluster know an image is really ours?"
+      answeredIn: img-signing
+  sources:
+    - title: "07 · Container image and supply chain"
+      origin: spring-boot-production-guides/07-container-image-and-supply-chain.md
+      revision: sha256:99283e1d1f86f14e54113d2cccb156e9b6eabd55d07d8ec29a730887723d17af
+      date: "2026-10-04"
+      author: Terson Rigaud
+      license: CC BY 4.0
+---
+import GuideStatus from '../../../components/GuideStatus.astro';
+import Recipe from '../../../components/Recipe.astro';
+import Checklist from '../../../components/Checklist.astro';
+import GuideReferences from '../../../components/GuideReferences.astro';
+import DiagramLegend from '../../../components/DiagramLegend.astro';
+import ImageLayersDiagram from '../../../components/diagrams/ImageLayersDiagram.astro';
+
+A security alert lands: a library with a known hole is out there. Which of your services ship it? Nobody knows,
+because the images are opaque boxes. Meanwhile every small commit pushes 50 MB, the app runs as root and the base
+image quietly changed its JDK last night.
+
+The image is the thing you deploy, scan, sign and roll back. This guide gives it a shape you can trust: small layers,
+no root, pinned inputs and a record of what is inside and who built it. JVM flags and the AOT cache live in
+[The JVM in containers](/guides/jvm-in-containers/).
+
+<GuideStatus guide="container-image" />
+
+<a id="img-layers"></a>
+
+## 1. Why does every release push the whole app again?
+
+**In short:** split the Spring Boot jar into layers, ordered from what changes least to what changes most.
+
+```sh
+java -Djarmode=tools -jar application.jar extract --layers --destination extracted
+```
+
+### What's going on
+
+A container image is a stack of layers and a registry only stores and sends the layers that changed. Copy the
+Spring Boot jar as one file and your code and every library sit in the same layer. Change one line and the whole
+thing, about 49 MB in our example service, is pushed again.
+
+Spring Boot can split the jar for you. Libraries go in one layer, your code in another. Since libraries change far
+less often than code, a normal commit only pushes the small top layers.
+
+<ImageLayersDiagram />
+<DiagramLegend items={['recommended', 'context', 'failure']} />
+
+### Do this
+
+1. Use a Dockerfile with several stages: one builds the jar, one extracts it, the last one only runs it. The final
+   image has no JDK, no Gradle and no source code.
+2. Extract with `-Djarmode=tools ... extract --layers`, without `--launcher`. That layout is the one the AOT cache can
+   use.
+3. Copy the layers in this order: `dependencies`, `spring-boot-loader`, `snapshot-dependencies`, `application`.
+4. Cache Gradle downloads with `RUN --mount=type=cache,target=/root/.gradle`, so builds do not fetch everything again.
+
+### When this is not for you
+
+- Old Dockerfiles use `-Djarmode=layertools`. It is gone in Spring Boot 4.1 and fails with `Unsupported jarmode
+  'layertools'`. Use `tools`.
+- Many services and no wish to maintain Dockerfiles: Buildpacks (`./gradlew bootBuildImage`) build layered images
+  too. Read what its memory calculator does first: at a 1 GiB limit it gave the heap about 41%.
+- Jib builds without Docker but cannot run the AOT training run.
+
+<a id="img-base-image"></a>
+
+## 2. Which base image should I start from?
+
+**In short:** Eclipse Temurin JRE on Ubuntu, with the Ubuntu codename in the tag.
+
+```dockerfile
+FROM eclipse-temurin:25.0.4.1_1-jre-noble@sha256:37c16059e13b3dfa59f4c24af72dd0f7798d5f1b06647e306feb914f4163a721
+```
+
+### What's going on
+
+The base image brings the operating system and the Java runtime. A JRE image is enough to run the app: compiling
+happens in an earlier stage. Temurin on Ubuntu keeps a shell and a package manager, which makes the build steps and
+debugging simple.
+
+The codename matters. The plain `25-jre` tag moved from Ubuntu 24.04 to Ubuntu 26.04 during 2026. With `noble` in
+the tag, you stay on 24.04 until you choose to move.
+
+| Base | Choose it when | What you give up |
+| ---- | -------------- | ---------------- |
+| Temurin JRE `noble` | The default | A shell and apt add attack surface |
+| Distroless `java25` | You want no shell at all | Build steps need exec form; debugging only through `kubectl debug` |
+| Chainguard JRE | Your security team counts CVEs | The free tier only has `latest`, which is not Java 25 |
+| UBI OpenJDK runtime | You need Red Hat support | A larger image |
+| Alpine | Size above all | It uses musl, which breaks some native libraries |
+
+### Do this
+
+1. Start from `eclipse-temurin:25.0.4.1_1-jre-noble` for the runtime stage and the matching `-jdk-noble` image for the
+   build stages.
+2. Add company CA certificates at build time or mount a truststore. Your own `ENTRYPOINT` replaces the Temurin
+   script that would import them.
+
+### When this is not for you
+
+- The security team scores images by shell or CVE count: choose distroless or Chainguard and plan debugging with
+  ephemeral containers.
+
+<a id="img-pinning"></a>
+
+## 3. How do I stop the base image from changing under me?
+
+**In short:** pin every image by tag and digest and let a bot open a pull request when the digest moves.
+
+```dockerfile
+FROM eclipse-temurin:25.0.4.1_1-jre-noble@sha256:37c16059e13b3dfa59f4c24af72dd0f7798d5f1b06647e306feb914f4163a721
+```
+
+### What's going on
+
+A tag is a label someone else can move. A digest is the exact content. Pin only the tag and the image you build
+tomorrow can differ from today's, with a new OS patch or even a new JDK. Pin the digest and nothing changes until
+you say so.
+
+But security patches still need to arrive. That is the bot's job: Renovate or Dependabot watches the tag and opens a
+pull request when its digest changes. The tag says what you meant; the digest says what you got.
+
+### Do this
+
+1. Write every base image as `tag@sha256:digest`, in plain `FROM` lines the bots can read.
+2. Turn on digest updates: Renovate with `docker:pinDigests` or Dependabot with `package-ecosystem: docker`.
+3. Block JDK major bumps (Renovate `allowedVersions: "<26"`), so leaving Java 25 is a deliberate change.
+4. Deploy by digest too: the Deployment, the migration Job and every CronJob use the digest CI pushed, never a tag.
+5. Pin GitHub Actions by commit SHA.
+
+### When this is not for you
+
+- It always applies. One cost: pinned digests need someone to merge the bot's pull requests each week.
+
+<a id="img-non-root"></a>
+
+## 4. How do I run the app without root on a read-only disk?
+
+**In short:** end the Dockerfile with a numeric user and give the app a writable `/tmp` and nothing else.
+
+```dockerfile
+USER 10001:10001
+```
+
+### What's going on
+
+Temurin images run as root unless you say otherwise. If someone breaks into the app, root makes the next step much
+easier. A read-only root filesystem closes another door: nothing can be written into the image at runtime.
+
+The catch: the JVM and Tomcat need one writable place. Tomcat creates its work directory in `/tmp` and without it
+the app does not start ("Unable to start web server"). Tools like `jcmd` and crash logs also use `/tmp`. So everything
+is read-only except a small, separate `/tmp`.
+
+### Do this
+
+1. Create user and group `10001` in the runtime stage and end with `USER 10001:10001`. A number lets Kubernetes check
+   `runAsNonRoot` without guessing.
+2. Use the exec form `ENTRYPOINT ["java", ...]`, so Java is process 1 and gets the stop signal.
+3. In the Deployment set `readOnlyRootFilesystem: true` and mount `/tmp` as an `emptyDir` with a `sizeLimit`.
+
+### When this is not for you
+
+- Avoid `medium: Memory` for `/tmp` unless you count its size in the memory limit: those pages are charged to the
+  container.
+
+<a id="img-build-context"></a>
+
+## 5. How do I keep secrets out of the image?
+
+**In short:** send Docker only the files the build needs and pass build credentials as secret mounts.
+
+### What's going on
+
+`docker build` sends a folder to the builder, called the build context. With `COPY . .` everything in it can end up
+in a layer: a `.env` file, a keystore, a local config with passwords. Anyone who can pull the image can read them,
+even if a later step deletes the file.
+
+`ARG` and `ENV` are no safer: their values stay in the image history.
+
+### Do this
+
+1. Write `.dockerignore` as an allow list: ignore everything, then allow `gradlew`, `gradle/`, the build files and
+   `src/`.
+2. Copy files by name, never `COPY . .`.
+3. For build credentials, such as a private Maven repository, use a BuildKit secret mount
+   (`RUN --mount=type=secret,...`). Never `ARG` or `ENV`.
+
+### When this is not for you
+
+- It always applies. Runtime secrets do not belong in the image either: the app reads them when it starts.
+
+<a id="img-sbom"></a>
+
+## 6. How do I know which libraries an image ships?
+
+**In short:** write a software bill of materials (SBOM) for the app at build time and another one for the whole
+image.
+
+### What's going on
+
+An SBOM is the ingredients list of a piece of software, in a standard format (CycloneDX). With one per image, the
+question "which services ship this vulnerable library?" becomes a search instead of a week of digging.
+
+You need two. The CycloneDX Gradle plugin lists the Java libraries your app uses, exactly as Gradle resolved them.
+Syft scans the finished image and also lists the OS packages and the JRE.
+
+### Do this
+
+1. Apply the CycloneDX Gradle plugin (`org.cyclonedx.bom`) and run it as part of `build`. With the plugin applied,
+   Spring Boot also packs the app SBOM into the jar, under `META-INF/sbom/`.
+2. In CI, scan the image with Syft: `syft scan <image> -o cyclonedx-json=sbom.cdx.json`.
+3. Attach the image SBOM to the image as a signed attestation (step 8), not as a loose file in CI storage.
+
+### When this is not for you
+
+- Actuator can serve the SBOM at `/actuator/sbom`. Leave it off by default. If you need it, keep it on the
+  management port and require a login.
+
+<a id="img-scanning"></a>
+
+## 7. How do I catch known vulnerabilities before they ship?
+
+**In short:** fail the build on fixable high or critical findings and keep scanning images after they ship.
+
+```sh
+trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 <image>
+```
+
+### What's going on
+
+A scanner compares what is in the image with public lists of known vulnerabilities. Running it in CI stops new
+problems from shipping. But new vulnerabilities are published every day for images that already run, so a second
+scanner in the registry or the cluster checks them again later.
+
+In a Java image most findings are in the libraries, not the OS. In our example, a fresh Spring Boot image failed the
+gate on Tomcat and Jackson while the Ubuntu layer had nothing fixable. The fix was a Spring Boot patch upgrade.
+
+### Do this
+
+1. Add a Trivy gate in CI after the image build: high and critical, only those with a fix, exit code 1.
+2. Turn on a registry or cluster scanner that rescans images after the push.
+3. When the gate fails on a library, upgrade the Spring Boot patch version first.
+
+### When this is not for you
+
+- You already scan SBOMs: Grype can scan the SBOM from step 6 without pulling the image.
+
+<a id="img-signing"></a>
+
+## 8. How does the cluster know an image is really ours?
+
+**In short:** sign each image by digest in CI, attach its SBOM and build provenance and let the cluster reject
+unsigned images.
+
+```sh
+cosign sign --yes <image>@<digest>
+```
+
+### What's going on
+
+A registry accepts whatever anyone with push rights sends. A signature proves that your CI built this exact digest.
+With cosign keyless signing, CI signs with its own short lived identity from GitHub Actions, so there is no key to
+store or leak.
+
+Attestations go further. They are signed statements about the image: its SBOM and how it was built (SLSA
+provenance). The last piece is in the cluster: an admission policy refuses any image without a valid signature.
+
+### Do this
+
+1. After the push, sign by digest: `cosign sign --yes <image>@<digest>`.
+2. Attach the SBOM: `cosign attest --type cyclonedx --predicate sbom.cdx.json <image>@<digest>`.
+3. Add SLSA build provenance in the same workflow.
+4. Verify with `cosign verify`, naming the workflow identity (`--certificate-identity-regexp`) and the GitHub OIDC
+   issuer (`--certificate-oidc-issuer https://token.actions.githubusercontent.com`).
+5. Enforce it in the cluster with an admission policy, such as Kyverno or the Sigstore policy controller.
+
+### When this is not for you
+
+- Keyless signing writes your CI identity and digests to a public transparency log. If that is a problem, sign with a
+  managed key (for example Notation with Azure Key Vault).
+
+## Put it all together
+
+The example service's Dockerfile and build file already apply most of these steps; the rest happens in CI and in
+the Deployment.
+
+### The build stages
+
+The first two stages compile the jar with a Gradle cache and split it into layers (step 1). Both use the JDK image
+pinned by digest (steps 2 and 3).
+
+<Recipe id="img-build-stages" path="fixtures/single-hexagonal/Dockerfile" start="FROM eclipse-temurin:25.0.4.1_1-jdk-noble@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 AS build" end="RUN java -Djarmode=tools" lang="dockerfile" />
+
+**Check it:** `docker history single-hexagonal:ci` shows separate layers for the dependencies and the application;
+after a code change only the top layers are new.
+
+### The runtime user
+
+The runtime stage creates user 10001, runs as it and starts Java in exec form (step 4).
+
+<Recipe id="img-runtime-user" path="fixtures/single-hexagonal/Dockerfile" start="RUN groupadd --system --gid 10001 app" end="&& useradd" lang="dockerfile" />
+
+<Recipe id="img-user-entrypoint" path="fixtures/single-hexagonal/Dockerfile" start="USER 10001:10001" end="ENTRYPOINT [" lang="dockerfile" />
+
+**Check it:** `docker run --read-only --tmpfs /tmp --user 10001:10001 single-hexagonal:ci` starts and `/readyz`
+answers 200.
+
+### The app SBOM
+
+The CycloneDX plugin writes the app SBOM as JSON and `build` depends on it (step 6).
+
+<Recipe id="img-cyclonedx" path="fixtures/single-hexagonal/build.gradle.kts" start="tasks.cyclonedxBom {" end="}" lang="kotlin" />
+
+**Check it:** after `./gradlew build`, `build/sbom/bom.json` lists every library with its version.
+
+### In CI and the Deployment
+
+- A Trivy gate after the image build (step 7).
+- A Syft image SBOM, a cosign signature and SBOM attestation and SLSA provenance, all by digest (steps 6 and 8).
+- Renovate or Dependabot for base image digests and action SHAs (step 3).
+- The Deployment uses the image digest, `runAsNonRoot: true`, `readOnlyRootFilesystem: true` and a `/tmp` `emptyDir`
+  with a `sizeLimit` (steps 3 and 4).
+
+## Checklist
+
+<Checklist guide="container-image" />
+
+## References
+
+<GuideReferences guide="container-image" />

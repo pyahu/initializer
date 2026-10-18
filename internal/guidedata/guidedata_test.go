@@ -117,6 +117,10 @@ w
 
 1. d
 
+   ` + "```java" + `
+   class A { List<String> b; }
+   ` + "```" + `
+
 ### When this is not for you
 
 - n

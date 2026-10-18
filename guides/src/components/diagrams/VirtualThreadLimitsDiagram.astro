@@ -1,0 +1,67 @@
+---
+// Flow: requests on virtual threads, the carriers that run them and the limits that protect each resource.
+import Diagram from "../Diagram.astro";
+---
+<Diagram id="vt-limits"
+  caption="Virtual threads remove the thread limit, so each scarce resource needs its own limit."
+  description="Four stages from left to right. 1, requests: 2,000 requests arrive at once. 2, virtual threads: each request gets a virtual thread whose stack lives on the heap; a small set of carrier threads, one per CPU the container gets, runs the virtual threads that are not blocked. 3, limits, recommended: JDBC calls go through a HikariCP pool of 10 connections sized from the database budget, with a short connection timeout; HTTP calls to a downstream service go through a concurrency limit of 50, with timeouts on every call; CPU heavy work goes to a platform thread pool sized to the cores. 4, resources: PostgreSQL, whose max_connections is shared by every pod; the downstream service; the CPU. Failure, at the bottom: with platform threads, Tomcat's 200 worker threads throttled all of this by accident; with virtual threads nothing does, so without these limits thousands of calls pile up on 10 connections or on one fragile service and time out.">
+  <svg viewBox="0 0 1000 450">
+    <defs>
+      <marker id="vt-limits-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker" /></marker>
+      <marker id="vt-limits-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
+    </defs>
+    <text x="20" y="32" class="dg-group">1 · REQUESTS</text>
+    <text x="200" y="32" class="dg-group">2 · VIRTUAL THREADS</text>
+    <text x="470" y="32" class="dg-group">3 · LIMITS</text>
+    <text x="740" y="32" class="dg-group">4 · RESOURCES</text>
+
+    <rect x="20" y="130" width="140" height="86" rx="6" class="dg-box" />
+    <text x="36" y="158" class="dg-title">2,000</text>
+    <text x="36" y="182" class="dg-detail">requests</text>
+    <text x="36" y="202" class="dg-detail">at the same time</text>
+    <path d="M160 173 H198" class="dg-line" marker-end="url(#vt-limits-arrow)" />
+
+    <rect x="200" y="56" width="230" height="110" rx="6" class="dg-box" />
+    <text x="216" y="84" class="dg-title">2,000 virtual threads</text>
+    <text x="216" y="108" class="dg-detail">one per request</text>
+    <text x="216" y="128" class="dg-detail">stacks live on the heap</text>
+    <path d="M315 166 V206" class="dg-line" marker-end="url(#vt-limits-arrow)" />
+    <text x="324" y="192" class="dg-note">run on</text>
+    <rect x="200" y="208" width="230" height="96" rx="6" class="dg-box" />
+    <text x="216" y="236" class="dg-title">N carrier threads</text>
+    <text x="216" y="260" class="dg-detail">N = CPUs the container gets</text>
+    <text x="216" y="280" class="dg-detail">run threads that are not blocked</text>
+
+    <path d="M430 92 H468" class="dg-line dg-accent" marker-end="url(#vt-limits-accent)" />
+    <path d="M430 124 C 450 124, 448 197, 468 197" class="dg-line dg-accent" marker-end="url(#vt-limits-accent)" />
+    <path d="M430 150 C 452 150, 446 302, 468 302" class="dg-line dg-accent" marker-end="url(#vt-limits-accent)" />
+
+    <rect x="470" y="56" width="230" height="76" rx="6" class="dg-box dg-emphasis" />
+    <text x="486" y="84" class="dg-title">HikariCP pool = 10</text>
+    <text x="486" y="108" class="dg-detail">JDBC, short connection timeout</text>
+    <rect x="470" y="160" width="230" height="76" rx="6" class="dg-box dg-emphasis" />
+    <text x="486" y="188" class="dg-title">Concurrency limit = 50</text>
+    <text x="486" y="212" class="dg-detail">HTTP, timeouts on every call</text>
+    <rect x="470" y="264" width="230" height="76" rx="6" class="dg-box dg-emphasis" />
+    <text x="486" y="292" class="dg-title">Platform pool = cores</text>
+    <text x="486" y="316" class="dg-detail">CPU heavy work</text>
+
+    <path d="M700 94 H738" class="dg-line" marker-end="url(#vt-limits-arrow)" />
+    <path d="M700 198 H738" class="dg-line" marker-end="url(#vt-limits-arrow)" />
+    <path d="M700 302 H738" class="dg-line" marker-end="url(#vt-limits-arrow)" />
+    <rect x="740" y="56" width="238" height="76" rx="6" class="dg-box" />
+    <text x="756" y="84" class="dg-title">PostgreSQL</text>
+    <text x="756" y="108" class="dg-detail">max_connections, all pods</text>
+    <rect x="740" y="160" width="238" height="76" rx="6" class="dg-box" />
+    <text x="756" y="188" class="dg-title">Downstream service</text>
+    <text x="756" y="212" class="dg-detail">another team's API</text>
+    <rect x="740" y="264" width="238" height="76" rx="6" class="dg-box" />
+    <text x="756" y="292" class="dg-title">CPU</text>
+    <text x="756" y="316" class="dg-detail">parsing, maths, compression</text>
+
+    <rect x="200" y="360" width="778" height="80" rx="6" class="dg-box dg-fail" />
+    <text x="216" y="386" class="dg-title">✕ Without the limits</text>
+    <text x="216" y="410" class="dg-detail">Tomcat's 200 threads used to throttle these calls by accident. Now nothing does:</text>
+    <text x="216" y="430" class="dg-detail">thousands of calls wait on 10 connections or on one fragile service and time out.</text>
+  </svg>
+</Diagram>

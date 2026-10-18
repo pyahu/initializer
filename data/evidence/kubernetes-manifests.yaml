@@ -1,0 +1,50 @@
+# Evidence records for the kubernetes-manifests guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-man-packaging-1
+  card: man-packaging
+  claim: "Helm, Kustomize and plain YAML can render the same production resources, so the choice of tool does not change what runs in the cluster."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the source guide and upstream documentation."
+  reason: "The source guide proved this with a normalised diff of three renderings of one service; this repository has no manifests yet."
+- id: ev-man-overlays-1
+  card: man-overlays
+  claim: "A Kustomize base with components and per-environment overlays renders each environment without copying the base, using only labels, patches and replacements."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the source guide and upstream documentation."
+  reason: "The example service has no Kustomize base or overlays yet, so nothing renders them in CI."
+- id: ev-man-labels-1
+  card: man-labels
+  claim: "A selector limited to name, instance and component survives version changes, while adding a label to an existing selector fails with field is immutable."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the source guide and upstream documentation."
+  reason: "No test applies a Deployment twice with different labels; the example service has no manifests yet."
+- id: ev-man-config-rollout-1
+  card: man-config-rollout
+  claim: "A configMapGenerator hash or a checksum/config annotation changes the pod template when config changes, so the pods roll; a fixed ConfigMap name does not."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the source guide and upstream documentation."
+  reason: "No test changes a ConfigMap and watches the rollout; that needs a cluster and manifests the example service does not have yet."
+- id: ev-man-image-digest-1
+  card: man-image-digest
+  claim: "The Kustomize images transformer with a digest renders repo@sha256 references and kustomize edit set image updates it."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the source guide and upstream documentation."
+  reason: "No test renders an overlay and checks the image reference yet."
+- id: ev-man-server-side-apply-1
+  card: man-server-side-apply
+  claim: "Server-side apply with a named field manager records field ownership and leaving spec.replicas out lets an HPA scale without conflicts."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the source guide and upstream documentation."
+  reason: "Needs a cluster and an HPA. No cluster test runs in CI yet."
+- id: ev-man-validation-1
+  card: man-validation
+  claim: "kubeconform in strict mode with CRD schemas, kube-linter, trivy config and pluto catch invalid or risky rendered manifests before they reach a cluster."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the source guide and upstream documentation."
+  reason: "No CI job renders and validates manifests yet; the example service has no manifests."
