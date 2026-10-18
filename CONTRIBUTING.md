@@ -36,6 +36,15 @@ docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal
 go test -tags acceptance -count=1 -p 1 ./acceptance/...
 ```
 
+The Initializer service and a project it generates:
+
+```sh
+./gradlew :start:build                           # engine tests, templates included
+./gradlew :start:bootRun
+curl localhost:8080/starter.zip -d name=orders -o orders.zip && unzip orders.zip
+go run ./cmd/runworkflow -dir orders             # the generated project's own CI, on this machine
+```
+
 ## Layout
 
 | Path | What |
@@ -50,7 +59,10 @@ go test -tags acceptance -count=1 -p 1 ./acceptance/...
 | `data/schemas/` | JSON Schema 2020-12 for every data file, the guide frontmatter and fixtures |
 | `fixtures/<name>/` | Services written by hand that prove the guides |
 | `acceptance/` | Go behavioural tests against the fixture images (build tag `acceptance`) |
-| `cmd/guidekit/`, `internal/` | The Go tooling |
+| `services/start/` | The Initializer service: the engine and its REST API (start.pyahu.io) |
+| `templates/` | The files the engine renders into a generated project |
+| `build-logic/` | Convention plugins of the Initializer's own Gradle build |
+| `cmd/guidekit/`, `cmd/runworkflow/`, `internal/` | The Go tooling |
 
 ## Data files
 
@@ -196,6 +208,7 @@ keys combine with AND, values with OR, `{}` means always.
 - `guides/src/content/docs/reference/docs.md`
 - `guides/src/generated/guides.json` and `guides/src/generated/fixture-files.json`
 - `fixtures/<name>/docs/references.md`
+- `templates/checklist.json` (the checklist the project generator filters by the project's options)
 - `skills/pyahu-production-guides/` (the Agent Skill: `SKILL.md`, `checklist.md` and one file per guide)
 
 ## Fixtures
@@ -210,6 +223,23 @@ when it fails.
 To add a claim: write the test, add it to `requiredTests`, push and record the run in the
 evidence file from the report.
 
+## Templates
+
+`templates/base/` goes into every project, `templates/<architecture>/` adds the files of one architecture. A path
+segment `_package_` becomes the package directory; `gitignore` and `gitattributes` get their dot when generated.
+Two sets writing the same file is an error, never a merge.
+
+Every file is a JMustache template with `[[ ]]` as delimiters, so `${{ }}` in workflows passes through. The
+wrapper scripts and the wrapper jar are copied from this repository at build time and never rendered. Templates
+hold no logic: what a project contains (dependencies, catalog entries, `application.yaml` keys, checklist items)
+is decided in `ProjectRecipe` and only written by the templates. Imports of rendered Java files are sorted after
+rendering, so `spotlessCheck` passes for any package.
+
+Versions come from the active baseline when a project is generated; never type one into a template. The
+generated workflow is the exception: its action SHAs are tooling that Renovate updates with ours, and its
+kustomize image must stay on the baseline's kustomize version (a test checks it). The matrix in `start.yml`
+generates every combination through the API and runs the generated workflow with `cmd/runworkflow`.
+
 ## Exceptions
 
 `data/link-exceptions.yaml` and `data/audit-exceptions.yaml` need a reason and expire at most
@@ -223,7 +253,7 @@ changes; a renewal is a new record.
 | `guides.yml` | `go test`, `check`, `generate --check`, `qualify --check`, `npm audit`, site build, `site` |
 | `links.yml` | external links and BOM pins, also weekly |
 | `fixture-single-hexagonal.yml` | fixture build, image, acceptance tests, evidence report |
-| `start.yml` | the Initializer service: Gradle build in the pinned JDK, convention plugin tests, image, smoke |
+| `start.yml` | the Initializer service: Gradle build in the pinned JDK, convention plugin tests, image, smoke; then every combination generated through the API, built, rendered, imaged and started by its own workflow |
 
 The site deploys from `main` through Cloudflare Workers Builds (root directory `guides`) to
 https://initializer.pyahu.io. Commits go straight to `main`; a red pipeline is fixed with a new

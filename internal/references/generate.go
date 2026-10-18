@@ -62,6 +62,11 @@ func Generate(r *guidedata.Repo) (Outputs, error) {
 		}
 		out[r.Rel(filepath.Join(fx.Dir, "docs", "references.md"))] = b
 	}
+	cl, err := ChecklistJSON(r)
+	if err != nil {
+		return nil, err
+	}
+	out[ChecklistPath] = cl
 	skill, err := Skill(r)
 	if err != nil {
 		return nil, err

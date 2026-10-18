@@ -1,0 +1,15 @@
+# Every version of the build, from baseline [[baseline]] of the Pyahu Initializer.
+[versions]
+[[#versions]]
+[[alias]] = "[[version]]"
+[[/versions]]
+
+[libraries]
+[[#libraries]]
+[[alias]] = { module = "[[module]]"[[#versionRef]], version.ref = "[[versionRef]]"[[/versionRef]] }
+[[/libraries]]
+
+[plugins]
+[[#plugins]]
+[[alias]] = { id = "[[id]]", version.ref = "[[versionRef]]" }
+[[/plugins]]

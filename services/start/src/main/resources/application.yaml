@@ -7,6 +7,14 @@ spring:
       enabled: true
   lifecycle:
     timeout-per-shutdown-phase: 20s
+  mvc:
+    problemdetails:
+      enabled: true
+
+# The form has five short fields; anything bigger is not a request for a project.
+server:
+  tomcat:
+    max-http-form-post-size: 4KB
 
 logging:
   structured:

@@ -90,11 +90,18 @@ application through a port and maps the answer back.
            "useTags" to "true",
            "skipDefaultInterface" to "true",
            "useSpringBuiltInValidation" to "true",
+           "openApiNullable" to "false",
+           "useJspecify" to "true",
        ))
    }
    ```
 
-2. Add the generated sources to the main source set and make `compileJava` depend on `openApiGenerate`.
+   `useJspecify` marks optional fields with JSpecify's `@Nullable`, the annotation NullAway reads.
+
+2. Add the generated sources to the main source set and make `compileJava` depend on `openApiGenerate`. Two
+   checks then see the generated code too. Set `option("NullAway:TreatGeneratedAsUnannotated", "true")`, or
+   NullAway fails on models whose required fields the no-argument constructor leaves unset. Give Spotless
+   `target("src/*/java/**/*.java")`, or `spotlessCheck` fails on the generated files.
 3. Write a controller in `adapter/in/web` that implements the generated interface.
 4. Keep generated models in the adapter. Map them to your own domain types, so the domain never depends on the
    contract.

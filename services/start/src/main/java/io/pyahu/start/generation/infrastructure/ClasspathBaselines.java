@@ -2,9 +2,11 @@ package io.pyahu.start.generation.infrastructure;
 
 import io.pyahu.start.generation.domain.Baseline;
 import io.pyahu.start.generation.domain.Baselines;
+import io.pyahu.start.generation.domain.Pin;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.jspecify.annotations.Nullable;
@@ -40,8 +42,10 @@ class ClasspathBaselines implements Baselines {
             for (Object r : revisions) {
                 Map<?, ?> revision = map(r, "a revision");
                 if (id.equals(revision.get("id"))) {
-                    Map<?, ?> components = map(revision.get("components"), "components of " + id);
-                    return new Baseline(id, version(components, "java"), version(components, "spring-boot"));
+                    Map<String, Pin> pins = new LinkedHashMap<>();
+                    map(revision.get("components"), "components of " + id)
+                            .forEach((key, value) -> pins.put(String.valueOf(key), pin(String.valueOf(key), value)));
+                    return new Baseline(id, pins);
                 }
             }
             throw new IllegalStateException(RESOURCE + ": active revision " + id + " not found");
@@ -50,18 +54,22 @@ class ClasspathBaselines implements Baselines {
         }
     }
 
+    private static Pin pin(String key, @Nullable Object value) {
+        Map<?, ?> c = map(value, key);
+        if (!(c.get("version") instanceof String version)) {
+            throw new IllegalStateException(RESOURCE + ": no version for " + key);
+        }
+        return new Pin(version, text(c, "image"), text(c, "digest"), text(c, "distributionSha256Sum"));
+    }
+
+    private static @Nullable String text(Map<?, ?> component, String field) {
+        return component.get(field) instanceof String s ? s : null;
+    }
+
     private static Map<?, ?> map(@Nullable Object value, String what) {
         if (!(value instanceof Map<?, ?> m)) {
             throw new IllegalStateException(RESOURCE + ": " + what + " is not a map");
         }
         return m;
-    }
-
-    private static String version(Map<?, ?> components, String name) {
-        Object component = components.get(name);
-        if (!(component instanceof Map<?, ?> c) || !(c.get("version") instanceof String v)) {
-            throw new IllegalStateException(RESOURCE + ": no version for " + name);
-        }
-        return v;
     }
 }

@@ -47,6 +47,19 @@
       "matchFileNames": ["fixtures/**", "services/**", "build-logic/**", "gradle/**", "settings.gradle.kts"],
       "dependencyDashboardApproval": true,
       "labels": ["baseline"]
+    },
+    {
+      "description": "Project templates take their versions from the baseline when a project is generated. Only the generated workflow's GitHub Actions are updated here, together with the repository's own Actions.",
+      "matchFileNames": ["templates/**"],
+      "matchManagers": ["!github-actions"],
+      "enabled": false
+    },
+    {
+      "description": "The kustomize image of the generated workflow stays on the baseline's kustomize version: listed only, it changes with a new baseline revision.",
+      "matchFileNames": ["templates/**"],
+      "matchDatasources": ["docker"],
+      "dependencyDashboardApproval": true,
+      "labels": ["baseline"]
     }
   ],
   "vulnerabilityAlerts": {

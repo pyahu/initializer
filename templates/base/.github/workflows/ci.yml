@@ -1,0 +1,54 @@
+# Build, render the manifests, build the image and start it (CI pipelines guide). Publishing is not here yet:
+# add it as a second job that needs this one (CI pipelines guide, steps 5 and 6).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # The JDK image of baseline [[baseline]], pinned by digest.
+  JDK_IMAGE: eclipse-temurin@[[jdkDigest]]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Gradle build in the pinned JDK
+        run: docker run --rm -v "$PWD:/w" -w /w "$JDK_IMAGE" ./gradlew --no-daemon build
+      - name: Render the dev overlay
+        uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
+        with:
+          args: build deploy/overlays/dev
+      - name: Render the prod overlay
+        uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
+        with:
+          args: build deploy/overlays/prod
+      - name: Image
+        run: docker buildx build --load -t [[name]]:ci .
+      - name: Smoke
+        # The way the pod runs it: read-only root, a writable /tmp and the non-root user.
+        run: |
+          docker run -d --name app -p 8080:8080 --read-only --tmpfs /tmp --user 10001:10001 \
+            -e MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED=false \
+            [[name]]:ci
+          for i in $(seq 1 60); do
+            if curl -sf localhost:8080/readyz; then
+              curl -sf localhost:8080/ping | grep -q '"message":"pong"'
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs app
+          exit 1

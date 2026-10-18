@@ -1,0 +1,223 @@
+openapi: 3.1.0
+info:
+  title: Pyahu Initializer
+  version: 0.1.0
+  description: >-
+    Generates a Spring Boot service that follows the Pyahu Initializer guides.
+    Every error is an RFC 9457 problem detail.
+servers:
+  - url: https://start.pyahu.io
+tags:
+  - name: starter
+paths:
+  /metadata:
+    get:
+      tags: [starter]
+      operationId: getMetadata
+      summary: The options, their defaults and rules and the baseline a project is generated with.
+      responses:
+        "200":
+          description: The options.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Metadata"
+        default:
+          $ref: "#/components/responses/Problem"
+  /starter.zip:
+    get:
+      tags: [starter]
+      operationId: getStarter
+      summary: Generates a project from query parameters.
+      parameters:
+        - $ref: "#/components/parameters/Name"
+        - $ref: "#/components/parameters/Group"
+        - $ref: "#/components/parameters/Package"
+        - $ref: "#/components/parameters/Description"
+        - $ref: "#/components/parameters/Architecture"
+      responses:
+        "200":
+          $ref: "#/components/responses/Starter"
+        "400":
+          $ref: "#/components/responses/Problem"
+        default:
+          $ref: "#/components/responses/Problem"
+    post:
+      tags: [starter]
+      operationId: postStarter
+      summary: Generates a project from form fields, so `curl -d name=orders` works.
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/StarterForm"
+      responses:
+        "200":
+          $ref: "#/components/responses/Starter"
+        "400":
+          $ref: "#/components/responses/Problem"
+        default:
+          $ref: "#/components/responses/Problem"
+components:
+  parameters:
+    Name:
+      name: name
+      in: query
+      required: false
+      description: The project name, lowercase words joined by hyphens. Default `demo`.
+      schema:
+        type: string
+        maxLength: 50
+    Group:
+      name: group
+      in: query
+      required: false
+      description: The Gradle group. Default `com.example`.
+      schema:
+        type: string
+        maxLength: 100
+    Package:
+      name: package
+      in: query
+      required: false
+      description: The base Java package. Default the group followed by the name without hyphens.
+      schema:
+        type: string
+        maxLength: 150
+    Description:
+      name: description
+      in: query
+      required: false
+      schema:
+        type: string
+        maxLength: 200
+    Architecture:
+      name: architecture
+      in: query
+      required: false
+      description: "`hexagonal` (default) or `ddd-layered`."
+      schema:
+        type: string
+        maxLength: 20
+  responses:
+    Starter:
+      description: The project as a zip file.
+      headers:
+        Content-Disposition:
+          description: "`attachment` with the file name, such as `demo.zip`."
+          schema:
+            type: string
+      content:
+        application/zip:
+          schema:
+            type: string
+            format: binary
+    Problem:
+      description: An RFC 9457 problem detail.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+  schemas:
+    StarterForm:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        group:
+          type: string
+          maxLength: 100
+        package:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+          maxLength: 200
+        architecture:
+          type: string
+          maxLength: 20
+    Metadata:
+      type: object
+      required: [baseline, fields, architectures]
+      properties:
+        baseline:
+          $ref: "#/components/schemas/BaselineInfo"
+        fields:
+          type: array
+          items:
+            $ref: "#/components/schemas/Field"
+        architectures:
+          type: array
+          items:
+            $ref: "#/components/schemas/Choice"
+    BaselineInfo:
+      type: object
+      required: [id, java, springBoot, url]
+      properties:
+        id:
+          type: string
+          examples: [v0.1-b1]
+        java:
+          type: string
+        springBoot:
+          type: string
+        url:
+          type: string
+          format: uri
+          description: The page that explains how the baseline is kept current.
+    Field:
+      type: object
+      required: [id, description]
+      properties:
+        id:
+          type: string
+          examples: [name]
+        description:
+          type: string
+        defaultValue:
+          type: string
+          description: Absent when the default is derived from other fields.
+        pattern:
+          type: string
+        maxLength:
+          type: integer
+    Choice:
+      type: object
+      required: [id, title, isDefault]
+      properties:
+        id:
+          type: string
+          examples: [hexagonal]
+        title:
+          type: string
+        isDefault:
+          type: boolean
+    Problem:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+        errors:
+          type: array
+          description: One entry per rejected field, on a 400.
+          items:
+            $ref: "#/components/schemas/FieldError"
+    FieldError:
+      type: object
+      required: [field, message]
+      properties:
+        field:
+          type: string
+        message:
+          type: string

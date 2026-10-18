@@ -1,0 +1,49 @@
+openapi: 3.1.0
+info:
+  title: [[name]]
+  version: 0.1.0
+  description: "[[description]]"
+tags:
+  - name: ping
+paths:
+  /ping:
+    get:
+      tags: [ping]
+      operationId: ping
+      summary: Answers with pong. Replace it with your first real endpoint.
+      responses:
+        "200":
+          description: The answer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PingResponse"
+        default:
+          description: Any error, as an RFC 9457 problem detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+components:
+  schemas:
+    PingResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          examples: [pong]
+    Problem:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string

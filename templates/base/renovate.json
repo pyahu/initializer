@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "minimumReleaseAge": "7 days",
+  "packageRules": [
+    {
+      "description": "The OpenTelemetry Logback appender has to match the SDK that Spring Boot manages.",
+      "matchPackageNames": ["org.springframework.boot**", "io.opentelemetry.instrumentation**"],
+      "groupName": "Spring Boot and OpenTelemetry"
+    },
+    {
+      "description": "Error Prone, NullAway and their Gradle plugin move together.",
+      "matchPackageNames": ["com.google.errorprone**", "com.uber.nullaway**", "net.ltgt.errorprone**"],
+      "groupName": "Error Prone"
+    },
+    {
+      "description": "The JDK and JRE images move together, so the AOT cache keeps matching the runtime.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["eclipse-temurin"],
+      "groupName": "Temurin images"
+    }
+  ]
+}

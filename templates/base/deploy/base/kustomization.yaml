@@ -1,0 +1,32 @@
+# Complete and free of any environment: no namespace, no image digest, no secrets
+# (Kubernetes manifests guide, step 2). Overlays add those.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - serviceaccount.yaml
+  - deployment.yaml
+  - service.yaml
+  - hpa.yaml
+  - pdb.yaml
+  - networkpolicy.yaml
+
+# The recommended labels on every object and pod template. Selectors are written in each object and keep
+# only name, instance and component, never the version (step 3).
+labels:
+  - pairs:
+      app.kubernetes.io/name: [[name]]
+      app.kubernetes.io/instance: [[name]]
+      app.kubernetes.io/component: api
+      app.kubernetes.io/version: "0.1.0"
+      app.kubernetes.io/part-of: [[name]]
+      app.kubernetes.io/managed-by: kustomize
+    includeSelectors: false
+    includeTemplates: true
+
+# The hash in the name rolls the pods when a value changes (step 4).
+configMapGenerator:
+  - name: [[name]]-config
+    literals:
+      - DEPLOYMENT_ENVIRONMENT=base
+      - TRACING_SAMPLING_PROBABILITY=0.1

@@ -28,6 +28,8 @@ tasks.withType<JavaCompile>().configureEach {
         check("NullAway", CheckSeverity.ERROR)
         option("NullAway:OnlyNullMarked", "true")
         option("NullAway:JSpecifyMode", "true")
+        // The OpenAPI models are @NullMarked but leave required fields unset in their no-argument constructor.
+        option("NullAway:TreatGeneratedAsUnannotated", "true")
     }
 }
 
@@ -41,6 +43,8 @@ tasks.withType<Test>().configureEach {
 
 spotless {
     java {
+        // Handwritten code only: generated sources are added to the source set too.
+        target("src/*/java/**/*.java")
         palantirJavaFormat(libs.findVersion("palantir-java-format").get().requiredVersion)
         removeUnusedImports()
         trimTrailingWhitespace()

@@ -14,12 +14,13 @@
 
 FROM eclipse-temurin:25.0.4.1_1-jdk-noble@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 AS build
 WORKDIR /workspace
-COPY gradlew settings.gradle.kts ./
+COPY gradlew gradlew.bat settings.gradle.kts ./
 COPY gradle/ gradle/
 COPY build-logic/ build-logic/
 COPY services/start/build.gradle.kts services/start/
 COPY data/versions.yaml data/
 RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon --quiet :start:dependencies > /dev/null
+COPY templates/ templates/
 COPY services/start/src/ services/start/src/
 # Tests run in CI before the image build.
 RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon --quiet :start:bootJar \

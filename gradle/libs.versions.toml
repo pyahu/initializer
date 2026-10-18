@@ -12,6 +12,7 @@ palantir-java-format = "2.102.0"
 errorprone-gradle-plugin = "5.1.1"
 spotless = "8.10.4"
 cyclonedx = "3.5.1"
+openapi-generator = "7.26.0"
 # JUnit as Spring Boot 4.1.1 manages it, for the convention plugins' own tests.
 junit = "6.0.3"
 
@@ -35,9 +36,13 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
 snakeyaml = { module = "org.yaml:snakeyaml" }
+# Managed by the Boot BOM.
+jmustache = { module = "com.samskivert:jmustache" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 errorprone = { id = "net.ltgt.errorprone", version.ref = "errorprone-gradle-plugin" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
+openapi-generator = { id = "org.openapi.generator", version.ref = "openapi-generator" }

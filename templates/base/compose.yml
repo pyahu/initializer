@@ -1,0 +1,13 @@
+# The local loop (local development guide). `./gradlew bootRun` starts these containers and Spring Boot
+# connects to them; telemetry goes to Grafana on http://localhost:3000 (admin/admin). Never in production.
+services:
+  otel-lgtm:
+    image: [[lgtmImage]]
+    ports:
+      - "3000:3000"
+      - "4318"
+    healthcheck:
+      test: ["CMD", "test", "-f", "/tmp/ready"]
+      interval: 5s
+      timeout: 2s
+      retries: 30

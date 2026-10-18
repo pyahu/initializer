@@ -5,21 +5,27 @@ on:
     branches: [main]
     paths:
       - services/start/**
+      - templates/**
       - build-logic/**
       - gradle/**
       - settings.gradle.kts
       - gradlew
+      - gradlew.bat
       - data/versions.yaml
+      - cmd/runworkflow/**
       - .dockerignore
       - .github/workflows/start.yml
   pull_request:
     paths:
       - services/start/**
+      - templates/**
       - build-logic/**
       - gradle/**
       - settings.gradle.kts
       - gradlew
+      - gradlew.bat
       - data/versions.yaml
+      - cmd/runworkflow/**
       - .dockerignore
       - .github/workflows/start.yml
   workflow_dispatch:
@@ -32,6 +38,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
+  GOTOOLCHAIN: go1.27.2
   JDK_IMAGE: eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4
 
 jobs:
@@ -55,3 +62,61 @@ jobs:
           done
           docker logs start
           exit 1
+      - name: Keep the image for the generated projects
+        run: docker save start:ci | gzip > start-image.tar.gz
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: start-image
+          path: start-image.tar.gz
+          retention-days: 1
+
+  # Every supported combination, generated through the HTTP API of the image above, then built and started by the
+  # generated project's own workflow. Two package lengths, so formatting cannot depend on the one we test with.
+  generated:
+    needs: start
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - architecture: hexagonal
+            name: orders
+            group: com.example
+          - architecture: ddd-layered
+            name: billing-history
+            group: org.zeta.platform.services
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: 1.27.2
+          cache: true
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: start-image
+      - name: Start the service
+        run: |
+          gunzip -c start-image.tar.gz | docker load
+          docker run -d --name start -p 18080:8080 -p 18081:8081 -e MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED=false start:ci
+          for i in $(seq 1 60); do
+            if curl -sf localhost:18081/actuator/health/readiness; then exit 0; fi
+            sleep 1
+          done
+          docker logs start
+          exit 1
+      - name: Generate, twice
+        # POST with form fields as curl -d sends them, then GET with the same fields as a query: same bytes.
+        env:
+          ARCHITECTURE: ${{ matrix.architecture }}
+          NAME: ${{ matrix.name }}
+          GROUP: ${{ matrix.group }}
+        run: |
+          mkdir -p out
+          curl -fsS localhost:18080/starter.zip -d name="$NAME" -d group="$GROUP" -d architecture="$ARCHITECTURE" -o out/post.zip
+          curl -fsS "localhost:18080/starter.zip?name=$NAME&group=$GROUP&architecture=$ARCHITECTURE" -o out/get.zip
+          cmp out/post.zip out/get.zip
+          cd out && unzip -q post.zip
+          test -x "$NAME/gradlew"
+      - name: The generated project's own workflow
+        run: go run ./cmd/runworkflow -dir "out/${{ matrix.name }}"

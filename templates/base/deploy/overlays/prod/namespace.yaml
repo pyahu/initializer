@@ -1,0 +1,8 @@
+# Pod Security Standards restricted, pinned to the cluster's minor version (security guide, step 8).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: [[name]]
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: [[podSecurityVersion]]
