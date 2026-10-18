@@ -61,7 +61,8 @@ final class ApplicationYaml {
         List<String> segments = new ArrayList<>();
         StringBuilder current = new StringBuilder();
         boolean bracket = false;
-        for (char c : name.toCharArray()) {
+        for (int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
             if (c == '[' && current.isEmpty()) {
                 bracket = true;
             } else if (c == ']' && bracket) {

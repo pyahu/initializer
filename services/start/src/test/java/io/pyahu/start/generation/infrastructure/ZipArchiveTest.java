@@ -5,13 +5,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -46,8 +48,9 @@ class ZipArchiveTest {
         assertThat(names).containsExactly("demo/a.txt=10000", "demo/z.txt=2");
     }
 
+    /** The JDK's zip file system reads the Unix mode from the same field unzip does. */
     @Test
-    void keepsTheExecutableBitForUnzip(@TempDir Path dir) throws IOException, InterruptedException {
+    void keepsTheExecutableBit(@TempDir Path dir) throws IOException {
         Path zip = dir.resolve("demo.zip");
         Files.write(
                 zip,
@@ -55,17 +58,12 @@ class ZipArchiveTest {
                         .add("demo/gradlew", bytes("#!/bin/sh\n"), true)
                         .add("demo/README.md", bytes("hi"), false)
                         .toByteArray());
-        try (ZipFile file = new ZipFile(zip.toFile())) {
-            assertThat(file.size()).isEqualTo(2);
+        try (FileSystem fs = FileSystems.newFileSystem(zip, Map.of("enablePosixFileAttributes", true))) {
+            assertThat(PosixFilePermissions.toString(Files.getPosixFilePermissions(fs.getPath("demo/gradlew"))))
+                    .isEqualTo("rwxr-xr-x");
+            assertThat(PosixFilePermissions.toString(Files.getPosixFilePermissions(fs.getPath("demo/README.md"))))
+                    .isEqualTo("rw-r--r--");
         }
-        Process unzip = new ProcessBuilder("unzip", "-q", zip.toString(), "-d", dir.toString())
-                .inheritIO()
-                .start();
-        assertThat(unzip.waitFor()).isZero();
-        assertThat(PosixFilePermissions.toString(Files.getPosixFilePermissions(dir.resolve("demo/gradlew"))))
-                .isEqualTo("rwxr-xr-x");
-        assertThat(PosixFilePermissions.toString(Files.getPosixFilePermissions(dir.resolve("demo/README.md"))))
-                .isEqualTo("rw-r--r--");
     }
 
     private static byte[] bytes(String s) {

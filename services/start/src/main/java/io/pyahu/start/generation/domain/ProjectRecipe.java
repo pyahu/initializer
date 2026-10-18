@@ -207,8 +207,8 @@ public final class ProjectRecipe {
         return b.components().keySet().stream()
                 .filter(k -> k.startsWith("kubernetes-"))
                 .map(k -> k.substring("kubernetes-".length()))
-                .min(Comparator.comparing((String v) -> Integer.parseInt(v.split("\\.")[0]))
-                        .thenComparing(v -> Integer.parseInt(v.split("\\.")[1])))
+                .min(Comparator.comparingInt((String v) -> Integer.parseInt(v.split("\\.", -1)[0]))
+                        .thenComparingInt(v -> Integer.parseInt(v.split("\\.", -1)[1])))
                 .map(v -> "v" + v)
                 .orElseThrow(() -> new IllegalStateException("baseline " + b.id() + " has no Kubernetes version"));
     }

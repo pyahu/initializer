@@ -153,7 +153,7 @@ public record ProjectRequest(
     }
 
     private static void keywords(ProjectField field, String value, List<FieldError> errors) {
-        for (String segment : value.toLowerCase(Locale.ROOT).split("\\.")) {
+        for (String segment : value.toLowerCase(Locale.ROOT).split("\\.", -1)) {
             if (JAVA_KEYWORDS.contains(segment)) {
                 errors.add(new FieldError(field.id(), "'" + segment + "' is a Java keyword"));
             }
