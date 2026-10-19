@@ -3,6 +3,7 @@ package io.pyahu.start.generation.presentation;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.pyahu.start.generation.application.DescribeOptions;
 import io.pyahu.start.generation.application.GenerateProject;
+import io.pyahu.start.generation.application.PreviewProject;
 import io.pyahu.start.generation.domain.FieldError;
 import io.pyahu.start.generation.domain.InvalidProjectRequest;
 import io.pyahu.start.generation.domain.ProjectArchive;
@@ -13,6 +14,8 @@ import io.pyahu.start.generation.presentation.api.model.BaselineInfo;
 import io.pyahu.start.generation.presentation.api.model.Choice;
 import io.pyahu.start.generation.presentation.api.model.Field;
 import io.pyahu.start.generation.presentation.api.model.Metadata;
+import io.pyahu.start.generation.presentation.api.model.Preview;
+import io.pyahu.start.generation.presentation.api.model.PreviewFile;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.ArrayList;
@@ -38,17 +41,23 @@ class StarterController implements StarterApi {
             Set.copyOf(ProjectField.ALL.stream().map(ProjectField::id).toList());
 
     private final GenerateProject generateProject;
+    private final PreviewProject previewProject;
     private final DescribeOptions describeOptions;
+    private final GenerationLimit limit;
     private final HttpServletRequest http;
     private final MeterRegistry meters;
 
     StarterController(
             GenerateProject generateProject,
+            PreviewProject previewProject,
             DescribeOptions describeOptions,
+            GenerationLimit limit,
             HttpServletRequest http,
             MeterRegistry meters) {
         this.generateProject = generateProject;
+        this.previewProject = previewProject;
         this.describeOptions = describeOptions;
+        this.limit = limit;
         this.http = http;
         this.meters = meters;
     }
@@ -105,20 +114,30 @@ class StarterController implements StarterApi {
         return starter();
     }
 
+    @Override
+    public ResponseEntity<Preview> previewStarter(
+            @Nullable String name,
+            @Nullable String group,
+            @Nullable String _package,
+            @Nullable String description,
+            @Nullable String architecture,
+            @Nullable String database,
+            @Nullable String auth,
+            @Nullable String frontend) {
+        ProjectRequest request = ProjectRequest.of(fields(http.getParameterMap()));
+        PreviewProject.Preview preview = limit.run(() -> previewProject.preview(request));
+        count("initializer.projects.previewed", request);
+        List<PreviewFile> files = preview.files().stream()
+                .map(f -> new PreviewFile(f.path(), f.size(), f.executable())
+                        .content(f.text().orElse(null)))
+                .toList();
+        return ResponseEntity.ok(new Preview(preview.root(), files));
+    }
+
     private ResponseEntity<Resource> starter() {
         ProjectRequest request = ProjectRequest.of(fields(http.getParameterMap()));
-        ProjectArchive archive = generateProject.generate(request);
-        meters.counter(
-                        "initializer.projects.generated",
-                        "architecture",
-                        request.architecture().id(),
-                        "database",
-                        request.database().id(),
-                        "auth",
-                        request.auth().id(),
-                        "frontend",
-                        request.frontend().id())
-                .increment();
+        ProjectArchive archive = limit.run(() -> generateProject.generate(request));
+        count("initializer.projects.generated", request);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/zip"))
                 .header(
@@ -128,6 +147,21 @@ class StarterController implements StarterApi {
                                 .build()
                                 .toString())
                 .body(new ByteArrayResource(archive.content()));
+    }
+
+    /** By option only: nothing about who asked. */
+    private void count(String metric, ProjectRequest request) {
+        meters.counter(
+                        metric,
+                        "architecture",
+                        request.architecture().id(),
+                        "database",
+                        request.database().id(),
+                        "auth",
+                        request.auth().id(),
+                        "frontend",
+                        request.frontend().id())
+                .increment();
     }
 
     /**

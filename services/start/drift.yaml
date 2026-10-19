@@ -1,0 +1,115 @@
+# The Initializer app is a project its own engine would produce. DriftTest generates it with these options and
+# checks every generated file against this repository:
+#
+#   same      byte for byte; ./gradlew :start:regenerate writes these files again
+#   extends   the generated lines, in order, with lines of the app's own between them
+#   adapted   the app's own file, for the reason given
+#   omitted   not in the app, for the reason given
+#
+# Every generated file must match one rule and every rule a generated file: a new template file needs a
+# decision here.
+options:
+  name: start
+  group: io.pyahu
+  description: Generates services that follow the Pyahu Initializer guides
+  architecture: ddd-layered
+  database: none
+  auth: none
+  frontend: nextjs
+
+# Where the generated layout lands in the monorepo; anything else keeps its path from the root.
+paths:
+  src/: services/start/src/
+  deploy/: services/start/deploy/
+  frontends/web/: frontends/start-web/
+
+rules:
+  - { path: .gitattributes, mode: same }
+  - { path: gradlew, mode: same }
+  - { path: gradlew.bat, mode: same }
+  - { path: gradle/wrapper/**, mode: same }
+  - { path: deploy/**, mode: same }
+  - { path: src/main/java/io/pyahu/start/Application.java, mode: same }
+  - { path: src/main/java/io/pyahu/start/package-info.java, mode: same }
+  - { path: src/main/java/io/pyahu/start/config/**, mode: same }
+  - { path: src/main/resources/logback-spring.xml, mode: same }
+  - { path: src/test/java/io/pyahu/start/ArchitectureTest.java, mode: same }
+  - { path: src/test/java/io/pyahu/start/ModulithTest.java, mode: same }
+  - { path: frontends/web/.dockerignore, mode: same }
+  - { path: frontends/web/.node-version, mode: same }
+  - { path: frontends/web/Dockerfile, mode: same }
+  - { path: frontends/web/instrumentation.ts, mode: same }
+  - { path: frontends/web/next.config.ts, mode: same }
+  - { path: frontends/web/public/robots.txt, mode: same }
+  - { path: frontends/web/src/api/client.ts, mode: same }
+  - { path: frontends/web/src/app/livez/route.ts, mode: same }
+  - { path: frontends/web/tsconfig.json, mode: same }
+
+  - { path: src/main/resources/application.yaml, mode: extends }
+  - { path: frontends/web/.gitignore, mode: extends }
+
+  - path: Dockerfile
+    mode: adapted
+    to: services/start/Dockerfile
+    why: Built from the repository root, which holds build-logic, the baseline and the templates (monorepo guide, step 8).
+  - path: build.gradle.kts
+    mode: adapted
+    to: services/start/build.gradle.kts
+    why: The conventions live in build-logic (monorepo guide, step 4); this file adds the engine's own.
+  - path: settings.gradle.kts
+    mode: adapted
+    why: The monorepo's settings, with build-logic and every project.
+  - path: gradle/libs.versions.toml
+    mode: adapted
+    why: One catalog for the whole repository (monorepo guide, step 5).
+  - path: .gitignore
+    mode: adapted
+    why: The repository's, which also covers the guides site and the fixtures.
+  - path: .dockerignore
+    mode: adapted
+    why: Image builds run from the root; it keeps the guides, fixtures and frontends out of the context.
+  - path: renovate.json
+    mode: adapted
+    why: The repository's, which also holds the baseline back for /maintenance/.
+  - path: .github/workflows/ci.yml
+    mode: adapted
+    to: .github/workflows/start.yml
+    why: Also generates and runs every combination the engine supports.
+  - path: README.md
+    mode: adapted
+    why: The repository's.
+  - path: src/main/openapi/api.yaml
+    mode: adapted
+    to: services/start/src/main/openapi/start.yaml
+    why: The Initializer's API instead of the sample.
+  - path: src/test/java/io/pyahu/start/ApplicationTest.java
+    mode: adapted
+    why: Starts the context and generates a project instead of answering the sample.
+  - path: frontends/web/package.json
+    mode: adapted
+    why: Points at start.yaml and adds the site's fonts and Playwright for the page's tests.
+  - path: frontends/web/package-lock.json
+    mode: adapted
+    why: Written by npm from that package.json.
+  - path: frontends/web/src/api/schema.d.ts
+    mode: adapted
+    why: Generated from start.yaml with npm run api; CI checks it.
+  - path: frontends/web/src/app/layout.tsx
+    mode: adapted
+    why: The Initializer's header, in the identity of the guides site.
+  - path: frontends/web/src/app/page.tsx
+    mode: adapted
+    why: The form, Explore and the download instead of the sample page.
+
+  - path: CHECKLIST.md
+    mode: omitted
+    why: The guides site holds the checklist of every guide.
+  - path: compose.yml
+    mode: omitted
+    why: Not yet. Nothing runs next to the service on the laptop, so its telemetry has nowhere to go.
+  - path: src/main/java/io/pyahu/start/ping/**
+    mode: omitted
+    why: The sample capability; the app's capability is generation.
+  - path: src/test/java/io/pyahu/start/ping/**
+    mode: omitted
+    why: The tests of the sample capability.

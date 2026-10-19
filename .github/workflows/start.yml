@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - services/start/**
+      - frontends/start-web/**
       - templates/**
       - build-logic/**
       - gradle/**
@@ -14,10 +15,12 @@ on:
       - data/versions.yaml
       - cmd/runworkflow/**
       - .dockerignore
+      - .gitattributes
       - .github/workflows/start.yml
   pull_request:
     paths:
       - services/start/**
+      - frontends/start-web/**
       - templates/**
       - build-logic/**
       - gradle/**
@@ -27,6 +30,7 @@ on:
       - data/versions.yaml
       - cmd/runworkflow/**
       - .dockerignore
+      - .gitattributes
       - .github/workflows/start.yml
   workflow_dispatch:
 
@@ -40,6 +44,10 @@ concurrency:
 env:
   GOTOOLCHAIN: go1.27.2
   JDK_IMAGE: eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4
+  # The Node of frontends/start-web/.node-version, pinned by digest.
+  NODE_IMAGE: node:24.22.0-trixie-slim@sha256:7f486cabe892bff8fef04c0f7da8dba84a560be3e4e2740b7a86afc57ebec315
+  # The browsers of the @playwright/test version in frontends/start-web/package.json.
+  PLAYWRIGHT_IMAGE: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:7852dc5a7d72f5fe458a597d690f6c42fbc8e9e26ddfa95f8e6ef552558d9bbf
 
 jobs:
   start:
@@ -51,6 +59,14 @@ jobs:
         run: |
           docker run --rm -v "$PWD:/w" -w /w "$JDK_IMAGE" sh -c \
             './gradlew --no-daemon build && ./gradlew --no-daemon -p build-logic test'
+      - name: Render the dev overlay
+        uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
+        with:
+          args: build services/start/deploy/overlays/dev
+      - name: Render the prod overlay
+        uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
+        with:
+          args: build services/start/deploy/overlays/prod
       - name: Image
         run: docker buildx build --load -t start:ci -f services/start/Dockerfile .
       - name: Smoke
@@ -69,6 +85,41 @@ jobs:
           name: start-image
           path: start-image.tar.gz
           retention-days: 1
+
+  # The page: its types against the contract, its image, then the form, Explore and the download in a browser,
+  # against the service image of the job above.
+  web:
+    needs: start
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: start-image
+      - name: Types match the contract
+        run: >-
+          docker run --rm -v "$PWD:/w" -w /w/frontends/start-web "$NODE_IMAGE"
+          sh -c 'npm ci --no-audit --no-fund && npm run api:check'
+      - name: Image
+        run: docker buildx build --load -t start-web:ci frontends/start-web
+      - name: The page in a browser
+        # The containers run the way the pods do: read-only root, a writable /tmp and a user that is not root.
+        run: |
+          trap 'code=$?; set +e; if [ $code -ne 0 ]; then for c in start web; do docker logs $c 2>&1 | tail -40; done; fi
+            docker rm -f start web > /dev/null 2>&1; docker network rm e2e > /dev/null 2>&1; exit $code' EXIT
+          ready() { for i in $(seq 1 60); do curl -sf "$1" > /dev/null && return 0; sleep 1; done; return 1; }
+          gunzip -c start-image.tar.gz | docker load
+          docker network create e2e > /dev/null
+          docker run -d --name start --network e2e -p 18081:8081 --read-only --tmpfs /tmp --user 10001:10001 \
+            -e MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED=false start:ci
+          ready localhost:18081/actuator/health/readiness
+          docker run -d --name web --network e2e -p 3000:3000 --read-only --tmpfs /tmp --tmpfs /web/.next/cache \
+            --user 1000:1000 -e API_BASE_URL=http://start:8080 start-web:ci
+          ready localhost:3000/livez
+          docker run --rm --network e2e --ipc=host -v "$PWD/frontends/start-web:/web" -w /web \
+            -e BASE_URL=http://web:3000 -e CI=true "$PLAYWRIGHT_IMAGE" \
+            sh -c 'npm ci --no-audit --no-fund && npx playwright test'
 
   # Every supported combination, generated through the HTTP API of the image above, then built and started by the
   # generated project's own workflow. Two package lengths, so formatting cannot depend on the one we test with.

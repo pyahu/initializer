@@ -1,0 +1,46 @@
+# Deny everything for every pod of the application, then allow each path on purpose (security guide, step 8).
+# Port 8081 (Actuator) has no rule.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: start-default-deny
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: start
+      app.kubernetes.io/instance: start
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: start-api
+  labels:
+    app.kubernetes.io/component: api
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: start
+      app.kubernetes.io/instance: start
+      app.kubernetes.io/component: api
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - ports:
+        - port: 8080
+          protocol: TCP
+  egress:
+    # DNS.
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    # The OpenTelemetry collector, over OTLP/HTTP. Narrow the peer to where your collector runs.
+    - ports:
+        - port: 4318
+          protocol: TCP

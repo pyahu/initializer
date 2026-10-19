@@ -8,13 +8,21 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.pyahu.start.generation.application.DescribeOptions;
 import io.pyahu.start.generation.application.GenerateProject;
+import io.pyahu.start.generation.application.PreviewProject;
 import io.pyahu.start.generation.domain.Baseline;
 import io.pyahu.start.generation.domain.Pin;
 import io.pyahu.start.generation.domain.ProjectArchive;
 import io.pyahu.start.generation.domain.ProjectField;
+import io.pyahu.start.generation.domain.ProjectFile;
 import io.pyahu.start.generation.domain.ProjectRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -37,6 +45,9 @@ class StarterControllerTest {
     GenerateProject generateProject;
 
     @MockitoBean
+    PreviewProject previewProject;
+
+    @MockitoBean
     DescribeOptions describeOptions;
 
     @TestConfiguration
@@ -44,6 +55,11 @@ class StarterControllerTest {
         @Bean
         MeterRegistry meterRegistry() {
             return new SimpleMeterRegistry();
+        }
+
+        @Bean
+        GenerationLimit generationLimit() {
+            return new GenerationLimit(1);
         }
     }
 
@@ -140,5 +156,57 @@ class StarterControllerTest {
         var result = mvc.get().uri("/starter.zip?name=a&name=b").exchange();
         assertThat(result).hasStatus(400);
         assertThat(result).bodyJson().extractingPath("$.errors[0].message").isEqualTo("given more than once");
+    }
+
+    @Test
+    void previewGivesEachFileWithItsText() {
+        given(previewProject.preview(ProjectRequest.of(Map.of("name", "orders"))))
+                .willReturn(new PreviewProject.Preview(
+                        "orders",
+                        List.of(
+                                new ProjectFile("gradle/wrapper/gradle-wrapper.jar", new byte[] {0, 1}, false),
+                                new ProjectFile("gradlew", "#!/bin/sh".getBytes(StandardCharsets.UTF_8), true))));
+        var result = mvc.post()
+                .uri("/preview")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content("name=orders")
+                .exchange();
+        assertThat(result).hasStatusOk();
+        assertThat(result).bodyJson().extractingPath("$.root").isEqualTo("orders");
+        assertThat(result).bodyJson().extractingPath("$.files[0].size").isEqualTo(2);
+        assertThat(result).bodyJson().doesNotHavePath("$.files[0].content");
+        assertThat(result).bodyJson().extractingPath("$.files[1].content").isEqualTo("#!/bin/sh");
+        assertThat(result).bodyJson().extractingPath("$.files[1].executable").isEqualTo(true);
+    }
+
+    @Test
+    void previewRejectsWhatTheZipRejects() {
+        var result = mvc.post()
+                .uri("/preview")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content("name=Orders")
+                .exchange();
+        assertThat(result).hasStatus(400).hasContentType(MediaType.APPLICATION_PROBLEM_JSON);
+    }
+
+    @Test
+    void aGenerationOverTheLimitIsTurnedAwayAtOnce() throws Exception {
+        CountDownLatch inside = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        given(generateProject.generate(any())).willAnswer(invocation -> {
+            inside.countDown();
+            release.await();
+            return new ProjectArchive("demo.zip", new byte[] {1});
+        });
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            Future<?> first =
+                    executor.submit(() -> mvc.get().uri("/starter.zip").exchange());
+            assertThat(inside.await(5, TimeUnit.SECONDS)).isTrue();
+            var second = mvc.get().uri("/starter.zip").exchange();
+            assertThat(second).hasStatus(503).hasContentType(MediaType.APPLICATION_PROBLEM_JSON);
+            assertThat(second).headers().hasValue("Retry-After", "1");
+            release.countDown();
+            first.get(5, TimeUnit.SECONDS);
+        }
     }
 }

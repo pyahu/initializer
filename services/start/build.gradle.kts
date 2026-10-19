@@ -81,3 +81,30 @@ val engineResources = tasks.register<Sync>("engineResources") {
 sourceSets.main {
     resources.srcDir(engineResources)
 }
+
+// The app against its own engine (DriftTest, drift.yaml): the test reads files across the repository, so they are
+// its inputs too.
+val repositoryFiles = fileTree(rootDir) {
+    include(".gitattributes", ".gitignore", ".dockerignore", "renovate.json", "README.md", "settings.gradle.kts")
+    include("gradlew", "gradlew.bat", "gradle/**", ".github/workflows/start.yml")
+    include("services/start/**", "frontends/start-web/**")
+    exclude("**/build/**", "**/node_modules/**", "**/.next/**", "**/test-results/**")
+}
+
+tasks.test {
+    systemProperty("repository.root", rootDir.absolutePath)
+    inputs.files(repositoryFiles).withPropertyName("repositoryFiles")
+}
+
+// Writes the files drift.yaml marks same from the engine's output, after a template changes.
+tasks.register<Test>("regenerate") {
+    description = "Rewrites the app's files that its own engine generates."
+    group = "build"
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    useJUnitPlatform()
+    filter { includeTestsMatching("*.DriftTest") }
+    systemProperty("repository.root", rootDir.absolutePath)
+    systemProperty("drift.write", "true")
+    outputs.upToDateWhen { false }
+}

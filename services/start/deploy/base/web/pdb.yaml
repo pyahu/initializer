@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: start-web
+  labels:
+    app.kubernetes.io/component: web
+spec:
+  maxUnavailable: 1
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: start
+      app.kubernetes.io/instance: start
+      app.kubernetes.io/component: web

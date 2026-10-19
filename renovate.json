@@ -62,8 +62,8 @@
       "labels": ["baseline"]
     },
     {
-      "description": "The generated frontend's npm packages are tooling: one pull request for minor and patch updates of both package files and their lock files. The matrix workflow builds every combination before the merge.",
-      "matchFileNames": ["templates/nextjs-*/frontends/web/package.json"],
+      "description": "The generated frontend's npm packages are tooling. So are those of the Initializer page, which starts from them: one pull request for minor and patch updates of every package file and lock file. The matrix and the page's tests run before the merge.",
+      "matchFileNames": ["templates/nextjs-*/frontends/web/package.json", "frontends/start-web/package.json"],
       "matchManagers": ["npm"],
       "enabled": true,
       "groupName": "Generated frontend packages",
@@ -71,14 +71,14 @@
     },
     {
       "description": "Major updates of the generated frontend's packages change what the Next.js guide says: listed only.",
-      "matchFileNames": ["templates/nextjs-*/frontends/web/package.json"],
+      "matchFileNames": ["templates/nextjs-*/frontends/web/package.json", "frontends/start-web/package.json"],
       "matchManagers": ["npm"],
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
     },
     {
-      "description": "The generated frontend's Node is a toolchain, pinned in its .node-version, its Dockerfile and the generated workflow: listed only, moved together.",
-      "matchFileNames": ["templates/nextjs/frontends/web/**", "templates/base/.github/workflows/ci.yml"],
+      "description": "The generated frontend's Node is a toolchain, pinned in its .node-version, its Dockerfile and the generated workflow, then again in the Initializer page's copies: listed only, moved together.",
+      "matchFileNames": ["templates/nextjs/frontends/web/**", "templates/base/.github/workflows/ci.yml", "frontends/start-web/**", ".github/workflows/start.yml"],
       "matchPackageNames": ["node"],
       "enabled": true,
       "dependencyDashboardApproval": true,
@@ -93,6 +93,12 @@
       "dependencyDashboardApproval": false,
       "groupName": "Generated mock identity provider",
       "labels": ["tooling"]
+    },
+    {
+      "description": "Playwright: the package and the image with its browsers move together.",
+      "matchPackageNames": ["@playwright/test", "mcr.microsoft.com/playwright"],
+      "groupName": "Playwright",
+      "labels": ["tooling"]
     }
   ],
   "customManagers": [
@@ -101,6 +107,13 @@
       "description": "Images the generated workflow pins in env, next to the same images in the frontend's Dockerfile and compose.yml.",
       "managerFilePatterns": ["/^templates/base/\\.github/workflows/ci\\.yml$/"],
       "matchStrings": ["(?:NODE|OIDC)_IMAGE: (?<depName>[^:\\s]+):(?<currentValue>[^@\\s]+)@(?<currentDigest>sha256:[a-f0-9]{64})"],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Images the Initializer's workflow pins in env: Node as in the page's Dockerfile, Playwright as in its package.",
+      "managerFilePatterns": ["/^\\.github/workflows/start\\.yml$/"],
+      "matchStrings": ["(?:NODE|PLAYWRIGHT)_IMAGE: (?<depName>[^:\\s]+):(?<currentValue>[^@\\s]+)@(?<currentDigest>sha256:[a-f0-9]{64})"],
       "datasourceTemplate": "docker"
     }
   ],

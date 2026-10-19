@@ -1,0 +1,42 @@
+# The frontend's paths: the browser in, the service and the collector out (security guide, step 8).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: start-web
+  labels:
+    app.kubernetes.io/component: web
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: start
+      app.kubernetes.io/instance: start
+      app.kubernetes.io/component: web
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - ports:
+        - port: 3000
+          protocol: TCP
+  egress:
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    # The service, by its pods.
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: start
+              app.kubernetes.io/instance: start
+              app.kubernetes.io/component: api
+      ports:
+        - port: 8080
+          protocol: TCP
+    - ports:
+        - port: 4318
+          protocol: TCP

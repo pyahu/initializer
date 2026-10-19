@@ -1,4 +1,5 @@
-# The Initializer service (start.pyahu.io).
+# One file for every environment: values that change per environment are placeholders with a local
+# default, overridden by environment variables from the Deployment (configuration guide, step 1).
 spring:
   application:
     name: start
@@ -10,9 +11,18 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+  # The Initializer: an optional field is absent from the JSON, as the contract says, not null.
+  jackson:
+    default-property-inclusion: non_null
 
-# The form has five short fields; anything bigger is not a request for a project.
+# The Initializer: generations at once, per pod; more get a 503 (GenerationLimit).
+start:
+  generation:
+    max-concurrent: 16
+
 server:
+  forward-headers-strategy: native
+  # The form has eight short fields; anything bigger is not a request for a project.
   tomcat:
     max-http-form-post-size: 4KB
 
@@ -48,3 +58,4 @@ management:
     distribution:
       percentiles-histogram:
         http.server.requests: true
+

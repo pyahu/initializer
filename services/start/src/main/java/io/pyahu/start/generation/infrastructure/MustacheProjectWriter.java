@@ -17,10 +17,12 @@ import io.pyahu.start.generation.domain.Database;
 import io.pyahu.start.generation.domain.Frontend;
 import io.pyahu.start.generation.domain.ProjectArchive;
 import io.pyahu.start.generation.domain.ProjectDescription;
+import io.pyahu.start.generation.domain.ProjectFile;
 import io.pyahu.start.generation.domain.ProjectRequest;
 import io.pyahu.start.generation.domain.ProjectWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,24 +53,22 @@ class MustacheProjectWriter implements ProjectWriter {
     }
 
     @Override
-    public ProjectArchive write(ProjectDescription description) {
+    public List<ProjectFile> files(ProjectDescription description) {
         Map<String, Object> model = model(description);
-        String root = description.request().name() + "/";
-        ZipArchive zip = new ZipArchive();
-        for (Contribution.File file : description.all(Contribution.File.class)) {
-            zip.add(root + file.path(), render(file, model), file.executable());
-        }
-        return new ProjectArchive(description.request().name() + ".zip", zip.toByteArray());
+        return description.all(Contribution.File.class).stream()
+                .map(file -> new ProjectFile(file.path(), render(file, model), file.executable()))
+                .sorted(Comparator.comparing(ProjectFile::path))
+                .toList();
     }
 
-    /** The files and their contents, for tests and a later preview. */
-    Map<String, String> renderText(ProjectDescription description) {
-        Map<String, Object> model = model(description);
-        Map<String, String> out = new LinkedHashMap<>();
-        for (Contribution.File file : description.all(Contribution.File.class)) {
-            out.put(file.path(), new String(render(file, model), StandardCharsets.UTF_8));
+    @Override
+    public ProjectArchive write(ProjectDescription description) {
+        String root = description.request().name() + "/";
+        ZipArchive zip = new ZipArchive();
+        for (ProjectFile file : files(description)) {
+            zip.add(root + file.path(), file.content(), file.executable());
         }
-        return out;
+        return new ProjectArchive(description.request().name() + ".zip", zip.toByteArray());
     }
 
     private byte[] render(Contribution.File file, Map<String, Object> model) {

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: start
+  labels:
+    app.kubernetes.io/component: api
+spec:
+  selector:
+    app.kubernetes.io/name: start
+    app.kubernetes.io/instance: start
+    app.kubernetes.io/component: api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

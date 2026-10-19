@@ -1,0 +1,61 @@
+# Dev: its namespace and values. A tag is fine here while you rebuild the same image often.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: start-dev
+
+resources:
+  - namespace.yaml
+  - ../../base
+
+configMapGenerator:
+  - name: start-config
+    behavior: merge
+    literals:
+      - DEPLOYMENT_ENVIRONMENT=dev
+      - TRACING_SAMPLING_PROBABILITY=1.0
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.observability:4318
+  - name: start-web-config
+    behavior: merge
+    literals:
+      - DEPLOYMENT_ENVIRONMENT=dev
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.observability:4318
+
+images:
+  - name: start
+    newName: ghcr.io/your-org/start
+    newTag: dev
+  - name: start-web
+    newName: ghcr.io/your-org/start-web
+    newTag: dev
+
+patches:
+  # One zone is common in dev: a strict zone rule would leave pods pending.
+  - target:
+      kind: Deployment
+      name: start
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/topologySpreadConstraints/0/whenUnsatisfiable
+        value: ScheduleAnyway
+  - target:
+      kind: HorizontalPodAutoscaler
+      name: start
+    patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 1
+  - target:
+      kind: Deployment
+      name: start-web
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/topologySpreadConstraints/0/whenUnsatisfiable
+        value: ScheduleAnyway
+  - target:
+      kind: HorizontalPodAutoscaler
+      name: start-web
+    patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 1

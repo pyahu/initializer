@@ -4,12 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.pyahu.start.generation.domain.Baseline;
 import io.pyahu.start.generation.domain.ProjectDescription;
+import io.pyahu.start.generation.domain.ProjectFile;
 import io.pyahu.start.generation.domain.ProjectRecipe;
 import io.pyahu.start.generation.domain.ProjectRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -210,6 +212,10 @@ class GenerationTest {
 
     private static Map<String, String> render(ProjectRequest request) {
         ProjectDescription d = recipe.describe(request, baseline);
-        return writer.renderText(d);
+        Map<String, String> files = new LinkedHashMap<>();
+        for (ProjectFile file : writer.files(d)) {
+            files.put(file.path(), file.text().orElse(""));
+        }
+        return files;
     }
 }

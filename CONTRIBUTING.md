@@ -246,6 +246,19 @@ the smoke test. Tests keep the kustomize image on the baseline's kustomize versi
 several files the same in all of them. The matrix in `start.yml` generates all 16 combinations through the API and
 runs each generated workflow with `cmd/runworkflow`.
 
+## The Initializer's own files
+
+The Initializer is a project its own engine would produce: ddd-layered, with a Next.js frontend.
+`services/start/drift.yaml` says what each generated file is here: the same bytes, the generated lines with more
+between them, adapted for a reason it gives or left out for one. `DriftTest` fails when a file drifts or a new
+template file has no rule. After changing a template, `./gradlew :start:regenerate` writes the files marked same
+again; review the diff like any other change.
+
+`frontends/start-web` is the page: the form comes from `/metadata`, Explore from `/preview` through a Server Action
+and the zip from its own `/starter.zip`, which passes requests on to the service, so a terminal and the browser use
+the same address. Its Playwright tests run in CI against both images; locally, start the service and
+`npm run dev`, then `npx playwright install chromium` once and `npm run test:e2e`.
+
 ## Exceptions
 
 `data/link-exceptions.yaml` and `data/audit-exceptions.yaml` need a reason and expire at most

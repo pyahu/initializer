@@ -9,7 +9,7 @@ import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 
 /** The dependency inverted DDD layered graph (architecture guide, step 4). */
-@AnalyzeClasses(packages = "io.pyahu.start", importOptions = ImportOption.DoNotIncludeTests.class)
+@AnalyzeClasses(packagesOf = Application.class, importOptions = ImportOption.DoNotIncludeTests.class)
 class ArchitectureTest {
 
     @ArchTest
@@ -33,11 +33,12 @@ class ArchitectureTest {
             .whereLayer("Domain")
             .mayOnlyBeAccessedByLayers("Presentation", "Application", "Infrastructure");
 
+    /** The domain sees only the JDK, JSpecify and itself. */
     @ArchTest
     static final ArchRule domainDependsOnNothingElse = classes()
             .that()
             .resideInAPackage("..domain..")
             .should()
             .onlyDependOnClassesThat()
-            .resideInAnyPackage("..domain..", "java..", "org.jspecify..", "org.jmolecules..");
+            .resideInAnyPackage("..domain..", "java..", "org.jspecify..");
 }

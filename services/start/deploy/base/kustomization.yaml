@@ -1,0 +1,47 @@
+# Complete and free of any environment: no namespace, no image digest, no secrets
+# (Kubernetes manifests guide, step 2). Overlays add those.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - serviceaccount.yaml
+  - deployment.yaml
+  - service.yaml
+  - hpa.yaml
+  - pdb.yaml
+  - networkpolicy.yaml
+  - web/serviceaccount.yaml
+  - web/deployment.yaml
+  - web/service.yaml
+  - web/hpa.yaml
+  - web/pdb.yaml
+  - web/networkpolicy.yaml
+
+# The recommended labels on every object and pod template. Each object adds its own component (api,
+# migration or web); selectors keep only name, instance and component, never the version (step 3).
+labels:
+  - pairs:
+      app.kubernetes.io/name: start
+      app.kubernetes.io/instance: start
+      app.kubernetes.io/version: "0.1.0"
+      app.kubernetes.io/part-of: start
+      app.kubernetes.io/managed-by: kustomize
+    includeSelectors: false
+    includeTemplates: true
+
+# The hash in the name rolls the pods when a value changes (step 4).
+configMapGenerator:
+  - name: start-config
+    options:
+      labels:
+        app.kubernetes.io/component: api
+    literals:
+      - DEPLOYMENT_ENVIRONMENT=base
+      - TRACING_SAMPLING_PROBABILITY=0.1
+  - name: start-web-config
+    options:
+      labels:
+        app.kubernetes.io/component: web
+    literals:
+      # The service by its cluster name, from the server only (Next.js guide, step 2).
+      - API_BASE_URL=http://start
