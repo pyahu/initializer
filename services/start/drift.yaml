@@ -87,7 +87,7 @@ rules:
     why: Starts the context and generates a project instead of answering the sample.
   - path: frontends/web/package.json
     mode: adapted
-    why: Points at start.yaml and adds the site's fonts and Playwright for the page's tests.
+    why: Points at start.yaml, names the Node major for builds that read engines and adds the site's fonts and Playwright.
   - path: frontends/web/package-lock.json
     mode: adapted
     why: Written by npm from that package.json.
