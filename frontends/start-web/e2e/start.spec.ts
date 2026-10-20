@@ -9,18 +9,40 @@ test('the form shows the options the service supports and its baseline', async (
   await expect(page.getByText(/Baseline v\d+\.\d+-b\d+/)).toBeVisible();
 });
 
-test('Explore shows every file with its contents', async ({ page }) => {
+test('the files of the options show before any click, in a tree', async ({ page }) => {
   await page.goto('/');
+  const files = page.getByRole('tree', { name: 'Files' });
+  await expect(page.getByLabel('Contents of README.md')).toContainText('# demo');
   await page.getByLabel('Name').fill('orders');
-  await page.getByRole('radio', { name: 'PostgreSQL' }).check();
-  await page.getByRole('button', { name: 'Explore' }).click();
-  const files = page.getByRole('navigation', { name: 'Files' });
-  await expect(files.getByText('orders/', { exact: true }).first()).toBeVisible();
-  await expect(files.getByRole('button', { name: 'roles.sql' })).toBeVisible();
-  await files.getByRole('button', { name: 'application.yaml' }).click();
+  await expect(page.getByText('orders', { exact: true }).first()).toBeVisible();
+  await page.getByRole('button', { name: 'Expand all' }).click();
+  await files.getByRole('treeitem', { name: 'application.yaml' }).click();
   await expect(page.getByLabel('Contents of src/main/resources/application.yaml')).toContainText('name: orders');
-  await files.getByRole('button', { name: 'gradle-wrapper.jar' }).click();
+  await files.getByRole('treeitem', { name: 'gradle-wrapper.jar' }).click();
   await expect(page.getByText(/A binary file of \d+ bytes/)).toBeVisible();
+});
+
+test('a change of option marks the files it adds and keeps the link', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('radio', { name: 'PostgreSQL' }).check();
+  await expect(page.getByRole('status')).toContainText(/\d+ new/);
+  await expect(page.getByRole('treeitem', { name: 'roles.sql' })).toBeVisible();
+  await expect(page).toHaveURL(/\?database=postgres$/);
+});
+
+test('the tree opens, closes and moves with the keyboard', async ({ page }) => {
+  await page.goto('/');
+  const deploy = page.getByRole('treeitem', { name: 'deploy', exact: true });
+  await deploy.focus();
+  await expect(deploy).toHaveAttribute('aria-expanded', 'true');
+  await page.keyboard.press('ArrowLeft');
+  await expect(deploy).toHaveAttribute('aria-expanded', 'false');
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect(page.getByLabel('Contents of deploy/base/deployment.yaml')).toContainText('kind: Deployment');
 });
 
 test('Generate downloads the zip', async ({ page }) => {
@@ -44,8 +66,8 @@ test('Generate downloads the zip', async ({ page }) => {
 test('a rejected field says why, next to its input', async ({ page }) => {
   await page.goto('/');
   await page.getByLabel('Name').fill('Orders');
-  await page.getByRole('button', { name: 'Generate' }).click();
   await expect(page.getByLabel('Name')).toHaveAttribute('aria-invalid', 'true');
+  await page.getByRole('button', { name: 'Generate' }).click();
   await expect(page.getByText(/must match/)).toBeVisible();
 });
 

@@ -254,8 +254,8 @@ between them, adapted for a reason it gives or left out for one. `DriftTest` fai
 template file has no rule. After changing a template, `./gradlew :start:regenerate` writes the files marked same
 again; review the diff like any other change.
 
-`frontends/start-web` is the page: the form comes from `/metadata`, Explore from `/preview` through a Server Action
-and the zip from its own `/starter.zip`, which passes requests on to the service, so a terminal and the browser use
+`frontends/start-web` is the page: the form comes from `/metadata`, the files from `/preview` through a Server Action
+on every change and the zip from its own `/starter.zip`, which passes requests on to the service, so a terminal and the browser use
 the same address. Its Playwright tests run in CI against both images; locally, start the service and
 `npm run dev`, then `npx playwright install chromium` once and `npm run test:e2e`.
 
