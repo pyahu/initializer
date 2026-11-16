@@ -23,17 +23,35 @@
 - id: ev-cfg-typed-properties-1
   card: cfg-typed-properties
   claim: "A @ConfigurationProperties record with @Validated fails application startup when a value breaks a constraint."
-  badge: not-exercised
+  badge: reproduced
+  capabilities: [runtime]
+  components: [spring-boot]
   baseline: v0.1-b1
   limitations: "Behaviour from the Spring Boot reference on @ConfigurationProperties validation."
-  reason: "SecretPropertiesTest checks this in the fixture; a completed CI evidence record has not been recorded yet."
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::SecretPropertiesTest
+  commands: ["./gradlew --no-daemon build"]
+  environment: "GitHub-hosted ubuntu-24.04 x64, Docker, pinned JDK image of v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/43880809744/attempts/1
+  commit: bb775f5d296d90628aa49edf5eda2bd36e8e6997
+  date: "2026-11-16"
+  result: "SecretPropertiesTest: 8 tests, 0 failures, 0 errors, 0 skipped; invalid secrets report false, valid multiline secrets bind without leaking."
 - id: ev-cfg-placeholder-guard-1
   card: cfg-placeholder-guard
   claim: "A boolean @AssertTrue getter rejects missing and unresolved secrets with false as the rejected value; valid multiline secrets bind and toString masks their content."
-  badge: not-exercised
+  badge: reproduced
+  capabilities: [runtime]
+  components: [spring-boot]
   baseline: v0.1-b1
   limitations: "SecretPropertiesTest checks real Spring Boot startup and captured failure logs with synthetic secrets. It does not exercise a vault or CSI driver."
-  reason: "The regression test is included in the fixture's required tests; a completed CI evidence record has not been recorded yet."
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::SecretPropertiesTest
+  commands: ["./gradlew --no-daemon build"]
+  environment: "GitHub-hosted ubuntu-24.04 x64, Docker, pinned JDK image of v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/43880809744/attempts/1
+  commit: bb775f5d296d90628aa49edf5eda2bd36e8e6997
+  date: "2026-11-16"
+  result: "SecretPropertiesTest: 8 tests, 0 failures, 0 errors, 0 skipped; invalid secrets report false, valid multiline secrets bind without leaking."
 - id: ev-cfg-secrets-as-files-1
   card: cfg-secrets-as-files
   claim: "spring.config.import with optional:configtree: turns each file under /mnt/secrets into a property named after the file, trailing newline trimmed, read once at startup."

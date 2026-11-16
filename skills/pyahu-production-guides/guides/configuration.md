@@ -6,7 +6,7 @@ Typed settings that fail fast, one source per kind of value and secrets that nev
 
 On the web: https://initializer.pyahu.io/guides/configuration/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
-**Preview.** 10 claims: 10 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/configuration.yaml).
+**Preview.** 10 claims: 2 reproduced, 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/configuration.yaml).
 
 A typo in a ConfigMap key binds to nothing and the default quietly wins. A missing secret leaves the text
 `${payment-api-key}` in a request header. A property that only exists in `application-prod.yaml` was never run
@@ -30,8 +30,8 @@ secrets out of manifests, logs and Actuator. Eight decisions, each with the file
 
 - 1. Where should the differences between environments live?: 1 claim: 1 not exercised.
 - 2. What is the environment variable for a property?: 2 claims: 2 not exercised.
-- 3. How do I catch a bad setting before the pod takes traffic?: 1 claim: 1 not exercised.
-- 4. Why did a missing secret not stop the app?: 1 claim: 1 not exercised.
+- 3. How do I catch a bad setting before the pod takes traffic?: 1 claim: 1 reproduced.
+- 4. Why did a missing secret not stop the app?: 1 claim: 1 reproduced.
 - 5. Where should secrets come from?: 1 claim: 1 not exercised.
 - 6. How do I keep secrets out of logs and Actuator?: 1 claim: 1 not exercised.
 - 7. How does a running app pick up a change?: 2 claims: 2 not exercised.
