@@ -682,8 +682,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/index.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned (minor); checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Reference root."
     guides: []
     appliesWhen: {}
@@ -699,8 +699,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/system-requirements.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect (\"requires at least Java 17, compatible up to Java 26, Gradle 8.14+/9.x\")."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "System requirements."
     guides: []
     appliesWhen: {}
@@ -780,8 +780,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/upgrading.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Upgrading Spring Boot (reference)."
     guides: []
     appliesWhen: {}
@@ -797,8 +797,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/appendix/dependency-versions/index.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Dependency versions appendix (managed versions)."
     guides: []
     appliesWhen: {}
@@ -814,8 +814,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Application properties appendix."
     guides: ["http-clients", "configuration"]
     appliesWhen: {}
@@ -831,8 +831,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/actuator/index.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Actuator (production-ready features)."
     guides: ["observability", "configuration"]
     appliesWhen: {}
@@ -848,8 +848,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Actuator endpoints (incl. Kubernetes probes anchor, verified)."
     guides: ["jvm-in-containers", "observability", "configuration", "security", "kubernetes-deployment"]
     appliesWhen: {}
@@ -865,8 +865,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/api/rest/actuator/index.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Actuator REST API."
     guides: ["observability", "configuration"]
     appliesWhen: {}
@@ -882,8 +882,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/actuator/observability.html#actuator.observability.opentelemetry"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Observability, OpenTelemetry section (anchor verified)."
     guides: ["observability", "local-development"]
     appliesWhen: {}
@@ -899,8 +899,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Tracing (names spring-boot-starter-opentelemetry, OTLP export)."
     guides: ["observability", "http-clients"]
     appliesWhen: {}
@@ -916,8 +916,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Metrics (incl. #actuator.metrics.export.otlp)."
     guides: ["observability", "http-clients"]
     appliesWhen: {}
@@ -933,8 +933,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Container images."
     guides: ["jvm-in-containers", "container-image"]
     appliesWhen: {}
@@ -950,8 +950,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Efficient container images (layering)."
     guides: ["jvm-in-containers", "container-image"]
     appliesWhen: {}
@@ -967,8 +967,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Dockerfiles."
     guides: ["jvm-in-containers", "container-image"]
     appliesWhen: {}
@@ -984,8 +984,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Cloud Native Buildpacks."
     guides: ["jvm-in-containers", "container-image"]
     appliesWhen: {}
@@ -1001,8 +1001,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Efficient deployments."
     guides: ["jvm-in-containers", "container-image"]
     appliesWhen: {}
@@ -1018,8 +1018,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/packaging/aot-cache.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "AOT cache and CDS (reference, sections #packaging.aot-cache.aot-cache and #packaging.aot-cache.cds)."
     guides: ["jvm-in-containers"]
     appliesWhen: {}
@@ -1035,8 +1035,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/how-to/aot-cache.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "AOT cache (how-to)."
     guides: ["jvm-in-containers"]
     appliesWhen: {}
@@ -1052,8 +1052,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Virtual threads (anchor verified)."
     guides: ["jvm-in-containers", "virtual-threads", "http-clients"]
     appliesWhen: {}
@@ -1069,8 +1069,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/features/task-execution-and-scheduling.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Task execution (virtual-thread executors)."
     guides: ["virtual-threads"]
     appliesWhen: {}
@@ -1086,8 +1086,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Testcontainers support."
     guides: ["database", "jpa-and-jooq", "local-development", "testing"]
     appliesWhen: {}
@@ -1103,8 +1103,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/data/sql.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)."
     guides: ["database", "jpa-and-jooq"]
     appliesWhen: {database: ["postgres"]}
@@ -1120,8 +1120,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/how-to/data-initialization.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Database initialization (Liquibase)."
     guides: ["database"]
     appliesWhen: {database: ["postgres"]}
@@ -1137,8 +1137,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/reference/security/oauth2.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "OAuth2 (resource server auto-config)."
     guides: ["security"]
     appliesWhen: {auth: [true]}
@@ -1154,8 +1154,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/how-to/deployment/cloud.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Deploying to the cloud (Kubernetes)."
     guides: []
     appliesWhen: {}
@@ -1171,8 +1171,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/gradle-plugin/index.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Gradle plugin."
     guides: ["build-quality"]
     appliesWhen: {}
@@ -1188,8 +1188,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/gradle-plugin/packaging-oci-image.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Gradle plugin: packaging OCI images."
     guides: ["container-image"]
     appliesWhen: {}
@@ -1205,8 +1205,8 @@ entries:
     area: "spring-boot"
     url: "https://docs.spring.io/spring-boot/4.1/api/java/index.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect (\"Spring Boot 4.1.1 API\")."
-    expect: "4.1.1"
+    pinNote: "Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "Spring Boot 4.1."
     purpose: "Boot API javadoc."
     guides: []
     appliesWhen: {}
@@ -1222,8 +1222,8 @@ entries:
     area: "spring-framework"
     url: "https://docs.spring.io/spring-framework/reference/7.0/index.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned (minor); checked: 200 via redirect."
-    expect: "7.0.9"
+    pinNote: "Pinned to the 7.0 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"7.0."
     purpose: "Reference."
     guides: ["http-clients", "rest-apis"]
     appliesWhen: {}
@@ -1239,8 +1239,8 @@ entries:
     area: "spring-framework"
     url: "https://docs.spring.io/spring-framework/reference/7.0/core/null-safety.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "7.0.9"
+    pinNote: "Pinned to the 7.0 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"7.0."
     purpose: "Null-safety (JSpecify in Spring 7)."
     guides: []
     appliesWhen: {}
@@ -1288,8 +1288,8 @@ entries:
     area: "spring-data"
     url: "https://docs.spring.io/spring-data/relational/reference/4.1/index.html"
     pinned: true
-    pinNote: "Spring Data JDBC 4.1.1 ships in the Spring Data 2026.0.1 train that Boot manages. Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Spring Data JDBC 4.1 ships in the Spring Data 2026.0 train. Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Spring Data Relational reference."
     guides: ["database", "jpa-and-jooq"]
     appliesWhen: {persistence: ["jdbc"]}
@@ -1305,8 +1305,8 @@ entries:
     area: "spring-data"
     url: "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html"
     pinned: true
-    pinNote: "Spring Data JDBC 4.1.1 ships in the Spring Data 2026.0.1 train that Boot manages. Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Spring Data JDBC 4.1 ships in the Spring Data 2026.0 train. Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "JDBC section."
     guides: ["database", "jpa-and-jooq"]
     appliesWhen: {persistence: ["jdbc"]}
@@ -1322,8 +1322,8 @@ entries:
     area: "spring-data"
     url: "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc/getting-started.html"
     pinned: true
-    pinNote: "Spring Data JDBC 4.1.1 ships in the Spring Data 2026.0.1 train that Boot manages. Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Spring Data JDBC 4.1 ships in the Spring Data 2026.0 train. Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "JDBC getting started."
     guides: []
     appliesWhen: {persistence: ["jdbc"]}
@@ -1339,8 +1339,8 @@ entries:
     area: "spring-data"
     url: "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc/entity-persistence.html"
     pinned: true
-    pinNote: "Spring Data JDBC 4.1.1 ships in the Spring Data 2026.0.1 train that Boot manages. Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "4.1.1"
+    pinNote: "Spring Data JDBC 4.1 ships in the Spring Data 2026.0 train. Pinned to the 4.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"4.1."
     purpose: "Persisting entities (aggregates)."
     guides: []
     appliesWhen: {persistence: ["jdbc"]}
@@ -1372,8 +1372,8 @@ entries:
     area: "spring-security"
     url: "https://docs.spring.io/spring-security/reference/7.1/index.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "7.1.1"
+    pinNote: "Pinned to the 7.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"7.1."
     purpose: "Reference."
     guides: ["security"]
     appliesWhen: {auth: [true]}
@@ -1389,8 +1389,8 @@ entries:
     area: "spring-security"
     url: "https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/index.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "7.1.1"
+    pinNote: "Pinned to the 7.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"7.1."
     purpose: "OAuth 2.0 Resource Server."
     guides: ["security"]
     appliesWhen: {auth: [true]}
@@ -1406,8 +1406,8 @@ entries:
     area: "spring-security"
     url: "https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/jwt.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "7.1.1"
+    pinNote: "Pinned to the 7.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"7.1."
     purpose: "Resource Server JWT."
     guides: ["security"]
     appliesWhen: {auth: [true]}
@@ -1423,8 +1423,8 @@ entries:
     area: "spring-security"
     url: "https://docs.spring.io/spring-security/reference/7.1/whats-new.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "7.1.1"
+    pinNote: "Pinned to the 7.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"7.1."
     purpose: "What's new in 7.1."
     guides: ["security"]
     appliesWhen: {auth: [true]}
@@ -1440,8 +1440,8 @@ entries:
     area: "spring-security"
     url: "https://docs.spring.io/spring-security/reference/7.1/migration/index.html"
     pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200 via redirect."
-    expect: "7.1.1"
+    pinNote: "Pinned to the 7.1 documentation line, which follows its latest patch. The examples remain on the baseline patch. Checked 2026-11-16."
+    expect: "<meta name=\"version\" content=\"7.1."
     purpose: "Migration (page title \"Migrating to 7.0\")."
     guides: []
     appliesWhen: {auth: [true]}

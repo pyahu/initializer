@@ -12,6 +12,10 @@ Each guide answers a few questions, one step per question. The code in them is c
 builds and tests on every change. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 The same guides are on the web at https://initializer.pyahu.io/guides/.
 
+Public preview: every guide shows its evidence coverage. Compiled means code builds, reproduced means a
+named behaviour passed a test and measured means a measurement was recorded. Claims marked not exercised
+have no test result here. Read their evidence records before presenting the advice as verified.
+
 ## How to use this skill
 
 1. Find the question closest to the task in the index below. Open only that guide and read the step it

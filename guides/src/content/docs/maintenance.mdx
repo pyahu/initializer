@@ -85,8 +85,9 @@ These are the steps we follow, in order.
   default, we record it in
   [`data/invalidations.yaml`](https://github.com/pyahu/initializer/blob/main/data/invalidations.yaml) with the
   reason. Every guide it touches shows "Re-verify" until the record is closed.
-- **Untested claims say so.** Some claims need a cluster or a load test that has not run yet. Their records in
-  [`data/evidence`](https://github.com/pyahu/initializer/tree/main/data/evidence) say "not exercised" and why.
+- **Untested claims say so.** Every guide shows its evidence coverage at the top and by step. Claims without
+  a test result, including advice based on documentation or design reasoning, say "not exercised" in
+  [`data/evidence`](https://github.com/pyahu/initializer/tree/main/data/evidence), with the source and the gap.
 - **Steps are retired, not deleted.** A removed step keeps its anchor in
   [`data/retired.yaml`](https://github.com/pyahu/initializer/blob/main/data/retired.yaml), so links to it keep
   working.
@@ -94,7 +95,10 @@ These are the steps we follow, in order.
 ## Keeping the links alive
 
 Every external link is checked on every change and again every Monday, together with the versions that a BOM
-manages. A link that is down for a reason we accept gets an exception with that reason. So does a security
+manages. Some official documentation is pinned to a release line, such as Spring Boot 4.1, and follows its
+latest patch. The link check verifies that release line; the examples and their evidence stay on the exact
+baseline patch until a new baseline is qualified. A link that is down for a reason we accept gets an exception
+with that reason. So does a security
 advisory with no fix yet. Every exception expires after at most 30 days, so none of them lasts by accident. They
 are in [`data/link-exceptions.yaml`](https://github.com/pyahu/initializer/blob/main/data/link-exceptions.yaml)
 and [`data/audit-exceptions.yaml`](https://github.com/pyahu/initializer/blob/main/data/audit-exceptions.yaml).

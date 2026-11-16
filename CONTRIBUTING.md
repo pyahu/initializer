@@ -1,8 +1,8 @@
 # Contributing
 
-The guides are the product. Each step answers one question with the failure it prevents and every
-claim carries the test that proves it. `guidekit` enforces the rules below; CI runs it on every
-change.
+The guides are the product, published as a public preview while their test coverage grows. Each step answers
+one question with the failure it prevents. Every claim has an evidence record: a test and result when exercised,
+or the source and reason it has not been exercised. `guidekit` enforces the rules below; CI runs it on every change.
 
 ## Toolchain
 
@@ -163,8 +163,8 @@ One record states one claim, in `data/evidence/<guide>.yaml`:
 | `not-exercised` | nothing; needs `reason` and has no run fields |
 
 `result` is the decisive output, inline, because run logs expire. Every step has at least one
-record. Records are not shown on the site; the landing page explains the method. Readers
-who want the detail read these files. A record counts toward qualification only when its test is in the fixture's
+record. Each guide shows its coverage at the top and by step, with a link to these records for the results and
+limitations. The Agent Skill and llms exports carry the same coverage. A record counts toward qualification only when its test is in the fixture's
 `requiredTests` and passed in the latest completed fixture run on `main`.
 
 ## Baselines
@@ -274,6 +274,18 @@ changes; a renewal is a new record.
 | `fixture-single-hexagonal.yml` | fixture build, image, acceptance tests, evidence report |
 | `start.yml` | the Initializer service: Gradle build in the pinned JDK, convention plugin tests, image, smoke; then every combination generated through the API, built, rendered, imaged and started by its own workflow |
 
-The site deploys from `main` through Cloudflare Workers Builds (root directory `guides`) to
-https://initializer.pyahu.io. Commits go straight to `main`; a red pipeline is fixed with a new
-commit.
+The publication target is https://initializer.pyahu.io on Cloudflare Workers. `guides/wrangler.jsonc`
+names the Worker `initializer` and serves the static `guides/dist` directory with a real 404 page.
+
+For Cloudflare Workers Builds, connect `pyahu/initializer` with production branch `main` and root directory
+`guides`. Set `NODE_VERSION=24.22.0`, build with `npm run toolchain && npm run check && npm run build`
+after dependency installation, and deploy with `npm run deploy`. The Wrangler dependency and npm lockfile
+pin the deployment tooling. Connect the custom domain only after the first successful deployment.
+
+Before publication, the Guides, Links and fixture workflows must pass for the release commit. Workers Builds runs separately
+from GitHub Actions; its successful build alone does not prove the guides or their claims.
+For a local packaging check after building, run `cd guides && npx wrangler deploy --dry-run`.
+The first Worker creation, custom-domain setup and Workers Builds connection still need to be completed in
+the hosting account; checked-in configuration alone does not publish a site.
+
+Commits go straight to `main`; a red pipeline is fixed with a new commit.

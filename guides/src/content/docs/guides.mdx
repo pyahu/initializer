@@ -8,8 +8,12 @@ Building a Spring Boot service is easy. Running it in production for years is wh
 way: pods killed for memory, slow rollouts, telemetry nobody can follow, a database that runs out of connections.
 
 These guides collect those lessons. They are the practices Pyahu follows in every project it generates, shared
-with the community. Each guide answers a handful of questions with one step per question and ends with tested
-files you can copy and a checklist to review your own service.
+with the community. Each guide answers a handful of questions with one step per question and ends with
+examples and a checklist to review your own service.
+
+**Public preview.** The guides are available while their test coverage grows. Each guide shows its evidence
+coverage at the top and by step. "Not exercised" means the advice has no test result in this repository;
+its evidence record explains the source and the gap. Read that coverage before applying it to your service.
 
 ## How to read them
 
@@ -50,8 +54,8 @@ Expose an API, store data and call other services without surprises.
 
 Move data between services reliably and keep hot data close.
 
-- [Kafka with the outbox](/guides/kafka/): events that are never lost and never sent twice.
-- [RabbitMQ](/guides/rabbitmq/): work queues where no message is lost or stuck forever.
+- [Kafka with the outbox](/guides/kafka/): closing the commit-to-publish gap and handling redelivery.
+- [RabbitMQ](/guides/rabbitmq/): confirms, acknowledgements, retries and dead letter queues.
 - [Caching with Valkey](/guides/caching/): when a cache helps and how to live with it going down.
 
 ## Part 4: Run in production

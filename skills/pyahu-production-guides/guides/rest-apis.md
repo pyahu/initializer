@@ -6,6 +6,8 @@ Write the OpenAPI contract first, generate the Spring interfaces from it and ser
 
 On the web: https://initializer.pyahu.io/guides/rest-apis/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 9 claims: 1 compiled, 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/rest-apis.yaml).
+
 The frontend team asks what `POST /orders` returns when the stock runs out. Nobody knows for sure: the answer is
 somewhere in a controller, a few exception handlers and a wiki page from last year. Each endpoint returns errors
 in its own shape and a renamed field breaks the mobile app on a Friday.
@@ -23,6 +25,17 @@ interfaces generated from it and one way to validate, fail, page and version acr
 6. How do I return a long list?
 7. How do I change an API without breaking its clients?
 8. How do I keep the code and the contract in sync?
+
+### Evidence by step
+
+- 1. Why write the contract before the code?: 1 claim: 1 not exercised.
+- 2. How do I turn the contract into code?: 2 claims: 1 compiled, 1 not exercised.
+- 3. How do I reject bad input?: 1 claim: 1 not exercised.
+- 4. What should an error look like?: 1 claim: 1 not exercised.
+- 5. What should a write return and can it be sent twice?: 1 claim: 1 not exercised.
+- 6. How do I return a long list?: 1 claim: 1 not exercised.
+- 7. How do I change an API without breaking its clients?: 1 claim: 1 not exercised.
+- 8. How do I keep the code and the contract in sync?: 1 claim: 1 not exercised.
 
 ## 1. Why write the contract before the code?
 
@@ -352,7 +365,7 @@ String ping() {
 
 ## References
 
-- [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html) (7.0.9 (docs 7.0))
+- [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html) (7.0.9 (docs 7.0); docs 7.0)
 - [OpenAPI Specification v3.1.2 (latest 3.1 patch)](https://spec.openapis.org/oas/v3.1.2.html) (3.1.2)
 - [openapi-generator Spring generator](https://openapi-generator.tech/docs/generators/spring/) (7.26.0, not version-pinned)
 - [Spring generator doc at tag](https://github.com/OpenAPITools/openapi-generator/blob/v7.26.0/docs/generators/spring.md) (7.26.0)

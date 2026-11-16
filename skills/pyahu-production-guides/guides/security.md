@@ -6,6 +6,8 @@ Tokens, permissions, headers, errors, outbound calls and the pod, locked down fo
 
 On the web: https://initializer.pyahu.io/guides/security/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 15 claims: 1 reproduced, 14 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/security.yaml).
+
 A security review lands on your desk. A token issued to another app opens your API, an error body shows a SQL
 query and the pod runs as root with a writable disk. Nobody broke in with an exotic exploit: each finding is a
 default that nobody revisited.
@@ -26,6 +28,18 @@ outbound calls and the pod. Most take one or two lines of configuration. Secrets
 7. How do I stop a URL fetch from reaching inside the network?
 8. How locked down should the pod be?
 9. Where should TLS end and how do I add mTLS?
+
+### Evidence by step
+
+- 1. Which tokens should the service accept?: 2 claims: 2 not exercised.
+- 2. How do token claims become permissions?: 1 claim: 1 not exercised.
+- 3. Who may call what?: 2 claims: 2 not exercised.
+- 4. Do I need CSRF protection and CORS?: 1 claim: 1 not exercised.
+- 5. Which headers should every response carry?: 2 claims: 2 not exercised.
+- 6. What should an error tell the client?: 1 claim: 1 not exercised.
+- 7. How do I stop a URL fetch from reaching inside the network?: 1 claim: 1 not exercised.
+- 8. How locked down should the pod be?: 3 claims: 1 reproduced, 2 not exercised.
+- 9. Where should TLS end and how do I add mTLS?: 2 claims: 2 not exercised.
 
 ## 1. Which tokens should the service accept?
 
@@ -424,15 +438,15 @@ USER 10001:10001
 
 ## References
 
-- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.1 (docs 4.1))
-- [OAuth2 (resource server auto-config)](https://docs.spring.io/spring-boot/4.1/reference/security/oauth2.html) (4.1.1 (docs 4.1))
-- [Reference](https://docs.spring.io/spring-security/reference/7.1/index.html) (7.1.1 (docs 7.1))
-- [OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/index.html) (7.1.1 (docs 7.1))
-- [Resource Server JWT](https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/jwt.html) (7.1.1 (docs 7.1))
-- [What's new in 7.1](https://docs.spring.io/spring-security/reference/7.1/whats-new.html) (7.1.1 (docs 7.1))
-- [Pod Security Standards](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/) (1.36.5 (docs 1.36))
-- [Pod Security Admission](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-admission/) (1.36.5 (docs 1.36))
-- [NetworkPolicy](https://v1-36.docs.kubernetes.io/docs/concepts/services-networking/network-policies/) (1.36.5 (docs 1.36))
+- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.1 (docs 4.1); docs 4.1)
+- [OAuth2 (resource server auto-config)](https://docs.spring.io/spring-boot/4.1/reference/security/oauth2.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Reference](https://docs.spring.io/spring-security/reference/7.1/index.html) (7.1.1 (docs 7.1); docs 7.1)
+- [OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/index.html) (7.1.1 (docs 7.1); docs 7.1)
+- [Resource Server JWT](https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/jwt.html) (7.1.1 (docs 7.1); docs 7.1)
+- [What's new in 7.1](https://docs.spring.io/spring-security/reference/7.1/whats-new.html) (7.1.1 (docs 7.1); docs 7.1)
+- [Pod Security Standards](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/) (1.36.5 (docs 1.36); docs 1.36)
+- [Pod Security Admission](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-admission/) (1.36.5 (docs 1.36); docs 1.36)
+- [NetworkPolicy](https://v1-36.docs.kubernetes.io/docs/concepts/services-networking/network-policies/) (1.36.5 (docs 1.36); docs 1.36)
 - [RFC 6750 Bearer Token Usage](https://www.rfc-editor.org/rfc/rfc6750.html) (final)
 - [RFC 9068 JWT Profile for OAuth 2.0 Access Tokens](https://www.rfc-editor.org/rfc/rfc9068.html) (final)
 - [RFC 9700 OAuth 2.0 Security BCP](https://www.rfc-editor.org/rfc/rfc9700.html) (final)

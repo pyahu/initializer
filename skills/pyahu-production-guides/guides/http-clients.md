@@ -6,6 +6,8 @@ Call other services from Spring Boot 4.1 with timeouts, bounded retries and a li
 
 On the web: https://initializer.pyahu.io/guides/http-clients/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 10 claims: 10 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/http-clients.yaml).
+
 The payments service did not go down. It just got slow. Within a minute your own service stops answering: every
 request is stuck waiting on payments and the retries you added to be safe triple the load on a service that is
 already struggling.
@@ -24,6 +26,17 @@ everything goes.
 6. How do I retry a payment without charging it twice?
 7. How do I stop one slow service from taking mine down?
 8. Why do some calls have no metrics or traces?
+
+### Evidence by step
+
+- 1. Which HTTP client should I use?: 2 claims: 2 not exercised.
+- 2. Which timeouts does every call need?: 1 claim: 1 not exercised.
+- 3. Why do calls wait minutes for a connection?: 1 claim: 1 not exercised.
+- 4. Does a read timeout stop a slow call?: 2 claims: 2 not exercised.
+- 5. When is it safe to retry?: 1 claim: 1 not exercised.
+- 6. How do I retry a payment without charging it twice?: 1 claim: 1 not exercised.
+- 7. How do I stop one slow service from taking mine down?: 1 claim: 1 not exercised.
+- 8. Why do some calls have no metrics or traces?: 1 claim: 1 not exercised.
 
 ## 1. Which HTTP client should I use?
 
@@ -349,11 +362,11 @@ tested file.
 
 ## References
 
-- [Migration guide 3.x to 4.0 (wiki)](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide) (4.1.1 (docs 4.0))
-- [Application properties appendix](https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html) (4.1.1 (docs 4.1))
-- [Tracing (names spring-boot-starter-opentelemetry, OTLP export)](https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html) (4.1.1 (docs 4.1))
-- [Metrics (incl. #actuator.metrics.export.otlp)](https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html) (4.1.1 (docs 4.1))
-- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.1.1 (docs 4.1))
-- [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html) (7.0.9 (docs 7.0))
-- [7.0 release notes (wiki, also covers upgrading)](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes) (7.0.9 (docs 7.0))
+- [Migration guide 3.x to 4.0 (wiki)](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide) (4.1.1 (docs 4.0); docs 4.0)
+- [Application properties appendix](https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Tracing (names spring-boot-starter-opentelemetry, OTLP export)](https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Metrics (incl. #actuator.metrics.export.otlp)](https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.1.1 (docs 4.1); docs 4.1)
+- [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html) (7.0.9 (docs 7.0); docs 7.0)
+- [7.0 release notes (wiki, also covers upgrading)](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes) (7.0.9 (docs 7.0); docs 7.0)
 - [Semconv HTTP spans](https://opentelemetry.io/docs/specs/semconv/http/http-spans/) (1.44.0, not version-pinned)

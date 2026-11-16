@@ -5,7 +5,7 @@ import LandingLayout from "../layouts/LandingLayout.astro";
 const parts = [
   {
     icon: "layers",
-    status: "Available",
+    status: "Public preview",
     title: "A knowledge base",
     text: "24 guides with the practices Pyahu follows for Java services with Spring Boot and a Next.js frontend next to them. Each step answers one question: the failure it prevents, the fix and when to choose differently.",
     href: "#guides",
@@ -94,9 +94,9 @@ const anatomy = [
 const proof = [
   { title: "Exact versions", text: "Each guide is written for one baseline: a frozen list of versions, such as Java 25 and Spring Boot 4.1.1. The reference page lists them with the official docs for each." },
   { title: "A real service behind the code", text: "Code in a guide comes from a small service in the repository. CI builds it and runs it on every change, so an upgrade that breaks the advice turns CI red first." },
-  { title: "A test behind each claim", text: "Each claim is tied to a test, its command and its result, such as a 768 MiB heap in a 1 GiB pod. The records live on GitHub next to the CI runs that produced them." },
+  { title: "Evidence for each claim", text: "Every claim has a record. Tested claims name their test, command, result and CI run. Claims based on documentation or design reasoning are marked not exercised, with the reason." },
   { title: "Kept current", text: "Renovate watches every dependency. New versions arrive as a new baseline and pass the same tests before any guide moves to it." },
-  { title: "Gaps said out loud", text: "Some claims need a cluster or a load test that has not run yet. Their records say \"not exercised\" and why, so nothing untested passes as proven." },
+  { title: "Coverage visible in every guide", text: "Each guide shows how many claims were compiled, reproduced or measured, and how many have not been exercised. A successful build proves only the checks that actually ran." },
 ];
 
 const roadmap = [

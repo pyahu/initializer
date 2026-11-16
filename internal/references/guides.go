@@ -39,13 +39,14 @@ type checklistOut struct {
 }
 
 type refOut struct {
-	ID      string `json:"id"`
-	Title   string `json:"title"`
-	URL     string `json:"url"`
-	Version string `json:"version"`
-	Pinned  bool   `json:"pinned"`
-	Purpose string `json:"purpose"`
-	Later   bool   `json:"later"`
+	ID         string `json:"id"`
+	Title      string `json:"title"`
+	URL        string `json:"url"`
+	Version    string `json:"version"`
+	DocVersion string `json:"docVersion"`
+	Pinned     bool   `json:"pinned"`
+	Purpose    string `json:"purpose"`
+	Later      bool   `json:"later"`
 }
 
 type questionOut struct {
@@ -103,6 +104,18 @@ func Coverage(recs []guidedata.EvidenceRecord) string {
 	return s
 }
 
+func guideEvidence(r *guidedata.Repo, g *guidedata.Guide) []guidedata.EvidenceRecord {
+	var records []guidedata.EvidenceRecord
+	for _, c := range g.Cards {
+		for _, e := range r.Evidence {
+			if e.Card == c.ID {
+				records = append(records, e)
+			}
+		}
+	}
+	return records
+}
+
 // GuidesJSON renders guides/src/generated/guides.json.
 func GuidesJSON(r *guidedata.Repo) ([]byte, error) {
 	guides := map[string]guideOut{}
@@ -126,7 +139,7 @@ func GuidesJSON(r *guidedata.Repo) ([]byte, error) {
 		for _, q := range g.Meta.Questions {
 			out.Questions = append(out.Questions, questionOut{ID: q.ID, Text: q.Text, AnsweredIn: q.AnsweredIn, CardTitle: cardTitle[q.AnsweredIn]})
 		}
-		var all []guidedata.EvidenceRecord
+		all := guideEvidence(r, g)
 		for _, c := range g.Cards {
 			var recs []guidedata.EvidenceRecord
 			for _, e := range r.Evidence {
@@ -134,7 +147,6 @@ func GuidesJSON(r *guidedata.Repo) ([]byte, error) {
 					recs = append(recs, e)
 				}
 			}
-			all = append(all, recs...)
 			co := cardOut{Title: c.Title, Coverage: Coverage(recs), Records: []evidenceOut{}}
 			for _, e := range recs {
 				eo := evidenceOut{ID: e.ID, Badge: e.Badge, Canonical: guidedata.CanonicalLine(e), Reason: e.Reason}
@@ -181,7 +193,7 @@ func guideRefs(r *guidedata.Repo, g *guidedata.Guide) []refOut {
 	var refs []refOut
 	for _, e := range entriesFor(r, g.Meta.Baseline, nil) {
 		if contains(e.Guides, g.Meta.ID) {
-			refs = append(refs, refOut{ID: e.ID, Title: e.Title, URL: e.URL, Version: versionOf(r, g.Meta.Baseline, e), Pinned: e.Pinned, Purpose: e.Purpose})
+			refs = append(refs, refOut{ID: e.ID, Title: e.Title, URL: e.URL, Version: versionOf(r, g.Meta.Baseline, e), DocVersion: e.DocVersion, Pinned: e.Pinned, Purpose: e.Purpose})
 		}
 	}
 	// Documents for a later release: no baseline pins them yet, so they carry no version.

@@ -6,6 +6,8 @@ Turn on virtual threads in Spring Boot 4.1 and put back the limits that protect 
 
 On the web: https://initializer.pyahu.io/guides/virtual-threads/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 10 claims: 1 reproduced, 1 compiled, 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/virtual-threads.yaml).
+
 You turn on virtual threads with one property and the benchmark looks great. Then production gets slower: the
 database pool is always full, a service you call starts failing and the slowest requests take longer than before.
 
@@ -22,6 +24,17 @@ default for most Spring Boot services, as long as you know what they stop doing 
 6. Why do my logs lose the trace ID in async work?
 7. How do I call two services at once with one deadline?
 8. Is synchronized still a problem?
+
+### Evidence by step
+
+- 1. Should I turn on virtual threads?: 2 claims: 1 compiled, 1 not exercised.
+- 2. Why did latency get worse after I turned them on?: 1 claim: 1 not exercised.
+- 3. How do I keep a slow service from drowning in my calls?: 1 claim: 1 not exercised.
+- 4. Where does CPU heavy work go?: 2 claims: 1 reproduced, 1 not exercised.
+- 5. Why does my @Async code still run on old threads?: 1 claim: 1 not exercised.
+- 6. Why do my logs lose the trace ID in async work?: 1 claim: 1 not exercised.
+- 7. How do I call two services at once with one deadline?: 1 claim: 1 not exercised.
+- 8. Is synchronized still a problem?: 1 claim: 1 not exercised.
 
 ## 1. Should I turn on virtual threads?
 
@@ -333,10 +346,10 @@ threads:
 
 ## References
 
-- [Virtual threads guide (Core Libraries)](https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html) (25.0.4.1+1 (docs 25))
+- [Virtual threads guide (Core Libraries)](https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html) (25.0.4.1+1 (docs 25); docs 25)
 - [JEP 444: Virtual Threads](https://openjdk.org/jeps/444) (JDK 21): What JEP 444 changes and in which JDK it was delivered.
 - [JEP 491: Synchronize Virtual Threads without Pinning](https://openjdk.org/jeps/491) (JDK 24): What JEP 491 changes and in which JDK it was delivered.
 - [JEP 505: Structured Concurrency (Fifth Preview), the preview in JDK 25](https://openjdk.org/jeps/505) (JDK 25): What JEP 505 changes and in which JDK it was delivered.
 - [JEP 506: Scoped Values (final)](https://openjdk.org/jeps/506) (JDK 25): What JEP 506 changes and in which JDK it was delivered.
-- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.1.1 (docs 4.1))
-- [Task execution (virtual-thread executors)](https://docs.spring.io/spring-boot/4.1/reference/features/task-execution-and-scheduling.html) (4.1.1 (docs 4.1))
+- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.1.1 (docs 4.1); docs 4.1)
+- [Task execution (virtual-thread executors)](https://docs.spring.io/spring-boot/4.1/reference/features/task-execution-and-scheduling.html) (4.1.1 (docs 4.1); docs 4.1)

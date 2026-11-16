@@ -6,6 +6,8 @@ Hexagonal, DDD layered, classic layered, Onion, Clean, vertical slice, BCE and M
 
 On the web: https://initializer.pyahu.io/guides/architecture-styles/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Evidence coverage.** 8 claims: 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/architecture-styles.yaml).
+
 Every team meeting about architecture ends the same way. One person draws hexagons, another draws circles, a third
 says "we just need controllers, services and repositories". Each picture looks reasonable and nobody can say what
 would actually change in the code.
@@ -24,6 +26,17 @@ explains; it does not generate. For the two styles the Initializer generates, re
 6. When does vertical slice make sense?
 7. What are BCE and MVC and are they service architectures?
 8. What can no architecture test prove?
+
+### Evidence by step
+
+- 1. How do I compare styles fairly?: 1 claim: 1 not exercised.
+- 2. What do the styles really disagree about?: 1 claim: 1 not exercised.
+- 3. When is classic layered enough?: 1 claim: 1 not exercised.
+- 4. Are hexagonal, Onion and Clean the same thing?: 1 claim: 1 not exercised.
+- 5. Where does DDD layered fit?: 1 claim: 1 not exercised.
+- 6. When does vertical slice make sense?: 1 claim: 1 not exercised.
+- 7. What are BCE and MVC and are they service architectures?: 1 claim: 1 not exercised.
+- 8. What can no architecture test prove?: 1 claim: 1 not exercised.
 
 ## 1. How do I compare styles fairly?
 
@@ -288,8 +301,8 @@ The eight styles side by side, for the same scenario.
 
 ## References
 
-- [Fundamentals](https://docs.spring.io/spring-modulith/reference/2.1/fundamentals.html) (2.1.1 (docs 2.1))
-- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.1/verification.html) (2.1.1 (docs 2.1))
+- [Fundamentals](https://docs.spring.io/spring-modulith/reference/2.1/fundamentals.html) (2.1.1 (docs 2.1); docs 2.1)
+- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.1/verification.html) (2.1.1 (docs 2.1); docs 2.1)
 - [jmolecules-archunit at tag](https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit) (0.33.0)
 - [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html) (1.5.1, not version-pinned)
 - [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/) (2005): Ports and adapters as defined by its author.

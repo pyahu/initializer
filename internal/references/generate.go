@@ -154,9 +154,9 @@ func renderEntries(b *strings.Builder, r *guidedata.Repo, baseline string, es []
 			b.WriteString("\n")
 			continue
 		}
-		b.WriteString("| Document | Version | Pinned | Read it for |\n| -------- | ------- | ------ | ----------- |\n")
+		b.WriteString("| Document | Baseline version | Documentation pin | Read it for |\n| -------- | ---------------- | ----------------- | ----------- |\n")
 		for _, e := range list {
-			pinned := "pinned"
+			pinned := "pinned to " + e.DocVersion
 			if !e.Pinned {
 				pinned = "not version-pinned"
 			}
@@ -177,7 +177,7 @@ func ReferencePage(r *guidedata.Repo) ([]byte, error) {
 	var b strings.Builder
 	b.WriteString("---\ntitle: Reference docs\ndescription: Official documentation for the exact versions the guides and the generator use.\ntableOfContents: { maxHeadingLevel: 2 }\n---\n\n")
 	b.WriteString(Header + "\n\n")
-	fmt.Fprintf(&b, "Baseline **%s**. Every link points to the documentation for the version in that baseline; links that cannot be pinned say \"not version-pinned\".\n\n", active)
+	fmt.Fprintf(&b, "Baseline **%s**. The baseline version is what the examples use. The documentation pin is the version or release line the official site serves; a release line such as Spring Boot 4.1 follows its latest patch. Links that cannot be pinned say \"not version-pinned\".\n\n", active)
 	if gaps := ReferenceGaps(r); len(gaps) > 0 {
 		fmt.Fprintf(&b, ":::caution[Re-verify]\nThese components had entries in the previous baseline and have none in %s: %s.\n:::\n\n", active, strings.Join(gaps, ", "))
 	}

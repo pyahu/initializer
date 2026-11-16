@@ -6,6 +6,8 @@ Connection pools, timeouts, roles, migrations and tests for a Spring Boot servic
 
 On the web: https://initializer.pyahu.io/guides/database/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 15 claims: 15 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/database.yaml).
+
 You deploy on a Friday afternoon. Halfway through the rollout the new pods stop getting ready and PostgreSQL
 answers `FATAL: sorry, too many clients already`. Nothing changed in the database. The deployment itself used up
 every connection.
@@ -25,6 +27,18 @@ PostgreSQL: pools, timeouts, roles, migrations, tests and the metrics that warn 
 7. How do I change the schema without downtime?
 8. How do I test against a real database?
 9. How do I know the pool is in trouble?
+
+### Evidence by step
+
+- 1. How many connections can my pods open?: 2 claims: 2 not exercised.
+- 2. How long should a request wait for a connection?: 3 claims: 3 not exercised.
+- 3. How do I stop one slow query from holding everything?: 2 claims: 2 not exercised.
+- 4. Who should be allowed to change the schema?: 1 claim: 1 not exercised.
+- 5. When should migrations run?: 1 claim: 1 not exercised.
+- 6. How do I run the migration Job safely?: 2 claims: 2 not exercised.
+- 7. How do I change the schema without downtime?: 2 claims: 2 not exercised.
+- 8. How do I test against a real database?: 1 claim: 1 not exercised.
+- 9. How do I know the pool is in trouble?: 1 claim: 1 not exercised.
 
 ## 1. How many connections can my pods open?
 
@@ -418,17 +432,17 @@ Everything above lands in three places: the application's configuration, the dat
 
 ## References
 
-- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.1 (docs 4.1))
-- [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.1/reference/data/sql.html) (4.1.1 (docs 4.1))
-- [Database initialization (Liquibase)](https://docs.spring.io/spring-boot/4.1/how-to/data-initialization.html) (4.1.1 (docs 4.1))
-- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html) (2026.0.1 (docs 4.1))
-- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html) (2026.0.1 (docs 4.1))
-- [What is a changelog (Community)](https://docs.liquibase.com/community/user-guide-5-0-4/what-is-a-changelog) (5.0.3 (docs 5.0.4))
-- [Install with Spring Boot (Community)](https://docs.liquibase.com/community/get-started-5-0-4/install-liquibase-with-spring-boot) (5.0.3 (docs 5.0.4))
-- [Connect with PostgreSQL (Community)](https://docs.liquibase.com/community/integration-guide-5-0-4/connect-liquibase-with-postgresql) (5.0.3 (docs 5.0.4))
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.1 (docs 4.1); docs 4.1)
+- [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.1/reference/data/sql.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Database initialization (Liquibase)](https://docs.spring.io/spring-boot/4.1/how-to/data-initialization.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html) (2026.0.1 (docs 4.1); docs 4.1)
+- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html) (2026.0.1 (docs 4.1); docs 4.1)
+- [What is a changelog (Community)](https://docs.liquibase.com/community/user-guide-5-0-4/what-is-a-changelog) (5.0.3 (docs 5.0.4); docs 5.0.4)
+- [Install with Spring Boot (Community)](https://docs.liquibase.com/community/get-started-5-0-4/install-liquibase-with-spring-boot) (5.0.3 (docs 5.0.4); docs 5.0.4)
+- [Connect with PostgreSQL (Community)](https://docs.liquibase.com/community/integration-guide-5-0-4/connect-liquibase-with-postgresql) (5.0.3 (docs 5.0.4); docs 5.0.4)
 - [Community 5.0.3 release notes](https://docs.liquibase.com/community/release-notes/liquibase-community-5-0-3-release-notes) (5.0.3)
-- [Documentation](https://www.postgresql.org/docs/18/index.html) (18.6 (docs 18))
-- [Release 18 notes](https://www.postgresql.org/docs/18/release-18.html) (18.6 (docs 18))
-- [pgJDBC documentation](https://jdbc.postgresql.org/documentation/) (42.7.13 (docs 42.7), not version-pinned)
+- [Documentation](https://www.postgresql.org/docs/18/index.html) (18.6 (docs 18); docs 18)
+- [Release 18 notes](https://www.postgresql.org/docs/18/release-18.html) (18.6 (docs 18); docs 18)
+- [pgJDBC documentation](https://jdbc.postgresql.org/documentation/) (42.7.13 (docs 42.7); docs 42.7, not version-pinned)
 - [Testcontainers for Java docs](https://java.testcontainers.org/) (2.0.5, not version-pinned)
 - [Postgres module](https://java.testcontainers.org/modules/databases/postgres/) (2.0.5, not version-pinned)

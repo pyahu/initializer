@@ -1,8 +1,9 @@
 # Pyahu Initializer
 
 Guides with the production practices Pyahu follows for Spring Boot, Java and Next.js, shared with the community.
-A generator that applies them comes later. Each step answers one question with the failure it prevents and every
-claim has a test behind it.
+A generator that applies them comes later. Each step answers one question with the failure it prevents.
+The guides are a public preview: each claim has an evidence record, and each guide shows which claims have
+test results and which have not been exercised.
 
 - Site: https://initializer.pyahu.io
 - [The guides](https://initializer.pyahu.io/guides/): 24 guides in six parts (foundations, build the service,
@@ -15,7 +16,8 @@ claim has a test behind it.
 A fixture in `fixtures/` is a real service built with the exact versions of a baseline in
 `data/versions.yaml`. CI builds it, runs the Go acceptance tests in `acceptance/` against its image and
 writes an evidence report. Every claim a guide makes has a record in `data/evidence/` with its test, run and
-commit. A claim nothing proves yet says why.
+commit when it has been tested. A claim nothing proves yet says why. The coverage summary at the top of each
+guide distinguishes compiled code, reproduced behaviour, measurements and claims not exercised here.
 
 ## Layout
 

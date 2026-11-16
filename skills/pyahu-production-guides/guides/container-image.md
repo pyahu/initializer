@@ -6,6 +6,8 @@ Build a small layered image for a Spring Boot service, run it without root and k
 
 On the web: https://initializer.pyahu.io/guides/container-image/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 11 claims: 2 reproduced, 1 compiled, 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/container-image.yaml).
+
 A security alert lands: a library with a known hole is out there. Which of your services ship it? Nobody knows,
 because the images are opaque boxes. Meanwhile every small commit pushes 50 MB, the app runs as root and the base
 image quietly changed its JDK last night.
@@ -24,6 +26,17 @@ no root, pinned inputs and a record of what is inside and who built it. JVM flag
 6. How do I know which libraries an image ships?
 7. How do I catch known vulnerabilities before they ship?
 8. How does the cluster know an image is really ours?
+
+### Evidence by step
+
+- 1. Why does every release push the whole app again?: 2 claims: 1 reproduced, 1 not exercised.
+- 2. Which base image should I start from?: 1 claim: 1 not exercised.
+- 3. How do I stop the base image from changing under me?: 1 claim: 1 not exercised.
+- 4. How do I run the app without root on a read-only disk?: 2 claims: 1 reproduced, 1 not exercised.
+- 5. How do I keep secrets out of the image?: 1 claim: 1 not exercised.
+- 6. How do I know which libraries an image ships?: 2 claims: 1 compiled, 1 not exercised.
+- 7. How do I catch known vulnerabilities before they ship?: 1 claim: 1 not exercised.
+- 8. How does the cluster know an image is really ours?: 1 claim: 1 not exercised.
 
 ## 1. Why does every release push the whole app again?
 
@@ -374,23 +387,23 @@ tasks.cyclonedxBom {
 
 ## References
 
-- [Container images](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html) (4.1.1 (docs 4.1))
-- [Efficient container images (layering)](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html) (4.1.1 (docs 4.1))
-- [Dockerfiles](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html) (4.1.1 (docs 4.1))
-- [Cloud Native Buildpacks](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html) (4.1.1 (docs 4.1))
-- [Efficient deployments](https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html) (4.1.1 (docs 4.1))
-- [Gradle plugin: packaging OCI images](https://docs.spring.io/spring-boot/4.1/gradle-plugin/packaging-oci-image.html) (4.1.1 (docs 4.1))
+- [Container images](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Efficient container images (layering)](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Dockerfiles](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Cloud Native Buildpacks](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Efficient deployments](https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Gradle plugin: packaging OCI images](https://docs.spring.io/spring-boot/4.1/gradle-plugin/packaging-oci-image.html) (4.1.1 (docs 4.1); docs 4.1)
 - [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect) (n/a, not version-pinned)
 - [SLSA spec v1.2 (current; /spec/ and /spec/latest/ both redirect to v1.2)](https://slsa.dev/spec/v1.2/) (1.2)
 - [SLSA v1.2 Provenance](https://slsa.dev/spec/v1.2/provenance) (1.2)
-- [Sigstore docs](https://docs.sigstore.dev/) (3.1.3 (docs 3), not version-pinned)
-- [cosign: signing containers](https://docs.sigstore.dev/cosign/signing/signing_with_containers/) (3.1.3 (docs 3), not version-pinned)
-- [cosign: verifying](https://docs.sigstore.dev/cosign/verifying/verify/) (3.1.3 (docs 3), not version-pinned)
-- [cosign: in-toto attestations](https://docs.sigstore.dev/cosign/verifying/attestation/) (3.1.3 (docs 3), not version-pinned)
+- [Sigstore docs](https://docs.sigstore.dev/) (3.1.3 (docs 3); docs 3, not version-pinned)
+- [cosign: signing containers](https://docs.sigstore.dev/cosign/signing/signing_with_containers/) (3.1.3 (docs 3); docs 3, not version-pinned)
+- [cosign: verifying](https://docs.sigstore.dev/cosign/verifying/verify/) (3.1.3 (docs 3); docs 3, not version-pinned)
+- [cosign: in-toto attestations](https://docs.sigstore.dev/cosign/verifying/attestation/) (3.1.3 (docs 3); docs 3, not version-pinned)
 - [cosign release v3.1.3](https://github.com/sigstore/cosign/releases/tag/v3.1.3) (3.1.3)
 - [Syft docs (Anchore OSS site)](https://oss.anchore.com/docs/guides/sbom/) (1.54.1, not version-pinned)
 - [Syft CLI reference](https://oss.anchore.com/docs/reference/syft/cli/) (1.54.1, not version-pinned)
-- [Trivy docs](https://trivy.dev/docs/v0.76/guide/) (0.76.0 (docs 0.76))
+- [Trivy docs](https://trivy.dev/docs/v0.76/guide/) (0.76.0 (docs 0.76); docs 0.76)
 - [Trivy release v0.76.0](https://github.com/aquasecurity/trivy/releases/tag/v0.76.0) (0.76.0)
 - [Renovate docs](https://docs.renovatebot.com/) (44.166.0, not version-pinned)
-- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/) (44.166.0 (docs latest), not version-pinned)
+- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/) (44.166.0 (docs latest); docs latest, not version-pinned)

@@ -6,6 +6,8 @@ A fast local loop for a Spring Boot 4.1 service, with the real database and tele
 
 On the web: https://initializer.pyahu.io/guides/local-development/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 10 claims: 2 reproduced, 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/local-development.yaml).
+
 A new developer clones the service and asks how to run it. The answer is a wiki page from last year: install
 PostgreSQL by hand, copy a properties file from a colleague and do not worry about the failing tests. Two days
 later they are still not sure their laptop behaves like production.
@@ -23,6 +25,17 @@ containers, wired to the app by Spring Boot, with the same settings as the clust
 6. How do I get fast restarts while I code?
 7. How do I get useful data into the local database?
 8. When is a local Kubernetes worth it?
+
+### Evidence by step
+
+- 1. Why run real dependencies instead of mocks?: 1 claim: 1 not exercised.
+- 2. How do I start the dependencies with the app?: 2 claims: 2 not exercised.
+- 3. Can I declare the containers in Java instead?: 1 claim: 1 not exercised.
+- 4. How do I see traces, metrics and logs on my laptop?: 2 claims: 1 reproduced, 1 not exercised.
+- 5. How do I keep local settings close to production?: 1 claim: 1 reproduced.
+- 6. How do I get fast restarts while I code?: 1 claim: 1 not exercised.
+- 7. How do I get useful data into the local database?: 1 claim: 1 not exercised.
+- 8. When is a local Kubernetes worth it?: 1 claim: 1 not exercised.
 
 ## 1. Why run real dependencies instead of mocks?
 
@@ -330,8 +343,8 @@ resource attributes: `deployment.environment.name` is `dev`, not `local`.
 
 ## References
 
-- [Observability, OpenTelemetry section (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/observability.html#actuator.observability.opentelemetry) (4.1.1 (docs 4.1))
-- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.1 (docs 4.1))
-- [Documentation](https://www.postgresql.org/docs/18/index.html) (18.6 (docs 18))
+- [Observability, OpenTelemetry section (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/observability.html#actuator.observability.opentelemetry) (4.1.1 (docs 4.1); docs 4.1)
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Documentation](https://www.postgresql.org/docs/18/index.html) (18.6 (docs 18); docs 18)
 - [Testcontainers for Java docs](https://java.testcontainers.org/) (2.0.5, not version-pinned)
 - [Postgres module](https://java.testcontainers.org/modules/databases/postgres/) (2.0.5, not version-pinned)

@@ -8,8 +8,17 @@ interface Props {
 const { guide } = Astro.props;
 const g = (data.guides as any)[guide];
 if (!g) throw new Error(`GuideStatus: unknown guide ${guide}`);
+const evidenceURL = `https://github.com/pyahu/initializer/blob/main/data/evidence/${guide}.yaml`;
 ---
 <div class="guide-map not-content">
+  <Aside type="note" title={g.state === "draft" ? "Preview" : "Evidence coverage"}>
+    <p>Written for baseline <strong>{g.baseline}</strong>. {g.coverage}.</p>
+    <p>
+      Compiled means the code builds; reproduced means the named behaviour passed a test;
+      measured means a measurement was recorded. A claim marked not exercised has no test result here.
+      {" "}<a href={evidenceURL}>Read the claims, results and limitations</a> before treating this guide as verified for your service.
+    </p>
+  </Aside>
   {g.status.reverify && (
     <Aside type="caution" title="Re-verify">
       <ul>{g.status.reverifyReasons.map((r: string) => <li>{r}</li>)}</ul>
@@ -22,7 +31,16 @@ if (!g) throw new Error(`GuideStatus: unknown guide ${guide}`);
       {g.contents.map((c: any) => <li><a href={`#${c.id}`}>{c.title}</a></li>)}
     </ul>
     <p class="guide-more">
-      Then <a href="#put-it-all-together">put it all together</a> with tested files and review a service with the <a href="#checklist">checklist</a>.
+      Then <a href="#put-it-all-together">put it all together</a> with examples and review a service with the <a href="#checklist">checklist</a>.
     </p>
   </nav>
+  <details class="guide-evidence">
+    <summary>Evidence by step</summary>
+    <ul>
+      {g.contents.map((c: any) => (
+        <li><a href={`#${c.id}`}>{c.title}</a>: {g.cards[c.id].coverage}.</li>
+      ))}
+    </ul>
+    <p>See the <a href={evidenceURL}>evidence records</a> for each claim's test or the reason it has not been exercised.</p>
+  </details>
 </div>

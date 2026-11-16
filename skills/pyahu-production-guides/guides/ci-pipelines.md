@@ -6,6 +6,8 @@ A GitHub Actions pipeline for a Spring Boot service that builds in the pinned JD
 
 On the web: https://initializer.pyahu.io/guides/ci-pipelines/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 9 claims: 1 reproduced, 1 compiled, 7 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/ci-pipelines.yaml).
+
 Every check is green and the release still breaks. The tests ran on a different JDK than the image, the image itself
 was never started and a popular action changed overnight because its tag now points somewhere else. CI said yes to
 something nobody actually tested.
@@ -23,6 +25,17 @@ the image, the image running and finally where it came from. It stays fast and k
 6. How do I publish an image others can verify?
 7. How do I keep the pipeline fast?
 8. Who keeps the pipeline itself up to date?
+
+### Evidence by step
+
+- 1. Can an action I use change under me?: 2 claims: 2 not exercised.
+- 2. What should the workflow token be allowed to do?: 1 claim: 1 not exercised.
+- 3. Which JDK does CI build with?: 1 claim: 1 compiled.
+- 4. How do I cache without trusting other branches?: 1 claim: 1 not exercised.
+- 5. What must pass before an image is published?: 1 claim: 1 reproduced.
+- 6. How do I publish an image others can verify?: 1 claim: 1 not exercised.
+- 7. How do I keep the pipeline fast?: 1 claim: 1 not exercised.
+- 8. Who keeps the pipeline itself up to date?: 1 claim: 1 not exercised.
 
 ## 1. Can an action I use change under me?
 
@@ -368,8 +381,8 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-9.8.1-bin.zip
 - [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect) (n/a, not version-pinned)
 - [SLSA v1.2 Build track basics](https://slsa.dev/spec/v1.2/build-track-basics) (1.2)
 - [SLSA v1.2 Provenance](https://slsa.dev/spec/v1.2/provenance) (1.2)
-- [cosign: signing containers](https://docs.sigstore.dev/cosign/signing/signing_with_containers/) (3.1.3 (docs 3), not version-pinned)
-- [cosign: verifying](https://docs.sigstore.dev/cosign/verifying/verify/) (3.1.3 (docs 3), not version-pinned)
+- [cosign: signing containers](https://docs.sigstore.dev/cosign/signing/signing_with_containers/) (3.1.3 (docs 3); docs 3, not version-pinned)
+- [cosign: verifying](https://docs.sigstore.dev/cosign/verifying/verify/) (3.1.3 (docs 3); docs 3, not version-pinned)
 - [Syft CLI reference](https://oss.anchore.com/docs/reference/syft/cli/) (1.54.1, not version-pinned)
 - [Renovate docs](https://docs.renovatebot.com/) (44.166.0, not version-pinned)
-- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/) (44.166.0 (docs latest), not version-pinned)
+- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/) (44.166.0 (docs latest); docs latest, not version-pinned)

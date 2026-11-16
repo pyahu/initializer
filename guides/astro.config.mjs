@@ -21,8 +21,6 @@ export default defineConfig({
       favicon: "/assets/mark.svg",
       social: [{ icon: "github", label: "GitHub", href: "https://github.com/pyahu/initializer" }],
       customCss: ["./src/styles/starlight.css"],
-      // Until the pilot format is approved.
-      head: [{ tag: "meta", attrs: { name: "robots", content: "noindex" } }],
       sidebar: [
         { label: "Start here", items: [{ label: "All guides", slug: "guides" }] },
         {

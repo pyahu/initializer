@@ -6,6 +6,8 @@ Serve and call gRPC from Spring Boot 4.1 with a safe contract, deadlines, honest
 
 On the web: https://initializer.pyahu.io/guides/grpc/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 9 claims: 9 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/grpc.yaml).
+
 You moved two internal services from JSON to gRPC and the first week looks great. Then you scale the server to
 four pods and one of them runs hot while three sit idle. A slow call hangs for minutes because nothing told it to
 stop. And a reused field number breaks a client you forgot existed.
@@ -23,6 +25,17 @@ contract safe and how to run it in Kubernetes with Spring Boot 4.1, which now su
 6. How does Kubernetes know a gRPC service is healthy?
 7. Why does one pod get all the calls?
 8. How do I see and secure gRPC traffic?
+
+### Evidence by step
+
+- 1. When is gRPC the right choice?: 1 claim: 1 not exercised.
+- 2. How do I change the contract without breaking clients?: 1 claim: 1 not exercised.
+- 3. How do I add gRPC to a Spring Boot service?: 1 claim: 1 not exercised.
+- 4. How long should a call wait?: 1 claim: 1 not exercised.
+- 5. Which errors should I return and which calls can be retried?: 1 claim: 1 not exercised.
+- 6. How does Kubernetes know a gRPC service is healthy?: 2 claims: 2 not exercised.
+- 7. Why does one pod get all the calls?: 1 claim: 1 not exercised.
+- 8. How do I see and secure gRPC traffic?: 1 claim: 1 not exercised.
 
 ## 1. When is gRPC the right choice?
 
@@ -308,7 +321,7 @@ No tested gRPC service exists in this repository yet, so the setup is a list.
 
 ## References
 
-- [Configure liveness/readiness/startup probes (task)](https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) (1.36.5 (docs 1.36))
+- [Configure liveness/readiness/startup probes (task)](https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) (1.36.5 (docs 1.36); docs 1.36)
 - [Spring gRPC reference](https://docs.spring.io/spring-grpc/reference/1.1/index.html) (not in the baseline yet)
 - [Spring gRPC getting started](https://docs.spring.io/spring-grpc/reference/1.1/getting-started.html) (not in the baseline yet)
 - [Spring Boot 4.1 gRPC (first-party in Boot 4.1)](https://docs.spring.io/spring-boot/4.1/reference/io/grpc.html) (not in the baseline yet)

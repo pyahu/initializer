@@ -6,6 +6,8 @@ Choose between Spring Data JDBC, JPA and jOOQ and use each one well in productio
 
 On the web: https://initializer.pyahu.io/guides/jpa-and-jooq/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 13 claims: 13 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/jpa-and-jooq.yaml).
+
 The orders page was fast in review. In production it takes four seconds and the database log shows why: one
 query for the orders, then one more for every order on the page. Nobody wrote those queries. The mapping did.
 
@@ -23,6 +25,17 @@ that Liquibase owns. For pools, timeouts and migrations, read [the database guid
 6. How do I write many rows fast?
 7. What goes wrong in long transactions and entity caches?
 8. How do I use jOOQ with my migrations?
+
+### Evidence by step
+
+- 1. Spring Data JDBC, JPA or jOOQ: which one fits my service?: 2 claims: 2 not exercised.
+- 2. What does JPA do behind my back?: 2 claims: 2 not exercised.
+- 3. Why does one page run a hundred queries?: 2 claims: 2 not exercised.
+- 4. Why do queries run after my controller returns?: 1 claim: 1 not exercised.
+- 5. How do I read data without loading entities?: 1 claim: 1 not exercised.
+- 6. How do I write many rows fast?: 1 claim: 1 not exercised.
+- 7. What goes wrong in long transactions and entity caches?: 2 claims: 2 not exercised.
+- 8. How do I use jOOQ with my migrations?: 2 claims: 2 not exercised.
 
 ## 1. Spring Data JDBC, JPA or jOOQ: which one fits my service?
 
@@ -301,10 +314,10 @@ Each choice lands in the build, in `application.yaml` and in the persistence ada
 
 ## References
 
-- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.1 (docs 4.1))
-- [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.1/reference/data/sql.html) (4.1.1 (docs 4.1))
-- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html) (2026.0.1 (docs 4.1))
-- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html) (2026.0.1 (docs 4.1))
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.1 (docs 4.1); docs 4.1)
+- [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.1/reference/data/sql.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html) (2026.0.1 (docs 4.1); docs 4.1)
+- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html) (2026.0.1 (docs 4.1); docs 4.1)
 - [Testcontainers for Java docs](https://java.testcontainers.org/) (2.0.5, not version-pinned)
 - [Jakarta Persistence 3.2 specification (HTML)](https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html) (not in the baseline yet)
 - [Hibernate ORM 7.4 user guide](https://docs.hibernate.org/orm/7.4/userguide/html_single/Hibernate_User_Guide.html) (not in the baseline yet)

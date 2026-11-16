@@ -6,6 +6,8 @@ What to test at each layer and with which tool, from fast domain tests to tests 
 
 On the web: https://initializer.pyahu.io/guides/testing/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 10 claims: 1 reproduced, 3 compiled, 6 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/testing.yaml).
+
 The build takes twelve minutes and half of that is tests that start the whole application to check one `if`. A
 change to a controller breaks a test about the database. A bug still reaches production, because the one thing
 nobody tested was the image that actually runs.
@@ -24,6 +26,17 @@ built image.
 6. How do I test calls to other services?
 7. Why is my test suite so slow?
 8. How do I know the image really works?
+
+### Evidence by step
+
+- 1. Where should most of my tests live?: 1 claim: 1 not exercised.
+- 2. How do I test business rules without starting Spring?: 1 claim: 1 not exercised.
+- 3. How do I test one endpoint quickly?: 2 claims: 1 compiled, 1 not exercised.
+- 4. How do I stop the architecture from drifting?: 2 claims: 2 compiled.
+- 5. How do I test against a real database?: 1 claim: 1 not exercised.
+- 6. How do I test calls to other services?: 1 claim: 1 not exercised.
+- 7. Why is my test suite so slow?: 1 claim: 1 not exercised.
+- 8. How do I know the image really works?: 1 claim: 1 reproduced.
 
 ## 1. Where should most of my tests live?
 
@@ -357,9 +370,9 @@ fails and names the class.
 
 ## References
 
-- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.1 (docs 4.1))
-- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.1/verification.html) (2.1.1 (docs 2.1))
-- [Integration testing modules](https://docs.spring.io/spring-modulith/reference/2.1/testing.html) (2.1.1 (docs 2.1))
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.1/verification.html) (2.1.1 (docs 2.1); docs 2.1)
+- [Integration testing modules](https://docs.spring.io/spring-modulith/reference/2.1/testing.html) (2.1.1 (docs 2.1); docs 2.1)
 - [jmolecules-archunit at tag](https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit) (0.33.0)
 - [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html) (1.5.1, not version-pinned)
 - [Testcontainers for Java docs](https://java.testcontainers.org/) (2.0.5, not version-pinned)

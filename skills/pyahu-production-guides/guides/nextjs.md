@@ -6,6 +6,8 @@ A production Next.js frontend in the same repository as the Spring Boot service,
 
 On the web: https://initializer.pyahu.io/guides/nextjs/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 11 claims: 11 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/nextjs.yaml).
+
 The new screen works on your laptop. In staging it calls the production API, the access token shows up in the
 browser's developer tools and a deploy drops every open request. The frontend is fine; it just runs in more places
 than you thought and each place sees different things.
@@ -24,6 +26,17 @@ advice is wrong for you.
 6. How do I run the frontend in Kubernetes?
 7. Which security headers does the frontend need?
 8. How do I follow a click into the service's trace?
+
+### Evidence by step
+
+- 1. What runs on the server and what runs in the browser?: 1 claim: 1 not exercised.
+- 2. How does the frontend call the Spring Boot service?: 1 claim: 1 not exercised.
+- 3. How does the user log in and where does the token live?: 2 claims: 2 not exercised.
+- 4. Why does my staging image call the production API?: 1 claim: 1 not exercised.
+- 5. What does Next.js cache and how do I refresh it?: 2 claims: 2 not exercised.
+- 6. How do I run the frontend in Kubernetes?: 2 claims: 2 not exercised.
+- 7. Which security headers does the frontend need?: 1 claim: 1 not exercised.
+- 8. How do I follow a click into the service's trace?: 1 claim: 1 not exercised.
 
 ## 1. What runs on the server and what runs in the browser?
 
@@ -322,9 +335,9 @@ file exists for it yet, so these are lists.
 ## References
 
 - [OTel specification](https://opentelemetry.io/docs/specs/otel/) (1.61.0, not version-pinned)
-- [Probes (concept)](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/) (1.36.5 (docs 1.36))
-- [Pod Security Standards](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/) (1.36.5 (docs 1.36))
-- [Pod lifecycle (graceful termination)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/) (1.36.5 (docs 1.36))
+- [Probes (concept)](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/) (1.36.5 (docs 1.36); docs 1.36)
+- [Pod Security Standards](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/) (1.36.5 (docs 1.36); docs 1.36)
+- [Pod lifecycle (graceful termination)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/) (1.36.5 (docs 1.36); docs 1.36)
 - [OpenAPI Specification v3.1.2 (latest 3.1 patch)](https://spec.openapis.org/oas/v3.1.2.html) (3.1.2)
 - [OpenID Connect Core 1.0 (errata set 2)](https://openid.net/specs/openid-connect-core-1_0.html) (final)
 - [RFC 9700 OAuth 2.0 Security BCP](https://www.rfc-editor.org/rfc/rfc9700.html) (final)

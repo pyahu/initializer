@@ -6,6 +6,8 @@ A Gradle build for a Spring Boot 4.1 service that is the same on every machine a
 
 On the web: https://initializer.pyahu.io/guides/build-quality/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
+**Preview.** 11 claims: 7 compiled, 4 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/build-quality.yaml).
+
 The build passes on your laptop and fails in CI. A teammate gets a different Spring version than you. A
 `NullPointerException` reaches production from a method everyone was sure never returned null. Half of every code
 review is about spaces and imports.
@@ -24,6 +26,17 @@ drift before anything ships.
 6. How do I end formatting debates in code review?
 7. How do I know which libraries the service ships?
 8. How do I keep dependencies current without breaking the build?
+
+### Evidence by step
+
+- 1. How do I make sure every machine builds the same way?: 2 claims: 1 compiled, 1 not exercised.
+- 2. Where should dependency versions live?: 1 claim: 1 compiled.
+- 3. How do I use Spring Boot's versions without the extra plugin?: 2 claims: 1 compiled, 1 not exercised.
+- 4. How do I catch bugs before the code runs?: 1 claim: 1 compiled.
+- 5. How do I stop a NullPointerException at compile time?: 2 claims: 1 compiled, 1 not exercised.
+- 6. How do I end formatting debates in code review?: 1 claim: 1 compiled.
+- 7. How do I know which libraries the service ships?: 1 claim: 1 compiled.
+- 8. How do I keep dependencies current without breaking the build?: 1 claim: 1 not exercised.
 
 ## 1. How do I make sure every machine builds the same way?
 
@@ -419,18 +432,18 @@ tasks.named("build") {
 
 ## References
 
-- [Gradle plugin](https://docs.spring.io/spring-boot/4.1/gradle-plugin/index.html) (4.1.1 (docs 4.1))
+- [Gradle plugin](https://docs.spring.io/spring-boot/4.1/gradle-plugin/index.html) (4.1.1 (docs 4.1); docs 4.1)
 - [Best practices](https://docs.gradle.org/9.8.1/userguide/best_practices.html) (9.8.1)
 - [Version catalogs](https://docs.gradle.org/9.8.1/userguide/version_catalogs.html) (9.8.1)
 - [Toolchains](https://docs.gradle.org/9.8.1/userguide/toolchains.html) (9.8.1)
 - [Dependency verification](https://docs.gradle.org/9.8.1/userguide/dependency_verification.html) (9.8.1)
-- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/) (44.166.0 (docs latest), not version-pinned)
-- [Renovate Gradle manager](https://docs.renovatebot.com/modules/manager/gradle/) (44.166.0 (docs latest), not version-pinned)
-- [Renovate upgrade best practices](https://docs.renovatebot.com/upgrade-best-practices/) (44.166.0 (docs latest), not version-pinned)
-- [JSpecify user guide](https://jspecify.dev/docs/user-guide/) (1.0.1 (docs 1.0), not version-pinned)
-- [JSpecify annotations javadoc 1.0.0](https://javadoc.io/doc/org.jspecify/jspecify/1.0.0/org/jspecify/annotations/package-summary.html) (1.0.1 (docs 1.0))
+- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/) (44.166.0 (docs latest); docs latest, not version-pinned)
+- [Renovate Gradle manager](https://docs.renovatebot.com/modules/manager/gradle/) (44.166.0 (docs latest); docs latest, not version-pinned)
+- [Renovate upgrade best practices](https://docs.renovatebot.com/upgrade-best-practices/) (44.166.0 (docs latest); docs latest, not version-pinned)
+- [JSpecify user guide](https://jspecify.dev/docs/user-guide/) (1.0.1 (docs 1.0); docs 1.0, not version-pinned)
+- [JSpecify annotations javadoc 1.0.0](https://javadoc.io/doc/org.jspecify/jspecify/1.0.0/org/jspecify/annotations/package-summary.html) (1.0.1 (docs 1.0); docs 1.0)
 - [NullAway README at tag](https://github.com/uber/NullAway/blob/v0.14.2/README.md) (0.14.2)
-- [NullAway JSpecify support (wiki)](https://github.com/uber/NullAway/wiki/JSpecify-Support) (0.14.2 (docs latest), not version-pinned)
+- [NullAway JSpecify support (wiki)](https://github.com/uber/NullAway/wiki/JSpecify-Support) (0.14.2 (docs latest); docs latest, not version-pinned)
 - [Error Prone docs](https://errorprone.info/) (2.50.0, not version-pinned)
 - [Error Prone installation](https://errorprone.info/docs/installation) (2.50.0, not version-pinned)
 - [Error Prone bug patterns](https://errorprone.info/bugpatterns) (2.50.0, not version-pinned)

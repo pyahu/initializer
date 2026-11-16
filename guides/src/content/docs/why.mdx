@@ -60,8 +60,10 @@ Example code rots when nothing runs it. The code in the guides is cut from a sma
 CI builds it, builds its image and runs behaviour tests against it on every change, so an upgrade that breaks
 the advice turns CI red before it reaches a reader.
 
-Each claim is tied to a test, its command and its result. Some claims need a cluster or a load test that has
-not run yet. Those say "not exercised" and why, so nothing untested passes as proven.
+Every claim has an evidence record. Tested claims name the test, its command, result and CI run. Others are
+based on the official documentation or design reasoning and say "not exercised", with the reason.
+Each guide shows that coverage at the top and by step. The public preview includes both kinds of advice;
+passing CI does not mean every claim in every guide has been tested.
 
 ## Why questions and steps
 
