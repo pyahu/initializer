@@ -13,20 +13,27 @@ import (
 )
 
 // Qualify recomputes every component's qualification from the eligible records (5.3)
-// and the latest fixture reports, keyed by fixture name.
+// and the current and historical reports, keyed by fixture and revision.
 func Qualify(r *guidedata.Repo, reports map[string]*Report) map[string]map[string]guidedata.Qualification {
 	valid := map[string]*Report{}
 	for name, report := range reports {
-		if report != nil && name == report.Fixture && report.ValidateQualification(r) == nil {
-			valid[name] = report
+		if report != nil && (name == report.Fixture || name == report.Key()) && report.ValidateQualification(r) == nil {
+			valid[report.Key()] = report
 		}
 	}
 	out := map[string]map[string]guidedata.Qualification{}
+	records := append([]guidedata.EvidenceRecord{}, r.Evidence...)
+	for _, record := range r.HistoricalEvidence {
+		fx := r.Fixture(record.Fixture)
+		if fx == nil || fx.Baseline != record.Baseline {
+			records = append(records, record)
+		}
+	}
 	for _, rev := range r.Versions.Revisions {
 		q := map[string]guidedata.Qualification{}
 		for key, c := range rev.Components {
 			caps := map[string][]string{}
-			for _, e := range r.Evidence {
+			for _, e := range records {
 				if !eligible(r, e, rev.ID, valid) || !containsStr(e.Components, key) {
 					continue
 				}
@@ -68,13 +75,16 @@ func eligible(r *guidedata.Repo, e guidedata.EvidenceRecord, revision string, re
 			return false
 		}
 	}
-	fx := r.Fixture(e.Fixture)
+	fx := r.FixtureAt(e.Fixture, e.Baseline)
 	if fx == nil || !containsStr(fx.RequiredTests, e.Test) {
 		return false
 	}
-	rep := reports[e.Fixture]
+	rep := reports[e.Fixture+"@"+revision]
 	return rep != nil && rep.Baseline == revision && rep.Passed(e.Test)
 }
+
+// Key lets a current report and its historical predecessor coexist for one fixture.
+func (rep *Report) Key() string { return rep.Fixture + "@" + rep.Baseline }
 
 // Differences lists components whose qualification in versions.yaml differs.
 func Differences(r *guidedata.Repo, q map[string]map[string]guidedata.Qualification) []string {

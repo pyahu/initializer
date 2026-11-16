@@ -11,19 +11,21 @@ import (
 
 // Repo is everything guidekit reads, loaded and schema-validated.
 type Repo struct {
-	Root          string
-	Schemas       *Schemas
-	Versions      Versions
-	References    References
-	Checklist     []ChecklistItem
-	Evidence      []EvidenceRecord
-	Invalidations []Invalidation
-	Retired       []Retired
-	Exceptions    []LinkException
-	Audit         []AuditException
-	Fixtures      []Fixture
-	Guides        []*Guide
-	Diagrams      map[string]DiagramDef // by component name
+	Root               string
+	Schemas            *Schemas
+	Versions           Versions
+	References         References
+	Checklist          []ChecklistItem
+	Evidence           []EvidenceRecord
+	Invalidations      []Invalidation
+	Retired            []Retired
+	Exceptions         []LinkException
+	Audit              []AuditException
+	Fixtures           []Fixture
+	HistoricalFixtures []Fixture
+	HistoricalEvidence []EvidenceRecord
+	Guides             []*Guide
+	Diagrams           map[string]DiagramDef // by component name
 }
 
 // FindRoot walks up from dir to the directory holding go.mod and data/.
@@ -110,6 +112,34 @@ func Load(root string) (*Repo, []error, error) {
 		}
 		r.Fixtures = append(r.Fixtures, fx)
 	}
+	history, _ := filepath.Glob(filepath.Join(root, "data", "history", "*", "*", "fixture.yaml"))
+	for _, f := range history {
+		var fx Fixture
+		rel, _ := filepath.Rel(root, f)
+		if err := load(rel, "fixture", &fx); err != nil {
+			return nil, nil, err
+		}
+		fx.Dir = filepath.Dir(f)
+		if fx.Name != filepath.Base(fx.Dir) || fx.Baseline != filepath.Base(filepath.Dir(fx.Dir)) {
+			return nil, nil, fmt.Errorf("%s: historical fixture path must match its baseline and name", rel)
+		}
+		r.HistoricalFixtures = append(r.HistoricalFixtures, fx)
+		files, _ := filepath.Glob(filepath.Join(fx.Dir, "evidence", "*.yaml"))
+		for _, file := range files {
+			var records []EvidenceRecord
+			rel, _ := filepath.Rel(root, file)
+			if err := load(rel, "evidence", &records); err != nil {
+				return nil, nil, err
+			}
+			for i := range records {
+				records[i].Guide = strings.TrimSuffix(filepath.Base(file), ".yaml")
+				if records[i].Baseline != fx.Baseline || (records[i].Exercised() && records[i].Fixture != fx.Name) {
+					return nil, nil, fmt.Errorf("%s: historical evidence must match its fixture and baseline", rel)
+				}
+			}
+			r.HistoricalEvidence = append(r.HistoricalEvidence, records...)
+		}
+	}
 	r.Diagrams, err = LoadDiagrams(root)
 	if err != nil {
 		return nil, nil, err
@@ -150,6 +180,20 @@ func (r *Repo) Fixture(name string) *Fixture {
 	for i := range r.Fixtures {
 		if r.Fixtures[i].Name == name {
 			return &r.Fixtures[i]
+		}
+	}
+	return nil
+}
+
+// FixtureAt uses the current inventory or a frozen inventory saved with its real CI report.
+func (r *Repo) FixtureAt(name, baseline string) *Fixture {
+	if fx := r.Fixture(name); fx != nil && fx.Baseline == baseline {
+		return fx
+	}
+	for i := range r.HistoricalFixtures {
+		fx := &r.HistoricalFixtures[i]
+		if fx.Name == name && fx.Baseline == baseline {
+			return fx
 		}
 	}
 	return nil

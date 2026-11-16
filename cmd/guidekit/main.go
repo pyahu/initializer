@@ -85,15 +85,18 @@ func main() {
 		_ = fs.Parse(args)
 		r := mustLoad(root)
 		reps := map[string]*evidence.Report{}
+		for _, fx := range r.HistoricalFixtures {
+			reports = append(reports, filepath.Join(fx.Dir, "evidence-report.json"))
+		}
 		for _, p := range reports {
 			rep, err := evidence.ReadReport(r, p)
 			if err != nil {
 				die(err)
 			}
-			reps[rep.Fixture] = rep
+			reps[rep.Key()] = rep
 		}
 		for _, fx := range r.Fixtures {
-			if reps[fx.Name] == nil {
+			if reps[fx.Name+"@"+fx.Baseline] == nil {
 				die(fmt.Errorf("no evidence report for fixture %s", fx.Name))
 			}
 		}

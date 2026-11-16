@@ -179,7 +179,7 @@ func (r *Repo) Check() []error {
 			}
 		}
 		if e.Exercised() {
-			fx := r.Fixture(e.Fixture)
+			fx := r.FixtureAt(e.Fixture, e.Baseline)
 			if fx == nil {
 				add("evidence %s: fixture %s unknown", e.ID, e.Fixture)
 			} else {
@@ -295,7 +295,7 @@ func (r *Repo) Check() []error {
 			add("audit exception %s: expires must be within 30 days after added", x.Advisory)
 		}
 	}
-	for _, fx := range r.Fixtures {
+	for _, fx := range append(append([]Fixture{}, r.Fixtures...), r.HistoricalFixtures...) {
 		rev := r.Versions.Revision(fx.Baseline)
 		if rev == nil {
 			add("fixture %s: baseline %s unknown", fx.Name, fx.Baseline)

@@ -179,6 +179,12 @@ the list. Only each component's `qualification` block changes and only through
 `guidekit qualify --report <evidence-report.json>`, which sets `qualified` when every claim has
 an eligible record, `partial` when some do, `provisional` when none do.
 
+Before moving an existing fixture to a new revision, save its manifest, evidence records (one file per guide under
+`evidence/`) and a real passing `evidence-report.json` in `data/history/<baseline>/<fixture>/`. Qualification loads
+these reports automatically and checks them against their saved inventories and pins. Current and historical
+reports are keyed by fixture and revision: a new run cannot erase an older qualification or qualify it by accident.
+Do not copy a qualification to a new revision; it starts provisional until its own evidence passes.
+
 A pin with `managedBy` must equal what the managing BOM gives its `coordinates`; `guidekit boms`
 checks this weekly.
 

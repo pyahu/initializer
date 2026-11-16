@@ -173,7 +173,7 @@ func ReadReport(r *guidedata.Repo, path string) (*Report, error) {
 }
 
 // ValidateQualification rejects failed, incomplete or internally inconsistent reports.
-// The inventory comes from the checked-out fixture, never from the report itself.
+// The inventory comes from the current fixture or its saved revision, never from the report itself.
 func (rep *Report) ValidateQualification(r *guidedata.Repo) error {
 	if rep == nil || !rep.OK {
 		return fmt.Errorf("evidence report did not pass")
@@ -182,7 +182,7 @@ func (rep *Report) ValidateQualification(r *guidedata.Repo) error {
 		rep.Commit == strings.Repeat("0", 40) || rep.RunID < 1 || rep.RunAttempt < 1 {
 		return fmt.Errorf("evidence report has no valid CI run identity")
 	}
-	fx := r.Fixture(rep.Fixture)
+	fx := r.FixtureAt(rep.Fixture, rep.Baseline)
 	if fx == nil || rep.Baseline != fx.Baseline || r.Versions.Revision(rep.Baseline) == nil {
 		return fmt.Errorf("evidence report does not match a fixture and its baseline")
 	}

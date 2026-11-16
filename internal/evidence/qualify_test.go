@@ -1,6 +1,7 @@
 package evidence
 
 import (
+	"slices"
 	"strings"
 	"testing"
 
@@ -24,6 +25,41 @@ func qualificationCase() (*guidedata.Repo, *Report) {
 		Components: []ComponentResult{{Key: "java", Expected: "25", Resolved: "25", Status: "match"}},
 	}
 	return r, rep
+}
+
+func TestQualificationKeepsRevisionsAndTheirInventoriesSeparate(t *testing.T) {
+	r, oldReport := qualificationCase()
+	r.HistoricalFixtures = slices.Clone(r.Fixtures)
+	r.HistoricalEvidence = slices.Clone(r.Evidence)
+	newComponent := r.Versions.Revisions[0].Components["java"]
+	newComponent.Version, newComponent.Build = "26", "26"
+	r.Versions.Revisions = append(r.Versions.Revisions, guidedata.Revision{
+		ID: "v0.1-b2", Components: map[string]guidedata.Component{"java": newComponent},
+	})
+	r.Fixtures[0].Baseline = "v0.1-b2"
+	r.Fixtures[0].RequiredTests = append(slices.Clone(r.Fixtures[0].RequiredTests), "acceptance/jvm::TestNew")
+	r.Evidence[0].Baseline = "v0.1-b2"
+	newReport := *oldReport
+	newReport.Baseline = "v0.1-b2"
+	newReport.Components = []ComponentResult{{Key: "java", Expected: "26", Resolved: "26", Status: "match"}}
+	newReport.Tests = append(slices.Clone(oldReport.Tests), TestResult{Test: "acceptance/jvm::TestNew", Status: "pass", Runs: 1})
+	if err := oldReport.ValidateQualification(r); err != nil {
+		t.Fatalf("historical report must use its saved inventory, not today's: %v", err)
+	}
+	if err := newReport.ValidateQualification(r); err != nil {
+		t.Fatal(err)
+	}
+	q := Qualify(r, map[string]*Report{oldReport.Key(): oldReport, newReport.Key(): &newReport})
+	for _, baseline := range []string{"v0.1-b1", "v0.1-b2"} {
+		if got := q[baseline]["java"]; got.State != "qualified" || len(got.Capabilities["runtime"]) != 1 {
+			t.Fatalf("%s lost or duplicated its qualification: %+v", baseline, got)
+		}
+	}
+	oldReport.OK = false
+	q = Qualify(r, map[string]*Report{oldReport.Key(): oldReport, newReport.Key(): &newReport})
+	if q["v0.1-b1"]["java"].State != "provisional" || q["v0.1-b2"]["java"].State != "qualified" {
+		t.Fatal("a successful new revision must not qualify a failed historical report")
+	}
 }
 
 func TestQualificationRequiresACompletePassingReport(t *testing.T) {
