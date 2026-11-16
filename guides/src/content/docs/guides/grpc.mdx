@@ -215,13 +215,15 @@ gRPC Java has retries switched on but with no retry policy, so nothing is retrie
 
 ## 6. How does Kubernetes know a gRPC service is healthy?
 
-**In short:** use the gRPC health service that Boot starts for you and point a `grpc` probe at port 9090 when the
-service has no HTTP port.
+**In short:** give liveness and readiness separate named gRPC health checks. Never use overall application
+health as liveness.
 
 ### What's going on
 
 gRPC has a standard health check protocol. Boot 4.1 starts its health service as soon as the app has a gRPC
-service and updates it from the app's own health every 5 seconds.
+service and updates it from the app's own health every 5 seconds. The overall check, whose service name is empty,
+includes all health indicators. A failed database can make it fail even when restarting the process cannot help.
+Using that check for liveness restarts every pod during a database outage.
 
 Kubernetes can call that protocol directly: the `grpc` probe type is stable since Kubernetes 1.27. Server
 reflection is also on by default. It lets tools list your services and methods, which helps when debugging and
@@ -229,15 +231,36 @@ also helps anyone who can reach the port.
 
 ### Do this
 
-1. Keep `spring.grpc.server.health.enabled` at its default.
-2. For a service with only gRPC, use `livenessProbe` and `readinessProbe` with `grpc: port: 9090`.
-3. For a service with HTTP too, keep the HTTP probes from [Deploying to Kubernetes](/guides/kubernetes-deployment/).
-4. Set `spring.grpc.server.reflection.enabled: false` in production, unless your team relies on it there.
+1. Add Actuator for the availability health indicators and keep the gRPC health service enabled.
+2. Define the named checks:
+
+   ```yaml
+   management.endpoint.health.probes.enabled: true
+   spring.grpc.server.health.service.liveness.include: livenessState
+   spring.grpc.server.health.service.readiness.include: readinessState
+   ```
+
+3. On a plaintext gRPC port, select each named check explicitly. Use `liveness` for startup and liveness and
+   `readiness` for readiness:
+
+   ```yaml
+   livenessProbe:
+     grpc: { port: 9090, service: liveness }
+     timeoutSeconds: 2
+   readinessProbe:
+     grpc: { port: 9090, service: readiness }
+     timeoutSeconds: 2
+   ```
+
+4. For a service with HTTP too, keep the HTTP probes from [Deploying to Kubernetes](/guides/kubernetes-deployment/).
+5. Set `spring.grpc.server.reflection.enabled: false` in production, unless your team relies on it there.
 
 ### When this is not for you
 
 - You use reflection with tools like `grpcurl` against production on purpose: keep it and make sure only your
   network can reach port 9090.
+- The gRPC port uses TLS or mTLS: Kubernetes' native gRPC probes do not support TLS or authentication. Use the
+  HTTP probes on an internal HTTP port or a separate health transport instead; keep the application port secure.
 
 <a id="grpc-load-balancing"></a>
 
@@ -324,7 +347,8 @@ No tested gRPC service exists in this repository yet, so the setup is a list.
 
 ### In the Deployment
 
-- Port 9090 declared, with a `grpc` probe if the service has no HTTP port (step 6).
+- Port 9090 declared, with named `liveness` and `readiness` checks on a plaintext port or internal HTTP probes
+  when the gRPC port uses TLS (step 6).
 - A headless Service for gRPC clients or a mesh that balances per call (step 7).
 
 ## Checklist

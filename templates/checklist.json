@@ -516,7 +516,7 @@
               "card": "grpc-health",
               "step": 6,
               "type": "deployment-prerequisite",
-              "text": "Services that serve only gRPC use grpc liveness and readiness probes on the gRPC port.",
+              "text": "gRPC probes select separate livenessState and readinessState checks; native probes use a plaintext health transport, never a TLS-only port or overall health for liveness.",
               "appliesWhen": {
                 "api": [
                   "grpc"

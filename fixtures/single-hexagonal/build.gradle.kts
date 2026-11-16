@@ -39,6 +39,7 @@ dependencies {
 
     testImplementation(libs.spring.boot.starter.webmvc.test)
     testImplementation(libs.spring.boot.starter.validation)
+    testImplementation(libs.spring.boot.starter.grpc.server)
     testImplementation(libs.spring.modulith.starter.test)
     testImplementation(libs.archunit.junit5)
     testImplementation(libs.jmolecules.archunit)

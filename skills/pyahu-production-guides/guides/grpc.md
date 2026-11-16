@@ -6,7 +6,7 @@ Serve and call gRPC from Spring Boot 4.1 with a safe contract, deadlines, honest
 
 On the web: https://initializer.pyahu.io/guides/grpc/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
-**Preview.** 9 claims: 9 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/grpc.yaml).
+**Preview.** 10 claims: 10 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/grpc.yaml).
 
 You moved two internal services from JSON to gRPC and the first week looks great. Then you scale the server to
 four pods and one of them runs hot while three sit idle. A slow call hangs for minutes because nothing told it to
@@ -33,7 +33,7 @@ contract safe and how to run it in Kubernetes with Spring Boot 4.1, which now su
 - 3. How do I add gRPC to a Spring Boot service?: 1 claim: 1 not exercised.
 - 4. How long should a call wait?: 1 claim: 1 not exercised.
 - 5. Which errors should I return and which calls can be retried?: 1 claim: 1 not exercised.
-- 6. How does Kubernetes know a gRPC service is healthy?: 2 claims: 2 not exercised.
+- 6. How does Kubernetes know a gRPC service is healthy?: 3 claims: 3 not exercised.
 - 7. Why does one pod get all the calls?: 1 claim: 1 not exercised.
 - 8. How do I see and secure gRPC traffic?: 1 claim: 1 not exercised.
 
@@ -189,13 +189,15 @@ gRPC Java has retries switched on but with no retry policy, so nothing is retrie
 
 ## 6. How does Kubernetes know a gRPC service is healthy?
 
-**In short:** use the gRPC health service that Boot starts for you and point a `grpc` probe at port 9090 when the
-service has no HTTP port.
+**In short:** give liveness and readiness separate named gRPC health checks. Never use overall application
+health as liveness.
 
 ### What's going on
 
 gRPC has a standard health check protocol. Boot 4.1 starts its health service as soon as the app has a gRPC
-service and updates it from the app's own health every 5 seconds.
+service and updates it from the app's own health every 5 seconds. The overall check, whose service name is empty,
+includes all health indicators. A failed database can make it fail even when restarting the process cannot help.
+Using that check for liveness restarts every pod during a database outage.
 
 Kubernetes can call that protocol directly: the `grpc` probe type is stable since Kubernetes 1.27. Server
 reflection is also on by default. It lets tools list your services and methods, which helps when debugging and
@@ -203,15 +205,36 @@ also helps anyone who can reach the port.
 
 ### Do this
 
-1. Keep `spring.grpc.server.health.enabled` at its default.
-2. For a service with only gRPC, use `livenessProbe` and `readinessProbe` with `grpc: port: 9090`.
-3. For a service with HTTP too, keep the HTTP probes from [Deploying to Kubernetes](kubernetes-deployment.md).
-4. Set `spring.grpc.server.reflection.enabled: false` in production, unless your team relies on it there.
+1. Add Actuator for the availability health indicators and keep the gRPC health service enabled.
+2. Define the named checks:
+
+   ```yaml
+   management.endpoint.health.probes.enabled: true
+   spring.grpc.server.health.service.liveness.include: livenessState
+   spring.grpc.server.health.service.readiness.include: readinessState
+   ```
+
+3. On a plaintext gRPC port, select each named check explicitly. Use `liveness` for startup and liveness and
+   `readiness` for readiness:
+
+   ```yaml
+   livenessProbe:
+     grpc: { port: 9090, service: liveness }
+     timeoutSeconds: 2
+   readinessProbe:
+     grpc: { port: 9090, service: readiness }
+     timeoutSeconds: 2
+   ```
+
+4. For a service with HTTP too, keep the HTTP probes from [Deploying to Kubernetes](kubernetes-deployment.md).
+5. Set `spring.grpc.server.reflection.enabled: false` in production, unless your team relies on it there.
 
 ### When this is not for you
 
 - You use reflection with tools like `grpcurl` against production on purpose: keep it and make sure only your
   network can reach port 9090.
+- The gRPC port uses TLS or mTLS: Kubernetes' native gRPC probes do not support TLS or authentication. Use the
+  HTTP probes on an internal HTTP port or a separate health transport instead; keep the application port secure.
 
 ## 7. Why does one pod get all the calls?
 
@@ -293,7 +316,8 @@ No tested gRPC service exists in this repository yet, so the setup is a list.
 
 ### In the Deployment
 
-- Port 9090 declared, with a `grpc` probe if the service has no HTTP port (step 6).
+- Port 9090 declared, with named `liveness` and `readiness` checks on a plaintext port or internal HTTP probes
+  when the gRPC port uses TLS (step 6).
 - A headless Service for gRPC clients or a mesh that balances per call (step 7).
 
 ## Checklist
@@ -315,7 +339,7 @@ No tested gRPC service exists in this repository yet, so the setup is a list.
 
 ### Deployment prerequisites
 
-- **GRPC-07** Services that serve only gRPC use grpc liveness and readiness probes on the gRPC port. (step 6; when api: grpc)
+- **GRPC-07** gRPC probes select separate livenessState and readinessState checks; native probes use a plaintext health transport, never a TLS-only port or overall health for liveness. (step 6; when api: grpc)
 - **GRPC-09** Clients reach gRPC servers through a headless Service with a dns target or through a mesh that balances per call. (step 7; when api: grpc)
 - **GRPC-12** gRPC traffic uses TLS from an SSL bundle or mesh mutual TLS; bypass-certificate-validation is never set outside tests. (step 8; when api: grpc)
 

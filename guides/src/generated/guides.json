@@ -3645,7 +3645,7 @@
         "stale": false
       },
       "verification": "",
-      "coverage": "9 claims: 9 not exercised",
+      "coverage": "10 claims: 10 not exercised",
       "sources": [],
       "questions": [
         {
@@ -3736,7 +3736,7 @@
         },
         "grpc-health": {
           "title": "6. How does Kubernetes know a gRPC service is healthy?",
-          "coverage": "2 claims: 2 not exercised",
+          "coverage": "3 claims: 3 not exercised",
           "records": [
             {
               "id": "ev-grpc-health-1",
@@ -3747,8 +3747,14 @@
             {
               "id": "ev-grpc-health-2",
               "badge": "not-exercised",
-              "canonical": "Evidence ev-grpc-health-2 · not exercised · baseline v0.1-b1. Kubernetes probes can call the gRPC health checking protocol directly with the grpc probe type, stable since Kubernetes 1.27. Limitations: From the Kubernetes probe documentation.",
+              "canonical": "Evidence ev-grpc-health-2 · not exercised · baseline v0.1-b1. Native Kubernetes grpc probes support named health services on plaintext ports, but do not support TLS or authentication. Limitations: From the Kubernetes probe documentation.",
               "reason": "No cluster runs the example service in a test yet."
+            },
+            {
+              "id": "ev-grpc-health-3",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-grpc-health-3 · not exercised · baseline v0.1-b1. Named livenessState and readinessState gRPC checks ignore a failed database, while overall health fails; refusing traffic changes readiness without failing liveness. Limitations: GrpcHealthTest exercises Boot's real gRPC health auto-configuration and availability indicators. It does not start a network server or a Kubernetes cluster.",
+              "reason": "The regression test is in the fixture inventory; a completed CI evidence record has not been recorded yet."
             }
           ]
         },
@@ -3906,7 +3912,7 @@
           "id": "GRPC-07",
           "type": "deployment-prerequisite",
           "card": "grpc-health",
-          "text": "Services that serve only gRPC use grpc liveness and readiness probes on the gRPC port.",
+          "text": "gRPC probes select separate livenessState and readinessState checks; native probes use a plaintext health transport, never a TLS-only port or overall health for liveness.",
           "claim": "documented",
           "tests": [],
           "tags": [

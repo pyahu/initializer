@@ -12,14 +12,14 @@
       "fixture": "single-hexagonal",
       "baseline": "v0.1-b1",
       "lang": "kotlin",
-      "sha256": "03aedf2abf6ece3c8985e7dd0ed9f96e43cb2c127c6383e8352d1734f67e84ae"
+      "sha256": "0eea079b8f81156ee657ef754c1d2eda09537d9addfcfbb0f331e1fad3cdc79c"
     },
     {
       "path": "fixtures/single-hexagonal/gradle/libs.versions.toml",
       "fixture": "single-hexagonal",
       "baseline": "v0.1-b1",
       "lang": "toml",
-      "sha256": "ce44a1603bfecd9c87aaa4ad7b1f84236317465d55d7ec28291fd3b1fa4b784e"
+      "sha256": "30d0894ac36fdb0b7de15ac4789cafb007fe70f91663d3c5fab9a578d868cb3a"
     },
     {
       "path": "fixtures/single-hexagonal/gradle/wrapper/gradle-wrapper.properties",

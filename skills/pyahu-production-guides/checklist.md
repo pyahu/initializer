@@ -75,7 +75,7 @@ explains why it matters. Items with a "when" apply only to services that use tha
 - [ ] **GRPC-04** Every gRPC client channel sets default.deadline. (step 4; when api: grpc)
 - [ ] **GRPC-05** Exceptions map to specific status codes in one @GrpcAdvice; UNAVAILABLE only when the client may retry. (step 5; when api: grpc)
 - [ ] **GRPC-06** Retry policies only on methods that are safe to repeat, with every attempt inside the deadline. (step 5; when api: grpc)
-- [ ] **GRPC-07** Services that serve only gRPC use grpc liveness and readiness probes on the gRPC port. (step 6; when api: grpc)
+- [ ] **GRPC-07** gRPC probes select separate livenessState and readinessState checks; native probes use a plaintext health transport, never a TLS-only port or overall health for liveness. (step 6; when api: grpc)
 - [ ] **GRPC-08** Server reflection is off in production unless the team relies on it there. (step 6; when api: grpc)
 - [ ] **GRPC-09** Clients reach gRPC servers through a headless Service with a dns target or through a mesh that balances per call. (step 7; when api: grpc)
 - [ ] **GRPC-10** spring.grpc.server.keepalive.connection.max-age is set so clients reconnect and spread over new pods. (step 7; when api: grpc)
