@@ -274,14 +274,18 @@ changes; a renewal is a new record.
 | `fixture-single-hexagonal.yml` | fixture build, image, acceptance tests, evidence report |
 | `start.yml` | the Initializer service: Gradle build in the pinned JDK, convention plugin tests, image, smoke; then every combination generated through the API, built, rendered, imaged and started by its own workflow |
 
-The publication target is https://initializer.pyahu.io on Cloudflare Workers. `guides/wrangler.jsonc`
+The guides are published at https://initializer.pyahu.io on Cloudflare Workers. `guides/wrangler.jsonc`
 names the Worker `initializer` and serves the static `guides/dist` directory with a real 404 page.
 It also declares the custom domain `initializer.pyahu.io`; deploying applies that domain association.
 
-For Cloudflare Workers Builds, connect `pyahu/initializer` with production branch `main` and root directory
-`guides`. Set `NODE_VERSION=24.22.0`, build with `npm run toolchain && npm run check && npm run build`
-after dependency installation, and deploy with `npm run deploy`. The Wrangler dependency and npm lockfile
-pin the deployment tooling.
+Cloudflare Workers Builds is connected to `pyahu/initializer`, with production branch `main` and root directory
+`guides`. Pushes to `main` build with `npm run toolchain && npm run check && npm run build` after dependency
+installation, then deploy with `npm run deploy`. The build environment sets `NODE_VERSION=24.22.0`.
+The Wrangler dependency and npm lockfile pin the deployment tooling.
+
+Builds watch every repository path, because the site also reads generated data and fixture files outside
+`guides/`. Preview builds are disabled. Manage the connection and build variables in the Worker's
+Settings > Builds in the Cloudflare dashboard.
 
 Before publication, the relevant Guides, Links and fixture workflows must pass. Workers Builds runs separately
 from GitHub Actions; its successful build alone does not prove the guides or their claims.
