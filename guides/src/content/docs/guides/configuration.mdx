@@ -187,33 +187,50 @@ public record OrdersProperties(
 
 ## 4. Why did a missing secret not stop the app?
 
-**In short:** Spring leaves an unresolved `${...}` as plain text. Add a guard to every secret field.
+**In short:** reject missing or unresolved secrets with a boolean validation method, so a failed check never
+reports the secret as the rejected value.
 
 ```java
-@NotBlank @Pattern(regexp = "^(?!\\$\\{).*", message = "unresolved placeholder") String apiKey
+@ConfigurationProperties("payments")
+@Validated
+public record SecretProperties(String apiKey) {
+    @AssertTrue(message = "secret is missing or unresolved")
+    public boolean isApiKeyConfigured() {
+        return apiKey != null && !apiKey.isBlank() && !apiKey.contains("${");
+    }
+
+    @Override
+    public String toString() {
+        return "SecretProperties[apiKey=***]";
+    }
+}
 ```
 
 ### What's going on
 
 When the binder meets `${payment-api-key}` and nothing provides that value, it does not fail. It puts the text
-`${payment-api-key}` into the field. `@NotBlank` is happy, the app starts and sends that text as its API key.
+`${payment-api-key}` into the field. A nonblank check accepts it and the app sends that text as its API key.
 `@Value("${x}")` behaves the other way and fails, so mixing the two styles gives two different behaviours.
 
 Two more ways a secret leaks at this point. When validation fails, Boot prints the rejected value in its failure
-message. And a record prints every component in its default `toString()`.
+message. A regex on the secret itself is not safe: `.` does not match line breaks by default, so a real multiline
+secret can fail the pattern and appear in the log. The boolean getter above makes the rejected value `false`
+instead. And a record prints every component in its default `toString()` unless you mask it.
 
 ### Do this
 
-1. Put the `@Pattern` guard above on every secret component and no other format rule. A size or format check
-   would print a real but malformed secret to the log.
-2. Override `toString()` in records that hold a secret, masking it.
+1. Add `jakarta.validation.constraints.AssertTrue` and a boolean getter for each secret, as above. Keep constraints
+   off the secret component itself, including `@NotBlank`, `@Size` and `@Pattern`.
+2. Override `toString()` in records that hold a secret, masking every secret component.
 3. Skip the guard for `spring.datasource.password`: a wrong password fails when the pool starts, just as fast.
-4. Never log the `Environment` or a whole properties object.
+4. Test startup with a missing value, an unresolved placeholder and a valid multiline secret. Check the actual
+   failure log for leaks, not only the exception. `SecretPropertiesTest` in the fixture does this.
+5. Never log the `Environment` or a whole properties object.
 
 ### When this is not for you
 
-- It always applies to secrets bound through records. The guard only ever prints the placeholder text, never the
-  secret.
+- A secret may legitimately contain `${`: use a boolean getter that checks the provider's format instead. Keep
+  the rejected value boolean and the error message fixed, without interpolating the secret.
 
 <a id="cfg-secrets-as-files"></a>
 

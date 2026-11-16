@@ -26,14 +26,14 @@
   badge: not-exercised
   baseline: v0.1-b1
   limitations: "Behaviour from the Spring Boot reference on @ConfigurationProperties validation."
-  reason: "The example service has no @ConfigurationProperties record yet, so no fail fast test exists."
+  reason: "SecretPropertiesTest checks this in the fixture; a completed CI evidence record has not been recorded yet."
 - id: ev-cfg-placeholder-guard-1
   card: cfg-placeholder-guard
-  claim: "The binder leaves an unresolvable placeholder as literal text, so @NotBlank passes and the @Pattern guard is what stops startup."
+  claim: "A boolean @AssertTrue getter rejects missing and unresolved secrets with false as the rejected value; valid multiline secrets bind and toString masks their content."
   badge: not-exercised
   baseline: v0.1-b1
-  limitations: "The source guide read ignoreUnresolvablePlaceholders = true in PropertySourcesPlaceholdersResolver of Spring Boot 4.1.1."
-  reason: "No test binds a record with a missing secret yet."
+  limitations: "SecretPropertiesTest checks real Spring Boot startup and captured failure logs with synthetic secrets. It does not exercise a vault or CSI driver."
+  reason: "The regression test is included in the fixture's required tests; a completed CI evidence record has not been recorded yet."
 - id: ev-cfg-secrets-as-files-1
   card: cfg-secrets-as-files
   claim: "spring.config.import with optional:configtree: turns each file under /mnt/secrets into a property named after the file, trailing newline trimmed, read once at startup."

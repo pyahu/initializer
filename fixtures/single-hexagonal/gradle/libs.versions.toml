@@ -24,6 +24,7 @@ jspecify = { module = "org.jspecify:jspecify" }
 error-prone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "error-prone" }
 nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "nullaway" }
 spring-boot-starter-webmvc-test = { module = "org.springframework.boot:spring-boot-starter-webmvc-test" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
 spring-modulith-starter-test = { module = "org.springframework.modulith:spring-modulith-starter-test" }
 archunit-junit5 = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunit" }
 jmolecules-archunit = { module = "org.jmolecules.integrations:jmolecules-archunit" }

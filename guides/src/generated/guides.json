@@ -2218,8 +2218,8 @@
             {
               "id": "ev-cfg-placeholder-guard-1",
               "badge": "not-exercised",
-              "canonical": "Evidence ev-cfg-placeholder-guard-1 · not exercised · baseline v0.1-b1. The binder leaves an unresolvable placeholder as literal text, so @NotBlank passes and the @Pattern guard is what stops startup. Limitations: The source guide read ignoreUnresolvablePlaceholders = true in PropertySourcesPlaceholdersResolver of Spring Boot 4.1.1.",
-              "reason": "No test binds a record with a missing secret yet."
+              "canonical": "Evidence ev-cfg-placeholder-guard-1 · not exercised · baseline v0.1-b1. A boolean @AssertTrue getter rejects missing and unresolved secrets with false as the rejected value; valid multiline secrets bind and toString masks their content. Limitations: SecretPropertiesTest checks real Spring Boot startup and captured failure logs with synthetic secrets. It does not exercise a vault or CSI driver.",
+              "reason": "The regression test is included in the fixture's required tests; a completed CI evidence record has not been recorded yet."
             }
           ]
         },
@@ -2273,7 +2273,7 @@
               "id": "ev-cfg-typed-properties-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-cfg-typed-properties-1 · not exercised · baseline v0.1-b1. A @ConfigurationProperties record with @Validated fails application startup when a value breaks a constraint. Limitations: Behaviour from the Spring Boot reference on @ConfigurationProperties validation.",
-              "reason": "The example service has no @ConfigurationProperties record yet, so no fail fast test exists."
+              "reason": "SecretPropertiesTest checks this in the fixture; a completed CI evidence record has not been recorded yet."
             }
           ]
         }
