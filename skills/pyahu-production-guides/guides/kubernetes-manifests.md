@@ -286,7 +286,9 @@ Each tool catches something different:
 1. Render each environment in CI: `kustomize build overlays/<env>` or `helm template` with each values file.
 2. Run `kubeconform -strict` for Kubernetes 1.36 and 1.37, with schemas for the custom resources you use, such as
    Gateway API's `HTTPRoute`.
-3. Run kube-linter and `trivy config`. Give every suppression a written reason.
+3. Run kube-linter and `trivy config --exit-code 1 --severity HIGH,CRITICAL`. The generated workflow applies both
+   to the rendered dev and prod YAML; it blocks HIGH/CRITICAL security misconfigurations and uses kube-linter's
+   default checks. Give every suppression a written reason; there are none in the generated sample.
 4. Run pluto against the newest Kubernetes version you support.
 5. For a Helm chart, add `helm lint --strict` and a `values.schema.json` with `additionalProperties: false`, so a
    typo in a value is an error.

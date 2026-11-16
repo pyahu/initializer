@@ -64,14 +64,36 @@ jobs:
         run: |
           docker run --rm -v "$PWD:/w" -w /w "$JDK_IMAGE" sh -c \
             './gradlew --no-daemon build && ./gradlew --no-daemon -p build-logic test'
+      - name: Manifest output directory
+        run: mkdir -p build/manifests
       - name: Render the dev overlay
         uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
         with:
-          args: build services/start/deploy/overlays/dev
+          args: build services/start/deploy/overlays/dev --output build/manifests/dev.yaml
       - name: Render the prod overlay
         uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
         with:
-          args: build services/start/deploy/overlays/prod
+          args: build services/start/deploy/overlays/prod --output build/manifests/prod.yaml
+      - name: Strict schemas for Kubernetes 1.36
+        uses: docker://ghcr.io/yannh/kubeconform:v0.8.0@sha256:faffaf43f95aa6425306e1ab8d6fcad72acb9049158f38e574c085ea1ec0f64e
+        with:
+          args: -strict -summary -kubernetes-version 1.36.0 build/manifests
+      - name: Strict schemas for Kubernetes 1.37
+        uses: docker://ghcr.io/yannh/kubeconform:v0.8.0@sha256:faffaf43f95aa6425306e1ab8d6fcad72acb9049158f38e574c085ea1ec0f64e
+        with:
+          args: -strict -summary -kubernetes-version 1.37.0 build/manifests
+      - name: Manifest lint
+        uses: docker://ghcr.io/stackrox/kube-linter:v0.8.3@sha256:f2bfce7879206d32f69ab6572c376f916643f54ca291ac38cf7d01ef591ff3f9
+        with:
+          args: lint build/manifests
+      - name: Manifest security
+        uses: docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+        with:
+          args: config --exit-code 1 --severity HIGH,CRITICAL build/manifests
+      - name: Deprecated or removed APIs
+        uses: docker://us-docker.pkg.dev/fairwinds-ops/oss/pluto:v5.24.5@sha256:2569f881ad57999772755a3e56eef5d35f5b4b9498f7cfb89e68ac19eba0532f
+        with:
+          args: detect-files -d build/manifests --target-versions k8s=v1.37.0
       - name: Image
         run: docker buildx build --load -t start:ci -f services/start/Dockerfile .
       - name: Smoke

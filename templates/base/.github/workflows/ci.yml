@@ -46,14 +46,36 @@ jobs:
 [[^postgres]]
         run: docker run --rm -v "$PWD:/w" -w /w "$JDK_IMAGE" ./gradlew --no-daemon build
 [[/postgres]]
+      - name: Manifest output directory
+        run: mkdir -p build/manifests
       - name: Render the dev overlay
         uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
         with:
-          args: build deploy/overlays/dev
+          args: build deploy/overlays/dev --output build/manifests/dev.yaml
       - name: Render the prod overlay
         uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
         with:
-          args: build deploy/overlays/prod
+          args: build deploy/overlays/prod --output build/manifests/prod.yaml
+      - name: Strict schemas for Kubernetes 1.36
+        uses: docker://ghcr.io/yannh/kubeconform:v0.8.0@sha256:faffaf43f95aa6425306e1ab8d6fcad72acb9049158f38e574c085ea1ec0f64e
+        with:
+          args: -strict -summary -kubernetes-version 1.36.0 build/manifests
+      - name: Strict schemas for Kubernetes 1.37
+        uses: docker://ghcr.io/yannh/kubeconform:v0.8.0@sha256:faffaf43f95aa6425306e1ab8d6fcad72acb9049158f38e574c085ea1ec0f64e
+        with:
+          args: -strict -summary -kubernetes-version 1.37.0 build/manifests
+      - name: Manifest lint
+        uses: docker://ghcr.io/stackrox/kube-linter:v0.8.3@sha256:f2bfce7879206d32f69ab6572c376f916643f54ca291ac38cf7d01ef591ff3f9
+        with:
+          args: lint build/manifests
+      - name: Manifest security
+        uses: docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+        with:
+          args: config --exit-code 1 --severity HIGH,CRITICAL build/manifests
+      - name: Deprecated or removed APIs
+        uses: docker://us-docker.pkg.dev/fairwinds-ops/oss/pluto:v5.24.5@sha256:2569f881ad57999772755a3e56eef5d35f5b4b9498f7cfb89e68ac19eba0532f
+        with:
+          args: detect-files -d build/manifests --target-versions k8s=v1.37.0
 [[#nextjs]]
       - name: Frontend types match the contract
         # The types of src/api/schema.d.ts come from the service's contract; a change to one without the other fails
@@ -73,14 +95,14 @@ jobs:
         run: |
           trap 'code=$?; set +e; if [ $code -ne 0 ]; then for c in app[[#nextjs]] web[[/nextjs]][[#postgres]] db[[/postgres]][[#oidc]] oidc[[/oidc]]; do docker logs $c 2>&1 | tail -40; done; fi
             docker rm -f app[[#nextjs]] web[[/nextjs]][[#postgres]] db[[/postgres]][[#oidc]] oidc[[/oidc]] > /dev/null 2>&1; docker network rm smoke > /dev/null 2>&1; exit $code' EXIT
-          ready() { for i in $(seq 1 90); do curl -sf "$1" > /dev/null && return 0; sleep 1; done; return 1; }
+          ready() { for _ in $(seq 1 90); do curl -sf "$1" > /dev/null && return 0; sleep 1; done; return 1; }
           status() { curl -s -o /dev/null -w '%{http_code}' "$@"; }
           docker network create smoke > /dev/null
 [[#postgres]]
 
           # PostgreSQL with the two roles of db/roles.sql, created the way an admin would (database guide, step 4).
           docker run -d --name db --network smoke -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=[[dbName]] "$POSTGRES_IMAGE"
-          for i in $(seq 1 60); do
+          for _ in $(seq 1 60); do
             docker exec db psql -h 127.0.0.1 -U postgres -d [[dbName]] -c 'SELECT 1' > /dev/null 2>&1 && break
             sleep 1
           done

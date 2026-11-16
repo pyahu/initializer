@@ -58,7 +58,9 @@ kustomize build deploy/overlays/dev
 ```
 
 `./gradlew spotlessApply` formats the code. CI does all of the above on every push
-(`.github/workflows/ci.yml`) and Renovate keeps the versions current (`renovate.json`).
+(`.github/workflows/ci.yml`), then checks the rendered dev and prod manifests with strict Kubernetes 1.36 and 1.37
+schemas, kube-linter, Trivy (HIGH/CRITICAL misconfigurations) and Pluto for deprecated or removed APIs.
+Renovate keeps the versions current (`renovate.json`).
 
 ## Where things are
 
