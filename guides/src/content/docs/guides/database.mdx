@@ -262,6 +262,10 @@ A Job runs the changelog once, before the new pods start. The pods only connect 
 2. Run the same changelog from a Job, as the migration user, before the rollout. Step 6 shows how to order it
    and what to do when it fails.
 3. Never edit a changeset that already ran. Add a new one.
+4. The generated readiness guard checks the full changeset identity (file path, id and author) and applies the
+   same context, label, database and ignore filters as Liquibase. Give the Job and application the same changelog
+   settings. It checks history presence, not checksums, `runAlways` or `runOnChange`; the successful migration Job
+   remains the release gate. After the required history is confirmed, the guard keeps that result for this process.
 
 ### When this is not for you
 

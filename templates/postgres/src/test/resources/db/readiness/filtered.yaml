@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: dev-seed
+      author: readiness-test
+      context: dev
+      changes:
+        - sql:
+            sql: CREATE TABLE readiness_dev (id int)
+  - changeSet:
+      id: beta-feature
+      author: readiness-test
+      labels: beta
+      changes:
+        - sql:
+            sql: CREATE TABLE readiness_beta (id int)
+  - changeSet:
+      id: other-db
+      author: readiness-test
+      dbms: mysql
+      changes:
+        - sql:
+            sql: CREATE TABLE readiness_mysql (id int)
+  - changeSet:
+      id: retired
+      author: readiness-test
+      ignore: true
+      changes:
+        - sql:
+            sql: CREATE TABLE readiness_ignored (id int)

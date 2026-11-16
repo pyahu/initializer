@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/readiness/first.yaml
+  - include:
+      file: db/readiness/second.yaml
+  - include:
+      file: db/readiness/filtered.yaml
