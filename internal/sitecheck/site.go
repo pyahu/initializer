@@ -16,6 +16,7 @@ import (
 	"golang.org/x/net/html"
 
 	"github.com/pyahu/initializer/internal/guidedata"
+	"github.com/pyahu/initializer/internal/references"
 )
 
 // PageSeparator is the llms export page separator configured in astro.config.mjs.
@@ -233,6 +234,9 @@ func checkGuides(r *guidedata.Repo, dist string, pages map[string]*page) []error
 			add("guide %s: built page %s missing", g.Meta.ID, rel(dist, f))
 			continue
 		}
+		if !strings.Contains(pg.text, normalize(references.GuideCoverage(r, g))) {
+			add("guide %s: evidence coverage missing from the page", g.Meta.ID)
+		}
 		ev := pg.events
 		for _, c := range g.Cards {
 			i := -1
@@ -366,6 +370,7 @@ func checkExports(r *guidedata.Repo, dist, site string) []error {
 				add("%s: no page segment for %q", name, g.Title)
 				continue
 			}
+			need(seg, "evidence coverage", references.GuideCoverage(r, g))
 			for _, d := range g.Diagrams {
 				dd := r.Diagrams[d]
 				need(seg, "diagram caption "+dd.ID, dd.Caption)

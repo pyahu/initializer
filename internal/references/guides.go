@@ -116,6 +116,11 @@ func guideEvidence(r *guidedata.Repo, g *guidedata.Guide) []guidedata.EvidenceRe
 	return records
 }
 
+// GuideCoverage describes the evidence recorded for all steps of a guide.
+func GuideCoverage(r *guidedata.Repo, g *guidedata.Guide) string {
+	return Coverage(guideEvidence(r, g))
+}
+
 // GuidesJSON renders guides/src/generated/guides.json.
 func GuidesJSON(r *guidedata.Repo) ([]byte, error) {
 	guides := map[string]guideOut{}

@@ -99,7 +99,8 @@ export default defineConfig({
             "",
             ...guideLinks,
           ].join("\n"),
-          minify: { details: false },
+          // Coverage notes are part of the advice, including in the compact export.
+          minify: { details: false, note: false },
           pageSeparator: "\n\n<!-- page -->\n\n",
           customSelectors: { all: [".dg-dialog", ".dg-hint"] },
           promote: ["guides", "guides/**", "reference/**"],
