@@ -133,8 +133,8 @@ explains why it matters. Items with a "when" apply only to services that use tha
 
 - [ ] **VT-01** spring.threads.virtual.enabled is true only for I/O bound services; the decision is recorded. (step 1)
 - [ ] **VT-02** HikariCP maximum-pool-size comes from the database connection budget; connection-timeout is 5 s or less. (step 2)
-- [ ] **VT-03** Every downstream service has a concurrency limit (@ConcurrencyLimit, Semaphore or bulkhead) and every outbound call has connect and read timeouts. (step 3)
-- [ ] **VT-04** CPU heavy work runs on a platform pool sized to the cores. (step 4)
+- [ ] **VT-03** Each downstream client shares a concurrency limit with explicit rejection; any waiting queue is bounded with an admission deadline, and outbound calls have connect and read timeouts. (step 3)
+- [ ] **VT-04** CPU heavy work runs on a platform pool sized to the cores with a bounded queue and explicit rejection. (step 4)
 - [ ] **VT-05** Pod CPU request of at least 1; either -XX:ActiveProcessorCount of at least 2 with no CPU limit or a CPU limit of at least 2. (step 4)
 - [ ] **VT-06** No custom executor bean silently replaces the virtual thread @Async executor; spring.main.keep-alive is true for apps without a web server. (step 5)
 - [ ] **VT-07** MDC, security and trace context are propagated across async boundaries; no business logic relies on ThreadLocal caching. (step 6)

@@ -4155,8 +4155,8 @@
             {
               "id": "ev-http-bulkhead-1",
               "badge": "not-exercised",
-              "canonical": "Evidence ev-http-bulkhead-1 · not exercised · baseline v0.1-b1. @ConcurrencyLimit with policy REJECT throws InvocationRejectedException over the limit; a class-level limit is shared by all methods of the bean and counts per JVM. Limitations: Checked in ConcurrencyLimitBeanPostProcessor on Framework 7.0.9 by the source guide.",
-              "reason": "No test runs this yet: the example service has no downstream call to limit."
+              "canonical": "Evidence ev-http-bulkhead-1 · not exercised · baseline v0.1-b1. A class-level @ConcurrencyLimit with REJECT shares a limit across methods, immediately rejects excess calls and admits calls again after an in-flight call finishes. Limitations: ConcurrencyLimitsTest exercises Spring's real proxy on a controlled client, without HTTP transport or a load test.",
+              "reason": "The regression test is in the fixture inventory; a completed CI evidence record has not been recorded yet."
             }
           ]
         },
@@ -10599,7 +10599,7 @@
         "stale": false
       },
       "verification": "",
-      "coverage": "10 claims: 1 reproduced, 1 compiled, 8 not exercised",
+      "coverage": "11 claims: 1 reproduced, 1 compiled, 9 not exercised",
       "sources": [
         {
           "title": "02 · Virtual threads and concurrency in Spring Boot 4",
@@ -10675,7 +10675,7 @@
         },
         "vt-cpu-work": {
           "title": "4. Where does CPU heavy work go?",
-          "coverage": "2 claims: 1 reproduced, 1 not exercised",
+          "coverage": "3 claims: 1 reproduced, 2 not exercised",
           "records": [
             {
               "id": "ev-vt-cpu-work-1",
@@ -10696,6 +10696,12 @@
               "badge": "not-exercised",
               "canonical": "Evidence ev-vt-cpu-work-2 · not exercised · baseline v0.1-b1. A virtual thread doing CPU work holds its carrier until it blocks, so CPU heavy requests starve the others. Limitations: From JEP 444 and the source guide.",
               "reason": "No CPU bound workload test runs yet."
+            },
+            {
+              "id": "ev-vt-cpu-work-3",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-vt-cpu-work-3 · not exercised · baseline v0.1-b1. A fixed CPU pool with a bounded queue rejects new tasks when its worker and queue are full. Limitations: ConcurrencyLimitsTest saturates one real ThreadPoolExecutor worker and one queued task. This proves admission behaviour, not throughput or a production queue size.",
+              "reason": "The regression test is in the fixture inventory; a completed CI evidence record has not been recorded yet."
             }
           ]
         },
@@ -10706,8 +10712,8 @@
             {
               "id": "ev-vt-downstream-limits-1",
               "badge": "not-exercised",
-              "canonical": "Evidence ev-vt-downstream-limits-1 · not exercised · baseline v0.1-b1. @ConcurrencyLimit, enabled by @EnableResilientMethods, caps concurrent calls through a method. Limitations: From the Spring Framework 7 resilience documentation.",
-              "reason": "The example service makes no outbound calls yet."
+              "canonical": "Evidence ev-vt-downstream-limits-1 · not exercised · baseline v0.1-b1. A class-level @ConcurrencyLimit with REJECT shares a limit across methods, immediately rejects excess calls and admits calls again after an in-flight call finishes. Limitations: ConcurrencyLimitsTest exercises Spring's real resilience proxy on a controlled client. It does not load test an external service.",
+              "reason": "The regression test is in the fixture inventory; a completed CI evidence record has not been recorded yet."
             }
           ]
         },
@@ -10842,7 +10848,7 @@
           "id": "VT-03",
           "type": "verified-behaviour",
           "card": "vt-downstream-limits",
-          "text": "Every downstream service has a concurrency limit (@ConcurrencyLimit, Semaphore or bulkhead) and every outbound call has connect and read timeouts.",
+          "text": "Each downstream client shares a concurrency limit with explicit rejection; any waiting queue is bounded with an admission deadline, and outbound calls have connect and read timeouts.",
           "claim": "documented",
           "tests": [],
           "tags": []
@@ -10851,7 +10857,7 @@
           "id": "VT-04",
           "type": "verified-behaviour",
           "card": "vt-cpu-work",
-          "text": "CPU heavy work runs on a platform pool sized to the cores.",
+          "text": "CPU heavy work runs on a platform pool sized to the cores with a bounded queue and explicit rejection.",
           "claim": "documented",
           "tests": [],
           "tags": []

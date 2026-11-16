@@ -32,11 +32,11 @@
   reason: "The example service has no database yet and no load test runs."
 - id: ev-vt-downstream-limits-1
   card: vt-downstream-limits
-  claim: "@ConcurrencyLimit, enabled by @EnableResilientMethods, caps concurrent calls through a method."
+  claim: "A class-level @ConcurrencyLimit with REJECT shares a limit across methods, immediately rejects excess calls and admits calls again after an in-flight call finishes."
   badge: not-exercised
   baseline: v0.1-b1
-  limitations: "From the Spring Framework 7 resilience documentation."
-  reason: "The example service makes no outbound calls yet."
+  limitations: "ConcurrencyLimitsTest exercises Spring's real resilience proxy on a controlled client. It does not load test an external service."
+  reason: "The regression test is in the fixture inventory; a completed CI evidence record has not been recorded yet."
 - id: ev-vt-cpu-work-1
   card: vt-cpu-work
   claim: "With no CPU limit, -XX:ActiveProcessorCount=1 overrides the CPU count the JVM detects, which also sets the number of carrier threads."
@@ -62,6 +62,13 @@
   baseline: v0.1-b1
   limitations: "From JEP 444 and the source guide."
   reason: "No CPU bound workload test runs yet."
+- id: ev-vt-cpu-work-3
+  card: vt-cpu-work
+  claim: "A fixed CPU pool with a bounded queue rejects new tasks when its worker and queue are full."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "ConcurrencyLimitsTest saturates one real ThreadPoolExecutor worker and one queued task. This proves admission behaviour, not throughput or a production queue size."
+  reason: "The regression test is in the fixture inventory; a completed CI evidence record has not been recorded yet."
 - id: ev-vt-executors-1
   card: vt-executors
   claim: "A TaskExecutor bean declared by the application replaces the virtual thread executor Boot configures for @Async; spring.main.keep-alive keeps an app with no web server running."

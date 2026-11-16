@@ -57,11 +57,11 @@
   reason: "No test runs this yet: the example service makes no outbound HTTP call."
 - id: ev-http-bulkhead-1
   card: http-bulkhead
-  claim: "@ConcurrencyLimit with policy REJECT throws InvocationRejectedException over the limit; a class-level limit is shared by all methods of the bean and counts per JVM."
+  claim: "A class-level @ConcurrencyLimit with REJECT shares a limit across methods, immediately rejects excess calls and admits calls again after an in-flight call finishes."
   badge: not-exercised
   baseline: v0.1-b1
-  limitations: "Checked in ConcurrencyLimitBeanPostProcessor on Framework 7.0.9 by the source guide."
-  reason: "No test runs this yet: the example service has no downstream call to limit."
+  limitations: "ConcurrencyLimitsTest exercises Spring's real proxy on a controlled client, without HTTP transport or a load test."
+  reason: "The regression test is in the fixture inventory; a completed CI evidence record has not been recorded yet."
 - id: ev-http-observability-1
   card: http-observability
   claim: "Clients from Boot's RestClient.Builder or HTTP Service groups record http.client.requests and send traceparent; a client from RestClient.create() does neither."

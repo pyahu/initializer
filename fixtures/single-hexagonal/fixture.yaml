@@ -43,6 +43,7 @@ exercises:
   - cyclonedx-gradle-plugin
   - otel-lgtm-image
 requiredTests:
+  - gradle/single-hexagonal::ConcurrencyLimitsTest
   - gradle/single-hexagonal::GrpcHealthTest
   - gradle/single-hexagonal::SecretPropertiesTest
   - gradle/single-hexagonal::ApplicationTest

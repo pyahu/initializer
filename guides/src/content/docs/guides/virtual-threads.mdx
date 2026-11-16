@@ -137,11 +137,12 @@ Virtual threads remove the thread limit. They do not add database connections or
 
 ## 3. How do I keep a slow service from drowning in my calls?
 
-**In short:** put an explicit limit on how many calls you make at once to each service and a timeout on every call.
+**In short:** share one concurrency limit across each downstream client, reject excess calls and put a timeout
+on every call.
 
 ```java
-@ConcurrencyLimit(50)
-RiskScore score(String id) { ... }
+@ConcurrencyLimit(limit = 50, policy = ConcurrencyLimit.ThrottlePolicy.REJECT)
+class RiskClient { ... }
 ```
 
 ### What's going on
@@ -150,21 +151,26 @@ The same thing that happened to the database happens to every service you call. 
 200 calls in flight. Now a traffic spike becomes thousands of calls at once to a service that may handle a hundred.
 It slows down, your calls wait longer, more calls pile up and both sides fall over.
 
-Spring Framework 7 adds `@ConcurrencyLimit`: at most N calls run through a method at the same time while the rest wait.
+Spring Framework 7 adds `@ConcurrencyLimit`. Its default policy, `BLOCK`, lets excess callers wait without a
+deadline for admission. Connect and read timeouts start after admission, so they do not bound that queue.
+`REJECT` instead throws `InvocationRejectedException` immediately. A class-level limit is shared across its methods.
 
 ### Do this
 
 1. Turn the annotations on with `@EnableResilientMethods` on a configuration class.
-2. Put `@ConcurrencyLimit(n)` on the client method for each downstream service, with `n` from what that service can
-   take.
+2. Put a class-level `@ConcurrencyLimit` on each downstream gateway, with an explicit `limit` and `policy = REJECT`.
+   Agree on the total across replicas with the service owner.
 3. Give every outbound call a connect timeout and a read timeout. The limit stops the flood; the timeouts stop one
    slow call from holding a slot forever.
 4. Limit retries and add jitter: retries times replicas times layers multiply the load on a service that is
    already struggling.
+5. Map `InvocationRejectedException` to 503 or 429. Do not retry it locally: that would add work back to a
+   saturated client. The [HTTP clients guide](/guides/http-clients/#http-bulkhead) uses the same policy.
 
 ### When this is not for you
 
-- One limit shared by several methods: use a `Semaphore` and release it in a `finally` block.
+- Waiting is part of the requirement: use a bounded queue with an explicit admission deadline. A bare semaphore
+  or the default `BLOCK` policy does not bound the number of waiting virtual threads.
 - You also want metrics, a circuit breaker and retries in one place: a Resilience4j bulkhead does that, with an extra
   dependency. Check its Spring Boot 4 support first.
 
@@ -178,7 +184,9 @@ at least 2 carriers.
 ```java
 @Bean(destroyMethod = "shutdown")
 ExecutorService cpuPool() {
-    return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    int cores = Runtime.getRuntime().availableProcessors();
+    return new ThreadPoolExecutor(cores, cores, 0, TimeUnit.MILLISECONDS,
+            new ArrayBlockingQueue<>(cores), new ThreadPoolExecutor.AbortPolicy());
 }
 ```
 
@@ -193,7 +201,9 @@ so it gets 1 carrier and behaves like a single threaded server.
 
 ### Do this
 
-1. Move the heavy part of a request to a fixed pool of platform threads, sized to the cores and wait for its result.
+1. Move the heavy part of a request to a fixed pool of platform threads, sized to the cores, with a bounded queue
+   and explicit rejection. `Executors.newFixedThreadPool` has an unbounded queue. The example queues at most one
+   task per worker; tune this budget to your latency target and map rejection to an overload response.
 2. Give the pod a CPU request of at least 1. Then set either `-XX:ActiveProcessorCount` of 2 or more with no
    CPU limit or a CPU limit of at least 2. The JVM in containers guide explains the flag.
 3. Never run blocking I/O on `ForkJoinPool.commonPool()`. It is shared by the whole JVM and sized for CPU work.
@@ -342,8 +352,9 @@ The example service turns virtual threads on in `application.yaml` (step 1).
 ### In the code
 
 - A HikariCP pool sized from the database budget, with `connection-timeout: 3000` (step 2).
-- `@EnableResilientMethods` and a `@ConcurrencyLimit` on each downstream client, with timeouts (step 3).
-- A fixed platform pool for CPU heavy work (step 4).
+- `@EnableResilientMethods`, a shared class-level `@ConcurrencyLimit` with `REJECT` on each downstream client and
+  connect and read timeouts (step 3).
+- A fixed platform pool with a bounded queue and rejection for CPU heavy work (step 4).
 - No stray executor beans; `spring.main.keep-alive: true` in apps without a web server (step 5).
 - A context wrapped executor for async work and fan out (steps 6 and 7).
 

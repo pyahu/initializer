@@ -204,7 +204,7 @@
   guide: virtual-threads
   card: vt-downstream-limits
   type: verified-behaviour
-  text: Every downstream service has a concurrency limit (@ConcurrencyLimit, Semaphore or bulkhead) and every outbound call has connect and read timeouts.
+  text: Each downstream client shares a concurrency limit with explicit rejection; any waiting queue is bounded with an admission deadline, and outbound calls have connect and read timeouts.
   claim: documented
   tests: []
   appliesWhen: {}
@@ -212,7 +212,7 @@
   guide: virtual-threads
   card: vt-cpu-work
   type: verified-behaviour
-  text: CPU heavy work runs on a platform pool sized to the cores.
+  text: CPU heavy work runs on a platform pool sized to the cores with a bounded queue and explicit rejection.
   claim: documented
   tests: []
   appliesWhen: {}

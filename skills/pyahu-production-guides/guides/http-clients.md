@@ -263,7 +263,7 @@ your service keeps working.
 
 With `policy = REJECT`, a call over the limit fails at once with `InvocationRejectedException`. The default,
 `BLOCK`, waits for a free slot and with virtual threads that becomes a queue nobody sees. The limit counts per
-JVM: three replicas with a limit of 64 can send 192 calls at once.
+client bean: with one singleton client per JVM, three replicas with a limit of 64 can send 192 calls at once.
 
 ### Do this
 
