@@ -276,16 +276,19 @@ changes; a renewal is a new record.
 
 The publication target is https://initializer.pyahu.io on Cloudflare Workers. `guides/wrangler.jsonc`
 names the Worker `initializer` and serves the static `guides/dist` directory with a real 404 page.
+It also declares the custom domain `initializer.pyahu.io`; deploying applies that domain association.
 
 For Cloudflare Workers Builds, connect `pyahu/initializer` with production branch `main` and root directory
 `guides`. Set `NODE_VERSION=24.22.0`, build with `npm run toolchain && npm run check && npm run build`
 after dependency installation, and deploy with `npm run deploy`. The Wrangler dependency and npm lockfile
-pin the deployment tooling. Connect the custom domain only after the first successful deployment.
+pin the deployment tooling.
 
-Before publication, the Guides, Links and fixture workflows must pass for the release commit. Workers Builds runs separately
+Before publication, the relevant Guides, Links and fixture workflows must pass. Workers Builds runs separately
 from GitHub Actions; its successful build alone does not prove the guides or their claims.
 For a local packaging check after building, run `cd guides && npx wrangler deploy --dry-run`.
-The first Worker creation, custom-domain setup and Workers Builds connection still need to be completed in
-the hosting account; checked-in configuration alone does not publish a site.
+Initial publication requires creating the Worker and applying its custom domain in the hosting account.
+Workers Builds also needs a repository connection in the Cloudflare dashboard; checked-in configuration alone
+does not create that connection. Its API needs a user token with Workers Builds Configuration permission,
+which the Wrangler OAuth login does not provide.
 
 Commits go straight to `main`; a red pipeline is fixed with a new commit.
