@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: [[name]]
   labels:
+    initializer.pyahu.io/deploy-phase: application
     app.kubernetes.io/component: api
 spec:
   # No replicas: the HorizontalPodAutoscaler owns the count (Kubernetes deployment guide, step 4).

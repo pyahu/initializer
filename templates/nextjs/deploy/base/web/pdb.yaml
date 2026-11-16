@@ -3,6 +3,7 @@ kind: PodDisruptionBudget
 metadata:
   name: [[name]]-web
   labels:
+    initializer.pyahu.io/deploy-phase: application
     app.kubernetes.io/component: web
 spec:
   maxUnavailable: 1

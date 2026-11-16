@@ -3,6 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: start
   labels:
+    initializer.pyahu.io/deploy-phase: application
     app.kubernetes.io/component: api
 spec:
   scaleTargetRef:

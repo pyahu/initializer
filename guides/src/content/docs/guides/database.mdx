@@ -284,8 +284,9 @@ kubectl wait --for=condition=complete job/<app>-migrate-<version> --timeout=10m
 A migration Job is a small program with one task: bring the schema to the version the new code expects. Three
 things decide whether it is safe.
 
-- **Order.** The Job must finish before the new pods start. Its credentials must exist before the Job starts.
-  A Job pod whose Secret is missing waits in `CreateContainerConfigError` instead of failing.
+- **Order.** Before the Job, apply its Namespace, ServiceAccount, generated ConfigMaps and NetworkPolicies,
+  and provision its database roles and Secrets. A Job pod whose Secret is missing waits in
+  `CreateContainerConfigError` instead of failing. The Job must finish before the new pods start.
 - **Failure.** If the Job fails, the rollout must not start. The old pods keep running on a schema they still
   understand, which is why every change has to be backward compatible (step 7).
 - **The lock.** Liquibase marks its lock table, `DATABASECHANGELOGLOCK`, while it works. If the Job is killed
@@ -297,9 +298,12 @@ things decide whether it is safe.
    delete and recreate the Job on every sync, such as an Argo CD hook, can keep one fixed name.
 2. Set a low `backoffLimit`, such as 1 or 2 (the default is 6) and an `activeDeadlineSeconds` so a stuck
    migration fails instead of hanging.
-3. Order it. In a pipeline, apply the Job and `kubectl wait --for=condition=complete` before the Deployment. With
-   Argo CD, use a `PreSync` hook or an earlier sync wave. With Helm, a `pre-upgrade` hook. With Flux, a separate
-   `Kustomization` that the app `dependsOn`.
+3. Apply the prerequisites first: Namespace, ServiceAccount, generated ConfigMaps, NetworkPolicies and externally
+   managed Secrets and database roles. Then apply the Job and `kubectl wait --for=condition=complete` before the
+   Deployment. The generated `deploy/apply.sh` implements these phases with an explicit context and environment.
+   With Argo CD, use ordered sync waves with prerequisites before the migration and the application after it;
+   a `PreSync` hook cannot depend on resources first created in the later Sync phase. With Helm, ensure any
+   `pre-upgrade` hook has its prerequisites too. With Flux, use separate `Kustomization` dependencies.
 4. If a killed Job left the lock behind, run `liquibase release-locks` once, after making sure no migration is
    running.
 5. Set `ttlSecondsAfterFinished` so finished Jobs and their pods are cleaned up.

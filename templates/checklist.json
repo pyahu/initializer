@@ -738,7 +738,7 @@
               "card": "db-migration-job",
               "step": 6,
               "type": "deployment-prerequisite",
-              "text": "The migration Job completes before the rollout starts and a failed Job stops the rollout.",
+              "text": "Namespace, ServiceAccount, ConfigMaps, NetworkPolicies, database roles and Secrets exist before the migration Job; it completes before the rollout and a failed Job stops the release.",
               "appliesWhen": {
                 "database": [
                   "postgres"

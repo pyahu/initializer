@@ -96,7 +96,7 @@ explains why it matters. Items with a "when" apply only to services that use tha
 - [ ] **DB-10** Integration tests run the real changelog on Testcontainers with the production PostgreSQL major version. (step 8; when database: postgres)
 - [ ] **DB-11** Alerts on hikaricp.connections.pending and hikaricp.connections.timeout. (step 9; when database: postgres)
 - [ ] **DB-12** Point in time restore rehearsed in the last quarter. (step 9; when database: postgres)
-- [ ] **DB-13** The migration Job completes before the rollout starts and a failed Job stops the rollout. (step 6; when database: postgres)
+- [ ] **DB-13** Namespace, ServiceAccount, ConfigMaps, NetworkPolicies, database roles and Secrets exist before the migration Job; it completes before the rollout and a failed Job stops the release. (step 6; when database: postgres)
 - [ ] **DB-14** The migration Job has a versioned name (or is recreated by its hook), a low backoffLimit, an activeDeadlineSeconds and a ttlSecondsAfterFinished. (step 6; when database: postgres)
 
 ### [JPA and jOOQ](guides/jpa-and-jooq.md)

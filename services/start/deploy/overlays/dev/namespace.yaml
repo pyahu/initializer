@@ -4,5 +4,6 @@ kind: Namespace
 metadata:
   name: start-dev
   labels:
+    initializer.pyahu.io/deploy-phase: prerequisites
     pod-security.kubernetes.io/enforce: restricted
     pod-security.kubernetes.io/enforce-version: v1.36

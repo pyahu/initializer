@@ -79,19 +79,35 @@ kustomize build deploy/overlays/dev
 | `CHECKLIST.md` | What to review before production, with the step that explains each item. |
 
 The architecture is [[architectureTitle]]: [guide]([[architectureGuide]]).
+
+## Deploy it
+
+Set the real image references, database and identity provider addresses in the overlay first. Production requires
+published image digests. Select the target context explicitly; this helper never changes your current context.
+
+```sh
+bash deploy/apply.sh --context YOUR_CONTEXT dev prepare
+# Provision the Secrets below in the namespace just created, using your secret store.
+bash deploy/apply.sh --context YOUR_CONTEXT dev release
+```
+
+Use `prod` for the production overlay. `prepare` applies the Namespace, ServiceAccounts, generated ConfigMaps and
+NetworkPolicies. `release` applies those prerequisites again, checks required Secret keys[[#postgres]], applies the
+migration Job and waits for completion[[/postgres]], then applies the application and waits for its rollout.
+A failed migration stops the release before a new Deployment is applied.
 [[#postgres]]
 
-## Before the first deploy
-
-Create in each namespace the Secrets `[[name]]-db-app` and `[[name]]-db-migrator` with the keys `username` and
-`password`.[[#webAuth]] Also create `[[name]]-web-auth` with `better-auth-secret` and `oidc-client-secret`.[[/webAuth]] Then
-apply the migration Job, wait until it completes and apply the rest.
+Provision `[[name]]-db-app` and `[[name]]-db-migrator` with `username` and `password` in each namespace.
+Create the database and its roles first (`db/roles.sql`); the Job does not provision them. Give each release a new
+migration Job name (`deploy/base/migration-job.yaml`), because a Job's pod template is immutable. Do not delete a
+running Job to reuse its name. The release's image and changelog must match.
 [[/postgres]]
-[[^postgres]]
 [[#webAuth]]
 
-## Before the first deploy
-
-Create in each namespace the Secret `[[name]]-web-auth` with the keys `better-auth-secret` and `oidc-client-secret`.
+Provision `[[name]]-web-auth` with `better-auth-secret` and `oidc-client-secret` in each namespace.
 [[/webAuth]]
-[[/postgres]]
+
+The helper renders the overlay once, so the migration and application use the same ConfigMap hashes. A plain apply
+of the entire overlay does not wait for a successful migration. When using GitOps, configure the same prerequisite,
+migration and application ordering in the controller instead of also running this helper. Retire unused generated
+ConfigMaps only after no running workload references them.

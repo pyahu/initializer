@@ -34,6 +34,7 @@ configMapGenerator:
   - name: start-config
     options:
       labels:
+        initializer.pyahu.io/deploy-phase: prerequisites
         app.kubernetes.io/component: api
     literals:
       - DEPLOYMENT_ENVIRONMENT=base
@@ -41,6 +42,7 @@ configMapGenerator:
   - name: start-web-config
     options:
       labels:
+        initializer.pyahu.io/deploy-phase: prerequisites
         app.kubernetes.io/component: web
     literals:
       # The service by its cluster name, from the server only (Next.js guide, step 2).

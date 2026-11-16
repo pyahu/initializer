@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: [[name]]-web
   labels:
+    initializer.pyahu.io/deploy-phase: application
     app.kubernetes.io/component: web
 spec:
   revisionHistoryLimit: 5
