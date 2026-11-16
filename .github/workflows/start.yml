@@ -43,7 +43,8 @@ permissions:
 
 concurrency:
   group: start-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  # Every consumer downloads this run's image, so a newer candidate can replace an older one.
+  cancel-in-progress: true
 
 env:
   GOTOOLCHAIN: go1.27.2
@@ -83,11 +84,15 @@ jobs:
           docker logs start
           exit 1
       - name: Keep the image for the generated projects
-        run: docker save start:ci | gzip > start-image.tar.gz
+        run: |
+          docker image inspect --format '{{.Id}}' start:ci > start-image.id
+          docker save start:ci | gzip > start-image.tar.gz
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: start-image
-          path: start-image.tar.gz
+          path: |
+            start-image.tar.gz
+            start-image.id
           retention-days: 1
 
   # The page: its types against the contract, its image, then the form, Explore and the download in a browser,
@@ -114,6 +119,7 @@ jobs:
             docker rm -f start web > /dev/null 2>&1; docker network rm e2e > /dev/null 2>&1; exit $code' EXIT
           ready() { for _ in $(seq 1 60); do curl -sf "$1" > /dev/null && return 0; sleep 1; done; return 1; }
           gunzip -c start-image.tar.gz | docker load
+          test "$(docker image inspect --format '{{.Id}}' start:ci)" = "$(cat start-image.id)"
           docker network create e2e > /dev/null
           docker run -d --name start --network e2e -p 18081:8081 --read-only --tmpfs /tmp --user 10001:10001 \
             -e MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED=false start:ci
@@ -157,6 +163,7 @@ jobs:
       - name: Start the service
         run: |
           gunzip -c start-image.tar.gz | docker load
+          test "$(docker image inspect --format '{{.Id}}' start:ci)" = "$(cat start-image.id)"
           docker run -d --name start -p 18080:8080 -p 18081:8081 -e MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED=false start:ci
           for _ in $(seq 1 60); do
             if curl -sf localhost:18081/actuator/health/readiness; then exit 0; fi

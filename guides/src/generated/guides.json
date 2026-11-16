@@ -1660,7 +1660,7 @@
         "stale": false
       },
       "verification": "",
-      "coverage": "9 claims: 1 reproduced, 1 compiled, 7 not exercised",
+      "coverage": "10 claims: 1 reproduced, 1 compiled, 8 not exercised",
       "sources": [],
       "questions": [
         {
@@ -1788,13 +1788,19 @@
         },
         "ci-publish": {
           "title": "6. How do I publish an image others can verify?",
-          "coverage": "1 claim: 1 not exercised",
+          "coverage": "2 claims: 2 not exercised",
           "records": [
             {
               "id": "ev-ci-publish-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-ci-publish-1 · not exercised · baseline v0.1-b1. actions/attest writes signed build provenance for an image digest; GitHub documents that artifact attestations alone provide SLSA v1.0 Build Level 2 and Build Level 3 with a shared reusable workflow. Limitations: Taken from GitHub's artifact attestation documentation; the levels are stated against SLSA v1.0, while the baseline pins the SLSA 1.2 specification.",
               "reason": "This repository's pipeline does not push or attest an image."
+            },
+            {
+              "id": "ev-ci-publish-2",
+              "badge": "not-exercised",
+              "canonical": "Evidence ev-ci-publish-2 · not exercised · baseline v0.1-b1. Saving and loading the tested image, then tagging it for release, preserves its image ID. Limitations: TestSaveLoadPreservesTheTestedImage uses real Docker save, load and tag operations. It does not push to a registry or verify a signature or attestation.",
+              "reason": "The regression test is in the fixture inventory; a completed CI evidence record has not been recorded yet."
             }
           ]
         },
