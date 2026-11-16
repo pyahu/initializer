@@ -1,0 +1,93 @@
+# Evidence records for the local-development guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-local-real-deps-1
+  card: local-real-deps
+  claim: "Running the production PostgreSQL version in a container catches SQL and behaviour differences that a mock or an embedded database hides."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Engineering judgment; the baseline pins postgres:18.6."
+  reason: "The example service has no database yet, so no test compares a container with an embedded database."
+- id: ev-local-compose-1
+  card: local-compose
+  claim: "With spring-boot-docker-compose as a developmentOnly dependency, Spring Boot runs docker compose up for compose.yml at startup, creates service connections for postgres containers from POSTGRES_USER, POSTGRES_PASSWORD and POSTGRES_DB and stops the containers at shutdown."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Boot 4.1 reference (Development-time Services), the spring-boot-docker-compose 4.1.1 configuration metadata and PostgresEnvironment in spring-boot-jdbc 4.1.1."
+  reason: "The example service has no compose.yml and no test starts it through Docker Compose."
+- id: ev-local-compose-2
+  card: local-compose
+  claim: "Docker Compose support is skipped in tests by default (spring.docker.compose.skip.in-tests is true) and lifecycle-management start-only leaves the containers running after the app stops."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the spring-boot-docker-compose 4.1.1 configuration metadata and the reference."
+  reason: "No test exercises the Docker Compose lifecycle."
+- id: ev-local-testcontainers-1
+  card: local-testcontainers
+  claim: "A TestApplication in src/test that calls SpringApplication.from(Application::main).with(LocalContainers.class) starts the app with @ServiceConnection container beans and ./gradlew bootTestRun runs it."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Boot 4.1 reference; PostgreSQLContainer in org.testcontainers.postgresql checked in testcontainers-postgresql 2.0.5."
+  reason: "The example service has no development launcher and no container beans."
+- id: ev-local-telemetry-1
+  card: local-telemetry
+  claim: "Pointed at grafana/otel-lgtm 0.37.0, one request to the example service produces a trace, a metric and a log line that all arrive in the image's backends."
+  badge: reproduced
+  capabilities: [runtime, test]
+  components: [spring-boot, otel-lgtm-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/observability::TestSignalsArrive
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestSignalsArrive$' ./acceptance/observability"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "Tempo trace 66d1cdc9f1a4801c676305bf245f43e1 has server span \"http get /ping\" with uri /ping; Prometheus sum(http_server_requests_seconds_count{service_name=\"single-hexagonal\",uri=\"/ping\"}) = 1; Loki {service_name=\"single-hexagonal\"} | trace_id=\"66d1cdc9f1a4801c676305bf245f43e1\" returned \"ping\"; 4 more sampled parents at probability 0.1, all 5 traces in Tempo"
+  limitations: "The test sets OTEL_EXPORTER_OTLP_ENDPOINT itself; Boot's automatic service connection for the image through Docker Compose or LgtmStackContainer is not exercised."
+- id: ev-local-telemetry-2
+  card: local-telemetry
+  claim: "Spring Boot creates OTLP logging, metrics and tracing connection details for a grafana/otel-lgtm container in compose.yml and for an LgtmStackContainer bean."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Boot 4.1 reference service connection tables; LgtmStackContainer checked in testcontainers-grafana 2.0.5."
+  reason: "No test starts the image through Docker Compose or Testcontainers."
+- id: ev-local-same-config-1
+  card: local-same-config
+  claim: "The same image, with only OTEL_EXPORTER_OTLP_ENDPOINT set as an environment variable, exports to the backend it names, with no file change."
+  badge: reproduced
+  capabilities: [runtime, test]
+  components: [spring-boot, otel-lgtm-image]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/observability::TestSignalsArrive
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestSignalsArrive$' ./acceptance/observability"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "Tempo trace 66d1cdc9f1a4801c676305bf245f43e1 has server span \"http get /ping\" with uri /ping; Prometheus sum(http_server_requests_seconds_count{service_name=\"single-hexagonal\",uri=\"/ping\"}) = 1; Loki {service_name=\"single-hexagonal\"} | trace_id=\"66d1cdc9f1a4801c676305bf245f43e1\" returned \"ping\"; 4 more sampled parents at probability 0.1, all 5 traces in Tempo"
+  limitations: "One variable is exercised; placeholder defaults such as DEPLOYMENT_ENVIRONMENT are not checked by a test."
+- id: ev-local-devtools-1
+  card: local-devtools
+  claim: "spring-boot-devtools restarts the app when the class path changes and is disabled when the app runs with java -jar; @RestartScope keeps container beans across restarts."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Boot 4.1 reference (Developer Tools, Development-time Services) and the spring-boot-devtools 4.1.1 configuration metadata."
+  reason: "The example service does not use devtools."
+- id: ev-local-seed-data-1
+  card: local-seed-data
+  claim: "Liquibase runs every changeset when no context is given and with a context filter it runs the matching changesets plus those without a context; spring.liquibase.contexts sets the filter."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Liquibase 5.0.4 reference (What are contexts) and the spring-boot-liquibase 4.1.1 configuration metadata."
+  reason: "The example service has no database or changelog yet."
+- id: ev-local-kubernetes-1
+  card: local-kubernetes
+  claim: "Probe ports, Secret mounts and NetworkPolicies can only be checked in a cluster, while daily coding is faster against containers next to the app."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Engineering judgment; the Pyahu CLI facts come from its README."
+  reason: "No local cluster runs in this repository's CI."

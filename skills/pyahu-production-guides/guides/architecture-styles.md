@@ -4,7 +4,7 @@
 
 Hexagonal, DDD layered, classic layered, Onion, Clean, vertical slice, BCE and MVC, compared on one scenario and on their consequences.
 
-On the web: https://initializer.pyahu.io/guides/architecture-styles/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+On the web: https://initializer.pyahu.io/guides/architecture-styles/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
 **Evidence coverage.** 8 claims: 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/architecture-styles.yaml).
 

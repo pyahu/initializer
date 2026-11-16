@@ -9,7 +9,7 @@ description: Production practices for Spring Boot 4.1 services on Java 25, Kuber
 
 The practices Pyahu follows in every service it generates, written as guides for people and tools alike.
 Each guide answers a few questions, one step per question. The code in them is cut from a service that CI
-builds and tests on every change. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+builds and tests on every change. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 The same guides are on the web at https://initializer.pyahu.io/guides/.
 
 Public preview: every guide shows its evidence coverage. Compiled means code builds, reproduced means a

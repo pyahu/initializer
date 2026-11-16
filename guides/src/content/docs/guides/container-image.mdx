@@ -105,7 +105,7 @@ less often than code, a normal commit only pushes the small top layers.
 **In short:** Eclipse Temurin JRE on Ubuntu, with the Ubuntu codename in the tag.
 
 ```dockerfile
-FROM eclipse-temurin:25.0.4.1_1-jre-noble@sha256:37c16059e13b3dfa59f4c24af72dd0f7798d5f1b06647e306feb914f4163a721
+FROM eclipse-temurin:25.0.5_8-jre-noble@sha256:e3b6f7887a50f20d8f07abf279d8a81a5953fb398a9555bd9edd56b9bd15968c
 ```
 
 ### What's going on
@@ -127,7 +127,7 @@ the tag, you stay on 24.04 until you choose to move.
 
 ### Do this
 
-1. Start from `eclipse-temurin:25.0.4.1_1-jre-noble` for the runtime stage and the matching `-jdk-noble` image for the
+1. Start from `eclipse-temurin:25.0.5_8-jre-noble` for the runtime stage and the matching `-jdk-noble` image for the
    build stages.
 2. Add company CA certificates at build time or mount a truststore. Your own `ENTRYPOINT` replaces the Temurin
    script that would import them.
@@ -144,7 +144,7 @@ the tag, you stay on 24.04 until you choose to move.
 **In short:** pin every image by tag and digest and let a bot open a pull request when the digest moves.
 
 ```dockerfile
-FROM eclipse-temurin:25.0.4.1_1-jre-noble@sha256:37c16059e13b3dfa59f4c24af72dd0f7798d5f1b06647e306feb914f4163a721
+FROM eclipse-temurin:25.0.5_8-jre-noble@sha256:e3b6f7887a50f20d8f07abf279d8a81a5953fb398a9555bd9edd56b9bd15968c
 ```
 
 ### What's going on
@@ -325,7 +325,7 @@ the Deployment.
 The first two stages compile the jar with a Gradle cache and split it into layers (step 1). Both use the JDK image
 pinned by digest (steps 2 and 3).
 
-<Recipe id="img-build-stages" path="fixtures/single-hexagonal/Dockerfile" start="FROM eclipse-temurin:25.0.4.1_1-jdk-noble@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 AS build" end="RUN java -Djarmode=tools" lang="dockerfile" />
+<Recipe id="img-build-stages" path="fixtures/single-hexagonal/Dockerfile" start="FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f AS build" end="RUN java -Djarmode=tools" lang="dockerfile" />
 
 **Check it:** `docker history single-hexagonal:ci` shows separate layers for the dependencies and the application;
 after a code change only the top layers are new.

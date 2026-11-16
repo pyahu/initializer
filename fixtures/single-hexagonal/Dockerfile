@@ -10,7 +10,7 @@
 # in the runtime stage, so training and production use the same JRE build: any other build rejects
 # the cache.
 
-FROM eclipse-temurin:25.0.4.1_1-jdk-noble@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 AS build
+FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f AS build
 WORKDIR /workspace
 COPY gradlew settings.gradle.kts build.gradle.kts ./
 COPY gradle/ gradle/
@@ -20,14 +20,14 @@ COPY src/ src/
 RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon --quiet bootJar \
  && cp build/libs/single-hexagonal-0.1.0.jar /workspace/application.jar
 
-FROM eclipse-temurin:25.0.4.1_1-jdk-noble@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 AS extract
+FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f AS extract
 WORKDIR /extract
 COPY --from=build /workspace/application.jar application.jar
 # --layers without --launcher: application/application.jar plus lib/*.jar on its manifest class
 # path, started with java -jar. The AOT cache needs this layout.
 RUN java -Djarmode=tools -jar application.jar extract --layers --destination extracted
 
-FROM eclipse-temurin:25.0.4.1_1-jre-noble@sha256:37c16059e13b3dfa59f4c24af72dd0f7798d5f1b06647e306feb914f4163a721 AS runtime
+FROM eclipse-temurin:25.0.5_8-jre-noble@sha256:e3b6f7887a50f20d8f07abf279d8a81a5953fb398a9555bd9edd56b9bd15968c AS runtime
 RUN groupadd --system --gid 10001 app \
  && useradd --system --uid 10001 --gid app --home-dir /nonexistent --shell /usr/sbin/nologin app
 WORKDIR /app

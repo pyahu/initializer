@@ -4,7 +4,7 @@
 
 A Gradle build for a Spring Boot 4.1 service that is the same on every machine and stops bugs, nulls and drift before they ship.
 
-On the web: https://initializer.pyahu.io/guides/build-quality/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+On the web: https://initializer.pyahu.io/guides/build-quality/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
 **Preview.** 11 claims: 7 compiled, 4 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/build-quality.yaml).
 
@@ -309,7 +309,7 @@ From [`libs.versions.toml`](https://github.com/pyahu/initializer/blob/main/fixtu
 
 ```toml
 [versions]
-spring-boot = "4.1.1"
+spring-boot = "4.1.2"
 spring-modulith = "2.1.1"
 jmolecules = "2025.0.2"
 opentelemetry-logback-appender = "2.28.1-alpha"

@@ -4,7 +4,7 @@
 
 Keep several Spring Boot services in one repository without turning them into one distributed monolith.
 
-On the web: https://initializer.pyahu.io/guides/monorepo/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+On the web: https://initializer.pyahu.io/guides/monorepo/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
 **Preview.** 8 claims: 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/monorepo.yaml).
 

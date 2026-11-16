@@ -1,0 +1,92 @@
+# Evidence records for the jpa-and-jooq guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-orm-choice-1
+  card: orm-choice
+  claim: "Spring Boot 4.1.1 manages Hibernate ORM 7.4.5.Final, Spring Data JPA 4.1.1 and jOOQ 3.21.7."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the spring-boot-dependencies 4.1.1 and spring-data-bom 2026.0.1 POMs on Maven Central, not from a build."
+  reason: "No build in this repository uses JPA or jOOQ yet: the fixture uses neither."
+- id: ev-orm-choice-2
+  card: orm-choice
+  claim: "Spring Data JDBC loads and saves whole aggregates without lazy loading or a persistence context."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Documented Spring Data Relational behaviour."
+  reason: "No test runs this yet: the fixture has no database."
+- id: ev-orm-persistence-context-1
+  card: orm-persistence-context
+  claim: "Hibernate writes changes to managed entities at flush by comparing them with their loaded state, and a JPQL or HQL query can trigger an automatic flush first."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Hibernate ORM 7.4 user guide, flushing chapter."
+  reason: "No test runs this yet: the fixture does not use JPA."
+- id: ev-orm-persistence-context-2
+  card: orm-persistence-context
+  claim: "In Spring Boot 4.1.1, spring.jpa.hibernate.ddl-auto defaults to create-drop for an embedded database without a schema manager and to none otherwise."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the spring-boot-hibernate 4.1.1 configuration metadata, not from a run."
+  reason: "No test binds this property yet: the fixture does not use JPA."
+- id: ev-orm-n-plus-one-1
+  card: orm-n-plus-one
+  claim: "@ManyToOne and @OneToOne associations are eager by default in JPA, and a lazy collection read inside a loop runs one query per owner."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Hibernate ORM 7.4 user guide, fetching chapter."
+  reason: "No test counts queries yet: the fixture does not use JPA."
+- id: ev-orm-n-plus-one-2
+  card: orm-n-plus-one
+  claim: "hibernate.query.fail_on_pagination_over_collection_fetch is false by default, hibernate.log_slow_query is 0 (off) by default and hibernate.default_batch_fetch_size enables batch fetching for all lazy associations."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Hibernate ORM 7.4 user guide, configuration settings appendix."
+  reason: "No test runs this yet: the fixture does not use JPA."
+- id: ev-orm-open-in-view-1
+  card: orm-open-in-view
+  claim: "spring.jpa.open-in-view defaults to true in Spring Boot 4.1.1, and Boot logs a warning at startup when it is not set explicitly."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the spring-boot-jpa 4.1.1 configuration metadata and the warning text in JpaBaseConfiguration, not from a run."
+  reason: "No test starts JPA yet: the fixture does not use it."
+- id: ev-orm-projections-1
+  card: orm-projections
+  claim: "DTO projections select only the needed columns and are not managed by the persistence context."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Hibernate ORM 7.4 user guide, performance chapter."
+  reason: "No test measures this yet: the fixture does not use JPA."
+- id: ev-orm-batching-1
+  card: orm-batching
+  claim: "hibernate.jdbc.batch_size defaults to 0 (no batching), hibernate.order_inserts and hibernate.order_updates default to false, and IDENTITY ids disable JDBC batching of inserts."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Hibernate ORM 7.4 user guide, batch settings and identifier generators."
+  reason: "No load test writes through JPA yet: the fixture does not use it."
+- id: ev-orm-long-transactions-1
+  card: orm-long-transactions
+  claim: "Hibernate enables the second level cache only when a region factory other than NoCachingRegionFactory is configured."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Hibernate ORM 7.4 user guide, caching chapter."
+  reason: "No test runs this yet: the fixture does not use JPA."
+- id: ev-orm-long-transactions-2
+  card: orm-long-transactions
+  claim: "A persistence context keeps every entity loaded in the transaction until it ends, so long transactions grow in memory and in flush cost."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Hibernate ORM 7.4 user guide, persistence context chapter; no measurement here."
+  reason: "No batch job runs through JPA in this repository yet."
+- id: ev-orm-jooq-1
+  card: orm-jooq
+  claim: "jOOQ 3.21.0 deprecated code generation from Liquibase files and recommends generating from a schema migrated in a Testcontainers database."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "jOOQ 3.21 manual, LiquibaseDatabase page."
+  reason: "No build generates jOOQ code yet: the fixture does not use jOOQ."
+- id: ev-orm-jooq-2
+  card: orm-jooq
+  claim: "Spring Boot 4.1.1 auto-configures a DSLContext over a TransactionAwareDataSourceProxy with a SpringTransactionProvider, so jOOQ calls join Spring transactions."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the spring-boot-jooq 4.1.1 classes, not from a run."
+  reason: "No test runs jOOQ yet: the fixture does not use it."

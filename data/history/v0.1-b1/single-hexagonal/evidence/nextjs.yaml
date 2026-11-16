@@ -1,0 +1,78 @@
+# Evidence records for the nextjs guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-next-rendering-1
+  card: next-rendering
+  claim: "App Router pages are server components by default; only modules marked 'use client' and their imports run in the browser. A module that imports server-only fails the build when a client component imports it."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Next.js 16 documentation (server and client components, data security)."
+  reason: "No Next.js app exists in this repository yet, so no test builds one."
+- id: ev-next-typed-client-1
+  card: next-typed-client
+  claim: "openapi-typescript 7.13.0 generates TypeScript types from an OpenAPI 3.0 or 3.1 document; openapi-fetch 0.17.0 uses them to type each call."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Versions read from the npm registry on 2026-10-18; behaviour from the openapi-ts.dev documentation."
+  reason: "The example service has no OpenAPI document and no frontend yet, so nothing generates or compiles a client."
+- id: ev-next-auth-1
+  card: next-auth
+  claim: "Server Actions are reachable by direct POST requests, so each one must check the user itself; a session in an httpOnly cookie keeps the access token away from page scripts."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Next.js authentication and data security guides."
+  reason: "No frontend or identity provider runs in a test here yet."
+- id: ev-next-auth-2
+  card: next-auth
+  claim: "On 2026-10-18 next-auth 5 was published only as a beta (5.0.0-beta.32, latest stable 4.24.15) and authjs.dev stated that Auth.js is now part of Better Auth (1.7.10)."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "A point in time read of the npm registry and authjs.dev; it will change."
+  reason: "A registry fact, not behaviour; nothing in the example service uses either library."
+- id: ev-next-env-1
+  card: next-env
+  claim: "next build replaces process.env.NEXT_PUBLIC_ values with their build time value, so one image promoted across environments keeps the build value; unprefixed values are read on the server at run time during dynamic rendering."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Next.js 16 environment variables guide."
+  reason: "No test builds a Next.js image and runs it with different environment values yet."
+- id: ev-next-caching-1
+  card: next-caching
+  claim: "Since Next.js 15, fetch requests and GET route handlers are not cached by default; in Next.js 16 the single argument revalidateTag is deprecated; updateTag gives read your writes in Server Actions."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Next.js 15 and 16 upgrade guides and the caching documentation."
+  reason: "No Next.js app runs in a test here yet."
+- id: ev-next-caching-2
+  card: next-caching
+  claim: "The Next.js cache is kept per server instance by default; revalidating a tag on one instance does not reach the others without a shared cache handler."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Next.js self-hosting guide."
+  reason: "Needs several Next.js pods and a shared cache; nothing runs them yet."
+- id: ev-next-kubernetes-1
+  card: next-kubernetes
+  claim: "output: 'standalone' writes a traced .next/standalone folder with a server.js that runs without node_modules; public and .next/static must be copied next to it."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Next.js output documentation and the official with-docker example."
+  reason: "No Next.js image is built in CI here yet."
+- id: ev-next-kubernetes-2
+  card: next-kubernetes
+  claim: "On SIGTERM the Next.js server finishes requests in flight before exiting. Several instances need the same NEXT_SERVER_ACTIONS_ENCRYPTION_KEY and a deploymentId."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Next.js self-hosting guide."
+  reason: "Needs a cluster and a rolling update of a Next.js Deployment; no test runs one."
+- id: ev-next-headers-1
+  card: next-headers
+  claim: "next.config.js headers() sets response headers per path. Next.js sends x-powered-by unless poweredByHeader is false. A CSP nonce requires per request rendering."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Reasoned from the Next.js headers, poweredByHeader and Content Security Policy documentation. The header values are common recommendations, not measured here."
+  reason: "No test fetches a page from a Next.js app and checks its headers yet."
+- id: ev-next-tracing-1
+  card: next-tracing
+  claim: "@vercel/otel 2.1.3 propagates trace context by default only to Vercel deployment URLs; other URLs need fetch.propagateContextUrls."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the @vercel/otel 2.1.3 README in the npm package."
+  reason: "No test sends a request from a Next.js app to the service and checks that both spans share a trace."

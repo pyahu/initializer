@@ -337,7 +337,7 @@ Everything above lands in two places: the image and the Deployment.
 The last stage of the Dockerfile applies steps 1, 2, 5 and 6. It sets the sizing defaults, trains the AOT cache
 and starts the JVM with G1 and the cache.
 
-<Recipe id="jvm-runtime-stage" path="fixtures/single-hexagonal/Dockerfile" start="FROM eclipse-temurin:25.0.4.1_1-jre-noble" end="ENTRYPOINT [" lang="dockerfile" />
+<Recipe id="jvm-runtime-stage" path="fixtures/single-hexagonal/Dockerfile" start="FROM eclipse-temurin:25.0.5_8-jre-noble" end="ENTRYPOINT [" lang="dockerfile" />
 
 **Check it:** run the image with `-e JDK_JAVA_OPTIONS=-Xlog:aot`. The log shows `Opened AOT cache /app/app.aot`,
 so the cache is in use.

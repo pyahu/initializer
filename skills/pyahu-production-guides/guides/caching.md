@@ -4,7 +4,7 @@
 
 When a cache helps a Spring Boot 4.1 service and how to run one on Valkey with TTLs, safe keys, fresh data and a plan for when it goes down.
 
-On the web: https://initializer.pyahu.io/guides/caching/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+On the web: https://initializer.pyahu.io/guides/caching/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
 **Preview.** 9 claims: 9 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/caching.yaml).
 

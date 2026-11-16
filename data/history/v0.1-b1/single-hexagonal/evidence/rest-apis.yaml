@@ -1,0 +1,74 @@
+# Evidence records for the rest-apis guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-rest-contract-first-1
+  card: rest-contract-first
+  claim: "Keeping an OpenAPI 3.1 document in the repository and reviewing it with the code makes every change to the API visible in one file."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Engineering judgment based on the OpenAPI 3.1.2 specification."
+  reason: "The example service has no OpenAPI contract yet."
+- id: ev-rest-generate-1
+  card: rest-generate
+  claim: "In the example service the web controller lives in adapter/in/web, no class outside the adapters depends on it and the jMolecules hexagonal rules pass."
+  badge: compiled
+  capabilities: [test]
+  components: [archunit, jmolecules-bom, jmolecules-archunit]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ArchitectureTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ArchitectureTest: 3 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "Proves the adapter boundary for a controller written by hand; the service does not generate an interface from a contract yet."
+- id: ev-rest-generate-2
+  card: rest-generate
+  claim: "With interfaceOnly and useSpringBoot4, the spring generator of openapi-generator 7.26.0 writes API interfaces and models with Jakarta imports and no controllers."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the spring generator documentation and the Gradle plugin README at tag v7.26.0."
+  reason: "The example service does not run openApiGenerate yet."
+- id: ev-rest-validation-1
+  card: rest-validation
+  claim: "Spring MVC validates annotated controller parameters before the method runs and raises MethodArgumentNotValidException or HandlerMethodValidationException, which become a 400 response."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Framework 7.0 reference on validation and the spring-web 7.0.9 classes."
+  reason: "The example service has no endpoint that takes input yet."
+- id: ev-rest-errors-1
+  card: rest-errors
+  claim: "With spring.mvc.problemdetails.enabled: true, Spring Boot 4.1 answers Spring MVC errors as RFC 9457 problem details in application/problem+json; the property defaults to false."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the spring-boot-webmvc 4.1.1 configuration metadata and the Spring Boot 4.1 servlet reference."
+  reason: "No test sends a bad request to the example service yet."
+- id: ev-rest-writes-1
+  card: rest-writes
+  claim: "PUT and DELETE are idempotent in HTTP and POST is not, so a POST that is retried can create a second resource unless the server deduplicates it, for example with an Idempotency-Key header."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From RFC 9110 and the IETF Idempotency-Key draft, which is not an RFC yet."
+  reason: "The example service has no write endpoint yet."
+- id: ev-rest-pagination-1
+  card: rest-pagination
+  claim: "A list endpoint with a server capped limit and a cursor stays bounded in size and stable when rows are added between calls."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Engineering judgment; no measurement in this repository."
+  reason: "The example service has no list endpoint yet."
+- id: ev-rest-versioning-1
+  card: rest-versioning
+  claim: "Spring Framework 7 maps one path to several versions with the version attribute, answers an unsupported version with 400 and can send Deprecation and Sunset headers; Spring Boot 4.1 configures it with spring.mvc.apiversion.* properties."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Framework 7.0 versioning reference, the spring-web 7.0.9 classes and the spring-boot-webmvc 4.1.1 configuration metadata."
+  reason: "The example service has a single unversioned endpoint."
+- id: ev-rest-contract-ci-1
+  card: rest-contract-ci
+  claim: "The openapi-generator Gradle plugin provides an openApiValidate task and a controller that implements a generated interface stops compiling when the contract changes its signature."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Gradle plugin README at tag v7.26.0; the breaking change diff in CI uses a tool that is not pinned in baseline v0.1-b1."
+  reason: "The example service has no contract to validate or diff yet."

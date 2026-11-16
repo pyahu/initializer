@@ -4,7 +4,7 @@
 
 Size memory, CPU, GC and startup for a Java 25 service in a pod and prove each choice.
 
-On the web: https://initializer.pyahu.io/guides/jvm-in-containers/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+On the web: https://initializer.pyahu.io/guides/jvm-in-containers/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
 **Preview.** 16 claims: 1 measured, 9 reproduced, 6 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/jvm-in-containers.yaml).
 
@@ -298,7 +298,7 @@ and starts the JVM with G1 and the cache.
 From [`Dockerfile`](https://github.com/pyahu/initializer/blob/main/fixtures/single-hexagonal/Dockerfile):
 
 ```dockerfile
-FROM eclipse-temurin:25.0.4.1_1-jre-noble@sha256:37c16059e13b3dfa59f4c24af72dd0f7798d5f1b06647e306feb914f4163a721 AS runtime
+FROM eclipse-temurin:25.0.5_8-jre-noble@sha256:e3b6f7887a50f20d8f07abf279d8a81a5953fb398a9555bd9edd56b9bd15968c AS runtime
 RUN groupadd --system --gid 10001 app \
  && useradd --system --uid 10001 --gid app --home-dir /nonexistent --shell /usr/sbin/nologin app
 WORKDIR /app

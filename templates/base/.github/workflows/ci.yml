@@ -20,7 +20,7 @@ env:
   JDK_IMAGE: eclipse-temurin@[[jdkDigest]]
 [[#nextjs]]
   # The Node of frontends/web/.node-version, pinned by digest.
-  NODE_IMAGE: node:24.22.0-trixie-slim@sha256:7f486cabe892bff8fef04c0f7da8dba84a560be3e4e2740b7a86afc57ebec315
+  NODE_IMAGE: node:24.22.3-trixie-slim@sha256:af02d57b57719b9657a45199a79264a9437940cd55b3c7b3fc99615654f124a0
 [[/nextjs]]
 [[#postgres]]
   POSTGRES_IMAGE: [[postgresImage]]
@@ -82,13 +82,29 @@ jobs:
         # here (Next.js guide, step 2). The image build below type checks the rest.
         run: >-
           docker run --rm -v "$PWD:/w" -w /w/frontends/web "$NODE_IMAGE"
-          sh -c 'npm ci --no-audit --no-fund && npm run api:check'
+          sh -c 'npm ci --no-audit --no-fund && npm audit --audit-level=high && npm run api:check'
 [[/nextjs]]
       - name: Image
         run: docker buildx build --load -t [[name]]:ci .
 [[#nextjs]]
       - name: Frontend image
         run: docker buildx build --load -t [[name]]-web:ci frontends/web
+[[/nextjs]]
+      - name: Export the built images for scanning
+        run: |
+          docker save [[name]]:ci -o build/app-image.tar
+[[#nextjs]]
+          docker save [[name]]-web:ci -o build/web-image.tar
+[[/nextjs]]
+      - name: Backend image vulnerabilities
+        uses: docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+        with:
+          args: image --input build/app-image.tar --scanners vuln --ignore-unfixed --severity HIGH,CRITICAL --exit-code 1 --cache-dir build/trivy-cache
+[[#nextjs]]
+      - name: Frontend image vulnerabilities
+        uses: docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+        with:
+          args: image --input build/web-image.tar --scanners vuln --ignore-unfixed --severity HIGH,CRITICAL --exit-code 1 --cache-dir build/trivy-cache
 [[/nextjs]]
       - name: Smoke
         # The containers run the way the pods do: read-only root, a writable /tmp and a user that is not root.

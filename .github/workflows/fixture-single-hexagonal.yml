@@ -36,8 +36,8 @@ concurrency:
 
 env:
   GOTOOLCHAIN: go1.27.2
-  # temurin-jdk-image of baseline v0.1-b1.
-  JDK_IMAGE: eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4
+  # temurin-jdk-image of baseline v0.1-b2.
+  JDK_IMAGE: eclipse-temurin@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f
 
 jobs:
   fixture:
@@ -57,6 +57,14 @@ jobs:
       - name: Image
         id: image
         run: docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal
+      - name: Export the built image for scanning
+        run: |
+          mkdir -p out
+          docker save single-hexagonal:ci -o out/fixture-image.tar
+      - name: Image vulnerabilities
+        uses: docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+        with:
+          args: image --input out/fixture-image.tar --scanners vuln --ignore-unfixed --severity HIGH,CRITICAL --exit-code 1 --cache-dir out/trivy-cache
       - name: Acceptance
         id: acceptance
         # -p 1: one package at a time, so the observability containers never disturb the startup measurement.

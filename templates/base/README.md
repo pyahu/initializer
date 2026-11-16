@@ -60,6 +60,8 @@ kustomize build deploy/overlays/dev
 `./gradlew spotlessApply` formats the code. CI does all of the above on every push
 (`.github/workflows/ci.yml`), then checks the rendered dev and prod manifests with strict Kubernetes 1.36 and 1.37
 schemas, kube-linter, Trivy (HIGH/CRITICAL misconfigurations) and Pluto for deprecated or removed APIs.
+It scans the exact built backend[[#nextjs]] and frontend[[/nextjs]] images for fixable HIGH/CRITICAL vulnerabilities
+before smoke tests[[#nextjs]] and runs `npm audit --audit-level=high` on the frontend lockfile[[/nextjs]].
 Renovate keeps the versions current (`renovate.json`).
 
 ## Where things are

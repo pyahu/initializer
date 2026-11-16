@@ -1,0 +1,112 @@
+# Evidence records for the testing guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-test-layers-1
+  card: test-layers
+  claim: "Most tests should be fast domain and slice tests, with few tests that start the whole application or the image."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "A recommendation about where to spend tests; no test measures the shape of a suite."
+  reason: "Engineering judgment backed by the Spring Boot testing reference; there is nothing to run."
+- id: ev-test-domain-1
+  card: test-domain
+  claim: "Domain classes with no Spring dependency can be tested with plain JUnit and AssertJ, without a Spring context."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "The example service has no business rule worth a domain test yet."
+  reason: "The example service's domain is a single record; no domain unit test exists to run."
+- id: ev-test-slices-1
+  card: test-slices
+  claim: "The example service's tests compile and run with spring-boot-starter-webmvc-test from the Spring Boot 4.1.1 BOM."
+  badge: compiled
+  capabilities: [compile, test]
+  components: [java, spring-boot, spring-framework]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ApplicationTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ApplicationTest: 1 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "Proves the test starter resolves and a @SpringBootTest runs; no @WebMvcTest slice exists in the example service yet."
+- id: ev-test-slices-2
+  card: test-slices
+  claim: "@WebMvcTest with @MockitoBean starts only the named controller and MockMvcTester asserts its status and body."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Taken from the Spring Boot 4.1 testing reference."
+  reason: "The example service has no slice test; the snippet in this step is not compiled by CI."
+- id: ev-test-architecture-1
+  card: test-architecture
+  claim: "ApplicationModules.of(Application.class).verify() passes on the example service with Spring Modulith 2.1.1."
+  badge: compiled
+  capabilities: [test]
+  components: [spring-modulith]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ModulithTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ModulithTest: 1 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "The example service has one module, so the test proves the setup, not that a cycle or an internal access is caught."
+- id: ev-test-architecture-2
+  card: test-architecture
+  claim: "The jMolecules hexagonal rule in STRICT mode and two ArchUnit rules pass on the example service with ArchUnit 1.5.1 and jmolecules-archunit 0.33.0."
+  badge: compiled
+  capabilities: [test]
+  components: [archunit, jmolecules-archunit, jmolecules-bom]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ArchitectureTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ArchitectureTest: 3 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "Proves the rules pass on a compliant code base; no test plants a violation to show the rules fail."
+- id: ev-test-real-database-1
+  card: test-real-database
+  claim: "A PostgreSQLContainer bean annotated with @ServiceConnection connects Spring Boot to a real PostgreSQL in tests and @DataJdbcTest keeps it instead of an embedded database."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Boot 4.1 Testcontainers reference and the AutoConfigureTestDatabase source (default Replace.NON_TEST)."
+  reason: "The example service has no database yet, so no Testcontainers test runs."
+- id: ev-test-outbound-http-1
+  card: test-outbound-http
+  claim: "@RestClientTest starts the named client with a RestClient.Builder and a MockRestServiceServer that answers as told."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Boot 4.1 testing reference."
+  reason: "The example service makes no outbound HTTP call, so there is no client to test."
+- id: ev-test-context-cache-1
+  card: test-context-cache
+  claim: "Spring caches a test context per unique configuration in the same JVM, with a default maximum of 32 contexts evicted least recently used. Bean overrides such as @MockitoBean are part of the cache key."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Framework 7.0 reference, Context Caching; Gradle's forkEvery default of 0 from the Gradle 9.8.1 user guide."
+  reason: "The example service has a single Spring test, so there is no cache behaviour to measure."
+- id: ev-test-image-1
+  card: test-image
+  claim: "A Go test starts the built image with Docker on a read-only root filesystem as UID 10001 and asserts that /readyz answers 200 within 60 s."
+  badge: reproduced
+  capabilities: [image, runtime]
+  components: [temurin-jre-image, spring-boot]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: acceptance/jvm::TestHardenedStartup
+  commands:
+    - "docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal"
+    - "go test -tags acceptance -count=1 -run '^TestHardenedStartup$' ./acceptance/jvm"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "read-only root, /tmp tmpfs, UID 10001, unreachable OTLP endpoint: /readyz 200 after 2.9 s"
+  limitations: "Docker flags stand in for the pod security context; no cluster run yet."

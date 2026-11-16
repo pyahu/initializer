@@ -1,0 +1,92 @@
+# Evidence records for the rabbitmq guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-rmq-when-1
+  card: rmq-when
+  claim: "RabbitMQ deletes a message from a queue once a consumer acknowledges it, while Kafka keeps events in a log that readers can replay."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Documented RabbitMQ and Kafka behaviour."
+  reason: "No test runs this yet: no example service uses RabbitMQ."
+- id: ev-rmq-when-2
+  card: rmq-when
+  claim: "The Spring Boot 4.1.1 BOM manages Spring AMQP 4.1.1 and amqp-client 5.30.0."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the spring-boot-dependencies 4.1.1 POM on Maven Central; not compiled here."
+  reason: "No test runs this yet: no example service uses RabbitMQ."
+- id: ev-rmq-quorum-queues-1
+  card: rmq-quorum-queues
+  claim: "Classic mirrored queues were removed in RabbitMQ 4.0; quorum queues replicate a queue across nodes and stay available while a majority of them is up."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "RabbitMQ quorum queue documentation."
+  reason: "No test runs this yet: no example service uses RabbitMQ."
+- id: ev-rmq-publisher-confirms-1
+  card: rmq-publisher-confirms
+  claim: "With publisher-confirm-type correlated, publisher-returns and template.mandatory, a send that the broker did not store or could not route completes the CorrelationData future with a nack or carries a returned message."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Spring AMQP and Spring Boot 4.1.1 documented behaviour; properties checked in the configuration metadata."
+  reason: "No test runs this yet: no example service uses RabbitMQ."
+- id: ev-rmq-publisher-confirms-2
+  card: rmq-publisher-confirms
+  claim: "For a quorum queue the broker confirms a message only after a quorum of its members has stored it."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "RabbitMQ quorum queue documentation."
+  reason: "No test runs this yet: no example service uses RabbitMQ."
+- id: ev-rmq-acks-prefetch-1
+  card: rmq-acks-prefetch
+  claim: "Spring AMQP's listener container defaults to a prefetch of 250 and to the auto acknowledge mode, which acknowledges when the listener returns without an exception."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the spring-rabbit 4.1.1 classes; behaviour under load not measured."
+  reason: "No test runs this yet: no example service uses RabbitMQ."
+- id: ev-rmq-acks-prefetch-2
+  card: rmq-acks-prefetch
+  claim: "RabbitMQ closes the channel of a consumer that does not acknowledge a delivery within the consumer timeout (30 minutes by default) and delivers the message again."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "RabbitMQ consumer documentation."
+  reason: "No test runs this yet: no example service uses RabbitMQ."
+- id: ev-rmq-retries-dlx-1
+  card: rmq-retries-dlx
+  claim: "Since RabbitMQ 4.0 a quorum queue stops redelivering a message after 20 failed deliveries by default and drops it or dead letters it when a dead letter exchange is set."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "RabbitMQ quorum queue documentation."
+  reason: "No test runs this yet: no example service uses RabbitMQ."
+- id: ev-rmq-retries-dlx-2
+  card: rmq-retries-dlx
+  claim: "With spring.rabbitmq.listener.simple.retry.enabled, Spring Boot retries in the listener and then rejects the message without requeue through RejectAndDontRequeueRecoverer unless a MessageRecoverer bean is defined."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the spring-boot-amqp 4.1.1 classes; not run here."
+  reason: "No test runs this yet: no example service uses RabbitMQ."
+- id: ev-rmq-idempotent-1
+  card: rmq-idempotent
+  claim: "With confirms and acknowledgements RabbitMQ delivers a message at least once, so a consumer can receive the same message twice."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "RabbitMQ reliability documentation."
+  reason: "No test runs this yet: no example service uses RabbitMQ."
+- id: ev-rmq-limits-1
+  card: rmq-limits
+  claim: "A queue with a maximum length drops the oldest messages by default (drop-head); reject-publish refuses new publishes instead. Quorum queues support both."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "RabbitMQ queue length limit and quorum queue documentation."
+  reason: "No test runs this yet: no example service uses RabbitMQ."
+- id: ev-rmq-monitoring-1
+  card: rmq-monitoring
+  claim: "RabbitMQ ships a built in rabbitmq_prometheus plugin that exposes queue and consumer metrics in Prometheus format."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "RabbitMQ monitoring documentation."
+  reason: "No test runs this yet: no example service uses RabbitMQ."
+- id: ev-rmq-monitoring-2
+  card: rmq-monitoring
+  claim: "spring.rabbitmq.template.observation-enabled and spring.rabbitmq.listener.simple.observation-enabled are off by default."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from the Spring Boot 4.1.1 configuration metadata."
+  reason: "No test runs this yet: no example service uses RabbitMQ."

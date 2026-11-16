@@ -4,7 +4,7 @@
 
 Traces, metrics and logs over OTLP with Spring Boot 4.1, correlated by one trace ID.
 
-On the web: https://initializer.pyahu.io/guides/observability/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+On the web: https://initializer.pyahu.io/guides/observability/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
 **Preview.** 12 claims: 6 reproduced, 1 compiled, 5 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/observability.yaml).
 

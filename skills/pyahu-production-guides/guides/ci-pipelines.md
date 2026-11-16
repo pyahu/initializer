@@ -4,7 +4,7 @@
 
 A GitHub Actions pipeline for a Spring Boot service that builds in the pinned JDK, tests the real image and publishes something others can verify.
 
-On the web: https://initializer.pyahu.io/guides/ci-pipelines/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+On the web: https://initializer.pyahu.io/guides/ci-pipelines/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
 **Preview.** 10 claims: 2 reproduced, 1 compiled, 7 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/ci-pipelines.yaml).
 
@@ -184,9 +184,11 @@ builds the image and Go acceptance tests start that exact image and check it fro
 
 1. Run the Gradle build: compile, unit and architecture tests (see [Testing](testing.md)).
 2. Build the image from the same Dockerfile production uses and load it locally.
-3. Run behaviour tests against that image: start it, call it and check what it does.
-4. Upload test reports with `if: always()`, so a red run still explains itself.
-5. Make the publishing job depend on the test job with `needs:`, so a failure stops it.
+3. Scan that exact image with `trivy image --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1`.
+   The generated workflow exports the local image and scans that archive; it does not scan an older registry tag.
+4. Run behaviour tests against that image: start it, call it and check what it does.
+5. Upload test reports with `if: always()`, so a red run still explains itself.
+6. Make the publishing job depend on the test job with `needs:`, so a failure stops it.
 
 ### When this is not for you
 
@@ -330,7 +332,7 @@ concurrency:
 env:
   GOTOOLCHAIN: go1.27.2
   # temurin-jdk-image of baseline v0.1-b1.
-  JDK_IMAGE: eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4
+  JDK_IMAGE: eclipse-temurin@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f
 ```
 
 ### The build stages

@@ -4,7 +4,7 @@
 
 Serve and call gRPC from Spring Boot 4.1 with a safe contract, deadlines, honest errors and calls spread across pods.
 
-On the web: https://initializer.pyahu.io/guides/grpc/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+On the web: https://initializer.pyahu.io/guides/grpc/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
 **Preview.** 10 claims: 1 reproduced, 9 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/grpc.yaml).
 

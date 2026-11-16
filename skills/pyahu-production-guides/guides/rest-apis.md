@@ -4,7 +4,7 @@
 
 Write the OpenAPI contract first, generate the Spring interfaces from it and serve errors, writes, lists and new versions the same way everywhere.
 
-On the web: https://initializer.pyahu.io/guides/rest-apis/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+On the web: https://initializer.pyahu.io/guides/rest-apis/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
 **Preview.** 9 claims: 1 compiled, 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/rest-apis.yaml).
 

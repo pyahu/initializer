@@ -1,0 +1,111 @@
+# Evidence records for the architecture guide. See CONTRIBUTING.md, "Evidence".
+- id: ev-arch-capabilities-1
+  card: arch-capabilities
+  claim: "ApplicationModules.of(Application.class).verify() passes for the fixture, whose ping capability is one module under the base package."
+  badge: compiled
+  capabilities: [compile, test]
+  components: [spring-modulith, spring-boot]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ModulithTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ModulithTest: 1 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "One module only, so no boundary between modules is exercised."
+- id: ev-arch-capabilities-2
+  card: arch-capabilities
+  claim: "verify() fails on a cycle between modules and on a reference to another module's internal package."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "From the Spring Modulith 2.1 reference, Verifying Application Module Structure."
+  reason: "The fixture has one module; no negative fixture with two modules exists yet."
+- id: ev-arch-style-choice-1
+  card: arch-style-choice
+  claim: "Hexagonal uses domain, application/port/in, application/port/out, application/service, adapter/in and adapter/out inside a capability; DDD layered uses presentation, application, domain and infrastructure."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "A layout policy of the Initializer; the fixture shows the hexagonal layout without outbound ports."
+  reason: "Only the hexagonal fixture exists. It has no outbound port or adapter yet."
+- id: ev-arch-hexagonal-1
+  card: arch-hexagonal
+  claim: "JMoleculesArchitectureRules.ensureHexagonal(VerificationDepth.STRICT) passes for the fixture's primary adapter, primary port and application service."
+  badge: compiled
+  capabilities: [compile, test]
+  components: [archunit, jmolecules-bom, jmolecules-archunit]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ArchitectureTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ArchitectureTest: 3 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "No secondary port or adapter exists in the fixture yet."
+- id: ev-arch-ddd-layered-1
+  card: arch-ddd-layered
+  claim: "jMolecules ensureLayering() allows each layer to access all layers below it, with infrastructure as the lowest, so it permits domain to infrastructure."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Read from JMoleculesArchitectureRules in jmolecules-archunit 0.33.0; the inverted graph is a Pyahu policy."
+  reason: "No DDD layered fixture exists yet."
+- id: ev-arch-transactions-1
+  card: arch-transactions
+  claim: "One @Transactional application service method per use case keeps the load, the rule check and the save in one transaction."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "A Pyahu policy built on Spring's declarative transactions."
+  reason: "The fixture has no database and no transaction yet."
+- id: ev-arch-pure-domain-1
+  card: arch-pure-domain
+  claim: "An ArchUnit rule that the domain package depends only on itself, java.. and org.jspecify.. passes for the fixture."
+  badge: compiled
+  capabilities: [compile, test]
+  components: [archunit, jspecify]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ArchitectureTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ArchitectureTest: 3 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "The fixture domain is one record; no test proves the rule fails on a forbidden import."
+- id: ev-arch-rules-tested-1
+  card: arch-rules-tested
+  claim: "The fixture runs ensureHexagonal(STRICT) plus two own rules (domain depends on nothing else, nothing outside adapters depends on adapters) and ApplicationModules.verify() in every build."
+  badge: compiled
+  capabilities: [compile, test]
+  components: [archunit, jmolecules-archunit, spring-modulith]
+  baseline: v0.1-b1
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ArchitectureTest
+  commands:
+    - "docker run --rm -v \"$PWD/fixtures/single-hexagonal:/w\" -w /w eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build"
+  environment: "GitHub-hosted ubuntu-24.04 x64 runner, Docker, images by digest from baseline v0.1-b1"
+  run: https://github.com/pyahu/initializer/actions/runs/39062105063/attempts/1
+  commit: b3eac8404f59d5951cc889234340baf4ac545d4b
+  date: "2026-10-17"
+  result: "io.pyahu.fixture.hexagonal.ArchitectureTest: 3 tests, 0 failures, 0 errors, 0 skipped"
+  limitations: "Proves the rules pass, not that they fail on a violation."
+- id: ev-arch-rules-tested-2
+  card: arch-rules-tested
+  claim: "Under ensureHexagonal(STRICT) a port may only reference ports and classes without a hexagonal annotation, so a domain marked @Application breaks every port that uses a domain type."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Found while building the fixture and read from JMoleculesArchitectureRules in jmolecules-archunit 0.33.0."
+  reason: "No negative fixture keeps the annotated domain case under test."
+- id: ev-arch-limits-1
+  card: arch-limits
+  claim: "Architecture tests check dependencies between packages and modules; they cannot judge whether boundaries are well chosen or whether a module could be deployed alone."
+  badge: not-exercised
+  baseline: v0.1-b1
+  limitations: "Engineering judgment, consistent with what ArchUnit and Spring Modulith document they check."
+  reason: "A statement about the limits of the tools; there is nothing to run."

@@ -1,7 +1,7 @@
 # The only version catalog of the Initializer's own build (monorepo guide, step 5). Versions are
 # those of the active baseline in data/versions.yaml; they change only with a new baseline revision.
 [versions]
-spring-boot = "4.1.1"
+spring-boot = "4.1.2"
 spring-modulith = "2.1.1"
 jmolecules = "2025.0.2"
 opentelemetry-logback-appender = "2.28.1-alpha"
@@ -13,7 +13,7 @@ errorprone-gradle-plugin = "5.1.1"
 spotless = "8.10.4"
 cyclonedx = "3.5.1"
 openapi-generator = "7.26.0"
-# JUnit as Spring Boot 4.1.1 manages it, for the convention plugins' own tests.
+# JUnit as Spring Boot 4.1.2 manages it, for the convention plugins' own tests.
 junit = "6.0.3"
 
 [libraries]

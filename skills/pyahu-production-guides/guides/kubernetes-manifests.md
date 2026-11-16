@@ -4,7 +4,7 @@
 
 Package, vary per environment, validate and apply the manifests of a Spring Boot service.
 
-On the web: https://initializer.pyahu.io/guides/kubernetes-manifests/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+On the web: https://initializer.pyahu.io/guides/kubernetes-manifests/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
 **Preview.** 8 claims: 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/kubernetes-manifests.yaml).
 

@@ -4,7 +4,7 @@
 
 Build a small layered image for a Spring Boot service, run it without root and know what it ships and who built it.
 
-On the web: https://initializer.pyahu.io/guides/container-image/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+On the web: https://initializer.pyahu.io/guides/container-image/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
 **Preview.** 11 claims: 2 reproduced, 1 compiled, 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/container-image.yaml).
 
@@ -79,7 +79,7 @@ less often than code, a normal commit only pushes the small top layers.
 **In short:** Eclipse Temurin JRE on Ubuntu, with the Ubuntu codename in the tag.
 
 ```dockerfile
-FROM eclipse-temurin:25.0.4.1_1-jre-noble@sha256:37c16059e13b3dfa59f4c24af72dd0f7798d5f1b06647e306feb914f4163a721
+FROM eclipse-temurin:25.0.5_8-jre-noble@sha256:e3b6f7887a50f20d8f07abf279d8a81a5953fb398a9555bd9edd56b9bd15968c
 ```
 
 ### What's going on
@@ -101,7 +101,7 @@ the tag, you stay on 24.04 until you choose to move.
 
 ### Do this
 
-1. Start from `eclipse-temurin:25.0.4.1_1-jre-noble` for the runtime stage and the matching `-jdk-noble` image for the
+1. Start from `eclipse-temurin:25.0.5_8-jre-noble` for the runtime stage and the matching `-jdk-noble` image for the
    build stages.
 2. Add company CA certificates at build time or mount a truststore. Your own `ENTRYPOINT` replaces the Temurin
    script that would import them.
@@ -116,7 +116,7 @@ the tag, you stay on 24.04 until you choose to move.
 **In short:** pin every image by tag and digest and let a bot open a pull request when the digest moves.
 
 ```dockerfile
-FROM eclipse-temurin:25.0.4.1_1-jre-noble@sha256:37c16059e13b3dfa59f4c24af72dd0f7798d5f1b06647e306feb914f4163a721
+FROM eclipse-temurin:25.0.5_8-jre-noble@sha256:e3b6f7887a50f20d8f07abf279d8a81a5953fb398a9555bd9edd56b9bd15968c
 ```
 
 ### What's going on
@@ -290,7 +290,7 @@ pinned by digest (steps 2 and 3).
 From [`Dockerfile`](https://github.com/pyahu/initializer/blob/main/fixtures/single-hexagonal/Dockerfile):
 
 ```dockerfile
-FROM eclipse-temurin:25.0.4.1_1-jdk-noble@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 AS build
+FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f AS build
 WORKDIR /workspace
 COPY gradlew settings.gradle.kts build.gradle.kts ./
 COPY gradle/ gradle/
@@ -300,7 +300,7 @@ COPY src/ src/
 RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon --quiet bootJar \
  && cp build/libs/single-hexagonal-0.1.0.jar /workspace/application.jar
 
-FROM eclipse-temurin:25.0.4.1_1-jdk-noble@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 AS extract
+FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f AS extract
 WORKDIR /extract
 COPY --from=build /workspace/application.jar application.jar
 # --layers without --launcher: application/application.jar plus lib/*.jar on its manifest class

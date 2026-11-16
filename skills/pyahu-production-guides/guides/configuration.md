@@ -4,7 +4,7 @@
 
 Typed settings that fail fast, one source per kind of value and secrets that never show up in logs or manifests.
 
-On the web: https://initializer.pyahu.io/guides/configuration/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
+On the web: https://initializer.pyahu.io/guides/configuration/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
 **Preview.** 10 claims: 2 reproduced, 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/configuration.yaml).
 

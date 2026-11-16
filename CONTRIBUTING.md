@@ -9,7 +9,7 @@ or the source and reason it has not been exercised. `guidekit` enforces the rule
 | Tool | Version | Where |
 | ---- | ------- | ----- |
 | Go | 1.27.2 | `go.mod` (`toolchain go1.27.2`); all tooling |
-| Node.js | 24.22.0, with npm 11.19.1 | `guides/.node-version`; only inside `guides/` |
+| Node.js | 24.22.3, with npm 11.19.1 | `guides/.node-version`; only inside `guides/` |
 | Docker | with Buildx | fixture builds and acceptance tests |
 
 Site packages are pinned exactly in `guides/package.json`, lock file committed.
@@ -31,7 +31,7 @@ Fixture and acceptance tests:
 
 ```sh
 docker run --rm -v "$PWD/fixtures/single-hexagonal:/w" -w /w \
-  eclipse-temurin@sha256:a75cd2f1bd3e1e45da898bf658f1f1039ab7392b34844862514d230fd6a516d4 ./gradlew --no-daemon build
+  eclipse-temurin@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f ./gradlew --no-daemon build
 docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal
 go test -tags acceptance -count=1 -p 1 ./acceptance/...
 ```
@@ -286,7 +286,7 @@ It also declares the custom domain `initializer.pyahu.io`; deploying applies tha
 
 Cloudflare Workers Builds is connected to `pyahu/initializer`, with production branch `main` and root directory
 `guides`. Pushes to `main` build with `npm run toolchain && npm run check && npm run build` after dependency
-installation, then deploy with `npm run deploy`. The build environment sets `NODE_VERSION=24.22.0`.
+installation, then deploy with `npm run deploy`. The build environment sets `NODE_VERSION=24.22.3`.
 The Wrangler dependency and npm lockfile pin the deployment tooling.
 
 Builds watch every repository path, because the site also reads generated data and fixture files outside

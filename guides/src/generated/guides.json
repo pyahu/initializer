@@ -1,5 +1,5 @@
 {
-  "active": "v0.1-b1",
+  "active": "v0.1-b2",
   "generatedBy": "guidekit generate",
   "guides": {
     "architecture": {
@@ -8,8 +8,11 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "java changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -436,8 +439,11 @@
       "state": "explanatory",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "java changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -773,8 +779,12 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "java changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2",
+          "temurin-jdk-image changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -1299,8 +1309,13 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "micrometer changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2",
+          "spring-data changed in v0.1-b2",
+          "spring-framework changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -1655,8 +1670,11 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "java changed in v0.1-b2",
+          "temurin-jdk-image changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -2115,8 +2133,10 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "spring-boot changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -2525,8 +2545,12 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "spring-boot changed in v0.1-b2",
+          "temurin-jdk-image changed in v0.1-b2",
+          "temurin-jre-image changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -3092,8 +3116,14 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "liquibase changed in v0.1-b2",
+          "micrometer changed in v0.1-b2",
+          "pgjdbc changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2",
+          "spring-data changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -3653,8 +3683,11 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "java changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -4094,8 +4127,14 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "java changed in v0.1-b2",
+          "micrometer changed in v0.1-b2",
+          "micrometer-tracing changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2",
+          "spring-framework changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -4537,8 +4576,13 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "liquibase changed in v0.1-b2",
+          "pgjdbc changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2",
+          "spring-data changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -5008,8 +5052,13 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "java changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2",
+          "temurin-jdk-image changed in v0.1-b2",
+          "temurin-jre-image changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -5725,8 +5774,11 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "java changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -6218,8 +6270,12 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "java changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2",
+          "temurin-jre-image changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -7066,8 +7122,12 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "java changed in v0.1-b2",
+          "liquibase changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -7438,8 +7498,10 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "spring-boot changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -7825,8 +7887,10 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "spring-boot changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -8247,8 +8311,12 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "micrometer changed in v0.1-b2",
+          "micrometer-tracing changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -8883,8 +8951,10 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "spring-boot changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -9317,8 +9387,11 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "spring-boot changed in v0.1-b2",
+          "spring-framework changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -9689,8 +9762,13 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "spring-boot changed in v0.1-b2",
+          "spring-framework changed in v0.1-b2",
+          "spring-security changed in v0.1-b2",
+          "temurin-jre-image changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -10218,8 +10296,13 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "java changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2",
+          "spring-framework changed in v0.1-b2",
+          "temurin-jre-image changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",
@@ -10634,8 +10717,13 @@
       "state": "draft",
       "baseline": "v0.1-b1",
       "status": {
-        "reverify": false,
-        "reverifyReasons": [],
+        "reverify": true,
+        "reverifyReasons": [
+          "java changed in v0.1-b2",
+          "spring-boot changed in v0.1-b2",
+          "spring-framework changed in v0.1-b2",
+          "temurin-jre-image changed in v0.1-b2"
+        ],
         "stale": false
       },
       "verification": "",

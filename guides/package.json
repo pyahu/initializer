@@ -7,7 +7,7 @@
     "node": ">=24"
   },
   "scripts": {
-    "toolchain": "test \"$(node --version)\" = v24.22.0 && test \"$(npm --version)\" = 11.19.1",
+    "toolchain": "test \"$(node --version)\" = v24.22.3 && test \"$(npm --version)\" = 11.19.1",
     "dev": "astro dev",
     "check": "astro check",
     "build": "astro build",
