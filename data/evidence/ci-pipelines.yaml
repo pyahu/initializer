@@ -72,10 +72,19 @@
 - id: ev-ci-publish-2
   card: ci-publish
   claim: "Saving and loading the tested image, then tagging it for release, preserves its image ID."
-  badge: not-exercised
+  badge: reproduced
+  capabilities: [image]
+  components: [temurin-jre-image]
   baseline: v0.1-b1
   limitations: "TestSaveLoadPreservesTheTestedImage uses real Docker save, load and tag operations. It does not push to a registry or verify a signature or attestation."
-  reason: "The regression test is in the fixture inventory; a completed CI evidence record has not been recorded yet."
+  fixture: "single-hexagonal"
+  test: "acceptance/promotion::TestSaveLoadPreservesTheTestedImage"
+  commands: ["./gradlew --no-daemon build"]
+  environment: "GitHub-hosted ubuntu-24.04 x64, Docker, pinned JDK image of v0.1-b1"
+  run: "https://github.com/pyahu/initializer/actions/runs/43902266368/attempts/1"
+  commit: "479c2a261c0613e04e59e9bd0657ddb8dfd32630"
+  date: "2026-11-16"
+  result: "save/load and release retag preserve tested image ID sha256:efa78e4b03f55c9695cc9aa895db38fb0c08e1ace1fffd1ba78088aa20456cca"
 - id: ev-ci-fast-1
   card: ci-fast
   claim: "A workflow skipped by a paths filter leaves its checks Pending, which blocks a pull request that requires them; a job runs at most 360 minutes unless timeout-minutes sets less."

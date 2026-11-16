@@ -1660,7 +1660,7 @@
         "stale": false
       },
       "verification": "",
-      "coverage": "10 claims: 1 reproduced, 1 compiled, 8 not exercised",
+      "coverage": "10 claims: 2 reproduced, 1 compiled, 7 not exercised",
       "sources": [],
       "questions": [
         {
@@ -1788,7 +1788,7 @@
         },
         "ci-publish": {
           "title": "6. How do I publish an image others can verify?",
-          "coverage": "2 claims: 2 not exercised",
+          "coverage": "2 claims: 1 reproduced, 1 not exercised",
           "records": [
             {
               "id": "ev-ci-publish-1",
@@ -1798,9 +1798,16 @@
             },
             {
               "id": "ev-ci-publish-2",
-              "badge": "not-exercised",
-              "canonical": "Evidence ev-ci-publish-2 · not exercised · baseline v0.1-b1. Saving and loading the tested image, then tagging it for release, preserves its image ID. Limitations: TestSaveLoadPreservesTheTestedImage uses real Docker save, load and tag operations. It does not push to a registry or verify a signature or attestation.",
-              "reason": "The regression test is in the fixture inventory; a completed CI evidence record has not been recorded yet."
+              "badge": "reproduced",
+              "canonical": "Evidence ev-ci-publish-2 · reproduced · baseline v0.1-b1 · 2026-11-16. Saving and loading the tested image, then tagging it for release, preserves its image ID. Result: save/load and release retag preserve tested image ID sha256:efa78e4b03f55c9695cc9aa895db38fb0c08e1ace1fffd1ba78088aa20456cca. Limitations: TestSaveLoadPreservesTheTestedImage uses real Docker save, load and tag operations. It does not push to a registry or verify a signature or attestation.",
+              "test": "acceptance/promotion::TestSaveLoadPreservesTheTestedImage",
+              "commands": [
+                "./gradlew --no-daemon build"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64, Docker, pinned JDK image of v0.1-b1",
+              "run": "run 43902266368 attempt 1, commit 479c2a2",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/43902266368/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/479c2a261c0613e04e59e9bd0657ddb8dfd32630"
             }
           ]
         },

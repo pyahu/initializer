@@ -49,7 +49,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            image: [ev-ci-test-order-1, ev-img-layers-1, ev-img-non-root-1, ev-jvm-aot-cache-1, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-sec-pod-hardening-1, ev-test-image-1]
+            image: [ev-ci-publish-2, ev-ci-test-order-1, ev-img-layers-1, ev-img-non-root-1, ev-jvm-aot-cache-1, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-sec-pod-hardening-1, ev-test-image-1]
             runtime: [ev-ci-test-order-1, ev-img-non-root-1, ev-jvm-aot-cache-2, ev-jvm-aot-cache-3, ev-jvm-cpu-count-1, ev-jvm-flag-placement-1, ev-jvm-gc-explicit-1, ev-jvm-gc-explicit-2, ev-jvm-gc-explicit-3, ev-jvm-gc-explicit-4, ev-jvm-heap-sizing-1, ev-kube-probes-1, ev-sec-pod-hardening-1, ev-test-image-1, ev-vt-cpu-work-1]
       gradle:
         version: "9.8.1"
