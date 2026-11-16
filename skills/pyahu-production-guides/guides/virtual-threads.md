@@ -6,7 +6,7 @@ Turn on virtual threads in Spring Boot 4.1 and put back the limits that protect 
 
 On the web: https://initializer.pyahu.io/guides/virtual-threads/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
-**Preview.** 11 claims: 1 reproduced, 1 compiled, 9 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/virtual-threads.yaml).
+**Preview.** 11 claims: 3 reproduced, 1 compiled, 7 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/virtual-threads.yaml).
 
 You turn on virtual threads with one property and the benchmark looks great. Then production gets slower: the
 database pool is always full, a service you call starts failing and the slowest requests take longer than before.
@@ -29,8 +29,8 @@ default for most Spring Boot services, as long as you know what they stop doing 
 
 - 1. Should I turn on virtual threads?: 2 claims: 1 compiled, 1 not exercised.
 - 2. Why did latency get worse after I turned them on?: 1 claim: 1 not exercised.
-- 3. How do I keep a slow service from drowning in my calls?: 1 claim: 1 not exercised.
-- 4. Where does CPU heavy work go?: 3 claims: 1 reproduced, 2 not exercised.
+- 3. How do I keep a slow service from drowning in my calls?: 1 claim: 1 reproduced.
+- 4. Where does CPU heavy work go?: 3 claims: 2 reproduced, 1 not exercised.
 - 5. Why does my @Async code still run on old threads?: 1 claim: 1 not exercised.
 - 6. Why do my logs lose the trace ID in async work?: 1 claim: 1 not exercised.
 - 7. How do I call two services at once with one deadline?: 1 claim: 1 not exercised.

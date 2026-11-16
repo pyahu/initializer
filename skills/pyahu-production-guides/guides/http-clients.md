@@ -6,7 +6,7 @@ Call other services from Spring Boot 4.1 with timeouts, bounded retries and a li
 
 On the web: https://initializer.pyahu.io/guides/http-clients/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
-**Preview.** 10 claims: 10 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/http-clients.yaml).
+**Preview.** 10 claims: 1 reproduced, 9 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/http-clients.yaml).
 
 The payments service did not go down. It just got slow. Within a minute your own service stops answering: every
 request is stuck waiting on payments and the retries you added to be safe triple the load on a service that is
@@ -35,7 +35,7 @@ everything goes.
 - 4. Does a read timeout stop a slow call?: 2 claims: 2 not exercised.
 - 5. When is it safe to retry?: 1 claim: 1 not exercised.
 - 6. How do I retry a payment without charging it twice?: 1 claim: 1 not exercised.
-- 7. How do I stop one slow service from taking mine down?: 1 claim: 1 not exercised.
+- 7. How do I stop one slow service from taking mine down?: 1 claim: 1 reproduced.
 - 8. Why do some calls have no metrics or traces?: 1 claim: 1 not exercised.
 
 ## 1. Which HTTP client should I use?
