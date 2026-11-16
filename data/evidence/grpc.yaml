@@ -51,10 +51,19 @@
 - id: ev-grpc-health-3
   card: grpc-health
   claim: "Named livenessState and readinessState gRPC checks ignore a failed database, while overall health fails; refusing traffic changes readiness without failing liveness."
-  badge: not-exercised
+  badge: reproduced
+  capabilities: [runtime]
+  components: [spring-boot]
   baseline: v0.1-b1
   limitations: "GrpcHealthTest exercises Boot's real gRPC health auto-configuration and availability indicators. It does not start a network server or a Kubernetes cluster."
-  reason: "The regression test is in the fixture inventory; a completed CI evidence record has not been recorded yet."
+  fixture: "single-hexagonal"
+  test: "gradle/single-hexagonal::GrpcHealthTest"
+  commands: ["./gradlew --no-daemon build"]
+  environment: "GitHub-hosted ubuntu-24.04 x64, Docker, pinned JDK image of v0.1-b1"
+  run: "https://github.com/pyahu/initializer/actions/runs/43889975254/attempts/1"
+  commit: "d8303471f9079c1f123d0a853d32e962d20db0e3"
+  date: "2026-11-16"
+  result: "io.pyahu.fixture.hexagonal.GrpcHealthTest: 2 tests, 0 failures, 0 errors, 0 skipped"
 - id: ev-grpc-load-balancing-1
   card: grpc-load-balancing
   claim: "Behind a cluster IP Service a gRPC client sends every call to one pod; a headless Service with a dns target and round_robin spreads the calls."

@@ -76,7 +76,7 @@ revisions:
           state: qualified
           capabilities:
             compile: [ev-arch-capabilities-1, ev-bld-boms-1, ev-img-sbom-1, ev-obs-starter-not-agent-1, ev-test-slices-1, ev-vt-enable-1]
-            runtime: [ev-cfg-placeholder-guard-1, ev-cfg-typed-properties-1, ev-ci-test-order-1, ev-img-non-root-1, ev-jvm-aot-cache-3, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-local-same-config-1, ev-local-telemetry-1, ev-obs-actuator-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1, ev-sec-pod-hardening-1, ev-test-image-1]
+            runtime: [ev-cfg-placeholder-guard-1, ev-cfg-typed-properties-1, ev-ci-test-order-1, ev-grpc-health-3, ev-img-non-root-1, ev-jvm-aot-cache-3, ev-jvm-flag-placement-1, ev-kube-probes-1, ev-local-same-config-1, ev-local-telemetry-1, ev-obs-actuator-1, ev-obs-correlation-1, ev-obs-logs-otlp-1, ev-obs-metric-shape-1, ev-obs-otlp-config-1, ev-obs-sampling-1, ev-sec-pod-hardening-1, ev-test-image-1]
       spring-framework:
         version: "7.0.9"
         kind: maven

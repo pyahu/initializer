@@ -6,7 +6,7 @@ Serve and call gRPC from Spring Boot 4.1 with a safe contract, deadlines, honest
 
 On the web: https://initializer.pyahu.io/guides/grpc/. Written for baseline v0.1-b1: Java 25, Spring Boot 4.1.1.
 
-**Preview.** 10 claims: 10 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/grpc.yaml).
+**Preview.** 10 claims: 1 reproduced, 9 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/grpc.yaml).
 
 You moved two internal services from JSON to gRPC and the first week looks great. Then you scale the server to
 four pods and one of them runs hot while three sit idle. A slow call hangs for minutes because nothing told it to
@@ -33,7 +33,7 @@ contract safe and how to run it in Kubernetes with Spring Boot 4.1, which now su
 - 3. How do I add gRPC to a Spring Boot service?: 1 claim: 1 not exercised.
 - 4. How long should a call wait?: 1 claim: 1 not exercised.
 - 5. Which errors should I return and which calls can be retried?: 1 claim: 1 not exercised.
-- 6. How does Kubernetes know a gRPC service is healthy?: 3 claims: 3 not exercised.
+- 6. How does Kubernetes know a gRPC service is healthy?: 3 claims: 1 reproduced, 2 not exercised.
 - 7. Why does one pod get all the calls?: 1 claim: 1 not exercised.
 - 8. How do I see and secure gRPC traffic?: 1 claim: 1 not exercised.
 
