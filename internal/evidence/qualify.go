@@ -22,7 +22,13 @@ func Qualify(r *guidedata.Repo, reports map[string]*Report) map[string]map[strin
 		}
 	}
 	out := map[string]map[string]guidedata.Qualification{}
-	records := append([]guidedata.EvidenceRecord{}, r.Evidence...)
+	records := []guidedata.EvidenceRecord{}
+	for _, record := range r.Evidence {
+		fx := r.Fixture(record.Fixture)
+		if !record.Exercised() || (fx != nil && fx.Baseline == record.Baseline) {
+			records = append(records, record)
+		}
+	}
 	for _, record := range r.HistoricalEvidence {
 		fx := r.Fixture(record.Fixture)
 		if fx == nil || fx.Baseline != record.Baseline {

@@ -39,6 +39,9 @@ func TestQualificationKeepsRevisionsAndTheirInventoriesSeparate(t *testing.T) {
 	r.Fixtures[0].Baseline = "v0.1-b2"
 	r.Fixtures[0].RequiredTests = append(slices.Clone(r.Fixtures[0].RequiredTests), "acceptance/jvm::TestNew")
 	r.Evidence[0].Baseline = "v0.1-b2"
+	// A guide may still display its old evidence while waiting to be re-verified.
+	// That record must not duplicate the saved historical proof.
+	r.Evidence = append(r.Evidence, r.HistoricalEvidence[0])
 	newReport := *oldReport
 	newReport.Baseline = "v0.1-b2"
 	newReport.Components = []ComponentResult{{Key: "java", Expected: "26", Resolved: "26", Status: "match"}}
