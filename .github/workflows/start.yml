@@ -14,6 +14,8 @@ on:
       - gradlew.bat
       - data/versions.yaml
       - cmd/runworkflow/**
+      - go.mod
+      - go.sum
       - .dockerignore
       - .gitattributes
       - .github/workflows/start.yml
@@ -29,6 +31,8 @@ on:
       - gradlew.bat
       - data/versions.yaml
       - cmd/runworkflow/**
+      - go.mod
+      - go.sum
       - .dockerignore
       - .gitattributes
       - .github/workflows/start.yml
@@ -72,7 +76,7 @@ jobs:
       - name: Smoke
         run: |
           docker run -d --name start -p 8081:8081 -e MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED=false start:ci
-          for i in $(seq 1 60); do
+          for _ in $(seq 1 60); do
             if curl -sf localhost:8081/actuator/health/readiness; then exit 0; fi
             sleep 1
           done
@@ -108,7 +112,7 @@ jobs:
         run: |
           trap 'code=$?; set +e; if [ $code -ne 0 ]; then for c in start web; do docker logs $c 2>&1 | tail -40; done; fi
             docker rm -f start web > /dev/null 2>&1; docker network rm e2e > /dev/null 2>&1; exit $code' EXIT
-          ready() { for i in $(seq 1 60); do curl -sf "$1" > /dev/null && return 0; sleep 1; done; return 1; }
+          ready() { for _ in $(seq 1 60); do curl -sf "$1" > /dev/null && return 0; sleep 1; done; return 1; }
           gunzip -c start-image.tar.gz | docker load
           docker network create e2e > /dev/null
           docker run -d --name start --network e2e -p 18081:8081 --read-only --tmpfs /tmp --user 10001:10001 \
@@ -154,7 +158,7 @@ jobs:
         run: |
           gunzip -c start-image.tar.gz | docker load
           docker run -d --name start -p 18080:8080 -p 18081:8081 -e MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED=false start:ci
-          for i in $(seq 1 60); do
+          for _ in $(seq 1 60); do
             if curl -sf localhost:18081/actuator/health/readiness; then exit 0; fi
             sleep 1
           done

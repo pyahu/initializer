@@ -12,6 +12,7 @@ on:
       - internal/**
       - acceptance/**
       - skills/**
+      - templates/**
       - go.mod
       - go.sum
       - .github/workflows/guides.yml
@@ -24,6 +25,7 @@ on:
       - internal/**
       - acceptance/**
       - skills/**
+      - templates/**
       - go.mod
       - go.sum
       - .github/workflows/guides.yml
@@ -80,7 +82,8 @@ jobs:
       - name: Evidence report
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: go run ./cmd/guidekit report fetch --workflow fixture-single-hexagonal.yml --branch main --out out/evidence-report.json
+          EVIDENCE_BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: go run ./cmd/guidekit report fetch --workflow fixture-single-hexagonal.yml --branch "$EVIDENCE_BRANCH" --out out/evidence-report.json
       - name: Qualification
         run: go run ./cmd/guidekit qualify --check --report out/evidence-report.json
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -93,6 +96,7 @@ jobs:
         run: |
           npm run toolchain
           npm ci
+          npm test
           cd .. && go run ./cmd/guidekit audit --dir guides
       - name: Site
         working-directory: guides

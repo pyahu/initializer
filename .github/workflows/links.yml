@@ -5,6 +5,10 @@ on:
   push:
     branches: [main]
     paths:
+      - fixtures/**
+      - acceptance/**
+      - go.mod
+      - go.sum
       - data/**
       - guides/**
       - cmd/**
@@ -12,6 +16,10 @@ on:
       - .github/workflows/links.yml
   pull_request:
     paths:
+      - fixtures/**
+      - acceptance/**
+      - go.mod
+      - go.sum
       - data/**
       - guides/**
       - cmd/**

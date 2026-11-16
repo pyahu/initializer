@@ -23,7 +23,7 @@ const usage = `guidekit <command> [flags]
   check     [--base <sha>]           schemas, grammar, cross-refs, history
   generate  [--check]                reference page, guides.json, fixture files, fixture references
   qualify   [--check] --report <f>   recompute qualification from evidence (repeat --report per fixture)
-  report    fetch --workflow <file> [--branch main] [--repo pyahu/initializer] --out <f>
+  report    fetch --workflow <file> [--branch main] [--commit HEAD] [--wait 10m] [--repo pyahu/initializer] --out <f>
   evidence  verify --fixture <name> [--go-test-json f] [--junit dir] [--sbom f] [--image ref] --out <f>
   site      [--dist guides/dist] [--site URL]   built site and llms exports
   links     [--dist guides/dist] [--site URL]   external links
@@ -121,8 +121,10 @@ func main() {
 		branch := fs.String("branch", "main", "branch")
 		repo := fs.String("repo", envOr("GITHUB_REPOSITORY", "pyahu/initializer"), "owner/name")
 		out := fs.String("out", "out/evidence-report.json", "output file")
+		commit := fs.String("commit", "HEAD", "checkout whose workflow inputs must match")
+		wait := fs.Duration("wait", 10*time.Minute, "time to wait for matching fixture evidence")
 		_ = fs.Parse(args[1:])
-		b, id, err := ghapi.FetchReport(*repo, *wf, *branch, ghapi.Token())
+		b, id, err := ghapi.FetchReport(*repo, *wf, *branch, ghapi.Token(), ghapi.FetchOptions{Root: root, Commit: *commit, Wait: *wait})
 		if err != nil {
 			die(err)
 		}

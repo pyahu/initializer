@@ -287,8 +287,16 @@ Builds watch every repository path, because the site also reads generated data a
 `guides/`. Preview builds are disabled. Manage the connection and build variables in the Worker's
 Settings > Builds in the Cloudflare dashboard.
 
-Before publication, the relevant Guides, Links and fixture workflows must pass. Workers Builds runs separately
-from GitHub Actions; its successful build alone does not prove the guides or their claims.
+`npm run deploy` first runs `publication:check`. It waits for successful Guides, Links, fixture and Start service
+workflows with the same inputs as the commit being published. The inputs are read from each workflow's actual
+push paths: a documentation-only commit may reuse an earlier service build, while a source change cannot.
+A pending, failed, cancelled or missing check prevents deployment. The check also rejects a dirty checkout or a
+commit superseded on main. It uses GitHub's public read API; an optional read-only `GITHUB_TOKEN` increases the
+API rate limit. No new token is needed for a normal public check. A timeout or API failure stops publication.
+
+The fixture report fetch uses the same input comparison and waits for the matching run instead of borrowing an
+older completed report. It verifies the artifact's run ID, attempt and source commit before qualification.
+Workers Builds still builds separately from GitHub Actions, but its deploy command now enforces their results.
 For a local packaging check after building, run `cd guides && npx wrangler deploy --dry-run`.
 Initial publication requires creating the Worker and applying its custom domain in the hosting account.
 Workers Builds also needs a repository connection in the Cloudflare dashboard; checked-in configuration alone
