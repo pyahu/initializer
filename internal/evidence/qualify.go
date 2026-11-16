@@ -15,13 +15,19 @@ import (
 // Qualify recomputes every component's qualification from the eligible records (5.3)
 // and the latest fixture reports, keyed by fixture name.
 func Qualify(r *guidedata.Repo, reports map[string]*Report) map[string]map[string]guidedata.Qualification {
+	valid := map[string]*Report{}
+	for name, report := range reports {
+		if report != nil && name == report.Fixture && report.ValidateQualification(r) == nil {
+			valid[name] = report
+		}
+	}
 	out := map[string]map[string]guidedata.Qualification{}
 	for _, rev := range r.Versions.Revisions {
 		q := map[string]guidedata.Qualification{}
 		for key, c := range rev.Components {
 			caps := map[string][]string{}
 			for _, e := range r.Evidence {
-				if !eligible(r, e, rev.ID, reports) || !containsStr(e.Components, key) {
+				if !eligible(r, e, rev.ID, valid) || !containsStr(e.Components, key) {
 					continue
 				}
 				for _, cap := range e.Capabilities {

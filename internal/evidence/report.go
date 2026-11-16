@@ -166,7 +166,60 @@ func ReadReport(r *guidedata.Repo, path string) (*Report, error) {
 	if err := guidedata.Decode(v, &rep); err != nil {
 		return nil, err
 	}
+	if err := rep.ValidateQualification(r); err != nil {
+		return nil, fmt.Errorf("%s: %w", path, err)
+	}
 	return &rep, nil
+}
+
+// ValidateQualification rejects failed, incomplete or internally inconsistent reports.
+// The inventory comes from the checked-out fixture, never from the report itself.
+func (rep *Report) ValidateQualification(r *guidedata.Repo) error {
+	if rep == nil || !rep.OK {
+		return fmt.Errorf("evidence report did not pass")
+	}
+	if rep.Schema != ReportSchema || !regexp.MustCompile(`^[0-9a-f]{40}$`).MatchString(rep.Commit) ||
+		rep.Commit == strings.Repeat("0", 40) || rep.RunID < 1 || rep.RunAttempt < 1 {
+		return fmt.Errorf("evidence report has no valid CI run identity")
+	}
+	fx := r.Fixture(rep.Fixture)
+	if fx == nil || rep.Baseline != fx.Baseline || r.Versions.Revision(rep.Baseline) == nil {
+		return fmt.Errorf("evidence report does not match a fixture and its baseline")
+	}
+	tests := map[string]bool{}
+	for _, test := range rep.Tests {
+		if tests[test.Test] || !containsStr(fx.RequiredTests, test.Test) || test.Status != "pass" || test.Runs < 1 {
+			return fmt.Errorf("evidence report has an invalid test result: %s", test.Test)
+		}
+		tests[test.Test] = true
+	}
+	if len(tests) != len(fx.RequiredTests) {
+		return fmt.Errorf("evidence report is missing required tests")
+	}
+	components := map[string]bool{}
+	revision := r.Versions.Revision(rep.Baseline)
+	for _, component := range rep.Components {
+		if components[component.Key] || !containsStr(fx.Exercises, component.Key) || component.Status != "match" ||
+			component.Expected == "" || component.Resolved == "" {
+			return fmt.Errorf("evidence report has an invalid component result: %s", component.Key)
+		}
+		pin, exists := revision.Components[component.Key]
+		expected := pin.Version
+		switch pin.Kind {
+		case "jdk":
+			expected = pin.Build
+		case "image":
+			expected = pin.Image + "@" + pin.Digest
+		}
+		if !exists || component.Expected != expected {
+			return fmt.Errorf("evidence report targets a different pin for %s", component.Key)
+		}
+		components[component.Key] = true
+	}
+	if len(components) != len(fx.Exercises) {
+		return fmt.Errorf("evidence report is missing exercised components")
+	}
+	return nil
 }
 
 func readJSON(path string) (any, error) {
