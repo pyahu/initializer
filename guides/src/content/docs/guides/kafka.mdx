@@ -127,32 +127,68 @@ connector can fill the disk. `max_slot_wal_keep_size` puts a ceiling on that; pa
 
 ## 3. How do producers and consumers agree on the event format?
 
-**In short:** describe every event with an Avro schema, store it in a schema registry and let the registry refuse
-changes that break readers.
+**In short:** describe every event with an Avro schema and explicitly set `FULL_TRANSITIVE` compatibility when
+producers and consumers deploy independently and old events remain available for replay.
 
 ### What's going on
 
 Events outlive the code that wrote them. A consumer deployed last month must read the event you publish today. JSON
 without a contract breaks quietly: a renamed field just arrives as `null`.
 
-Avro records carry the id of their schema. A schema registry stores every version. The registry checks each new
+The registry wire format prefixes the Avro payload with its schema id. A schema registry stores every version. The registry checks each new
 version against a compatibility rule before accepting it. Karapace is an Apache licensed registry that speaks the
 same API as the Confluent Schema Registry, so the Confluent Avro serializer works with it; that serializer module is
 Apache 2.0 too. Karapace starts with `BACKWARD` compatibility: a new schema must be able to read data written with
-the previous one.
+the previous one. That is the opposite direction from protecting an old consumer against a new producer.
+
+| Policy | What it protects | Upgrade order |
+| ------ | ---------------- | ------------- |
+| `BACKWARD_TRANSITIVE` | New readers can read every previous schema | Upgrade all consumers before producing the new schema |
+| `FORWARD_TRANSITIVE` | Old readers can read data from the new schema | Producers first, but new readers may not replay old data |
+| `FULL_TRANSITIVE` | Both directions, against all previous schemas | Producers and consumers may move independently for compatible changes |
+
+Transitive matters for replay: checking only the latest schema does not prove that a consumer can read the
+oldest events you still retain. Schema compatibility also cannot prove that the meaning of a field stayed the
+same; review semantic changes and test readers too.
 
 ### Do this
 
 1. Keep `.avsc` files in the repository next to the code that owns the event.
-2. Add new fields with a default value, so old events still read. Avro's schema resolution fills the default when
+2. Set and verify the compatibility policy for each subject. Do not rely on the registry's default:
+
+   ```sh
+   curl -fsS -X PUT "$SCHEMA_REGISTRY_URL/config/$EVENT_SUBJECT" \
+     -H 'Content-Type: application/vnd.schemaregistry.v1+json' \
+     --data '{"compatibility":"FULL_TRANSITIVE"}'
+   curl -fsS "$SCHEMA_REGISTRY_URL/config/$EVENT_SUBJECT"
+   ```
+
+3. Add new fields with a default value, so old events still read. Avro's schema resolution fills the default when
    the writer did not have the field.
-3. Never rename or remove a field in place. Add a new one, migrate readers, then retire the old one.
-4. Register schemas from CI and fail the build when the registry rejects a change.
+4. Never rename or remove a field in place. Add a new one and migrate readers. A retirement that fails the
+   retained history check needs a new subject or event version, not a weaker policy applied silently.
+5. Check compatibility in CI before registering the schema and fail when it is incompatible. Test representative
+   retained events with the supported reader versions as well.
+6. Serialize the event against its registered `.avsc` before storing it in a PostgreSQL `bytea` payload column.
+   Configure Debezium to preserve those bytes:
+
+   ```properties
+   transforms.outbox.type=io.debezium.transforms.outbox.EventRouter
+   value.converter=io.debezium.converters.BinaryDataConverter
+   value.converter.delegate.converter.type=org.apache.kafka.connect.json.JsonConverter
+   value.converter.delegate.converter.type.schemas.enable=false
+   ```
+
+   The delegate handles non-binary connector records such as heartbeats. Apply the outbox transformation only to
+   outbox records, using an SMT predicate. An Avro converter applied to a JSON string does not enforce your
+   business `.avsc`. Verify an end-to-end event with the actual consumer before releasing this integration.
 
 ### When this is not for you
 
 - Events that never leave one service: a simpler format may be enough. Once a second team reads them, add the
   contract.
+- You deliberately use `BACKWARD_TRANSITIVE`: upgrade every consumer first and verify that rollout before
+  producing the new schema. Record that ordering as a release requirement.
 
 <a id="kafka-topics"></a>
 
@@ -339,7 +375,10 @@ The outbox, the registry and the consumer rules land in four places.
 
 - Debezium's PostgreSQL connector with the outbox event router, `pgoutput`, `publication.autocreate.mode: filtered`
   and `heartbeat.interval.ms` (steps 1 and 2).
-- Avro values with the schema registry's URL, so each record carries its schema id (step 3).
+- `BinaryDataConverter` for pre-serialized Avro outbox payloads, with a delegate for connector control records
+  and an SMT predicate limited to outbox records (step 3).
+- In the writing application, Avro serialization against the registered contract; in the registry, an explicit
+  compatibility policy per subject (step 3).
 
 ### In application.yaml
 

@@ -325,6 +325,13 @@ Baseline **v0.1-b1**. The baseline version is what the examples use. The documen
 | [Error Prone release 2.50.0](https://github.com/google/error-prone/releases/tag/v2.50.0) | 2.50.0 | pinned to 2.50.0 | Error Prone release 2.50.0. |
 | [gradle-errorprone-plugin (README)](https://github.com/tbroyer/gradle-errorprone-plugin) | 5.1.1 | not version-pinned | gradle-errorprone-plugin (README). |
 
+## Messaging
+
+| Document | Baseline version | Documentation pin | Read it for |
+| -------- | ---------------- | ----------------- | ----------- |
+| [Schema compatibility and client upgrade ordering](https://docs.confluent.io/platform/current/schema-registry/fundamentals/schema-evolution.html) | unversioned | not version-pinned | Backward, forward, full and transitive compatibility, including producer and consumer upgrade order. |
+| [Karapace subject compatibility API](https://www.karapace.io/docs/api-examples/) | unversioned | not version-pinned | Set and read compatibility policy per subject instead of relying on the registry default. |
+
 ## By guide
 
 ### [Architecture styles compared](/guides/architecture-styles/)
@@ -492,7 +499,8 @@ Baseline **v0.1-b1**. The baseline version is what the examples use. The documen
 
 ### [Kafka with the outbox](/guides/kafka/)
 
-- None yet.
+- [Schema compatibility and client upgrade ordering](https://docs.confluent.io/platform/current/schema-registry/fundamentals/schema-evolution.html)
+- [Karapace subject compatibility API](https://www.karapace.io/docs/api-examples/)
 
 ### [Deploying to Kubernetes](/guides/kubernetes-deployment/)
 

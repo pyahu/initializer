@@ -25,7 +25,7 @@
   claim: "Karapace is Apache 2.0 licensed and compatible with the Confluent Schema Registry API. Its default compatibility level is BACKWARD."
   badge: not-exercised
   baseline: v0.1-b1
-  limitations: "Read from the Karapace README; the default level is taken from its example output."
+  limitations: "Karapace API examples document per-subject policy configuration. Confluent's schema evolution reference defines compatibility directions and rollout ordering; the guide explicitly requires FULL_TRANSITIVE for independent deployment with replay, or consumers-first BACKWARD_TRANSITIVE."
   reason: "No schema registry runs in this repository yet."
 - id: ev-kafka-topics-1
   card: kafka-topics

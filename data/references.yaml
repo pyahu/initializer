@@ -4080,6 +4080,38 @@ entries:
     jep: null
     llms: null
     baselines: []
+  - id: messaging-schema-compatibility
+    title: "Schema compatibility and client upgrade ordering"
+    component: null
+    docVersion: "unversioned"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://docs.confluent.io/platform/current/schema-registry/fundamentals/schema-evolution.html"
+    pinned: false
+    pinNote: "Unversioned protocol documentation; compatibility semantics do not qualify a registry runtime."
+    purpose: "Backward, forward, full and transitive compatibility, including producer and consumer upgrade order."
+    guides: [kafka]
+    appliesWhen: {"kafka.enabled": [true]}
+    jep: null
+    llms: null
+    baselines: [v0.1-b1]
+  - id: messaging-karapace-policy-api
+    title: "Karapace subject compatibility API"
+    component: null
+    docVersion: "unversioned"
+    match: "none"
+    kind: "reference"
+    area: "messaging"
+    url: "https://www.karapace.io/docs/api-examples/"
+    pinned: false
+    pinNote: "Unversioned API documentation; the guide does not claim a tested Karapace deployment."
+    purpose: "Set and read compatibility policy per subject instead of relying on the registry default."
+    guides: [kafka]
+    appliesWhen: {"kafka.enabled": [true]}
+    jep: null
+    llms: null
+    baselines: [v0.1-b1]
   - id: messaging-karapace-docs
     title: "Karapace docs"
     component: null

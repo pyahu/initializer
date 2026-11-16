@@ -1103,7 +1103,7 @@
               "card": "kafka-schemas",
               "step": 3,
               "type": "generated-config",
-              "text": "Every event has an Avro schema in the repository, registered from CI; new fields have defaults; no field renamed or removed in place.",
+              "text": "Event schemas are checked and registered from CI with explicit FULL_TRANSITIVE compatibility per subject, or a documented consumers-first BACKWARD_TRANSITIVE rollout; new fields have defaults and replay history is checked.",
               "appliesWhen": {
                 "kafka.enabled": [
                   true

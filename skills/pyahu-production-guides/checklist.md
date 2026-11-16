@@ -149,7 +149,7 @@ explains why it matters. Items with a "when" apply only to services that use tha
 - [ ] **KAFKA-02** Outbox rows are kept; a cleanup job deletes only rows below the published watermark and older than the retention window. (step 2; when kafka.outbox: true)
 - [ ] **KAFKA-03** Publication and replication slot created before the app accepts writes; publication.autocreate.mode filtered; heartbeat.interval.ms set. (step 2; when kafka.outbox: true)
 - [ ] **KAFKA-04** max_slot_wal_keep_size set in PostgreSQL and an alert on replication slot lag. (step 2; when kafka.outbox: true)
-- [ ] **KAFKA-05** Every event has an Avro schema in the repository, registered from CI; new fields have defaults; no field renamed or removed in place. (step 3; when kafka.enabled: true)
+- [ ] **KAFKA-05** Event schemas are checked and registered from CI with explicit FULL_TRANSITIVE compatibility per subject, or a documented consumers-first BACKWARD_TRANSITIVE rollout; new fields have defaults and replay history is checked. (step 3; when kafka.enabled: true)
 - [ ] **KAFKA-06** Topics created explicitly, one per aggregate type, keyed by aggregate id, with retention longer than the longest incident. (step 4; when kafka.enabled: true)
 - [ ] **KAFKA-07** acks and enable.idempotence left at the Kafka defaults (all and true); spring.kafka.template.observation-enabled true. (step 5; when kafka.enabled: true)
 - [ ] **KAFKA-08** Consumers store processed event ids in the same transaction as the work and skip duplicates; auto commit off; listener observation enabled. (step 6; when kafka.enabled: true)

@@ -5862,7 +5862,7 @@
             {
               "id": "ev-kafka-schemas-1",
               "badge": "not-exercised",
-              "canonical": "Evidence ev-kafka-schemas-1 · not exercised · baseline v0.1-b1. Karapace is Apache 2.0 licensed and compatible with the Confluent Schema Registry API. Its default compatibility level is BACKWARD. Limitations: Read from the Karapace README; the default level is taken from its example output.",
+              "canonical": "Evidence ev-kafka-schemas-1 · not exercised · baseline v0.1-b1. Karapace is Apache 2.0 licensed and compatible with the Confluent Schema Registry API. Its default compatibility level is BACKWARD. Limitations: Karapace API examples document per-subject policy configuration. Confluent's schema evolution reference defines compatibility directions and rollout ordering; the guide explicitly requires FULL_TRANSITIVE for independent deployment with replay, or consumers-first BACKWARD_TRANSITIVE.",
               "reason": "No schema registry runs in this repository yet."
             }
           ]
@@ -5975,7 +5975,7 @@
           "id": "KAFKA-05",
           "type": "generated-config",
           "card": "kafka-schemas",
-          "text": "Every event has an Avro schema in the repository, registered from CI; new fields have defaults; no field renamed or removed in place.",
+          "text": "Event schemas are checked and registered from CI with explicit FULL_TRANSITIVE compatibility per subject, or a documented consumers-first BACKWARD_TRANSITIVE rollout; new fields have defaults and replay history is checked.",
           "claim": "documented",
           "tests": [],
           "tags": [
@@ -6050,6 +6050,26 @@
         }
       ],
       "references": [
+        {
+          "id": "messaging-schema-compatibility",
+          "title": "Schema compatibility and client upgrade ordering",
+          "url": "https://docs.confluent.io/platform/current/schema-registry/fundamentals/schema-evolution.html",
+          "version": "unversioned",
+          "docVersion": "unversioned",
+          "pinned": false,
+          "purpose": "Backward, forward, full and transitive compatibility, including producer and consumer upgrade order.",
+          "later": false
+        },
+        {
+          "id": "messaging-karapace-policy-api",
+          "title": "Karapace subject compatibility API",
+          "url": "https://www.karapace.io/docs/api-examples/",
+          "version": "unversioned",
+          "docVersion": "unversioned",
+          "pinned": false,
+          "purpose": "Set and read compatibility policy per subject instead of relying on the registry default.",
+          "later": false
+        },
         {
           "id": "messaging-apache-kafka-4-2-docs",
           "title": "Apache Kafka 4.2 docs",
