@@ -11,6 +11,8 @@
 FROM node:24.22.3-trixie-slim@sha256:af02d57b57719b9657a45199a79264a9437940cd55b3c7b3fc99615654f124a0 AS build
 WORKDIR /web
 ENV NEXT_TELEMETRY_DISABLED=1
+ARG DEPLOYMENT_ID
+RUN test -n "$DEPLOYMENT_ID" || (echo "Set --build-arg DEPLOYMENT_ID to the release identifier" >&2; exit 1)
 COPY package.json package-lock.json ./
 RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
 COPY . .

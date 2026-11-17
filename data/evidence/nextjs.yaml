@@ -50,14 +50,14 @@
   reason: "Needs several Next.js pods and a shared cache; nothing runs them yet."
 - id: ev-next-kubernetes-1
   card: next-kubernetes
-  claim: "output: 'standalone' writes a traced .next/standalone folder with a server.js that runs without node_modules; public and .next/static must be copied next to it."
+  claim: "output: 'standalone' writes a traced .next/standalone folder with server.js and the required subset of node_modules; public and .next/static must be copied next to it."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Reasoned from the Next.js output documentation and the official with-docker example."
   reason: "No Next.js image is built in CI here yet."
 - id: ev-next-kubernetes-2
   card: next-kubernetes
-  claim: "On SIGTERM the Next.js server finishes requests in flight before exiting. Several instances need the same NEXT_SERVER_ACTIONS_ENCRYPTION_KEY and a deploymentId."
+  claim: "On SIGTERM the Next.js server finishes requests in flight before exiting. A deploymentId supports rolling version skew detection; apps using Server Actions also need consistent build-time encryption keys across interoperating instances/builds."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Reasoned from the Next.js self-hosting guide."

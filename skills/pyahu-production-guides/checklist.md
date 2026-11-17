@@ -362,6 +362,6 @@ explains why it matters. Items with a "when" apply only to services that use tha
 - [ ] **NEXT-07** Nothing that depends on the user's session is cached in a shared cache; cached reads have a tag and a lifetime. (step 5; when frontend: nextjs)
 - [ ] **NEXT-08** With more than one replica, cached data uses a shared cache handler or a short lifetime per pod. (step 5; when frontend: nextjs)
 - [ ] **NEXT-09** The image is built with output: 'standalone', copies only .next/standalone, .next/static and public, runs as the node user and starts with CMD ["node", "server.js"]. (step 6; when frontend: nextjs)
-- [ ] **NEXT-10** Probes point at a route handler that returns 200; the grace period covers the slowest request; several replicas share the Server Actions encryption key and a deploymentId. (step 6; when frontend: nextjs)
+- [ ] **NEXT-10** Probes point at a route handler that returns 200 and the grace period covers the slowest request; each frontend release embeds a unique deploymentId, and apps with Server Actions coordinate their build-time encryption key. (step 6; when frontend: nextjs)
 - [ ] **NEXT-11** next.config.js sets nosniff, a referrer policy, frame denial and HSTS on every path, poweredByHeader is false and a Content Security Policy is in place. (step 7; when frontend: nextjs)
 - [ ] **NEXT-12** instrumentation.ts registers OpenTelemetry with the service's address in fetch.propagateContextUrls and exports to the same collector as the service. (step 8; when frontend: nextjs)

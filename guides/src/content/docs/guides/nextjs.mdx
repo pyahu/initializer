@@ -247,8 +247,14 @@ both into the image and runs as the `node` user. On shutdown, Next.js finishes r
 3. Add a route handler such as `app/livez/route.ts` that returns 200 and point the probes at it
    ([Deploying to Kubernetes](/guides/kubernetes-deployment/)). Route handlers are not cached by default.
 4. Give the pod a grace period that covers your slowest request.
-5. With more than one replica, set the same `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` at build time and a
-   `deploymentId`, so pods agree on Server Actions and on assets during a rollout.
+5. Set `deploymentId` in `next.config.ts` from the build's release identifier. The generated Dockerfile requires
+   `--build-arg DEPLOYMENT_ID=<release>`; CI uses the commit SHA and checks the built configuration. Promote the
+   resulting image unchanged across environments and replicas. This enables Next.js version skew handling during
+   a rollout; a mismatched client can reload and lose state kept only in memory.
+6. If the app uses Server Actions, make their encryption key consistent across instances/builds that must
+   interoperate. Supply `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` securely to `next build`, as a base64 AES key of the
+   supported length. It is embedded in the server build, so setting it only at runtime is insufficient. The
+   generated sample has no Server Actions and does not require this additional secret.
 
 ### When this is not for you
 

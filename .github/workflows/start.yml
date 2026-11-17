@@ -140,7 +140,11 @@ jobs:
           docker run --rm -v "$PWD:/w" -w /w/frontends/start-web "$NODE_IMAGE"
           sh -c 'npm ci --no-audit --no-fund && npm audit --audit-level=high && npm run api:check'
       - name: Image
-        run: docker buildx build --load -t start-web:ci frontends/start-web
+        run: |
+          deployment_id=$(git rev-parse HEAD)
+          docker buildx build --load --build-arg DEPLOYMENT_ID="$deployment_id" -t start-web:ci frontends/start-web
+          docker run --rm --entrypoint node start-web:ci -e \
+            'if (require("./.next/required-server-files.json").config.deploymentId !== process.argv[1]) process.exit(1)' "$deployment_id"
       - name: Export the built frontend image for scanning
         run: |
           mkdir -p build

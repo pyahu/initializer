@@ -52,7 +52,7 @@ signs in any user name[[/oidc]]. After a change to the contract, `npm run api` r
 ./gradlew build                  # compile with Error Prone and NullAway, tests, Spotless, SBOM
 docker build -t [[name]] .       # image with layers and an AOT cache, running as user 10001
 [[#nextjs]]
-docker build -t [[name]]-web frontends/web
+docker build --build-arg DEPLOYMENT_ID=0.1.0 -t [[name]]-web frontends/web
 [[/nextjs]]
 kustomize build deploy/overlays/dev
 ```
@@ -63,6 +63,13 @@ schemas, kube-linter, Trivy (HIGH/CRITICAL misconfigurations) and Pluto for depr
 It scans the exact built backend[[#nextjs]] and frontend[[/nextjs]] images for fixable HIGH/CRITICAL vulnerabilities
 before smoke tests[[#nextjs]] and runs `npm audit --audit-level=high` on the frontend lockfile[[/nextjs]].
 Renovate keeps the versions current (`renovate.json`).
+[[#nextjs]]
+
+The frontend image requires `DEPLOYMENT_ID` at build time: choose a different identifier for each release. CI uses
+the commit SHA and verifies that Next.js embedded it. Promote that image unchanged between environments and replicas.
+The sample has no Server Actions. If you add them, coordinate their build-time encryption key as described in the
+[Next.js guide](https://initializer.pyahu.io/guides/nextjs/#next-kubernetes).
+[[/nextjs]]
 
 ## Where things are
 

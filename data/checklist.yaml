@@ -1868,7 +1868,7 @@
   guide: nextjs
   card: next-kubernetes
   type: deployment-prerequisite
-  text: "Probes point at a route handler that returns 200; the grace period covers the slowest request; several replicas share the Server Actions encryption key and a deploymentId."
+  text: "Probes point at a route handler that returns 200 and the grace period covers the slowest request; each frontend release embeds a unique deploymentId, and apps with Server Actions coordinate their build-time encryption key."
   claim: documented
   tests: []
   appliesWhen: {frontend: [nextjs]}

@@ -7951,13 +7951,13 @@
             {
               "id": "ev-next-kubernetes-1",
               "badge": "not-exercised",
-              "canonical": "Evidence ev-next-kubernetes-1 · not exercised · baseline v0.1-b2. output: 'standalone' writes a traced .next/standalone folder with a server.js that runs without node_modules; public and .next/static must be copied next to it. Limitations: Reasoned from the Next.js output documentation and the official with-docker example.",
+              "canonical": "Evidence ev-next-kubernetes-1 · not exercised · baseline v0.1-b2. output: 'standalone' writes a traced .next/standalone folder with server.js and the required subset of node_modules; public and .next/static must be copied next to it. Limitations: Reasoned from the Next.js output documentation and the official with-docker example.",
               "reason": "No Next.js image is built in CI here yet."
             },
             {
               "id": "ev-next-kubernetes-2",
               "badge": "not-exercised",
-              "canonical": "Evidence ev-next-kubernetes-2 · not exercised · baseline v0.1-b2. On SIGTERM the Next.js server finishes requests in flight before exiting. Several instances need the same NEXT_SERVER_ACTIONS_ENCRYPTION_KEY and a deploymentId. Limitations: Reasoned from the Next.js self-hosting guide.",
+              "canonical": "Evidence ev-next-kubernetes-2 · not exercised · baseline v0.1-b2. On SIGTERM the Next.js server finishes requests in flight before exiting. A deploymentId supports rolling version skew detection; apps using Server Actions also need consistent build-time encryption keys across interoperating instances/builds. Limitations: Reasoned from the Next.js self-hosting guide.",
               "reason": "Needs a cluster and a rolling update of a Next.js Deployment; no test runs one."
             }
           ]
@@ -8139,7 +8139,7 @@
           "id": "NEXT-10",
           "type": "deployment-prerequisite",
           "card": "next-kubernetes",
-          "text": "Probes point at a route handler that returns 200; the grace period covers the slowest request; several replicas share the Server Actions encryption key and a deploymentId.",
+          "text": "Probes point at a route handler that returns 200 and the grace period covers the slowest request; each frontend release embeds a unique deploymentId, and apps with Server Actions coordinate their build-time encryption key.",
           "claim": "documented",
           "tests": [],
           "tags": [

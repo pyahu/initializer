@@ -89,7 +89,11 @@ jobs:
         run: docker buildx build --load -t [[name]]:ci .
 [[#nextjs]]
       - name: Frontend image
-        run: docker buildx build --load -t [[name]]-web:ci frontends/web
+        run: |
+          deployment_id=$(git rev-parse HEAD)
+          docker buildx build --load --build-arg DEPLOYMENT_ID="$deployment_id" -t [[name]]-web:ci frontends/web
+          docker run --rm --entrypoint node [[name]]-web:ci -e \
+            'if (require("./.next/required-server-files.json").config.deploymentId !== process.argv[1]) process.exit(1)' "$deployment_id"
 [[/nextjs]]
       - name: Export the built images for scanning
         run: |
