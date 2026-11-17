@@ -332,6 +332,24 @@ Baseline **v0.1-b2**. The baseline version is what the examples use. The documen
 | [Schema compatibility and client upgrade ordering](https://docs.confluent.io/platform/current/schema-registry/fundamentals/schema-evolution.html) | unversioned | not version-pinned | Backward, forward, full and transitive compatibility, including producer and consumer upgrade order. |
 | [Karapace subject compatibility API](https://www.karapace.io/docs/api-examples/) | unversioned | not version-pinned | Set and read compatibility policy per subject instead of relying on the registry default. |
 
+## Next.js and the frontend
+
+| Document | Baseline version | Documentation pin | Read it for |
+| -------- | ---------------- | ----------------- | ----------- |
+| [Server and Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components) | 16.x | not version-pinned | Component boundaries and the server-only import guard. |
+| [Next.js data security](https://nextjs.org/docs/app/guides/data-security) | 16.x | not version-pinned | Server Actions authorization, server-only modules and secret handling. |
+| [Next.js environment variables](https://nextjs.org/docs/app/guides/environment-variables) | 16.x | not version-pinned | Build-time public substitution and server-side runtime settings. |
+| [Self-hosting Next.js](https://nextjs.org/docs/app/guides/self-hosting) | 16.x | not version-pinned | Image promotion, multi-instance deployment identity and encryption keys. |
+| [Next.js output and standalone tracing](https://nextjs.org/docs/app/api-reference/config/next-config-js/output) | 16.x | not version-pinned | The traced runtime subset and separately copied public/static assets. |
+| [Next.js cacheHandlers](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheHandlers) | 16.x | not version-pinned | Cache Components handler API, including remote storage and tag coordination. |
+| [Next.js use cache: remote](https://nextjs.org/docs/app/api-reference/directives/use-cache-remote) | 16.x | not version-pinned | Choosing shared remote caching and its operational tradeoffs. |
+| [Next.js Content Security Policy](https://nextjs.org/docs/app/guides/content-security-policy) | 16.x | not version-pinned | Per-request nonces and rendering requirements. |
+| [Next.js response headers](https://nextjs.org/docs/app/api-reference/config/next-config-js/headers) | 16.x | not version-pinned | Configuring headers by path. |
+| [openapi-typescript](https://openapi-ts.dev/introduction) | unversioned | not version-pinned | Generating TypeScript definitions from OpenAPI. |
+| [openapi-fetch](https://openapi-ts.dev/openapi-fetch/) | unversioned | not version-pinned | Typed calls using generated OpenAPI definitions. |
+| [Vercel OpenTelemetry library](https://github.com/vercel/otel) | unversioned | not version-pinned | Frontend instrumentation and fetch context propagation. |
+| [Better Auth generic OAuth plugin](https://www.better-auth.com/docs/plugins/generic-oauth) | unversioned | not version-pinned | The generated frontend login integration. |
+
 ## By guide
 
 ### [Architecture styles compared](/guides/architecture-styles/)
@@ -551,6 +569,19 @@ Baseline **v0.1-b2**. The baseline version is what the examples use. The documen
 - [OpenAPI Specification v3.1.2 (latest 3.1 patch)](https://spec.openapis.org/oas/v3.1.2.html)
 - [OpenID Connect Core 1.0 (errata set 2)](https://openid.net/specs/openid-connect-core-1_0.html)
 - [RFC 9700 OAuth 2.0 Security BCP](https://www.rfc-editor.org/rfc/rfc9700.html)
+- [Server and Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components)
+- [Next.js data security](https://nextjs.org/docs/app/guides/data-security)
+- [Next.js environment variables](https://nextjs.org/docs/app/guides/environment-variables)
+- [Self-hosting Next.js](https://nextjs.org/docs/app/guides/self-hosting)
+- [Next.js output and standalone tracing](https://nextjs.org/docs/app/api-reference/config/next-config-js/output)
+- [Next.js cacheHandlers](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheHandlers)
+- [Next.js use cache: remote](https://nextjs.org/docs/app/api-reference/directives/use-cache-remote)
+- [Next.js Content Security Policy](https://nextjs.org/docs/app/guides/content-security-policy)
+- [Next.js response headers](https://nextjs.org/docs/app/api-reference/config/next-config-js/headers)
+- [openapi-typescript](https://openapi-ts.dev/introduction)
+- [openapi-fetch](https://openapi-ts.dev/openapi-fetch/)
+- [Vercel OpenTelemetry library](https://github.com/vercel/otel)
+- [Better Auth generic OAuth plugin](https://www.better-auth.com/docs/plugins/generic-oauth)
 
 ### [Observability](/guides/observability/)
 

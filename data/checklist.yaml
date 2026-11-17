@@ -1852,7 +1852,7 @@
   guide: nextjs
   card: next-caching
   type: deployment-prerequisite
-  text: "With more than one replica, cached data uses a shared cache handler or a short lifetime per pod."
+  text: "When cached data must be shared across replicas, Cache Components uses cacheHandlers.remote with shared storage and tag coordination; per-pod caches require an explicit tolerance for staleness."
   claim: documented
   tests: []
   appliesWhen: {frontend: [nextjs]}

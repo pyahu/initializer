@@ -245,7 +245,9 @@ decided in `ProjectRecipe` and only written by the templates. Imports of rendere
 rendering, so `spotlessCheck` passes for any package. `frontends/web/src/api/schema.d.ts` must be what
 `openapi-typescript` writes for each variant of the contract; the generated workflow checks it.
 
-Versions come from the active baseline when a project is generated; never type one into a template. The
+Core Java platform versions come from the active baseline when a project is generated. Frontend packages and
+auxiliary build tools have exact pins in their lockfiles, Dockerfiles and workflows; update their related copies
+together and run the generator matrix. These pins are not qualified by the Java fixture report. The
 exceptions are tooling that Renovate updates: the generated workflow's action SHAs, the frontend's npm packages
 and lock files, its Node image (listed only, like a toolchain) and the mock identity provider of `compose.yml` and
 the smoke test. Tests keep the kustomize image on the baseline's kustomize version and each image pinned in

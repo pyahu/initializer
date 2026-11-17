@@ -99,7 +99,7 @@
               "id": "ev-arch-ddd-layered-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-arch-ddd-layered-1 · not exercised · baseline v0.1-b2. jMolecules ensureLayering() allows each layer to access all layers below it, with infrastructure as the lowest, so it permits domain to infrastructure. Limitations: Read from JMoleculesArchitectureRules in jmolecules-archunit 0.33.0; the inverted graph is a Pyahu policy.",
-              "reason": "No DDD layered fixture exists yet."
+              "reason": "DDD layered variants are built and smoke-tested by the generator matrix; no qualified fixture test proves every boundary in this claim."
             }
           ]
         },
@@ -186,7 +186,7 @@
               "id": "ev-arch-style-choice-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-arch-style-choice-1 · not exercised · baseline v0.1-b2. Hexagonal uses domain, application/port/in, application/port/out, application/service, adapter/in and adapter/out inside a capability; DDD layered uses presentation, application, domain and infrastructure. Limitations: A layout policy of the Initializer; the fixture shows the hexagonal layout without outbound ports.",
-              "reason": "Only the hexagonal fixture exists. It has no outbound port or adapter yet."
+              "reason": "The qualified fixture is hexagonal; the generator also tests DDD layered projects. No focused comparison proves the tradeoffs between styles."
             }
           ]
         },
@@ -198,7 +198,7 @@
               "id": "ev-arch-transactions-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-arch-transactions-1 · not exercised · baseline v0.1-b2. One @Transactional application service method per use case keeps the load, the rule check and the save in one transaction. Limitations: A Pyahu policy built on Spring's declarative transactions.",
-              "reason": "The fixture has no database and no transaction yet."
+              "reason": "The qualified fixture has no transaction boundary. Generated PostgreSQL projects test database roles and migrations, without a focused transaction-boundary failure test."
             }
           ]
         }
@@ -514,7 +514,7 @@
               "id": "ev-style-ddd-layered-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-style-ddd-layered-1 · not exercised · baseline v0.1-b2. Evans' layered architecture lets each layer depend only on the layers below, with the domain isolated from user interface, application and infrastructure code. Limitations: From the Domain-Driven Design Reference, 2015, Layered Architecture.",
-              "reason": "No DDD layered fixture exists yet."
+              "reason": "The generator matrix builds DDD layered variants. The qualified fixture inventory has no focused test for this complete architectural claim."
             }
           ]
         },
@@ -946,7 +946,7 @@
               "id": "ev-bld-updates-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-bld-updates-1 · not exercised · baseline v0.1-b2. Renovate with config:recommended and minimumReleaseAge opens update pull requests for gradle/libs.versions.toml and the Gradle wrapper. Limitations: From the Renovate 44.166.0 documentation for the gradle and gradle-wrapper managers.",
-              "reason": "The example service has no Renovate configuration and no test runs Renovate."
+              "reason": "Renovate configurations exist in the repository and generated projects. The qualified fixture does not run dependency extraction and update PR creation."
             }
           ]
         },
@@ -1820,7 +1820,7 @@
               "id": "ev-ci-renovate-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-ci-renovate-1 · not exercised · baseline v0.1-b2. Renovate's helpers:pinGitHubActionDigests preset pins actions and reusable workflows to digests and minimumReleaseAge delays an update until the release is old enough. Limitations: Taken from the current Renovate documentation; the baseline pins Renovate 44.166.0 and the presets were not checked against that release.",
-              "reason": "This repository has no Renovate configuration yet."
+              "reason": "The repository and generated projects configure Renovate. No qualified fixture test verifies update scheduling and action-digest updates."
             }
           ]
         },
@@ -2191,7 +2191,7 @@
               "id": "ev-cfg-env-names-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-cfg-env-names-1 · not exercised · baseline v0.1-b2. Relaxed binding maps orders.payment-service.base-url to ORDERS_PAYMENTSERVICE_BASEURL; a variable that keeps the dashes binds to nothing. Limitations: Naming rules from the Spring Boot reference; the env: import resolver was read in the Boot 4.1.2 jar by the source guide.",
-              "reason": "No test binds a property from an environment variable yet."
+              "reason": "Runtime environment settings are exercised by acceptance tests. No dedicated fixture verifies the full relaxed-binding mapping in this claim."
             },
             {
               "id": "ev-cfg-env-names-2",
@@ -2221,7 +2221,7 @@
               "id": "ev-cfg-one-file-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-cfg-one-file-1 · not exercised · baseline v0.1-b2. Environment variables outrank application.yaml, so one file with safe defaults plus a ConfigMap per environment covers every environment without profiles. Limitations: Property source order is taken from the Spring Boot reference on externalized configuration.",
-              "reason": "No test overrides a setting from the environment yet. The example service runs with its defaults only."
+              "reason": "Acceptance tests pass environment settings. No focused qualified fixture compares every configuration source and precedence rule."
             }
           ]
         },
@@ -2664,7 +2664,7 @@
             {
               "id": "ev-img-non-root-2",
               "badge": "not-exercised",
-              "canonical": "Evidence ev-img-non-root-2 · not exercised · baseline v0.1-b2. Without a writable /tmp the embedded Tomcat fails to start with Unable to start web server. Limitations: Observed by the source guide with Spring Boot 4.1.2.",
+              "canonical": "Evidence ev-img-non-root-2 · not exercised · baseline v0.1-b2. Without a writable /tmp the embedded Tomcat fails to start with Unable to start web server. Limitations: Observed by the source guide with Spring Boot 4.1.1; not reproduced on baseline v0.1-b2 here.",
               "reason": "No test starts the image without a writable /tmp yet."
             }
           ]
@@ -6386,7 +6386,7 @@
               "id": "ev-kube-rollout-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-kube-rollout-1 · not exercised · baseline v0.1-b2. maxSurge 1 with maxUnavailable 0 and minReadySeconds 10 never drops serving pods below the desired count during a rollout. Limitations: Reasoned from the Deployment rolling update documentation.",
-              "reason": "Needs a cluster; the example service has no manifests yet."
+              "reason": "Deployment manifests are rendered and validated in CI. No automated cluster test measures rollout behavior under traffic."
             }
           ]
         },
@@ -6398,7 +6398,7 @@
               "id": "ev-kube-scheduled-work-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-kube-scheduled-work-1 · not exercised · baseline v0.1-b2. @Scheduled with ShedLock runs a task once per trigger across replicas, using the database clock. Limitations: Taken from the ShedLock README; ShedLock is not part of baseline v0.1-b2.",
-              "reason": "The example service has no database and no scheduled task yet."
+              "reason": "Generated projects support PostgreSQL but contain no scheduled-work implementation; no qualified fixture exercises scheduler coordination."
             }
           ]
         },
@@ -6745,7 +6745,7 @@
               "id": "ev-man-config-rollout-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-man-config-rollout-1 · not exercised · baseline v0.1-b2. A configMapGenerator hash or a checksum/config annotation changes the pod template when config changes, so the pods roll; a fixed ConfigMap name does not. Limitations: Reasoned from the source guide and upstream documentation.",
-              "reason": "No test changes a ConfigMap and watches the rollout; that needs a cluster and manifests the example service does not have yet."
+              "reason": "Generated ConfigMaps use hashes and CI renders them. No automated cluster test changes configuration and observes the resulting rollout."
             }
           ]
         },
@@ -6769,7 +6769,7 @@
               "id": "ev-man-image-digest-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-man-image-digest-1 · not exercised · baseline v0.1-b2. The Kustomize images transformer with a digest renders repo@sha256 references and kustomize edit set image updates it. Limitations: Reasoned from the source guide and upstream documentation.",
-              "reason": "No test renders an overlay and checks the image reference yet."
+              "reason": "Production overlays render digest references in CI. No focused qualified fixture exercises editing and resolving a real published registry digest."
             }
           ]
         },
@@ -6781,7 +6781,7 @@
               "id": "ev-man-labels-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-man-labels-1 · not exercised · baseline v0.1-b2. A selector limited to name, instance and component survives version changes, while adding a label to an existing selector fails with field is immutable. Limitations: Reasoned from the source guide and upstream documentation.",
-              "reason": "No test applies a Deployment twice with different labels; the example service has no manifests yet."
+              "reason": "Manifests keep stable selectors. No automated cluster test applies conflicting selector changes to demonstrate immutability."
             }
           ]
         },
@@ -6793,7 +6793,7 @@
               "id": "ev-man-overlays-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-man-overlays-1 · not exercised · baseline v0.1-b2. A Kustomize base with components and per-environment overlays renders each environment without copying the base, using only labels, patches and replacements. Limitations: Reasoned from the source guide and upstream documentation.",
-              "reason": "The example service has no Kustomize base or overlays yet, so nothing renders them in CI."
+              "reason": "CI renders dev and prod overlays for the service and generated projects. No qualified fixture specifically proves component/replacement reuse and the absence of copied base definitions."
             }
           ]
         },
@@ -6805,7 +6805,7 @@
               "id": "ev-man-packaging-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-man-packaging-1 · not exercised · baseline v0.1-b2. Helm, Kustomize and plain YAML can render the same production resources, so the choice of tool does not change what runs in the cluster. Limitations: Reasoned from the source guide and upstream documentation.",
-              "reason": "The source guide proved this with a normalised diff of three renderings of one service; this repository has no manifests yet."
+              "reason": "Kustomize manifests exist and are validated in CI. No test compares equivalent Helm, Kustomize and plain-YAML renderings in this repository."
             }
           ]
         },
@@ -6829,7 +6829,7 @@
               "id": "ev-man-validation-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-man-validation-1 · not exercised · baseline v0.1-b2. kubeconform in strict mode with CRD schemas, kube-linter, trivy config and pluto catch invalid or risky rendered manifests before they reach a cluster. Limitations: Reasoned from the source guide and upstream documentation.",
-              "reason": "No CI job renders and validates manifests yet; the example service has no manifests."
+              "reason": "Start and generated workflows run all four validators on rendered YAML. No qualified fixture tests CRD schema coverage and every detection behavior in this assertion."
             }
           ]
         }
@@ -7133,7 +7133,7 @@
               "id": "ev-local-compose-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-local-compose-1 · not exercised · baseline v0.1-b2. With spring-boot-docker-compose as a developmentOnly dependency, Spring Boot runs docker compose up for compose.yml at startup, creates service connections for postgres containers from POSTGRES_USER, POSTGRES_PASSWORD and POSTGRES_DB and stops the containers at shutdown. Limitations: From the Spring Boot 4.1 reference (Development-time Services), the spring-boot-docker-compose 4.1.2 configuration metadata and PostgresEnvironment in spring-boot-jdbc 4.1.2.",
-              "reason": "The example service has no compose.yml and no test starts it through Docker Compose."
+              "reason": "Generated projects contain Compose files. The qualified fixture starts telemetry through the Docker CLI; Spring Boot Compose lifecycle and connection discovery are not exercised."
             },
             {
               "id": "ev-local-compose-2",
@@ -7175,7 +7175,7 @@
               "id": "ev-local-real-deps-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-local-real-deps-1 · not exercised · baseline v0.1-b2. Running the production PostgreSQL version in a container catches SQL and behaviour differences that a mock or an embedded database hides. Limitations: Engineering judgment; the baseline pins postgres:18.6.",
-              "reason": "The example service has no database yet, so no test compares a container with an embedded database."
+              "reason": "Generated PostgreSQL projects run Testcontainers and real migrations. No qualified fixture compares database behavior with an embedded substitute."
             }
           ]
         },
@@ -7207,7 +7207,7 @@
               "id": "ev-local-seed-data-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-local-seed-data-1 · not exercised · baseline v0.1-b2. Liquibase runs every changeset when no context is given and with a context filter it runs the matching changesets plus those without a context; spring.liquibase.contexts sets the filter. Limitations: From the Liquibase 5.0.4 reference (What are contexts) and the spring-boot-liquibase 4.1.2 configuration metadata.",
-              "reason": "The example service has no database or changelog yet."
+              "reason": "Generated PostgreSQL projects have a changelog, and their readiness test covers context filtering. A full local-versus-production seed-data lifecycle is not a qualified fixture test."
             }
           ]
         },
@@ -7233,7 +7233,7 @@
               "id": "ev-local-telemetry-2",
               "badge": "not-exercised",
               "canonical": "Evidence ev-local-telemetry-2 · not exercised · baseline v0.1-b2. Spring Boot creates OTLP logging, metrics and tracing connection details for a grafana/otel-lgtm container in compose.yml and for an LgtmStackContainer bean. Limitations: From the Spring Boot 4.1 reference service connection tables; LgtmStackContainer checked in testcontainers-grafana 2.0.5.",
-              "reason": "No test starts the image through Docker Compose or Testcontainers."
+              "reason": "The telemetry image runs in Go acceptance tests through the Docker CLI. Its Spring Boot Compose and Testcontainers integrations are not qualified fixture tests."
             }
           ]
         },
@@ -7245,7 +7245,7 @@
               "id": "ev-local-testcontainers-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-local-testcontainers-1 · not exercised · baseline v0.1-b2. A TestApplication in src/test that calls SpringApplication.from(Application::main).with(LocalContainers.class) starts the app with @ServiceConnection container beans and ./gradlew bootTestRun runs it. Limitations: From the Spring Boot 4.1 reference; PostgreSQLContainer in org.testcontainers.postgresql checked in testcontainers-postgresql 2.0.5.",
-              "reason": "The example service has no development launcher and no container beans."
+              "reason": "Generated PostgreSQL tests use container beans. No qualified fixture starts a bootTestRun development launcher and checks its lifecycle."
             }
           ]
         }
@@ -7517,7 +7517,7 @@
               "id": "ev-mono-build-logic-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-mono-build-logic-1 · not exercised · baseline v0.1-b2. Gradle recommends an included build named build-logic over buildSrc for convention plugins, because any change in buildSrc makes the whole build out of date; it is added with includeBuild inside pluginManagement. Limitations: Taken from the Gradle 9.8.1 best practices and composite builds documentation.",
-              "reason": "The example service is a single project without build-logic."
+              "reason": "The repository implements and tests build-logic. No qualified fixture measures the claimed buildSrc versus included-build invalidation behavior."
             }
           ]
         },
@@ -7529,7 +7529,7 @@
               "id": "ev-mono-catalog-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-mono-catalog-1 · not exercised · baseline v0.1-b2. An included build-logic build reads the root version catalog by importing gradle/libs.versions.toml with from(files(...)) in its settings, and convention plugins read it through VersionCatalogsExtension. Limitations: Taken from the Gradle 9.8.1 version catalog documentation, which shows the import for buildSrc.",
-              "reason": "The example service has a catalog but no build-logic build that imports it."
+              "reason": "The repository imports the root catalog into build-logic. No focused qualified fixture verifies the entire convention-plugin/catalog contract."
             }
           ]
         },
@@ -7565,7 +7565,7 @@
               "id": "ev-mono-one-service-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-mono-one-service-1 · not exercised · baseline v0.1-b2. Including a nested project by its full path creates empty parent projects; a flat name with an explicit projectDir avoids them. Limitations: Taken from the Gradle 9.8.1 best practices for structuring builds.",
-              "reason": "The example service is a single project; no nested service is included."
+              "reason": "The repository maps the start project to services/start. No focused qualified fixture compares this with empty nested parent projects."
             }
           ]
         },
@@ -7577,7 +7577,7 @@
               "id": "ev-mono-ship-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-mono-ship-1 · not exercised · baseline v0.1-b2. Each service has its own image, built from the repository root with a service target, its own deploy folder and its own releases. The same digest is promoted between environments. Limitations: Stated as a rule. No multi-service image build exists here.",
-              "reason": "The example service is a single service with one image."
+              "reason": "The repository builds backend and frontend images. No qualified fixture proves independent releases and promotion for several backend services."
             }
           ]
         },
@@ -7589,7 +7589,7 @@
               "id": "ev-mono-when-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-mono-when-1 · not exercised · baseline v0.1-b2. One repository suits services that one team owns and changes together; separate repositories suit services with different owners or release schedules. Limitations: Engineering judgment. There is no measurement behind it.",
-              "reason": "A recommendation about team structure; no test can prove it. The repository has no monorepo example yet."
+              "reason": "This repository contains a Gradle monorepo. The team-ownership recommendation is engineering judgment rather than a testable runtime property."
             }
           ]
         }
@@ -7892,13 +7892,13 @@
               "id": "ev-next-auth-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-next-auth-1 · not exercised · baseline v0.1-b2. Server Actions are reachable by direct POST requests, so each one must check the user itself; a session in an httpOnly cookie keeps the access token away from page scripts. Limitations: Reasoned from the Next.js authentication and data security guides.",
-              "reason": "No frontend or identity provider runs in a test here yet."
+              "reason": "Generated smoke tests exercise OIDC login and server-side calls. The sample has no Server Actions, so their authorization is not exercised."
             },
             {
               "id": "ev-next-auth-2",
               "badge": "not-exercised",
               "canonical": "Evidence ev-next-auth-2 · not exercised · baseline v0.1-b2. On 2026-10-18 next-auth 5 was published only as a beta (5.0.0-beta.32, latest stable 4.24.15) and authjs.dev stated that Auth.js is now part of Better Auth (1.7.10). Limitations: A point in time read of the npm registry and authjs.dev; it will change.",
-              "reason": "A registry fact, not behaviour; nothing in the example service uses either library."
+              "reason": "Generated frontends use Better Auth. This dated registry observation is historical metadata, without a runtime assertion in the qualified fixture."
             }
           ]
         },
@@ -7910,7 +7910,7 @@
               "id": "ev-next-caching-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-next-caching-1 · not exercised · baseline v0.1-b2. Since Next.js 15, fetch requests and GET route handlers are not cached by default; in Next.js 16 the single argument revalidateTag is deprecated; updateTag gives read your writes in Server Actions. Limitations: Reasoned from the Next.js 15 and 16 upgrade guides and the caching documentation.",
-              "reason": "No Next.js app runs in a test here yet."
+              "reason": "The frontend runs in CI; no focused test asserts cache defaults, tag invalidation or Server Action updateTag behavior."
             },
             {
               "id": "ev-next-caching-2",
@@ -7928,7 +7928,7 @@
               "id": "ev-next-env-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-next-env-1 · not exercised · baseline v0.1-b2. next build replaces process.env.NEXT_PUBLIC_ values with their build time value, so one image promoted across environments keeps the build value; unprefixed values are read on the server at run time during dynamic rendering. Limitations: Reasoned from the Next.js 16 environment variables guide.",
-              "reason": "No test builds a Next.js image and runs it with different environment values yet."
+              "reason": "CI runs frontend images with server-side environment settings. No focused test compares NEXT_PUBLIC build-time substitution with dynamic runtime reads."
             }
           ]
         },
@@ -7952,13 +7952,13 @@
               "id": "ev-next-kubernetes-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-next-kubernetes-1 · not exercised · baseline v0.1-b2. output: 'standalone' writes a traced .next/standalone folder with server.js and the required subset of node_modules; public and .next/static must be copied next to it. Limitations: Reasoned from the Next.js output documentation and the official with-docker example.",
-              "reason": "No Next.js image is built in CI here yet."
+              "reason": "The Start workflow builds and starts standalone images. This record has no qualified fixture checking the complete tracing and asset-copy behavior."
             },
             {
               "id": "ev-next-kubernetes-2",
               "badge": "not-exercised",
               "canonical": "Evidence ev-next-kubernetes-2 · not exercised · baseline v0.1-b2. On SIGTERM the Next.js server finishes requests in flight before exiting. A deploymentId supports rolling version skew detection; apps using Server Actions also need consistent build-time encryption keys across interoperating instances/builds. Limitations: Reasoned from the Next.js self-hosting guide.",
-              "reason": "Needs a cluster and a rolling update of a Next.js Deployment; no test runs one."
+              "reason": "CI checks the embedded deployment ID. No automated multi-instance rollout test measures in-flight shutdown, version skew and Server Actions key interoperability."
             }
           ]
         },
@@ -7970,7 +7970,7 @@
               "id": "ev-next-rendering-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-next-rendering-1 · not exercised · baseline v0.1-b2. App Router pages are server components by default; only modules marked 'use client' and their imports run in the browser. A module that imports server-only fails the build when a client component imports it. Limitations: Reasoned from the Next.js 16 documentation (server and client components, data security).",
-              "reason": "No Next.js app exists in this repository yet, so no test builds one."
+              "reason": "The Start workflow builds real Next.js frontends. No focused negative build imports server-only code into a client component to prove the whole claim."
             }
           ]
         },
@@ -7994,7 +7994,7 @@
               "id": "ev-next-typed-client-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-next-typed-client-1 · not exercised · baseline v0.1-b2. openapi-typescript 7.13.0 generates TypeScript types from an OpenAPI 3.0 or 3.1 document; openapi-fetch 0.17.0 uses them to type each call. Limitations: Versions read from the npm registry on 2026-10-18; behaviour from the openapi-ts.dev documentation.",
-              "reason": "The example service has no OpenAPI document and no frontend yet, so nothing generates or compiles a client."
+              "reason": "Generated workflows regenerate and type-check clients for their OpenAPI contracts. This record has no qualified fixture covering both OpenAPI 3.0 and 3.1 inputs."
             }
           ]
         }
@@ -8117,7 +8117,7 @@
           "id": "NEXT-08",
           "type": "deployment-prerequisite",
           "card": "next-caching",
-          "text": "With more than one replica, cached data uses a shared cache handler or a short lifetime per pod.",
+          "text": "When cached data must be shared across replicas, Cache Components uses cacheHandlers.remote with shared storage and tag coordination; per-pod caches require an explicit tolerance for staleness.",
           "claim": "documented",
           "tests": [],
           "tags": [
@@ -8238,6 +8238,136 @@
           "docVersion": "final",
           "pinned": true,
           "purpose": "RFC 9700 OAuth 2.0 Security BCP.",
+          "later": false
+        },
+        {
+          "id": "next-server-client",
+          "title": "Server and Client Components",
+          "url": "https://nextjs.org/docs/app/getting-started/server-and-client-components",
+          "version": "16.x",
+          "docVersion": "16.x",
+          "pinned": false,
+          "purpose": "Component boundaries and the server-only import guard.",
+          "later": false
+        },
+        {
+          "id": "next-data-security",
+          "title": "Next.js data security",
+          "url": "https://nextjs.org/docs/app/guides/data-security",
+          "version": "16.x",
+          "docVersion": "16.x",
+          "pinned": false,
+          "purpose": "Server Actions authorization, server-only modules and secret handling.",
+          "later": false
+        },
+        {
+          "id": "next-environment",
+          "title": "Next.js environment variables",
+          "url": "https://nextjs.org/docs/app/guides/environment-variables",
+          "version": "16.x",
+          "docVersion": "16.x",
+          "pinned": false,
+          "purpose": "Build-time public substitution and server-side runtime settings.",
+          "later": false
+        },
+        {
+          "id": "next-self-hosting",
+          "title": "Self-hosting Next.js",
+          "url": "https://nextjs.org/docs/app/guides/self-hosting",
+          "version": "16.x",
+          "docVersion": "16.x",
+          "pinned": false,
+          "purpose": "Image promotion, multi-instance deployment identity and encryption keys.",
+          "later": false
+        },
+        {
+          "id": "next-standalone",
+          "title": "Next.js output and standalone tracing",
+          "url": "https://nextjs.org/docs/app/api-reference/config/next-config-js/output",
+          "version": "16.x",
+          "docVersion": "16.x",
+          "pinned": false,
+          "purpose": "The traced runtime subset and separately copied public/static assets.",
+          "later": false
+        },
+        {
+          "id": "next-cache-components-handlers",
+          "title": "Next.js cacheHandlers",
+          "url": "https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheHandlers",
+          "version": "16.x",
+          "docVersion": "16.x",
+          "pinned": false,
+          "purpose": "Cache Components handler API, including remote storage and tag coordination.",
+          "later": false
+        },
+        {
+          "id": "next-use-cache-remote",
+          "title": "Next.js use cache: remote",
+          "url": "https://nextjs.org/docs/app/api-reference/directives/use-cache-remote",
+          "version": "16.x",
+          "docVersion": "16.x",
+          "pinned": false,
+          "purpose": "Choosing shared remote caching and its operational tradeoffs.",
+          "later": false
+        },
+        {
+          "id": "next-csp",
+          "title": "Next.js Content Security Policy",
+          "url": "https://nextjs.org/docs/app/guides/content-security-policy",
+          "version": "16.x",
+          "docVersion": "16.x",
+          "pinned": false,
+          "purpose": "Per-request nonces and rendering requirements.",
+          "later": false
+        },
+        {
+          "id": "next-headers",
+          "title": "Next.js response headers",
+          "url": "https://nextjs.org/docs/app/api-reference/config/next-config-js/headers",
+          "version": "16.x",
+          "docVersion": "16.x",
+          "pinned": false,
+          "purpose": "Configuring headers by path.",
+          "later": false
+        },
+        {
+          "id": "openapi-typescript",
+          "title": "openapi-typescript",
+          "url": "https://openapi-ts.dev/introduction",
+          "version": "unversioned",
+          "docVersion": "unversioned",
+          "pinned": false,
+          "purpose": "Generating TypeScript definitions from OpenAPI.",
+          "later": false
+        },
+        {
+          "id": "openapi-fetch",
+          "title": "openapi-fetch",
+          "url": "https://openapi-ts.dev/openapi-fetch/",
+          "version": "unversioned",
+          "docVersion": "unversioned",
+          "pinned": false,
+          "purpose": "Typed calls using generated OpenAPI definitions.",
+          "later": false
+        },
+        {
+          "id": "vercel-otel",
+          "title": "Vercel OpenTelemetry library",
+          "url": "https://github.com/vercel/otel",
+          "version": "unversioned",
+          "docVersion": "unversioned",
+          "pinned": false,
+          "purpose": "Frontend instrumentation and fetch context propagation.",
+          "later": false
+        },
+        {
+          "id": "better-auth-generic-oauth",
+          "title": "Better Auth generic OAuth plugin",
+          "url": "https://www.better-auth.com/docs/plugins/generic-oauth",
+          "version": "unversioned",
+          "docVersion": "unversioned",
+          "pinned": false,
+          "purpose": "The generated frontend login integration.",
           "later": false
         }
       ]
@@ -9384,7 +9514,7 @@
               "id": "ev-rest-contract-ci-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-rest-contract-ci-1 · not exercised · baseline v0.1-b2. The openapi-generator Gradle plugin provides an openApiValidate task and a controller that implements a generated interface stops compiling when the contract changes its signature. Limitations: From the Gradle plugin README at tag v7.26.0; the breaking change diff in CI uses a tool that is not pinned in baseline v0.1-b2.",
-              "reason": "The example service has no contract to validate or diff yet."
+              "reason": "Generated workflows validate and regenerate contracts. No released-versus-current compatibility diff is exercised by a qualified fixture test."
             }
           ]
         },
@@ -9396,7 +9526,7 @@
               "id": "ev-rest-contract-first-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-rest-contract-first-1 · not exercised · baseline v0.1-b2. Keeping an OpenAPI 3.1 document in the repository and reviewing it with the code makes every change to the API visible in one file. Limitations: Engineering judgment based on the OpenAPI 3.1.2 specification.",
-              "reason": "The example service has no OpenAPI contract yet."
+              "reason": "The generator and generated projects have OpenAPI contracts. No qualified fixture test covers the complete contract-first workflow described here."
             }
           ]
         },
@@ -9408,7 +9538,7 @@
               "id": "ev-rest-errors-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-rest-errors-1 · not exercised · baseline v0.1-b2. With spring.mvc.problemdetails.enabled: true, Spring Boot 4.1 answers Spring MVC errors as RFC 9457 problem details in application/problem+json; the property defaults to false. Limitations: From the spring-boot-webmvc 4.1.2 configuration metadata and the Spring Boot 4.1 servlet reference.",
-              "reason": "No test sends a bad request to the example service yet."
+              "reason": "The generator tests rejected requests. No qualified fixture test covers the full ProblemDetail response contract described here."
             }
           ]
         },
@@ -9433,7 +9563,7 @@
               "id": "ev-rest-generate-2",
               "badge": "not-exercised",
               "canonical": "Evidence ev-rest-generate-2 · not exercised · baseline v0.1-b2. With interfaceOnly and useSpringBoot4, the spring generator of openapi-generator 7.26.0 writes API interfaces and models with Jakarta imports and no controllers. Limitations: From the spring generator documentation and the Gradle plugin README at tag v7.26.0.",
-              "reason": "The example service does not run openApiGenerate yet."
+              "reason": "Generated projects run openApiGenerate and compile the result. The qualified fixture does not verify regeneration after a contract change."
             }
           ]
         },
@@ -9457,7 +9587,7 @@
               "id": "ev-rest-validation-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-rest-validation-1 · not exercised · baseline v0.1-b2. Spring MVC validates annotated controller parameters before the method runs and raises MethodArgumentNotValidException or HandlerMethodValidationException, which become a 400 response. Limitations: From the Spring Framework 7.0 reference on validation and the spring-web 7.0.10 classes.",
-              "reason": "The example service has no endpoint that takes input yet."
+              "reason": "The generator validates input and generated projects accept requests. No qualified fixture test checks all validation cases in this claim."
             }
           ]
         },
@@ -9783,7 +9913,7 @@
               "id": "ev-sec-csrf-cors-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-sec-csrf-cors-1 · not exercised · baseline v0.1-b2. With a stateless session policy and CSRF disabled, a bearer token API accepts state-changing requests without a CSRF token and creates no HTTP session. Limitations: Documented Spring Security behaviour.",
-              "reason": "The example service has no Spring Security yet."
+              "reason": "Generated OIDC projects configure API security. No qualified fixture verifies CSRF and CORS for the browser/session combinations in this claim."
             }
           ]
         },
@@ -9795,7 +9925,7 @@
               "id": "ev-sec-deny-default-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-sec-deny-default-1 · not exercised · baseline v0.1-b2. An API chain that ends with anyRequest().denyAll() rejects a path no rule names. Limitations: Documented Spring Security behaviour.",
-              "reason": "The example service has no Spring Security yet."
+              "reason": "Generated projects include Spring Security when OIDC is selected. No qualified fixture exhaustively checks route and method authorization defaults."
             },
             {
               "id": "ev-sec-deny-default-2",
@@ -9831,7 +9961,7 @@
               "id": "ev-sec-headers-2",
               "badge": "not-exercised",
               "canonical": "Evidence ev-sec-headers-2 · not exercised · baseline v0.1-b2. Tomcat's default internal-proxies trusts every private address range, so any pod in the cluster can fake X-Forwarded-For. Limitations: Read from the Boot 4.1.2 configuration metadata in the source guide.",
-              "reason": "Needs a cluster; no cluster test runs yet."
+              "reason": "No automated ingress test verifies edge headers; static manifest validation does not establish the behavior of a deployed edge."
             }
           ]
         },
@@ -9857,7 +9987,7 @@
               "id": "ev-sec-pod-hardening-2",
               "badge": "not-exercised",
               "canonical": "Evidence ev-sec-pod-hardening-2 · not exercised · baseline v0.1-b2. The pod security context passes Pod Security admission in a namespace that enforces restricted. Limitations: The source guide checked its manifest with kubeconform only.",
-              "reason": "Needs a cluster; no cluster test runs yet."
+              "reason": "CI validates restricted pod settings. No automated cluster test with an enforcing CNI proves network isolation and API access restrictions."
             },
             {
               "id": "ev-sec-pod-hardening-3",
@@ -9892,7 +10022,7 @@
             {
               "id": "ev-sec-tls-2",
               "badge": "not-exercised",
-              "canonical": "Evidence ev-sec-tls-2 · not exercised · baseline v0.1-b2. The HTTP client builders in Spring Boot 4.1.2 build their TLS setup once, so a renewed client certificate is used only after the pod restarts. Limitations: The source guide reproduced this against the Boot 4.1.2 jars; this repository has not.",
+              "canonical": "Evidence ev-sec-tls-2 · not exercised · baseline v0.1-b2. The HTTP client builders in Spring Boot 4.1.2 build their TLS setup once, so a renewed client certificate is used only after the pod restarts. Limitations: The source guide reports a reproduction against Boot 4.1.1 jars. This repository has no mTLS reproduction for baseline v0.1-b2.",
               "reason": "The example service makes no outbound call; no mTLS test runs yet."
             }
           ]
@@ -9905,7 +10035,7 @@
               "id": "ev-sec-token-audience-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-sec-token-audience-1 · not exercised · baseline v0.1-b2. With issuer-uri and audiences set, Spring Boot 4.1 rejects a token issued for another audience with 401. Limitations: Read from the Spring Boot 4.1.2 decoder configuration and Spring Security 7.1.1 validators in the source guide.",
-              "reason": "The example service has no Spring Security yet, so no test sends tokens to it."
+              "reason": "Generated OIDC smoke tests reject unauthenticated requests and accept the intended token. No qualified fixture tests the complete issuer/audience failure matrix."
             },
             {
               "id": "ev-sec-token-audience-2",
@@ -10841,7 +10971,7 @@
               "id": "ev-vt-resource-limits-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-vt-resource-limits-1 · not exercised · baseline v0.1-b2. With virtual threads, a HikariCP pool sized from the database budget with a 3 second connection timeout keeps tail latency bounded under load. Limitations: Reasoned from HikariCP behaviour and the source guide; server.tomcat.threads.max having no effect is from Boot's property description.",
-              "reason": "The example service has no database yet and no load test runs."
+              "reason": "Generated PostgreSQL variants run in CI. No saturation/load test measures the database budget with virtual threads."
             }
           ]
         }

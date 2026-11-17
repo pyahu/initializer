@@ -61,7 +61,7 @@
   claim: "Without a writable /tmp the embedded Tomcat fails to start with Unable to start web server."
   badge: not-exercised
   baseline: v0.1-b2
-  limitations: "Observed by the source guide with Spring Boot 4.1.2."
+  limitations: "Observed by the source guide with Spring Boot 4.1.1; not reproduced on baseline v0.1-b2 here."
   reason: "No test starts the image without a writable /tmp yet."
 - id: ev-img-build-context-1
   card: img-build-context

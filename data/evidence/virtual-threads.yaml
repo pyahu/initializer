@@ -29,7 +29,7 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Reasoned from HikariCP behaviour and the source guide; server.tomcat.threads.max having no effect is from Boot's property description."
-  reason: "The example service has no database yet and no load test runs."
+  reason: "Generated PostgreSQL variants run in CI. No saturation/load test measures the database budget with virtual threads."
 - id: ev-vt-downstream-limits-1
   card: vt-downstream-limits
   claim: "A class-level @ConcurrencyLimit with REJECT shares a limit across methods, immediately rejects excess calls and admits calls again after an in-flight call finishes."

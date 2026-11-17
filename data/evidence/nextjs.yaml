@@ -5,42 +5,42 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Reasoned from the Next.js 16 documentation (server and client components, data security)."
-  reason: "No Next.js app exists in this repository yet, so no test builds one."
+  reason: "The Start workflow builds real Next.js frontends. No focused negative build imports server-only code into a client component to prove the whole claim."
 - id: ev-next-typed-client-1
   card: next-typed-client
   claim: "openapi-typescript 7.13.0 generates TypeScript types from an OpenAPI 3.0 or 3.1 document; openapi-fetch 0.17.0 uses them to type each call."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Versions read from the npm registry on 2026-10-18; behaviour from the openapi-ts.dev documentation."
-  reason: "The example service has no OpenAPI document and no frontend yet, so nothing generates or compiles a client."
+  reason: "Generated workflows regenerate and type-check clients for their OpenAPI contracts. This record has no qualified fixture covering both OpenAPI 3.0 and 3.1 inputs."
 - id: ev-next-auth-1
   card: next-auth
   claim: "Server Actions are reachable by direct POST requests, so each one must check the user itself; a session in an httpOnly cookie keeps the access token away from page scripts."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Reasoned from the Next.js authentication and data security guides."
-  reason: "No frontend or identity provider runs in a test here yet."
+  reason: "Generated smoke tests exercise OIDC login and server-side calls. The sample has no Server Actions, so their authorization is not exercised."
 - id: ev-next-auth-2
   card: next-auth
   claim: "On 2026-10-18 next-auth 5 was published only as a beta (5.0.0-beta.32, latest stable 4.24.15) and authjs.dev stated that Auth.js is now part of Better Auth (1.7.10)."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "A point in time read of the npm registry and authjs.dev; it will change."
-  reason: "A registry fact, not behaviour; nothing in the example service uses either library."
+  reason: "Generated frontends use Better Auth. This dated registry observation is historical metadata, without a runtime assertion in the qualified fixture."
 - id: ev-next-env-1
   card: next-env
   claim: "next build replaces process.env.NEXT_PUBLIC_ values with their build time value, so one image promoted across environments keeps the build value; unprefixed values are read on the server at run time during dynamic rendering."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Reasoned from the Next.js 16 environment variables guide."
-  reason: "No test builds a Next.js image and runs it with different environment values yet."
+  reason: "CI runs frontend images with server-side environment settings. No focused test compares NEXT_PUBLIC build-time substitution with dynamic runtime reads."
 - id: ev-next-caching-1
   card: next-caching
   claim: "Since Next.js 15, fetch requests and GET route handlers are not cached by default; in Next.js 16 the single argument revalidateTag is deprecated; updateTag gives read your writes in Server Actions."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Reasoned from the Next.js 15 and 16 upgrade guides and the caching documentation."
-  reason: "No Next.js app runs in a test here yet."
+  reason: "The frontend runs in CI; no focused test asserts cache defaults, tag invalidation or Server Action updateTag behavior."
 - id: ev-next-caching-2
   card: next-caching
   claim: "The Next.js cache is kept per server instance by default; revalidating a tag on one instance does not reach the others without a shared cache handler."
@@ -54,14 +54,14 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Reasoned from the Next.js output documentation and the official with-docker example."
-  reason: "No Next.js image is built in CI here yet."
+  reason: "The Start workflow builds and starts standalone images. This record has no qualified fixture checking the complete tracing and asset-copy behavior."
 - id: ev-next-kubernetes-2
   card: next-kubernetes
   claim: "On SIGTERM the Next.js server finishes requests in flight before exiting. A deploymentId supports rolling version skew detection; apps using Server Actions also need consistent build-time encryption keys across interoperating instances/builds."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Reasoned from the Next.js self-hosting guide."
-  reason: "Needs a cluster and a rolling update of a Next.js Deployment; no test runs one."
+  reason: "CI checks the embedded deployment ID. No automated multi-instance rollout test measures in-flight shutdown, version skew and Server Actions key interoperability."
 - id: ev-next-headers-1
   card: next-headers
   claim: "next.config.js headers() sets response headers per path. Next.js sends x-powered-by unless poweredByHeader is false. A CSP nonce requires per request rendering."

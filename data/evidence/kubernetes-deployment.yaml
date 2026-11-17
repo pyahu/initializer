@@ -44,7 +44,7 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Reasoned from the Deployment rolling update documentation."
-  reason: "Needs a cluster; the example service has no manifests yet."
+  reason: "Deployment manifests are rendered and validated in CI. No automated cluster test measures rollout behavior under traffic."
 - id: ev-kube-disruption-1
   card: kube-disruption
   claim: "A PodDisruptionBudget with maxUnavailable 1 and unhealthyPodEvictionPolicy AlwaysAllow lets a drain proceed one pod at a time, even with a pod that is not ready."
@@ -72,7 +72,7 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Taken from the ShedLock README; ShedLock is not part of baseline v0.1-b2."
-  reason: "The example service has no database and no scheduled task yet."
+  reason: "Generated projects support PostgreSQL but contain no scheduled-work implementation; no qualified fixture exercises scheduler coordination."
 - id: ev-kube-diagnose-1
   card: kube-diagnose
   claim: "kubectl logs with --previous shows the log of the container instance that crashed. kubectl describe pod lists the events that explain Pending, ImagePullBackOff and failing probes."

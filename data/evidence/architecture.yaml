@@ -29,7 +29,7 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "A layout policy of the Initializer; the fixture shows the hexagonal layout without outbound ports."
-  reason: "Only the hexagonal fixture exists. It has no outbound port or adapter yet."
+  reason: "The qualified fixture is hexagonal; the generator also tests DDD layered projects. No focused comparison proves the tradeoffs between styles."
 - id: ev-arch-hexagonal-1
   card: arch-hexagonal
   claim: "JMoleculesArchitectureRules.ensureHexagonal(VerificationDepth.STRICT) passes for the fixture's primary adapter, primary port and application service."
@@ -53,14 +53,14 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Read from JMoleculesArchitectureRules in jmolecules-archunit 0.33.0; the inverted graph is a Pyahu policy."
-  reason: "No DDD layered fixture exists yet."
+  reason: "DDD layered variants are built and smoke-tested by the generator matrix; no qualified fixture test proves every boundary in this claim."
 - id: ev-arch-transactions-1
   card: arch-transactions
   claim: "One @Transactional application service method per use case keeps the load, the rule check and the save in one transaction."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "A Pyahu policy built on Spring's declarative transactions."
-  reason: "The fixture has no database and no transaction yet."
+  reason: "The qualified fixture has no transaction boundary. Generated PostgreSQL projects test database roles and migrations, without a focused transaction-boundary failure test."
 - id: ev-arch-pure-domain-1
   card: arch-pure-domain
   claim: "An ArchUnit rule that the domain package depends only on itself, java.. and org.jspecify.. passes for the fixture."

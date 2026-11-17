@@ -5,14 +5,14 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Property source order is taken from the Spring Boot reference on externalized configuration."
-  reason: "No test overrides a setting from the environment yet. The example service runs with its defaults only."
+  reason: "Acceptance tests pass environment settings. No focused qualified fixture compares every configuration source and precedence rule."
 - id: ev-cfg-env-names-1
   card: cfg-env-names
   claim: "Relaxed binding maps orders.payment-service.base-url to ORDERS_PAYMENTSERVICE_BASEURL; a variable that keeps the dashes binds to nothing."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Naming rules from the Spring Boot reference; the env: import resolver was read in the Boot 4.1.2 jar by the source guide."
-  reason: "No test binds a property from an environment variable yet."
+  reason: "Runtime environment settings are exercised by acceptance tests. No dedicated fixture verifies the full relaxed-binding mapping in this claim."
 - id: ev-cfg-env-names-2
   card: cfg-env-names
   claim: "Kubernetes service link variables such as SERVER_PORT=tcp://10.0.12.7:8080 break server.port unless enableServiceLinks is false."

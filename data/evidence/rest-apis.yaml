@@ -5,7 +5,7 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Engineering judgment based on the OpenAPI 3.1.2 specification."
-  reason: "The example service has no OpenAPI contract yet."
+  reason: "The generator and generated projects have OpenAPI contracts. No qualified fixture test covers the complete contract-first workflow described here."
 - id: ev-rest-generate-1
   card: rest-generate
   claim: "In the example service the web controller lives in adapter/in/web, no class outside the adapters depends on it and the jMolecules hexagonal rules pass."
@@ -29,21 +29,21 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "From the spring generator documentation and the Gradle plugin README at tag v7.26.0."
-  reason: "The example service does not run openApiGenerate yet."
+  reason: "Generated projects run openApiGenerate and compile the result. The qualified fixture does not verify regeneration after a contract change."
 - id: ev-rest-validation-1
   card: rest-validation
   claim: "Spring MVC validates annotated controller parameters before the method runs and raises MethodArgumentNotValidException or HandlerMethodValidationException, which become a 400 response."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "From the Spring Framework 7.0 reference on validation and the spring-web 7.0.10 classes."
-  reason: "The example service has no endpoint that takes input yet."
+  reason: "The generator validates input and generated projects accept requests. No qualified fixture test checks all validation cases in this claim."
 - id: ev-rest-errors-1
   card: rest-errors
   claim: "With spring.mvc.problemdetails.enabled: true, Spring Boot 4.1 answers Spring MVC errors as RFC 9457 problem details in application/problem+json; the property defaults to false."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "From the spring-boot-webmvc 4.1.2 configuration metadata and the Spring Boot 4.1 servlet reference."
-  reason: "No test sends a bad request to the example service yet."
+  reason: "The generator tests rejected requests. No qualified fixture test covers the full ProblemDetail response contract described here."
 - id: ev-rest-writes-1
   card: rest-writes
   claim: "PUT and DELETE are idempotent in HTTP and POST is not, so a POST that is retried can create a second resource unless the server deduplicates it, for example with an Idempotency-Key header."
@@ -71,4 +71,4 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "From the Gradle plugin README at tag v7.26.0; the breaking change diff in CI uses a tool that is not pinned in baseline v0.1-b2."
-  reason: "The example service has no contract to validate or diff yet."
+  reason: "Generated workflows validate and regenerate contracts. No released-versus-current compatibility diff is exercised by a qualified fixture test."

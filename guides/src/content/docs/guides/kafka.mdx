@@ -111,7 +111,9 @@ connector can fill the disk. `max_slot_wal_keep_size` puts a ceiling on that; pa
 
 1. Create the outbox table with the router's columns and an index on the time the row was written.
 2. Never delete in the writing transaction. A cleanup job deletes only rows older than the retention window and
-   below the published watermark, so a long outage never deletes unpublished events.
+   below a reliably confirmed published watermark. The outbox router does not mark database rows as delivered;
+   publication tracking is an operational prerequisite. If you cannot establish that confirmation, keep the rows
+   and monitor their growth instead of deleting by age during a connector outage.
 3. Create the publication and the replication slot right after migrations, before the app takes writes. With the
    `pgoutput` plugin, set `publication.autocreate.mode` to `filtered` so the connector does not try to publish
    every table.

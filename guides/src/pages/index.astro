@@ -1,6 +1,7 @@
 ---
 import Icon from "../components/Icon.astro";
 import LandingLayout from "../layouts/LandingLayout.astro";
+import guideData from "../generated/guides.json";
 
 const parts = [
   {
@@ -13,11 +14,11 @@ const parts = [
   },
   {
     icon: "terminal",
-    status: "In development",
+    status: "Preview in the repository",
     title: "A project generator",
-    text: "pyahu new will create a service that already follows the guides: sized for containers, observability wired, Kubernetes manifests and CI included, in the architecture you choose.",
-    href: "#roadmap",
-    link: "See the roadmap",
+    text: "Generate a hexagonal or DDD layered service with optional PostgreSQL, OIDC and Next.js, plus observability, Kubernetes manifests and CI. All 16 supported combinations are built and smoke-tested.",
+    href: "https://github.com/pyahu/initializer/tree/main/services/start",
+    link: "See the generator",
   },
 ] as const;
 
@@ -87,32 +88,32 @@ const modules = [
 const anatomy = [
   { title: "Questions first", text: "The top of each guide lists the questions it answers. Click one and you land on the answer." },
   { title: "One step per question", text: "Each step starts with the answer in short, then what goes wrong, what to do and when the advice is not for you." },
-  { title: "Put it all together", text: "Files to copy with a short explanation, cut from a real service that is built and run on every change." },
+  { title: "Put it all together", text: "Files to copy with explanations, fixture-backed recipe excerpts and clearly stated evidence gaps." },
   { title: "Checklist", text: "Short items with stable IDs, to review a service against the guide." },
 ];
 
 const proof = [
-  { title: "Exact versions", text: "Each guide is written for one baseline: a frozen list of versions, such as Java 25 and Spring Boot 4.1.1. The reference page lists them with the official docs for each." },
-  { title: "A real service behind the code", text: "Code in a guide comes from a small service in the repository. CI builds it and runs it on every change, so an upgrade that breaks the advice turns CI red first." },
+  { title: "Exact versions", text: "Each guide names its frozen list of versions. The reference page lists the active revision with its official docs." },
+  { title: "A real service behind the code", text: "Fixture recipes are built and exercised in CI. The generator matrix separately builds and starts every supported project combination." },
   { title: "Evidence for each claim", text: "Every claim has a record. Tested claims name their test, command, result and CI run. Claims based on documentation or design reasoning are marked not exercised, with the reason." },
-  { title: "Kept current", text: "Renovate watches every dependency. New versions arrive as a new baseline and pass the same tests before any guide moves to it." },
+  { title: "Kept current", text: "Renovate watches configured dependencies and tooling. Baseline changes pass their required checks, and each guide keeps its own evidence scope." },
   { title: "Coverage visible in every guide", text: "Each guide shows how many claims were compiled, reproduced or measured, and how many have not been exercised. A successful build proves only the checks that actually ran." },
 ];
 
 const roadmap = [
-  { when: "Now", text: "24 guides in six parts, from the first build to Kubernetes, messaging and a Next.js frontend." },
-  { when: "Next", text: "Generator v0.1: one service, hexagonal or DDD layered, REST with PostgreSQL, OIDC, OpenTelemetry, Kustomize and CI." },
-  { when: "Later", text: "The generator grows with the guides: monorepos, JPA and jOOQ, gRPC, Kafka, RabbitMQ, Valkey and Next.js, each once its tested service exists." },
+  { when: "Now", text: `24 guides in six parts and a generator preview in the repository, on baseline ${guideData.active}.` },
+  { when: "Next", text: "Broader fixture evidence and operational tests for the existing recommendations, including cluster behavior under load." },
+  { when: "Later", text: "The generator grows with the guides: monorepos, JPA and jOOQ, gRPC, Kafka, RabbitMQ and Valkey, with corresponding guides and tests." },
 ];
 ---
 
-<LandingLayout title="Pyahu Initializer" description="A knowledge base for production Java with Spring Boot and Next.js and a generator for production-ready projects.">
+<LandingLayout title="Pyahu Initializer" description="A knowledge base for production Java with Spring Boot and Next.js and a generator for tested starter projects.">
   <section class="hero">
     <div class="hero-grid">
       <div class="hero-content">
         <p class="eyebrow"><span class="signal"></span>Java · Spring Boot · Next.js · Kubernetes</p>
         <h1>Production Java, explained. <span>Then generated.</span></h1>
-        <p class="hero-copy">Pyahu Initializer is a modern knowledge base for building applications with Spring Boot and Next.js and a generator that starts new projects at production quality, following the same guides.</p>
+        <p class="hero-copy">Pyahu Initializer is a modern knowledge base for building applications with Spring Boot and Next.js and a generator that starts projects with documented defaults, build checks and smoke tests.</p>
         <div class="hero-actions">
           <a class="button primary" href="/guides/">Read the guides <Icon name="arrow" size={18} /></a>
           <a class="button quiet" href="#what">What it is</a>
@@ -208,7 +209,7 @@ const roadmap = [
     <div class="section-heading">
       <p class="eyebrow">Roadmap</p>
       <h2 id="roadmap-title">Guides first, then the generator.</h2>
-      <p class="section-lead">Every option gets its guide and a tested service before the generator offers it. No dates are promised.</p>
+      <p class="section-lead">Supported combinations pass the generator matrix. New options need their guide and corresponding tests. No dates are promised.</p>
     </div>
     <div class="proof-grid">
       {roadmap.map((r) => (

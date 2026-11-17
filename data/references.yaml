@@ -4752,3 +4752,263 @@ entries:
     jep: null
     llms: null
     baselines: [ v0.1-b2 ]
+  - id: next-server-client
+    title: Server and Client Components
+    component: null
+    docVersion: 16.x
+    match: none
+    kind: reference
+    area: frontend
+    url: https://nextjs.org/docs/app/getting-started/server-and-client-components
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: Component boundaries and the server-only import guard.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2
+  - id: next-data-security
+    title: Next.js data security
+    component: null
+    docVersion: 16.x
+    match: none
+    kind: reference
+    area: frontend
+    url: https://nextjs.org/docs/app/guides/data-security
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: Server Actions authorization, server-only modules and secret handling.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2
+  - id: next-environment
+    title: Next.js environment variables
+    component: null
+    docVersion: 16.x
+    match: none
+    kind: reference
+    area: frontend
+    url: https://nextjs.org/docs/app/guides/environment-variables
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: Build-time public substitution and server-side runtime settings.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2
+  - id: next-self-hosting
+    title: Self-hosting Next.js
+    component: null
+    docVersion: 16.x
+    match: none
+    kind: reference
+    area: frontend
+    url: https://nextjs.org/docs/app/guides/self-hosting
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: Image promotion, multi-instance deployment identity and encryption keys.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2
+  - id: next-standalone
+    title: Next.js output and standalone tracing
+    component: null
+    docVersion: 16.x
+    match: none
+    kind: reference
+    area: frontend
+    url: https://nextjs.org/docs/app/api-reference/config/next-config-js/output
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: The traced runtime subset and separately copied public/static assets.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2
+  - id: next-cache-components-handlers
+    title: Next.js cacheHandlers
+    component: null
+    docVersion: 16.x
+    match: none
+    kind: reference
+    area: frontend
+    url: https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheHandlers
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: Cache Components handler API, including remote storage and tag coordination.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2
+  - id: next-use-cache-remote
+    title: "Next.js use cache: remote"
+    component: null
+    docVersion: 16.x
+    match: none
+    kind: reference
+    area: frontend
+    url: https://nextjs.org/docs/app/api-reference/directives/use-cache-remote
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: Choosing shared remote caching and its operational tradeoffs.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2
+  - id: next-csp
+    title: Next.js Content Security Policy
+    component: null
+    docVersion: 16.x
+    match: none
+    kind: reference
+    area: frontend
+    url: https://nextjs.org/docs/app/guides/content-security-policy
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: Per-request nonces and rendering requirements.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2
+  - id: next-headers
+    title: Next.js response headers
+    component: null
+    docVersion: 16.x
+    match: none
+    kind: reference
+    area: frontend
+    url: https://nextjs.org/docs/app/api-reference/config/next-config-js/headers
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: Configuring headers by path.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2
+  - id: openapi-typescript
+    title: openapi-typescript
+    component: null
+    docVersion: unversioned
+    match: none
+    kind: reference
+    area: frontend
+    url: https://openapi-ts.dev/introduction
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: Generating TypeScript definitions from OpenAPI.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2
+  - id: openapi-fetch
+    title: openapi-fetch
+    component: null
+    docVersion: unversioned
+    match: none
+    kind: reference
+    area: frontend
+    url: https://openapi-ts.dev/openapi-fetch/
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: Typed calls using generated OpenAPI definitions.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2
+  - id: vercel-otel
+    title: Vercel OpenTelemetry library
+    component: null
+    docVersion: unversioned
+    match: none
+    kind: reference
+    area: frontend
+    url: https://github.com/vercel/otel
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: Frontend instrumentation and fetch context propagation.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2
+  - id: better-auth-generic-oauth
+    title: Better Auth generic OAuth plugin
+    component: null
+    docVersion: unversioned
+    match: none
+    kind: reference
+    area: frontend
+    url: https://www.better-auth.com/docs/plugins/generic-oauth
+    pinned: false
+    pinNote: Official documentation may follow newer patches. Exact frontend package pins live in lockfiles; this reference does not confer fixture qualification.
+    purpose: The generated frontend login integration.
+    guides:
+      - nextjs
+    appliesWhen:
+      frontend:
+        - nextjs
+    jep: null
+    llms: null
+    baselines:
+      - v0.1-b2

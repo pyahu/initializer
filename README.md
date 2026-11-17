@@ -1,7 +1,7 @@
 # Pyahu Initializer
 
 Guides with the production practices Pyahu follows for Spring Boot, Java and Next.js, shared with the community.
-A generator that applies them comes later. Each step answers one question with the failure it prevents.
+A preview generator implements the supported starting projects. Each guide step answers one question with the failure it prevents.
 The guides are a public preview: each claim has an evidence record, and each guide shows which claims have
 test results and which have not been exercised.
 
@@ -19,6 +19,10 @@ writes an evidence report. Every claim a guide makes has a record in `data/evide
 commit when it has been tested. A claim nothing proves yet says why. The coverage summary at the top of each
 guide distinguishes compiled code, reproduced behaviour, measurements and claims not exercised here.
 
+The generator has a separate check: the Start workflow builds all 16 combinations of architecture, PostgreSQL,
+OIDC and Next.js, runs their own generated CI and tests the form in a browser. These checks cover the generated
+paths; individual guide claims keep their own evidence scope. See the limitations in each evidence record.
+
 ## Layout
 
 | Path | What |
@@ -35,13 +39,15 @@ guide distinguishes compiled code, reproduced behaviour, measurements and claims
 
 ## Quick start
 
+Run these from the repository root, starting each server in its own terminal:
+
 ```sh
 go run ./cmd/guidekit check            # data, guides, cross-references
-cd guides && npm ci && npm run dev     # the site at http://localhost:4321 (Node 24.22.3)
-./gradlew :start:bootRun               # the generator, in development
+npm --prefix guides ci && npm --prefix guides run dev     # the site at http://localhost:4321 (Node 24.22.3)
+./gradlew :start:bootRun               # the generator preview
 curl localhost:8080/starter.zip -d name=orders -o orders.zip
 curl localhost:8080/starter.zip -d name=orders -d database=postgres -d auth=oidc -d frontend=nextjs -o orders.zip
-cd frontends/start-web && npm ci && npm run dev   # the page at http://localhost:3001, against the generator
+npm --prefix frontends/start-web ci && npm --prefix frontends/start-web run dev   # the page at http://localhost:3001, against the generator
 ```
 
 ## License

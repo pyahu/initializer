@@ -100,4 +100,4 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Taken from the current Renovate documentation; the baseline pins Renovate 44.166.0 and the presets were not checked against that release."
-  reason: "This repository has no Renovate configuration yet."
+  reason: "The repository and generated projects configure Renovate. No qualified fixture test verifies update scheduling and action-digest updates."

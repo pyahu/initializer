@@ -145,4 +145,4 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "From the Renovate 44.166.0 documentation for the gradle and gradle-wrapper managers."
-  reason: "The example service has no Renovate configuration and no test runs Renovate."
+  reason: "Renovate configurations exist in the repository and generated projects. The qualified fixture does not run dependency extraction and update PR creation."

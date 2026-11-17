@@ -5,7 +5,7 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Read from the Spring Boot 4.1.2 decoder configuration and Spring Security 7.1.1 validators in the source guide."
-  reason: "The example service has no Spring Security yet, so no test sends tokens to it."
+  reason: "Generated OIDC smoke tests reject unauthenticated requests and accept the intended token. No qualified fixture tests the complete issuer/audience failure matrix."
 - id: ev-sec-token-audience-2
   card: sec-token-audience
   claim: "With issuer-uri set, Boot 4.1 resolves the discovery document and signing keys on the first request, not at startup."
@@ -26,7 +26,7 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Documented Spring Security behaviour."
-  reason: "The example service has no Spring Security yet."
+  reason: "Generated projects include Spring Security when OIDC is selected. No qualified fixture exhaustively checks route and method authorization defaults."
 - id: ev-sec-deny-default-2
   card: sec-deny-default
   claim: "A catch-all exception handler that does not rethrow AccessDeniedException turns a denied call into a 500."
@@ -40,7 +40,7 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Documented Spring Security behaviour."
-  reason: "The example service has no Spring Security yet."
+  reason: "Generated OIDC projects configure API security. No qualified fixture verifies CSRF and CORS for the browser/session combinations in this claim."
 - id: ev-sec-headers-1
   card: sec-headers
   claim: "Spring Security sends HSTS only when the request is secure, so behind a TLS ingress HSTS needs trusted forwarded headers."
@@ -54,7 +54,7 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Read from the Boot 4.1.2 configuration metadata in the source guide."
-  reason: "Needs a cluster; no cluster test runs yet."
+  reason: "No automated ingress test verifies edge headers; static manifest validation does not establish the behavior of a deployed edge."
 - id: ev-sec-errors-1
   card: sec-errors
   claim: "In Spring Boot 4.1 the spring.web.error defaults hide the stack trace, the message and binding errors; spring.mvc.problemdetails.enabled defaults to false."
@@ -93,7 +93,7 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "The source guide checked its manifest with kubeconform only."
-  reason: "Needs a cluster; no cluster test runs yet."
+  reason: "CI validates restricted pod settings. No automated cluster test with an enforcing CNI proves network isolation and API access restrictions."
 - id: ev-sec-pod-hardening-3
   card: sec-pod-hardening
   claim: "A default-deny NetworkPolicy with explicit allows blocks the metadata service at 169.254.169.254."
@@ -113,5 +113,5 @@
   claim: "The HTTP client builders in Spring Boot 4.1.2 build their TLS setup once, so a renewed client certificate is used only after the pod restarts."
   badge: not-exercised
   baseline: v0.1-b2
-  limitations: "The source guide reproduced this against the Boot 4.1.2 jars; this repository has not."
+  limitations: "The source guide reports a reproduction against Boot 4.1.1 jars. This repository has no mTLS reproduction for baseline v0.1-b2."
   reason: "The example service makes no outbound call; no mTLS test runs yet."

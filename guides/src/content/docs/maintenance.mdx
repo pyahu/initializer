@@ -3,6 +3,7 @@ title: How we keep it current
 description: How the guides, their versions, their links and the generator stay up to date and the steps we follow to do it.
 tableOfContents: { maxHeadingLevel: 2 }
 ---
+import guideData from '../../generated/guides.json';
 
 Production advice ages fast. A default changes in a minor release, a library moves, a link starts pointing to
 the wrong version. A guide that was right last year can quietly turn wrong.
@@ -14,23 +15,25 @@ these steps and everything they mention is public, from the versions to the test
 
 | What | How we notice | What we do |
 | ---- | ------------- | ---------- |
-| Versions | Renovate watches every dependency | Tooling updates merge on their own pull request. The versions the guides are written for change together in a new baseline revision. |
+| Versions | Renovate watches configured package managers and pinned tooling | Tooling updates merge on their own pull request. The versions the guides are written for change together in a new baseline revision. |
 | Advice | A guide's components change or someone reports a problem | The guide shows "Re-verify" until we read it again and the tests pass. |
 | Links to official docs | A check on every change and every Monday | We fix the link or record an exception that expires. |
-| The generator (planned) | It follows the baseline | A generator release ships only versions the guides were proven on. |
+| The generator preview | Its workflow builds every supported combination | The generated CI checks the build, manifests, images and smoke paths; fixture reports qualify individual guide claims. |
 
 ## The baseline: one frozen list of versions
 
-Every guide is written for a **baseline revision**: a list of exact versions such as Java 25 and Spring Boot
-4.1.1, kept in [`data/versions.yaml`](https://github.com/pyahu/initializer/blob/main/data/versions.yaml). Today it
-is `v0.1-b1`.
+Every guide is written for a **baseline revision**, a list of exact versions kept in
+[`data/versions.yaml`](https://github.com/pyahu/initializer/blob/main/data/versions.yaml).
+The active revision is **{guideData.active}**.
 
 A revision never changes once it is published. New versions arrive as a new revision appended to the list, so
 every guide always says which versions it was checked against. Each version in a revision also carries how well
 the tests cover it: **qualified** when every claim about it has a passing test, **partial** when some do and
 **provisional** when none do yet.
 
-The [reference docs](/reference/docs/) list the active revision with the official documentation for each version.
+The [reference docs](/reference/docs/) list the active platform revision with its official documentation. Frontend
+packages and auxiliary tooling have additional exact pins in lockfiles, Dockerfiles and workflows. The generator
+matrix checks those combinations; the Java fixture report does not qualify every frontend dependency.
 
 ## Updates we take right away
 
@@ -52,21 +55,24 @@ So Renovate does not open pull requests for them. It lists them on the
 an issue it keeps up to date. The same applies to the Go and Node.js toolchains, which are pinned in several
 files at once. We cut a new revision when enough has piled up or when one update matters.
 
-**Security fixes do not wait.** Renovate opens a pull request for them right away. It fails CI on purpose and
-that is the signal to cut a revision with the fix.
+**Security fixes do not wait.** Available Renovate vulnerability alerts bypass the ordinary release-age delay.
+CI also blocks fixable HIGH/CRITICAL vulnerabilities in built images and runs the frontend npm audit. A baseline
+security update needs consistent pins and passing checks before it can ship. Scanning deployed registry digests
+on a schedule remains an operational prerequisite for each adopting team.
 
 ## Cutting a new revision
 
 These are the steps we follow, in order.
 
 1. **Pick the updates** from the Dependency Dashboard. Read the release notes of each one.
-2. **Append the revision** to `data/versions.yaml`, for example `v0.1-b2`, with the new versions and image
-   digests. Make it `active`.
+2. **Save the previous proof** in `data/history/<baseline>/<fixture>/`: its fixture manifest, evidence files and
+   real passing CI report. Append a new revision to `data/versions.yaml`, with updated versions and image digests,
+   and make it `active`. Its qualification starts provisional.
 3. **Update the services** to the same versions: the fixtures in `fixtures/` and the Initializer's own build
    (`gradle/libs.versions.toml`, the Gradle wrapper and each Dockerfile).
-4. **Run the tests.** The fixture workflow builds the service and its image, runs every behaviour test and fails
-   if any resolved version differs from the revision. Then `guidekit qualify` records how well each version is
-   covered.
+4. **Run both test tracks.** The fixture workflow checks its required tests and resolved pins. The Start workflow
+   builds and runs all 16 supported project combinations and the frontend browser tests. Use the real fixture
+   report with `guidekit qualify`; saved reports preserve older revisions independently.
 5. **Read every guide that shows "Re-verify".** It lists the components that changed. Check each step that
    depends on them, fix the text and the version numbers, then move the guide's `baseline` forward and record
    the run that verified it.
@@ -105,9 +111,15 @@ and [`data/audit-exceptions.yaml`](https://github.com/pyahu/initializer/blob/mai
 
 ## The generator
 
-The generator is still being built. It will produce the same code as the services that prove the guides, so a new
-project starts on a baseline that passed every test here. Each generator release will follow a baseline revision
-and no option will reach it before its guide and its tested service exist.
+The preview generator is implemented in `services/start/` with its page in `frontends/start-web/`. It supports
+hexagonal and DDD layered services, REST, optional PostgreSQL, OIDC and Next.js. Its workflow generates all 16
+combinations and runs each generated project's CI, including strict manifest checks, vulnerability scans and smoke
+tests. The fixture report separately records the claims it has exercised; passing the matrix does not qualify
+every operational recommendation in the guides.
+
+Site publication requires successful Guides, Links, fixture and Start workflows for the relevant source inputs.
+The publication check rejects pending, failed or superseded candidates. Publishing and operating a customer's
+service still requires its real image registry, environment settings, database roles, Secrets and deployment pipeline.
 
 A project you generate is yours from then on. Keep it current with Renovate in your own repository, as the
 [build quality guide](/guides/build-quality/) shows.

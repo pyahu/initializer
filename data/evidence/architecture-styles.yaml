@@ -33,7 +33,7 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "From the Domain-Driven Design Reference, 2015, Layered Architecture."
-  reason: "No DDD layered fixture exists yet."
+  reason: "The generator matrix builds DDD layered variants. The qualified fixture inventory has no focused test for this complete architectural claim."
 - id: ev-style-vertical-slice-1
   card: style-vertical-slice
   claim: "Vertical slice architecture minimises coupling between slices and maximises coupling inside a slice."

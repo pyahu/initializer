@@ -185,8 +185,10 @@ leaves the others serving the old copy.
 3. After a write, call `updateTag` in the Server Action when the user must see the change at once. Call
    `revalidateTag(tag, 'max')` when slightly stale data is fine. The one argument form of `revalidateTag` is
    deprecated in Next.js 16.
-4. With more than one pod, configure a shared cache handler (Redis, for example) or accept per pod caches with a
-   short lifetime.
+4. If cached data must be shared across pods, use `'use cache: remote'` with a `cacheHandlers.remote`
+   implementation backed by shared storage and coordinated tag invalidation. The older `cacheHandler` option
+   serves a different cache API; it does not by itself share Cache Components entries. Per-pod caches with a short
+   lifetime are an explicit alternative when stale copies are acceptable.
 
 ### When this is not for you
 
@@ -312,8 +314,8 @@ file exists for it yet, so these are lists.
 - `API_BASE_URL`, the identity provider settings and `OTEL_EXPORTER_OTLP_ENDPOINT` as environment variables
   (steps 3, 4 and 8).
 - Probes on the `livez` route handler and a grace period that covers the slowest request (step 6).
-- With several replicas: the same Server Actions encryption key at build time, a `deploymentId` and a shared cache
-  handler if you cache (steps 5 and 6).
+- Each release's `deploymentId` is embedded during the image build. Apps with Server Actions coordinate their
+  build-time encryption key; apps sharing cached data coordinate the remote cache and tag invalidation (steps 5 and 6).
 
 ## Checklist
 
@@ -335,7 +337,7 @@ file exists for it yet, so these are lists.
 
 ### Deployment prerequisites
 
-- **NEXT-08** With more than one replica, cached data uses a shared cache handler or a short lifetime per pod. (step 5; when frontend: nextjs)
+- **NEXT-08** When cached data must be shared across replicas, Cache Components uses cacheHandlers.remote with shared storage and tag coordination; per-pod caches require an explicit tolerance for staleness. (step 5; when frontend: nextjs)
 - **NEXT-10** Probes point at a route handler that returns 200 and the grace period covers the slowest request; each frontend release embeds a unique deploymentId, and apps with Server Actions coordinate their build-time encryption key. (step 6; when frontend: nextjs)
 
 ## References
@@ -347,3 +349,16 @@ file exists for it yet, so these are lists.
 - [OpenAPI Specification v3.1.2 (latest 3.1 patch)](https://spec.openapis.org/oas/v3.1.2.html) (3.1.2)
 - [OpenID Connect Core 1.0 (errata set 2)](https://openid.net/specs/openid-connect-core-1_0.html) (final)
 - [RFC 9700 OAuth 2.0 Security BCP](https://www.rfc-editor.org/rfc/rfc9700.html) (final)
+- [Server and Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components) (16.x, not version-pinned): Component boundaries and the server-only import guard.
+- [Next.js data security](https://nextjs.org/docs/app/guides/data-security) (16.x, not version-pinned): Server Actions authorization, server-only modules and secret handling.
+- [Next.js environment variables](https://nextjs.org/docs/app/guides/environment-variables) (16.x, not version-pinned): Build-time public substitution and server-side runtime settings.
+- [Self-hosting Next.js](https://nextjs.org/docs/app/guides/self-hosting) (16.x, not version-pinned): Image promotion, multi-instance deployment identity and encryption keys.
+- [Next.js output and standalone tracing](https://nextjs.org/docs/app/api-reference/config/next-config-js/output) (16.x, not version-pinned): The traced runtime subset and separately copied public/static assets.
+- [Next.js cacheHandlers](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheHandlers) (16.x, not version-pinned): Cache Components handler API, including remote storage and tag coordination.
+- [Next.js use cache: remote](https://nextjs.org/docs/app/api-reference/directives/use-cache-remote) (16.x, not version-pinned): Choosing shared remote caching and its operational tradeoffs.
+- [Next.js Content Security Policy](https://nextjs.org/docs/app/guides/content-security-policy) (16.x, not version-pinned): Per-request nonces and rendering requirements.
+- [Next.js response headers](https://nextjs.org/docs/app/api-reference/config/next-config-js/headers) (16.x, not version-pinned): Configuring headers by path.
+- [openapi-typescript](https://openapi-ts.dev/introduction) (unversioned, not version-pinned): Generating TypeScript definitions from OpenAPI.
+- [openapi-fetch](https://openapi-ts.dev/openapi-fetch/) (unversioned, not version-pinned): Typed calls using generated OpenAPI definitions.
+- [Vercel OpenTelemetry library](https://github.com/vercel/otel) (unversioned, not version-pinned): Frontend instrumentation and fetch context propagation.
+- [Better Auth generic OAuth plugin](https://www.better-auth.com/docs/plugins/generic-oauth) (unversioned, not version-pinned): The generated frontend login integration.

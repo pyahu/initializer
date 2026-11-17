@@ -3,6 +3,7 @@ title: Why it exists
 description: The problem the Pyahu Initializer solves, why the guides come before the generator, why every version is pinned and what the project is not.
 tableOfContents: { maxHeadingLevel: 2 }
 ---
+import guideData from '../../generated/guides.json';
 
 Starting a Spring Boot service takes a minute. Getting it ready for production takes months. Most of what that
 takes is learned in incidents: a pod killed for memory, a rollout that drops requests, a pool that runs
@@ -29,7 +30,7 @@ Two parts with one standard behind them.
 
 - **[The guides](/guides/)** explain how a production service should be built and why. Each one answers a few
   questions with one step per question and ends with files to copy and a checklist with stable IDs.
-- **The generator**, still in development, will start a new project that already follows the guides.
+- **The generator preview** in the repository starts a service in hexagonal or DDD layered style, with optional PostgreSQL, OIDC and a Next.js frontend, following the corresponding guides.
 
 The guides also come as an
 [Agent Skill](https://github.com/pyahu/initializer/tree/main/skills) and as `llms.txt`, so AI coding tools
@@ -40,25 +41,25 @@ follow the same practices your team reads.
 Code you do not understand is code you cannot run at three in the morning. A generator that hands you a
 finished project without the reasons behind it saves a day and costs you the first incident.
 
-So the generator is a shortcut: it skips the wiring, not the understanding. Every option follows the same
-order. First its guide, then a real service that proves the guide and only then the generator option that
-produces it. Nothing reaches the generator before the other two exist.
+The guides explain the choices a generated project makes. Every supported combination is generated, built and
+smoke-tested by its own workflow. The fixture tests separately qualify named claims about the baseline. A guide
+can also discuss a pattern that the generator does not offer; its evidence record makes that scope explicit.
 
 ## Why every version is pinned
 
 Advice is only true for a version. "Set this timeout" depends on the default it replaces and defaults move.
 "Use the latest" cannot be tested, because the latest changes while the test runs.
 
-So every guide is written for a **baseline**: a frozen list of exact versions, such as Java 25 and Spring Boot
-4.1.1. A claim can then point to the test that checked it on exactly those versions. The cost is that we trail
+Every guide names a **baseline**, a frozen list of exact versions. The active revision is **{guideData.active}**.
+A claim can then point to the test that checked it on those versions. The cost is that we trail
 the newest release by days or weeks. Security fixes do not wait; [How we keep it current](/maintenance/)
 explains how a new baseline is cut.
 
 ## Why a real service and tests
 
-Example code rots when nothing runs it. The code in the guides is cut from a small service in the repository.
-CI builds it, builds its image and runs behaviour tests against it on every change, so an upgrade that breaks
-the advice turns CI red before it reaches a reader.
+Executable recipe excerpts come from fixture files whose anchors are checked. CI builds the fixture image and
+runs its required behaviour tests. The generator matrix checks the supported project combinations. Other examples
+and recommendations are grounded in official documentation or engineering judgment and retain their stated gaps.
 
 Every claim has an evidence record. Tested claims name the test, its command, result and CI run. Others are
 based on the official documentation or design reasoning and say "not exercised", with the reason.
@@ -74,7 +75,7 @@ That last part matters. Advice has limits and a guide that hides them gets appli
 
 ## Your choices stay yours
 
-- **The architecture is your choice.** The generator will offer hexagonal and DDD layered and the guides
+- **The architecture is your choice.** The generator offers hexagonal and DDD layered and the guides
   compare the other styles honestly, even the ones it does not generate.
 - **The generated project is plain.** Spring Boot, Gradle and Kubernetes, with no runtime library of ours
   inside. It does not need Pyahu to build or to run.

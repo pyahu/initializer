@@ -108,7 +108,8 @@
             "dependencies",
             "static-analysis",
             "messaging",
-            "cache"
+            "cache",
+            "frontend"
           ]
         },
         "url": {

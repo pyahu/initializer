@@ -5,7 +5,7 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Engineering judgment. There is no measurement behind it."
-  reason: "A recommendation about team structure; no test can prove it. The repository has no monorepo example yet."
+  reason: "This repository contains a Gradle monorepo. The team-ownership recommendation is engineering judgment rather than a testable runtime property."
 - id: ev-mono-boundaries-rule-1
   card: mono-boundaries-rule
   claim: "Services in one repository depend only on contracts and generated client projects, never on another service's project."
@@ -26,21 +26,21 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Taken from the Gradle 9.8.1 best practices and composite builds documentation."
-  reason: "The example service is a single project without build-logic."
+  reason: "The repository implements and tests build-logic. No qualified fixture measures the claimed buildSrc versus included-build invalidation behavior."
 - id: ev-mono-catalog-1
   card: mono-catalog
   claim: "An included build-logic build reads the root version catalog by importing gradle/libs.versions.toml with from(files(...)) in its settings, and convention plugins read it through VersionCatalogsExtension."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Taken from the Gradle 9.8.1 version catalog documentation, which shows the import for buildSrc."
-  reason: "The example service has a catalog but no build-logic build that imports it."
+  reason: "The repository imports the root catalog into build-logic. No focused qualified fixture verifies the entire convention-plugin/catalog contract."
 - id: ev-mono-one-service-1
   card: mono-one-service
   claim: "Including a nested project by its full path creates empty parent projects; a flat name with an explicit projectDir avoids them."
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Taken from the Gradle 9.8.1 best practices for structuring builds."
-  reason: "The example service is a single project; no nested service is included."
+  reason: "The repository maps the start project to services/start. No focused qualified fixture compares this with empty nested parent projects."
 - id: ev-mono-ci-1
   card: mono-ci
   claim: "A workflow skipped by a path filter leaves its required check pending and blocks the pull request, so the only required check is a gate job in a workflow that always runs."
@@ -54,4 +54,4 @@
   badge: not-exercised
   baseline: v0.1-b2
   limitations: "Stated as a rule. No multi-service image build exists here."
-  reason: "The example service is a single service with one image."
+  reason: "The repository builds backend and frontend images. No qualified fixture proves independent releases and promotion for several backend services."

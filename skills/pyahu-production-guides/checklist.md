@@ -360,7 +360,7 @@ explains why it matters. Items with a "when" apply only to services that use tha
 - [ ] **NEXT-05** Every Server Action and every data access function checks the user itself, not only proxy.ts. (step 3; when auth: true; frontend: nextjs)
 - [ ] **NEXT-06** One image is promoted across environments; no environment specific value uses the NEXT_PUBLIC_ prefix. (step 4; when frontend: nextjs)
 - [ ] **NEXT-07** Nothing that depends on the user's session is cached in a shared cache; cached reads have a tag and a lifetime. (step 5; when frontend: nextjs)
-- [ ] **NEXT-08** With more than one replica, cached data uses a shared cache handler or a short lifetime per pod. (step 5; when frontend: nextjs)
+- [ ] **NEXT-08** When cached data must be shared across replicas, Cache Components uses cacheHandlers.remote with shared storage and tag coordination; per-pod caches require an explicit tolerance for staleness. (step 5; when frontend: nextjs)
 - [ ] **NEXT-09** The image is built with output: 'standalone', copies only .next/standalone, .next/static and public, runs as the node user and starts with CMD ["node", "server.js"]. (step 6; when frontend: nextjs)
 - [ ] **NEXT-10** Probes point at a route handler that returns 200 and the grace period covers the slowest request; each frontend release embeds a unique deploymentId, and apps with Server Actions coordinate their build-time encryption key. (step 6; when frontend: nextjs)
 - [ ] **NEXT-11** next.config.js sets nosniff, a referrer policy, frame denial and HSTS on every path, poweredByHeader is false and a Content Security Policy is in place. (step 7; when frontend: nextjs)

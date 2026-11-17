@@ -209,8 +209,10 @@ leaves the others serving the old copy.
 3. After a write, call `updateTag` in the Server Action when the user must see the change at once. Call
    `revalidateTag(tag, 'max')` when slightly stale data is fine. The one argument form of `revalidateTag` is
    deprecated in Next.js 16.
-4. With more than one pod, configure a shared cache handler (Redis, for example) or accept per pod caches with a
-   short lifetime.
+4. If cached data must be shared across pods, use `'use cache: remote'` with a `cacheHandlers.remote`
+   implementation backed by shared storage and coordinated tag invalidation. The older `cacheHandler` option
+   serves a different cache API; it does not by itself share Cache Components entries. Per-pod caches with a short
+   lifetime are an explicit alternative when stale copies are acceptable.
 
 ### When this is not for you
 
@@ -342,8 +344,8 @@ file exists for it yet, so these are lists.
 - `API_BASE_URL`, the identity provider settings and `OTEL_EXPORTER_OTLP_ENDPOINT` as environment variables
   (steps 3, 4 and 8).
 - Probes on the `livez` route handler and a grace period that covers the slowest request (step 6).
-- With several replicas: the same Server Actions encryption key at build time, a `deploymentId` and a shared cache
-  handler if you cache (steps 5 and 6).
+- Each release's `deploymentId` is embedded during the image build. Apps with Server Actions coordinate their
+  build-time encryption key; apps sharing cached data coordinate the remote cache and tag invalidation (steps 5 and 6).
 
 ## Checklist
 
