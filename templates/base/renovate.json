@@ -14,10 +14,11 @@
       "groupName": "Error Prone"
     },
     {
-      "description": "The JDK and JRE images move together, so the AOT cache keeps matching the runtime.",
+      "description": "Keep JDK and JRE on Java 25 and update them together; feature upgrades need a deliberate toolchain change.",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["eclipse-temurin"],
-      "groupName": "Temurin images"
+      "groupName": "Temurin images",
+      "allowedVersions": "/^25[.]/"
     }
   ]
 }

@@ -132,7 +132,10 @@ pull request when its digest changes. The tag says what you meant; the digest sa
 
 1. Write every base image as `tag@sha256:digest`, in plain `FROM` lines the bots can read.
 2. Turn on digest updates: Renovate with `docker:pinDigests` or Dependabot with `package-ecosystem: docker`.
-3. Block JDK major bumps (Renovate `allowedVersions: "<26"`), so leaving Java 25 is a deliberate change.
+3. Keep the Temurin image rule on Java 25 with Renovate `allowedVersions: "/^25[.]/"`, matching the pinned
+   patch tags. Keep the Java versioning rules inherited from `config:recommended`, so numeric build suffixes
+   remain eligible for updates and JDK/JRE and OS variants stay separate. Update the image rule and Gradle
+   toolchain together when deliberately moving to another Java feature release.
 4. Deploy by digest too: the Deployment, the migration Job and every CronJob use the digest CI pushed, never a tag.
 5. Pin GitHub Actions by commit SHA.
 
