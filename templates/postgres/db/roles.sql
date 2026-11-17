@@ -18,6 +18,9 @@ ALTER DEFAULT PRIVILEGES FOR ROLE [[dbName]]_migrator IN SCHEMA [[dbName]]
 ALTER DEFAULT PRIVILEGES FOR ROLE [[dbName]]_migrator IN SCHEMA [[dbName]]
     GRANT USAGE, SELECT ON SEQUENCES TO [[dbName]]_app;
 
+-- The first Liquibase changeset removes INSERT/UPDATE/DELETE on DATABASECHANGELOG and DATABASECHANGELOGLOCK
+-- from the runtime role after those tables exist. SELECT remains available for migration readiness.
+
 -- Server side timeouts on every connection of the runtime role (step 3).
 ALTER ROLE [[dbName]]_app IN DATABASE :"DBNAME" SET search_path = [[dbName]];
 ALTER ROLE [[dbName]]_app IN DATABASE :"DBNAME" SET statement_timeout = '15s';

@@ -89,7 +89,7 @@ explains why it matters. Items with a "when" apply only to services that use tha
 - [ ] **DB-03** connection-timeout between 2000 and 5000 ms, max-lifetime below every connection age cap, keepalive-time below network idle timeouts, leak-detection-threshold set. (step 2; when database: postgres)
 - [ ] **DB-04** spring.transaction.default-timeout and spring.jdbc.template.query-timeout set. (step 3; when database: postgres)
 - [ ] **DB-05** Runtime role has statement_timeout and idle_in_transaction_session_timeout. (step 3; when database: postgres)
-- [ ] **DB-06** Separate migration and runtime users; the runtime user cannot change the schema. (step 4; when database: postgres)
+- [ ] **DB-06** Separate migration and runtime users; the runtime user cannot change the schema or write Liquibase history/lock tables, and can read history for readiness. (step 4; when database: postgres)
 - [ ] **DB-07** Migrations run in a Job before the rollout; the application sets spring.liquibase.enabled to false. (step 5; when database: postgres)
 - [ ] **DB-08** Every schema change reviewed as expand and contract; no rename or drop in the same release as the code change. (step 7; when database: postgres)
 - [ ] **DB-09** Transactional changesets start with SET LOCAL lock_timeout; changesets that ran are never edited. (step 7; when database: postgres)

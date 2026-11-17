@@ -231,6 +231,10 @@ the runtime user failed with `must be owner of table orders`.
 
 2. Give the application only the runtime user's credentials.
 3. Give the migration user's credentials only to whatever runs migrations (step 5).
+4. Exclude migration bookkeeping from the runtime role's writes. Default table grants also reach Liquibase's
+   history and lock tables. After Liquibase creates them, revoke `INSERT`, `UPDATE` and `DELETE` from the runtime
+   role before applying the application. Keep `SELECT` on the history table for the readiness check. The generated
+   changelog does this in its first changeset; keep these names aligned if you customize Liquibase table settings.
 
 ### When this is not for you
 

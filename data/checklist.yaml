@@ -300,7 +300,7 @@
   guide: database
   card: db-roles
   type: deployment-prerequisite
-  text: "Separate migration and runtime users; the runtime user cannot change the schema."
+  text: "Separate migration and runtime users; the runtime user cannot change the schema or write Liquibase history/lock tables, and can read history for readiness."
   claim: documented
   tests: []
   appliesWhen: {database: [postgres]}

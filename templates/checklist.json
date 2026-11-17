@@ -654,7 +654,7 @@
               "card": "db-roles",
               "step": 4,
               "type": "deployment-prerequisite",
-              "text": "Separate migration and runtime users; the runtime user cannot change the schema.",
+              "text": "Separate migration and runtime users; the runtime user cannot change the schema or write Liquibase history/lock tables, and can read history for readiness.",
               "appliesWhen": {
                 "database": [
                   "postgres"

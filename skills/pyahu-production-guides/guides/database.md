@@ -201,6 +201,10 @@ the runtime user failed with `must be owner of table orders`.
 
 2. Give the application only the runtime user's credentials.
 3. Give the migration user's credentials only to whatever runs migrations (step 5).
+4. Exclude migration bookkeeping from the runtime role's writes. Default table grants also reach Liquibase's
+   history and lock tables. After Liquibase creates them, revoke `INSERT`, `UPDATE` and `DELETE` from the runtime
+   role before applying the application. Keep `SELECT` on the history table for the readiness check. The generated
+   changelog does this in its first changeset; keep these names aligned if you customize Liquibase table settings.
 
 ### When this is not for you
 
@@ -429,7 +433,7 @@ Everything above lands in three places: the application's configuration, the dat
 
 - **DB-01** Connection budget computed: every pool times HPA maximum, surge and draining pods, plus migrations and admin, fits the user connections of each database server. (step 1; when database: postgres)
 - **DB-05** Runtime role has statement_timeout and idle_in_transaction_session_timeout. (step 3; when database: postgres)
-- **DB-06** Separate migration and runtime users; the runtime user cannot change the schema. (step 4; when database: postgres)
+- **DB-06** Separate migration and runtime users; the runtime user cannot change the schema or write Liquibase history/lock tables, and can read history for readiness. (step 4; when database: postgres)
 - **DB-13** Namespace, ServiceAccount, ConfigMaps, NetworkPolicies, database roles and Secrets exist before the migration Job; it completes before the rollout and a failed Job stops the release. (step 6; when database: postgres)
 
 ### Recurring operator tasks

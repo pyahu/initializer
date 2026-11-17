@@ -1,6 +1,16 @@
 # Applied by the migration Job with the migration role, never by the application (database guide, step 5).
 # Never edit a changeset that ran: add a new one, backward compatible with the release still running (step 7).
 databaseChangeLog:
+  # Default DML grants are for business data. Liquibase creates these tables before applying changesets;
+  # keep their SELECT grant for readiness, and reserve history/lock writes for the migration role.
+  - changeSet:
+      id: 0-protect-migration-history
+      author: [[name]]
+      changes:
+        - sql:
+            sql: >-
+              REVOKE INSERT, UPDATE, DELETE ON TABLE databasechangelog, databasechangeloglock
+              FROM [[dbName]]_app
   - changeSet:
       id: 1-ping-counter
       author: [[name]]

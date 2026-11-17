@@ -50,11 +50,11 @@
   reason: "No test runs this yet: the fixture has no database."
 - id: ev-db-roles-1
   card: db-roles
-  claim: "With the migration user owning the schema and default privileges for the runtime user, the runtime user can insert but DROP TABLE fails with must be owner of table."
+  claim: "The migration role owns the schema. The runtime role writes business data, cannot drop tables, and can read but not insert/update/delete Liquibase history or lock records."
   badge: not-exercised
   baseline: v0.1-b2
-  limitations: "Tested by the source guide on PostgreSQL 17, not in this repository."
-  reason: "No test runs this yet: the fixture has no database."
+  limitations: "Generated PostgreSQL variants run DatabaseRolesTest for business DML, denied DROP, readable history and denied history/lock writes. This guide has no linked qualified fixture report for that test."
+  reason: "The qualified fixture has no database; the generated-project matrix tests these role permissions separately."
 - id: ev-db-migrations-1
   card: db-migrations
   claim: "With spring.liquibase.enabled true, the Spring Boot default, every pod runs the changelog at startup and Liquibase serialises them with its DATABASECHANGELOGLOCK table."

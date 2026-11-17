@@ -3293,8 +3293,8 @@
             {
               "id": "ev-db-roles-1",
               "badge": "not-exercised",
-              "canonical": "Evidence ev-db-roles-1 · not exercised · baseline v0.1-b2. With the migration user owning the schema and default privileges for the runtime user, the runtime user can insert but DROP TABLE fails with must be owner of table. Limitations: Tested by the source guide on PostgreSQL 17, not in this repository.",
-              "reason": "No test runs this yet: the fixture has no database."
+              "canonical": "Evidence ev-db-roles-1 · not exercised · baseline v0.1-b2. The migration role owns the schema. The runtime role writes business data, cannot drop tables, and can read but not insert/update/delete Liquibase history or lock records. Limitations: Generated PostgreSQL variants run DatabaseRolesTest for business DML, denied DROP, readable history and denied history/lock writes. This guide has no linked qualified fixture report for that test.",
+              "reason": "The qualified fixture has no database; the generated-project matrix tests these role permissions separately."
             }
           ]
         },
@@ -3409,7 +3409,7 @@
           "id": "DB-06",
           "type": "deployment-prerequisite",
           "card": "db-roles",
-          "text": "Separate migration and runtime users; the runtime user cannot change the schema.",
+          "text": "Separate migration and runtime users; the runtime user cannot change the schema or write Liquibase history/lock tables, and can read history for readiness.",
           "claim": "documented",
           "tests": [],
           "tags": [
