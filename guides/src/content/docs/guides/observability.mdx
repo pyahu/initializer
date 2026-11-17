@@ -6,9 +6,13 @@ guide:
   id: observability
   prefix: OBS
   state: draft
-  baseline: v0.1-b1
-  components: [spring-boot, micrometer, micrometer-tracing, opentelemetry-java, opentelemetry-logback-appender, otel-lgtm-image]
-  verification: null
+  baseline: v0.1-b2
+  components: [ spring-boot, micrometer, micrometer-tracing, opentelemetry-java, opentelemetry-logback-appender, otel-lgtm-image ]
+  verification:
+    run: https://github.com/pyahu/initializer/actions/runs/43912675718/attempts/1
+    commit: f61ac7e840d9245b3ca833fa874374df26245cc0
+    date: "2026-11-16"
+    baseline: v0.1-b2
   questions:
     - id: OBS-Q1
       text: "Should I use Boot's starter or the OpenTelemetry agent?"

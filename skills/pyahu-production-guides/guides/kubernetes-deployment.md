@@ -415,7 +415,7 @@ port, while Actuator itself listens on 8081.
 
 ## References
 
-- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.1 (docs 4.1); docs 4.1)
+- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.2 (docs 4.1); docs 4.1)
 - [Probes (concept)](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/) (1.36.5 (docs 1.36); docs 1.36)
 - [Configure liveness/readiness/startup probes (task)](https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) (1.36.5 (docs 1.36); docs 1.36)
 - [Disruptions (PDB concept)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/disruptions/) (1.36.5 (docs 1.36); docs 1.36)

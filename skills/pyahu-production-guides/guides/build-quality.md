@@ -322,7 +322,7 @@ spotless = "8.10.4"
 cyclonedx = "3.5.1"
 ```
 
-**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `spring-core` 7.0.9, a version written
+**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `spring-core` 7.0.10, a version written
 nowhere in the build.
 
 ### The BOMs
@@ -432,7 +432,7 @@ tasks.named("build") {
 
 ## References
 
-- [Gradle plugin](https://docs.spring.io/spring-boot/4.1/gradle-plugin/index.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Gradle plugin](https://docs.spring.io/spring-boot/4.1/gradle-plugin/index.html) (4.1.2 (docs 4.1); docs 4.1)
 - [Best practices](https://docs.gradle.org/9.8.1/userguide/best_practices.html) (9.8.1)
 - [Version catalogs](https://docs.gradle.org/9.8.1/userguide/version_catalogs.html) (9.8.1)
 - [Toolchains](https://docs.gradle.org/9.8.1/userguide/toolchains.html) (9.8.1)

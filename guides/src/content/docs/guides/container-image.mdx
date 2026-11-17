@@ -6,9 +6,13 @@ guide:
   id: container-image
   prefix: IMG
   state: draft
-  baseline: v0.1-b1
-  components: [temurin-jdk-image, temurin-jre-image, spring-boot, gradle, cyclonedx-gradle-plugin, syft, trivy, cosign, renovate, slsa]
-  verification: null
+  baseline: v0.1-b2
+  components: [ temurin-jdk-image, temurin-jre-image, spring-boot, gradle, cyclonedx-gradle-plugin, syft, trivy, cosign, renovate, slsa ]
+  verification:
+    run: https://github.com/pyahu/initializer/actions/runs/43912675718/attempts/1
+    commit: f61ac7e840d9245b3ca833fa874374df26245cc0
+    date: "2026-11-16"
+    baseline: v0.1-b2
   questions:
     - id: IMG-Q1
       text: "Why does every release push the whole app again?"

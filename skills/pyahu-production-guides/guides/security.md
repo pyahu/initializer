@@ -438,12 +438,12 @@ USER 10001:10001
 
 ## References
 
-- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.1 (docs 4.1); docs 4.1)
-- [OAuth2 (resource server auto-config)](https://docs.spring.io/spring-boot/4.1/reference/security/oauth2.html) (4.1.1 (docs 4.1); docs 4.1)
-- [Reference](https://docs.spring.io/spring-security/reference/7.1/index.html) (7.1.1 (docs 7.1); docs 7.1)
-- [OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/index.html) (7.1.1 (docs 7.1); docs 7.1)
-- [Resource Server JWT](https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/jwt.html) (7.1.1 (docs 7.1); docs 7.1)
-- [What's new in 7.1](https://docs.spring.io/spring-security/reference/7.1/whats-new.html) (7.1.1 (docs 7.1); docs 7.1)
+- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.2 (docs 4.1); docs 4.1)
+- [OAuth2 (resource server auto-config)](https://docs.spring.io/spring-boot/4.1/reference/security/oauth2.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Reference](https://docs.spring.io/spring-security/reference/7.1/index.html) (7.1.2 (docs 7.1); docs 7.1)
+- [OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/index.html) (7.1.2 (docs 7.1); docs 7.1)
+- [Resource Server JWT](https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/jwt.html) (7.1.2 (docs 7.1); docs 7.1)
+- [What's new in 7.1](https://docs.spring.io/spring-security/reference/7.1/whats-new.html) (7.1.2 (docs 7.1); docs 7.1)
 - [Pod Security Standards](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/) (1.36.5 (docs 1.36); docs 1.36)
 - [Pod Security Admission](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-admission/) (1.36.5 (docs 1.36); docs 1.36)
 - [NetworkPolicy](https://v1-36.docs.kubernetes.io/docs/concepts/services-networking/network-policies/) (1.36.5 (docs 1.36); docs 1.36)

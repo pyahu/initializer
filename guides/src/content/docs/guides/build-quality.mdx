@@ -6,9 +6,13 @@ guide:
   id: build-quality
   prefix: BLD
   state: draft
-  baseline: v0.1-b1
-  components: [java, temurin-jdk-image, gradle, spring-boot, spring-modulith, jmolecules-bom, error-prone, errorprone-gradle-plugin, nullaway, jspecify, spotless-gradle-plugin, palantir-java-format, cyclonedx-gradle-plugin, renovate]
-  verification: null
+  baseline: v0.1-b2
+  components: [ java, temurin-jdk-image, gradle, spring-boot, spring-modulith, jmolecules-bom, error-prone, errorprone-gradle-plugin, nullaway, jspecify, spotless-gradle-plugin, palantir-java-format, cyclonedx-gradle-plugin, renovate ]
+  verification:
+    run: https://github.com/pyahu/initializer/actions/runs/43912675718/attempts/1
+    commit: f61ac7e840d9245b3ca833fa874374df26245cc0
+    date: "2026-11-16"
+    baseline: v0.1-b2
   questions:
     - id: BLD-Q1
       text: "How do I make sure every machine builds the same way?"
@@ -322,7 +326,7 @@ Settings allow repositories in one place only and the catalog holds every versio
 
 <Recipe id="bld-catalog-versions" path="fixtures/single-hexagonal/gradle/libs.versions.toml" start="[versions]" end="cyclonedx = " lang="toml" />
 
-**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `spring-core` 7.0.9, a version written
+**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `spring-core` 7.0.10, a version written
 nowhere in the build.
 
 ### The BOMs

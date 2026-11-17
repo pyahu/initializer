@@ -6,9 +6,13 @@ guide:
   id: security
   prefix: SEC
   state: draft
-  baseline: v0.1-b1
-  components: [spring-boot, spring-security, spring-framework, temurin-jre-image, kubernetes-1.36]
-  verification: null
+  baseline: v0.1-b2
+  components: [ spring-boot, spring-security, spring-framework, temurin-jre-image, kubernetes-1.36 ]
+  verification:
+    run: https://github.com/pyahu/initializer/actions/runs/43912675718/attempts/1
+    commit: f61ac7e840d9245b3ca833fa874374df26245cc0
+    date: "2026-11-16"
+    baseline: v0.1-b2
   questions:
     - id: SEC-Q1
       text: "Which tokens should the service accept?"

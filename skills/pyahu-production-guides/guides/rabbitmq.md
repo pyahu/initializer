@@ -61,7 +61,7 @@ and acknowledges each message on its own, so one slow job does not block the nex
 1. Choose RabbitMQ for task queues, commands to one service and routing by key or pattern.
 2. Choose Kafka for events that several services consume or that you may need to replay
    ([Kafka with the outbox](kafka.md)).
-3. Add `spring-boot-starter-amqp`. The Spring Boot 4.1.1 BOM manages Spring AMQP 4.1.1 and the RabbitMQ Java
+3. Add `spring-boot-starter-amqp`. The Spring Boot 4.1.2 BOM manages Spring AMQP 4.1.2 and the RabbitMQ Java
    client `amqp-client` 5.30.0.
 
 ### When this is not for you

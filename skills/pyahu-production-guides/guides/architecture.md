@@ -402,5 +402,5 @@ From [`package-info.java`](https://github.com/pyahu/initializer/blob/main/fixtur
 - [jMolecules repo at release tag](https://github.com/xmolecules/jmolecules/tree/2.0.1) (2025.0.2 (docs 2.0.1); docs 2.0.1)
 - [jmolecules-archunit at tag](https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit) (0.33.0)
 - [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html) (1.5.1, not version-pinned)
-- [Declarative transaction management](https://docs.spring.io/spring-framework/reference/7.0/data-access/transaction/declarative.html) (7.0.9 (docs 7.0); docs 7.0): How @Transactional works and where to put it.
+- [Declarative transaction management](https://docs.spring.io/spring-framework/reference/7.0/data-access/transaction/declarative.html) (7.0.10 (docs 7.0); docs 7.0): How @Transactional works and where to put it.
 - [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/) (2005): Ports and adapters as defined by its author.

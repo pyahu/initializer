@@ -6,9 +6,13 @@ guide:
   id: grpc
   prefix: GRPC
   state: draft
-  baseline: v0.1-b1
-  components: [java, spring-boot, kubernetes-1.36, kubernetes-1.37]
-  verification: null
+  baseline: v0.1-b2
+  components: [ java, spring-boot, kubernetes-1.36, kubernetes-1.37 ]
+  verification:
+    run: https://github.com/pyahu/initializer/actions/runs/43912675718/attempts/1
+    commit: f61ac7e840d9245b3ca833fa874374df26245cc0
+    date: "2026-11-16"
+    baseline: v0.1-b2
   questions:
     - id: GRPC-Q1
       text: "When is gRPC the right choice?"

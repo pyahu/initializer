@@ -362,11 +362,11 @@ tested file.
 
 ## References
 
-- [Migration guide 3.x to 4.0 (wiki)](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide) (4.1.1 (docs 4.0); docs 4.0)
-- [Application properties appendix](https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html) (4.1.1 (docs 4.1); docs 4.1)
-- [Tracing (names spring-boot-starter-opentelemetry, OTLP export)](https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html) (4.1.1 (docs 4.1); docs 4.1)
-- [Metrics (incl. #actuator.metrics.export.otlp)](https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html) (4.1.1 (docs 4.1); docs 4.1)
-- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.1.1 (docs 4.1); docs 4.1)
-- [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html) (7.0.9 (docs 7.0); docs 7.0)
-- [7.0 release notes (wiki, also covers upgrading)](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes) (7.0.9 (docs 7.0); docs 7.0)
+- [Migration guide 3.x to 4.0 (wiki)](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide) (4.1.2 (docs 4.0); docs 4.0)
+- [Application properties appendix](https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Tracing (names spring-boot-starter-opentelemetry, OTLP export)](https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Metrics (incl. #actuator.metrics.export.otlp)](https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.1.2 (docs 4.1); docs 4.1)
+- [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html) (7.0.10 (docs 7.0); docs 7.0)
+- [7.0 release notes (wiki, also covers upgrading)](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes) (7.0.10 (docs 7.0); docs 7.0)
 - [Semconv HTTP spans](https://opentelemetry.io/docs/specs/semconv/http/http-spans/) (1.44.0, not version-pinned)

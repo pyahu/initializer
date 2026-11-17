@@ -6,9 +6,13 @@ guide:
   id: ci-pipelines
   prefix: CI
   state: draft
-  baseline: v0.1-b1
-  components: [java, temurin-jdk-image, gradle, syft, cosign, slsa, renovate]
-  verification: null
+  baseline: v0.1-b2
+  components: [ java, temurin-jdk-image, gradle, syft, cosign, slsa, renovate ]
+  verification:
+    run: https://github.com/pyahu/initializer/actions/runs/43912675718/attempts/1
+    commit: f61ac7e840d9245b3ca833fa874374df26245cc0
+    date: "2026-11-16"
+    baseline: v0.1-b2
   questions:
     - id: CI-Q1
       text: "Can an action I use change under me?"
@@ -362,7 +366,7 @@ concurrency:
 
 env:
   GOTOOLCHAIN: go1.27.2
-  # temurin-jdk-image of baseline v0.1-b1.
+  # temurin-jdk-image of baseline v0.1-b2.
   JDK_IMAGE: eclipse-temurin@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f
 ```
 

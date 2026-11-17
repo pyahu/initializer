@@ -237,7 +237,7 @@ If the vault refuses or is down, the volume never mounts and the pod waits in `C
 ### When this is not for you
 
 - No CSI driver, such as App Service or plain VMs: Spring Cloud Azure can read Key Vault as a property source. It
-  adds the Azure SDK and a network call at startup; check that it supports Spring Boot 4.1.1 before adopting it.
+  adds the Azure SDK and a network call at startup; check that it supports Spring Boot 4.1.2 before adopting it.
 - Tools that need a real Kubernetes Secret, such as image pulls or ingress TLS: sync one with an operator. The app
   still reads files.
 - Keep secret property names distinctive: an environment variable with the same relaxed name outranks the mounted
@@ -250,7 +250,7 @@ write a secret into a manifest.
 
 ### What's going on
 
-Actuator's `env` and `configprops` endpoints list every property. In Spring Boot 4.1.1 they mask every value by
+Actuator's `env` and `configprops` endpoints list every property. In Spring Boot 4.1.2 they mask every value by
 default (`show-values: never`). Switch that to `always` or `when-authorized` and masking turns off for every value,
 secrets included, unless you add a `SanitizingFunction`.
 
@@ -425,7 +425,7 @@ management:
 
 ## References
 
-- [Application properties appendix](https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html) (4.1.1 (docs 4.1); docs 4.1)
-- [Actuator (production-ready features)](https://docs.spring.io/spring-boot/4.1/reference/actuator/index.html) (4.1.1 (docs 4.1); docs 4.1)
-- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.1 (docs 4.1); docs 4.1)
-- [Actuator REST API](https://docs.spring.io/spring-boot/4.1/api/rest/actuator/index.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Application properties appendix](https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Actuator (production-ready features)](https://docs.spring.io/spring-boot/4.1/reference/actuator/index.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.2 (docs 4.1); docs 4.1)
+- [Actuator REST API](https://docs.spring.io/spring-boot/4.1/api/rest/actuator/index.html) (4.1.2 (docs 4.1); docs 4.1)

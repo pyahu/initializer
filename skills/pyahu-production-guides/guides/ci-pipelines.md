@@ -331,7 +331,7 @@ concurrency:
 
 env:
   GOTOOLCHAIN: go1.27.2
-  # temurin-jdk-image of baseline v0.1-b1.
+  # temurin-jdk-image of baseline v0.1-b2.
   JDK_IMAGE: eclipse-temurin@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f
 ```
 

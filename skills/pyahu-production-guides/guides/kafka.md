@@ -12,8 +12,8 @@ An order is saved and the "order placed" event never reaches billing. Or it reac
 is charged twice. Nobody sees an error: the database committed and Kafka said yes. The gap was in between.
 
 This guide makes events as reliable as the data they describe: saved in the same transaction, published from the
-database log, read with a known format and handled safely when they fail. It uses Spring for Apache Kafka 4.1.1
-and the Kafka 4.2.1 client, the versions Spring Boot 4.1.1 manages.
+database log, read with a known format and handled safely when they fail. It uses Spring for Apache Kafka 4.1.2
+and the Kafka 4.2.2 client, the versions Spring Boot 4.1.2 manages.
 
 ## What you'll learn
 

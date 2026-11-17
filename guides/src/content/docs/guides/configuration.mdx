@@ -6,9 +6,13 @@ guide:
   id: configuration
   prefix: CFG
   state: draft
-  baseline: v0.1-b1
-  components: [spring-boot]
-  verification: null
+  baseline: v0.1-b2
+  components: [ spring-boot ]
+  verification:
+    run: https://github.com/pyahu/initializer/actions/runs/43912675718/attempts/1
+    commit: f61ac7e840d9245b3ca833fa874374df26245cc0
+    date: "2026-11-16"
+    baseline: v0.1-b2
   questions:
     - id: CFG-Q1
       text: "Where should the differences between environments live?"
@@ -269,7 +273,7 @@ If the vault refuses or is down, the volume never mounts and the pod waits in `C
 ### When this is not for you
 
 - No CSI driver, such as App Service or plain VMs: Spring Cloud Azure can read Key Vault as a property source. It
-  adds the Azure SDK and a network call at startup; check that it supports Spring Boot 4.1.1 before adopting it.
+  adds the Azure SDK and a network call at startup; check that it supports Spring Boot 4.1.2 before adopting it.
 - Tools that need a real Kubernetes Secret, such as image pulls or ingress TLS: sync one with an operator. The app
   still reads files.
 - Keep secret property names distinctive: an environment variable with the same relaxed name outranks the mounted
@@ -284,7 +288,7 @@ write a secret into a manifest.
 
 ### What's going on
 
-Actuator's `env` and `configprops` endpoints list every property. In Spring Boot 4.1.1 they mask every value by
+Actuator's `env` and `configprops` endpoints list every property. In Spring Boot 4.1.2 they mask every value by
 default (`show-values: never`). Switch that to `always` or `when-authorized` and masking turns off for every value,
 secrets included, unless you add a `SanitizingFunction`.
 

@@ -387,12 +387,12 @@ tasks.cyclonedxBom {
 
 ## References
 
-- [Container images](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html) (4.1.1 (docs 4.1); docs 4.1)
-- [Efficient container images (layering)](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html) (4.1.1 (docs 4.1); docs 4.1)
-- [Dockerfiles](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html) (4.1.1 (docs 4.1); docs 4.1)
-- [Cloud Native Buildpacks](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html) (4.1.1 (docs 4.1); docs 4.1)
-- [Efficient deployments](https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html) (4.1.1 (docs 4.1); docs 4.1)
-- [Gradle plugin: packaging OCI images](https://docs.spring.io/spring-boot/4.1/gradle-plugin/packaging-oci-image.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Container images](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Efficient container images (layering)](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Dockerfiles](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Cloud Native Buildpacks](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Efficient deployments](https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Gradle plugin: packaging OCI images](https://docs.spring.io/spring-boot/4.1/gradle-plugin/packaging-oci-image.html) (4.1.2 (docs 4.1); docs 4.1)
 - [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect) (n/a, not version-pinned)
 - [SLSA spec v1.2 (current; /spec/ and /spec/latest/ both redirect to v1.2)](https://slsa.dev/spec/v1.2/) (1.2)
 - [SLSA v1.2 Provenance](https://slsa.dev/spec/v1.2/provenance) (1.2)

@@ -6,9 +6,13 @@ guide:
   id: jvm-in-containers
   prefix: JVM
   state: draft
-  baseline: v0.1-b1
-  components: [java, temurin-jre-image, temurin-jdk-image, spring-boot, gradle]
-  verification: null
+  baseline: v0.1-b2
+  components: [ java, temurin-jre-image, temurin-jdk-image, spring-boot, gradle ]
+  verification:
+    run: https://github.com/pyahu/initializer/actions/runs/43912675718/attempts/1
+    commit: f61ac7e840d9245b3ca833fa874374df26245cc0
+    date: "2026-11-16"
+    baseline: v0.1-b2
   questions:
     - id: JVM-Q1
       text: "How much memory can the heap take?"

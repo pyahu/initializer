@@ -58,7 +58,7 @@ first real flight. A container with the real database costs a few seconds to sta
 ### Do this
 
 1. Run your real dependencies in containers: PostgreSQL first, then anything else the service calls.
-2. Use the image and version that production runs. Baseline v0.1-b1 pins `postgres:18.6`.
+2. Use the image and version that production runs. Baseline v0.1-b2 pins `postgres:18.6`.
 3. Keep mocks for unit tests of your own code, where they belong.
 
 ### When this is not for you
@@ -343,8 +343,8 @@ resource attributes: `deployment.environment.name` is `dev`, not `local`.
 
 ## References
 
-- [Observability, OpenTelemetry section (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/observability.html#actuator.observability.opentelemetry) (4.1.1 (docs 4.1); docs 4.1)
-- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Observability, OpenTelemetry section (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/observability.html#actuator.observability.opentelemetry) (4.1.2 (docs 4.1); docs 4.1)
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.2 (docs 4.1); docs 4.1)
 - [Documentation](https://www.postgresql.org/docs/18/index.html) (18.6 (docs 18); docs 18)
 - [Testcontainers for Java docs](https://java.testcontainers.org/) (2.0.5, not version-pinned)
 - [Postgres module](https://java.testcontainers.org/modules/databases/postgres/) (2.0.5, not version-pinned)

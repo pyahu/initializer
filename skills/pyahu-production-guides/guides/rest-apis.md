@@ -365,7 +365,7 @@ String ping() {
 
 ## References
 
-- [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html) (7.0.9 (docs 7.0); docs 7.0)
+- [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html) (7.0.10 (docs 7.0); docs 7.0)
 - [OpenAPI Specification v3.1.2 (latest 3.1 patch)](https://spec.openapis.org/oas/v3.1.2.html) (3.1.2)
 - [openapi-generator Spring generator](https://openapi-generator.tech/docs/generators/spring/) (7.26.0, not version-pinned)
 - [Spring generator doc at tag](https://github.com/OpenAPITools/openapi-generator/blob/v7.26.0/docs/generators/spring.md) (7.26.0)

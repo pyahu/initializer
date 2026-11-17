@@ -370,7 +370,7 @@ fails and names the class.
 
 ## References
 
-- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.2 (docs 4.1); docs 4.1)
 - [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.1/verification.html) (2.1.1 (docs 2.1); docs 2.1)
 - [Integration testing modules](https://docs.spring.io/spring-modulith/reference/2.1/testing.html) (2.1.1 (docs 2.1); docs 2.1)
 - [jmolecules-archunit at tag](https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit) (0.33.0)

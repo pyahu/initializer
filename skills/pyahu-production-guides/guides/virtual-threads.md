@@ -357,10 +357,10 @@ threads:
 
 ## References
 
-- [Virtual threads guide (Core Libraries)](https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html) (25.0.4.1+1 (docs 25); docs 25)
+- [Virtual threads guide (Core Libraries)](https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html) (25.0.5+8 (docs 25); docs 25)
 - [JEP 444: Virtual Threads](https://openjdk.org/jeps/444) (JDK 21): What JEP 444 changes and in which JDK it was delivered.
 - [JEP 491: Synchronize Virtual Threads without Pinning](https://openjdk.org/jeps/491) (JDK 24): What JEP 491 changes and in which JDK it was delivered.
 - [JEP 505: Structured Concurrency (Fifth Preview), the preview in JDK 25](https://openjdk.org/jeps/505) (JDK 25): What JEP 505 changes and in which JDK it was delivered.
 - [JEP 506: Scoped Values (final)](https://openjdk.org/jeps/506) (JDK 25): What JEP 506 changes and in which JDK it was delivered.
-- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.1.1 (docs 4.1); docs 4.1)
-- [Task execution (virtual-thread executors)](https://docs.spring.io/spring-boot/4.1/reference/features/task-execution-and-scheduling.html) (4.1.1 (docs 4.1); docs 4.1)
+- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.1.2 (docs 4.1); docs 4.1)
+- [Task execution (virtual-thread executors)](https://docs.spring.io/spring-boot/4.1/reference/features/task-execution-and-scheduling.html) (4.1.2 (docs 4.1); docs 4.1)
