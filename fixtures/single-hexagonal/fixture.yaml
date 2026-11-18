@@ -42,7 +42,12 @@ exercises:
   - palantir-java-format
   - cyclonedx-gradle-plugin
   - otel-lgtm-image
+  - liquibase
+  - pgjdbc
+  - testcontainers
+  - postgres-image
 requiredTests:
+  - gradle/single-hexagonal::DatabaseRolesTest
   - acceptance/promotion::TestSaveLoadPreservesTheTestedImage
   - gradle/single-hexagonal::ConcurrencyLimitsTest
   - gradle/single-hexagonal::GrpcHealthTest

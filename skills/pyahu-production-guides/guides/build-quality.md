@@ -338,6 +338,7 @@ implementation(platform(libs.jmolecules.bom))
 testImplementation(platform(libs.spring.boot.dependencies))
 testImplementation(platform(libs.spring.modulith.bom))
 testImplementation(platform(libs.jmolecules.bom))
+testImplementation(platform(libs.testcontainers.bom))
 testRuntimeOnly(platform(libs.spring.boot.dependencies))
 ```
 

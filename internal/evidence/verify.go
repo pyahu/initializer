@@ -125,6 +125,12 @@ func Verify(r *guidedata.Repo, in VerifyInput) (*Report, []error) {
 				set(ref+" (read from versions.yaml by acceptance/observability)", true)
 				break
 			}
+			if key == "postgres-image" {
+				// DatabaseRolesTest starts PostgreSQL with the exact image supplied by tasks.test.
+				pin := catalog["version:postgres-image"]
+				set("postgres:"+pin+" (fixture test catalog)", pin == c.Version+"@"+c.Digest)
+				break
+			}
 			found := ""
 			for _, f := range froms {
 				if f == c.Image+"@"+c.Digest || f == ref {

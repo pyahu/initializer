@@ -229,6 +229,10 @@ when it fails.
 To add a claim: write the test, add it to `requiredTests`, push and record the run in the
 evidence file from the report.
 
+The single-hexagonal fixture's `DatabaseRolesTest` runs PostgreSQL as a test container, using the role script and
+changelog from `templates/postgres/`. Its database dependencies are test-only: the service image used by JVM and
+telemetry acceptance tests still has no data source. The fixture workflow watches those template inputs too.
+
 ## Templates
 
 `templates/base/` goes into every project, `templates/<architecture>/` adds the files of one architecture and each

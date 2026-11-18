@@ -3174,13 +3174,13 @@
               "id": "ev-db-connection-budget-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-db-connection-budget-1 · not exercised · baseline v0.1-b2. Every pod has its own pool, so during a rolling update the database sees the pools of the running, surge and draining pods together. Limitations: Arithmetic and Kubernetes rollout behaviour from the source guide.",
-              "reason": "No test runs this yet: the fixture has no database."
+              "reason": "The fixture's PostgreSQL permission test does not exercise this behavior."
             },
             {
               "id": "ev-db-connection-budget-2",
               "badge": "not-exercised",
               "canonical": "Evidence ev-db-connection-budget-2 · not exercised · baseline v0.1-b2. A CONNECTION LIMIT on the runtime role makes a pod that would overrun the budget fail with a clear error instead of exhausting the server. Limitations: PostgreSQL documented behaviour.",
-              "reason": "No test runs this yet: the fixture has no database."
+              "reason": "The fixture's PostgreSQL permission test does not exercise this behavior."
             }
           ]
         },
@@ -3192,13 +3192,13 @@
               "id": "ev-db-expand-contract-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-db-expand-contract-1 · not exercised · baseline v0.1-b2. During a rolling update the old and new release run against the same schema, so each schema change must work with both. Limitations: Reasoned from Kubernetes rolling updates; the source guide ran the full rename sequence on PostgreSQL 17 with Flyway, not Liquibase.",
-              "reason": "No migration test runs in this repository yet."
+              "reason": "The permission test does not exercise this migration scenario."
             },
             {
               "id": "ev-db-expand-contract-2",
               "badge": "not-exercised",
               "canonical": "Evidence ev-db-expand-contract-2 · not exercised · baseline v0.1-b2. CREATE INDEX blocks writes for the whole build while CREATE INDEX CONCURRENTLY does not. The concurrent form cannot run inside a transaction. Limitations: PostgreSQL documented behaviour.",
-              "reason": "No migration test runs in this repository yet."
+              "reason": "The permission test does not exercise this migration scenario."
             }
           ]
         },
@@ -3216,7 +3216,7 @@
               "id": "ev-db-migration-job-2",
               "badge": "not-exercised",
               "canonical": "Evidence ev-db-migration-job-2 · not exercised · baseline v0.1-b2. liquibase release-locks removes a lock left in DATABASECHANGELOGLOCK by an interrupted run. Limitations: From the Liquibase release-locks documentation.",
-              "reason": "No database test runs in this repository yet."
+              "reason": "The permission test does not interrupt Liquibase or run release-locks."
             }
           ]
         },
@@ -3228,7 +3228,7 @@
               "id": "ev-db-migrations-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-db-migrations-1 · not exercised · baseline v0.1-b2. With spring.liquibase.enabled true, the Spring Boot default, every pod runs the changelog at startup and Liquibase serialises them with its DATABASECHANGELOGLOCK table. Limitations: Default and table name read from the Spring Boot Liquibase configuration metadata; locking behaviour from the Liquibase documentation.",
-              "reason": "No test runs this yet: the fixture has no database or Liquibase."
+              "reason": "The permission test invokes Liquibase directly; no test starts competing Spring Boot pods or exercises migration locking."
             }
           ]
         },
@@ -3264,7 +3264,7 @@
               "id": "ev-db-pool-timeouts-3",
               "badge": "not-exercised",
               "canonical": "Evidence ev-db-pool-timeouts-3 · not exercised · baseline v0.1-b2. HikariCP 7 pings idle connections every 2 minutes by default (keepalive-time); HikariCP 5 had it off. Limitations: Read from the HikariCP source in the source guide.",
-              "reason": "No test runs this yet: the fixture has no database."
+              "reason": "The fixture's PostgreSQL permission test does not exercise this behavior."
             }
           ]
         },
@@ -3276,13 +3276,13 @@
               "id": "ev-db-query-timeouts-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-db-query-timeouts-1 · not exercised · baseline v0.1-b2. Inside a transaction with a timeout, JdbcTemplate sets each statement timeout to the time left in the transaction, overriding spring.jdbc.template.query-timeout. Limitations: Read from DataSourceUtils.applyTimeout in Spring Framework 7.0.10; not run.",
-              "reason": "No test runs this yet: the fixture has no database."
+              "reason": "The fixture's PostgreSQL permission test does not exercise this behavior."
             },
             {
               "id": "ev-db-query-timeouts-2",
               "badge": "not-exercised",
               "canonical": "Evidence ev-db-query-timeouts-2 · not exercised · baseline v0.1-b2. A statement_timeout set on the runtime role cancels a query on the server even when the client is gone. Limitations: PostgreSQL documented behaviour.",
-              "reason": "No test runs this yet: the fixture has no database."
+              "reason": "The fixture's PostgreSQL permission test does not exercise this behavior."
             }
           ]
         },
@@ -3293,8 +3293,8 @@
             {
               "id": "ev-db-roles-1",
               "badge": "not-exercised",
-              "canonical": "Evidence ev-db-roles-1 · not exercised · baseline v0.1-b2. The migration role owns the schema. The runtime role writes business data, cannot drop tables, and can read but not insert/update/delete Liquibase history or lock records. Limitations: Generated PostgreSQL variants run DatabaseRolesTest for business DML, denied DROP, readable history and denied history/lock writes. This guide has no linked qualified fixture report for that test.",
-              "reason": "The qualified fixture has no database; the generated-project matrix tests these role permissions separately."
+              "canonical": "Evidence ev-db-roles-1 · not exercised · baseline v0.1-b2. The migration role owns the schema. The runtime role writes business data, cannot drop tables, and can read but not insert/update/delete Liquibase history or lock records. Limitations: DatabaseRolesTest uses the generated role script and changelog on PostgreSQL 18.6. It checks schema/table ownership, business CRUD, denied DDL, readable history/locks and denied metadata writes. It does not test pooling, readiness or rollout behavior.",
+              "reason": "The fixture now requires DatabaseRolesTest; awaiting its passing CI evidence report before recording this claim as reproduced."
             }
           ]
         },
@@ -3306,7 +3306,7 @@
               "id": "ev-db-testing-1",
               "badge": "not-exercised",
               "canonical": "Evidence ev-db-testing-1 · not exercised · baseline v0.1-b2. Testcontainers 2.0.5 provides org.testcontainers.postgresql.PostgreSQLContainer in the renamed testcontainers-postgresql artifact. @ServiceConnection points the data source at it. Limitations: Read from the Testcontainers 2.0.5 artifacts in the source guide.",
-              "reason": "No database test runs in this repository yet."
+              "reason": "The permission test uses PostgreSQLContainer directly; no qualified test verifies Spring Boot @ServiceConnection data source wiring."
             }
           ]
         }

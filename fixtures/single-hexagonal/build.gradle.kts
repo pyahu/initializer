@@ -25,6 +25,7 @@ dependencies {
     testImplementation(platform(libs.spring.boot.dependencies))
     testImplementation(platform(libs.spring.modulith.bom))
     testImplementation(platform(libs.jmolecules.bom))
+    testImplementation(platform(libs.testcontainers.bom))
     testRuntimeOnly(platform(libs.spring.boot.dependencies))
 
     implementation(libs.spring.boot.starter.webmvc)
@@ -43,6 +44,10 @@ dependencies {
     testImplementation(libs.spring.modulith.starter.test)
     testImplementation(libs.archunit.junit5)
     testImplementation(libs.jmolecules.archunit)
+    testImplementation(libs.testcontainers.postgresql)
+    testImplementation(libs.testcontainers.junit.jupiter)
+    testImplementation(libs.liquibase.core)
+    testImplementation(libs.postgresql)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
@@ -62,6 +67,25 @@ tasks.named<JavaCompile>("compileTestJava") {
 
 tasks.test {
     useJUnitPlatform()
+    systemProperty("postgres.image", "postgres@" + libs.versions.postgres.image.get().substringAfter("@"))
+}
+
+// Exercise the actual generated role grants and changelog, without adding a database to the runtime image.
+val databaseRolesResources = tasks.register<Sync>("databaseRolesResources") {
+    from("../../templates/postgres/db") {
+        include("roles.sql", "init-local.sh")
+        into("database-roles/db")
+    }
+    from("../../templates/postgres/src/main/resources/db/changelog") {
+        include("db.changelog-master.yaml")
+        into("database-roles/changelog")
+    }
+    filter { line: String -> line.replace("[[dbName]]", "fixture").replace("[[name]]", "database-roles") }
+    into(layout.buildDirectory.dir("generated/database-roles-resources"))
+}
+
+sourceSets.test {
+    resources.srcDir(databaseRolesResources)
 }
 
 spotless {
