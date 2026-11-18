@@ -1,14 +1,3 @@
 # npm audit exceptions for guides/ (high and critical only).
 # Each exception needs a reason and expires within 30 days of being added.
-- advisory: GHSA-fc5q-39xc-vjpf
-  package: picomatch
-  added: "2026-11-18"
-  expires: "2026-11-25"
-  reason: >-
-    No patched release is available (latest 4.0.7). This exception applies only to guides/,
-    where picomatch runs in the trusted-source static Astro build with repository-authored
-    glob patterns. wrangler.jsonc publishes only dist/ assets, with no Worker main or SSR
-    adapter; visitors cannot supply patterns to this build dependency. Recheck the upstream
-    advisory and remove this record when a fix is released. The exception does not apply to
-    the generator service, generated applications, their images or the Next.js frontend.
-    https://github.com/advisories/GHSA-fc5q-39xc-vjpf
+[]
