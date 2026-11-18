@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os/exec"
+	"regexp"
 	"sort"
 	"time"
 
@@ -15,15 +16,28 @@ import (
 func Audit(r *guidedata.Repo, dir string, now time.Time) []error {
 	cmd := exec.Command("npm", "audit", "--json")
 	cmd.Dir = dir
-	out, _ := cmd.Output() // npm audit exits 1 when it finds anything
+	out, runErr := cmd.Output() // npm audit exits 1 when it reports findings.
+	if runErr != nil {
+		if exit, ok := runErr.(*exec.ExitError); !ok || exit.ExitCode() != 1 {
+			return []error{fmt.Errorf("npm audit did not complete: %w", runErr)}
+		}
+	}
 	var rep struct {
-		Vulnerabilities map[string]struct {
+		AuditReportVersion int             `json:"auditReportVersion"`
+		Error              json.RawMessage `json:"error"`
+		Vulnerabilities    map[string]struct {
 			Severity string            `json:"severity"`
 			Via      []json.RawMessage `json:"via"`
 		} `json:"vulnerabilities"`
 	}
 	if err := json.Unmarshal(out, &rep); err != nil {
 		return []error{fmt.Errorf("npm audit --json: %v: %s", err, out)}
+	}
+	if rep.AuditReportVersion != 2 || rep.Vulnerabilities == nil || (len(rep.Error) > 0 && string(rep.Error) != "null") {
+		return []error{fmt.Errorf("npm audit returned an error or an incomplete version 2 report")}
+	}
+	if runErr != nil && len(rep.Vulnerabilities) == 0 {
+		return []error{fmt.Errorf("npm audit failed without reporting findings: %w", runErr)}
 	}
 	allowed := map[string]guidedata.AuditException{}
 	var errs []error
@@ -39,15 +53,26 @@ func Audit(r *guidedata.Repo, dir string, now time.Time) []error {
 		if v.Severity != "high" && v.Severity != "critical" {
 			continue
 		}
+		if len(v.Via) == 0 {
+			errs = append(errs, fmt.Errorf("npm audit %s has no advisory details", pkg))
+		}
 		for _, raw := range v.Via {
 			var via struct {
 				URL   string `json:"url"`
 				Title string `json:"title"`
 			}
-			if json.Unmarshal(raw, &via) != nil || via.URL == "" {
-				continue // a reference to another vulnerable package, reported on its own
+			var dependency string
+			if json.Unmarshal(raw, &dependency) == nil {
+				if _, ok := rep.Vulnerabilities[dependency]; !ok {
+					errs = append(errs, fmt.Errorf("npm audit %s references an unreported vulnerable package %s", pkg, dependency))
+				}
+				continue // Dependency findings are reported on their own package.
 			}
-			ghsa := via.URL[len(via.URL)-19:]
+			if json.Unmarshal(raw, &via) != nil || !advisoryURL.MatchString(via.URL) {
+				errs = append(errs, fmt.Errorf("npm audit %s has an invalid advisory", pkg))
+				continue
+			}
+			ghsa := advisoryURL.FindStringSubmatch(via.URL)[1]
 			if _, ok := allowed[pkg+"\x00"+ghsa]; ok {
 				continue
 			}
@@ -57,3 +82,5 @@ func Audit(r *guidedata.Repo, dir string, now time.Time) []error {
 	sort.Slice(errs, func(i, j int) bool { return errs[i].Error() < errs[j].Error() })
 	return errs
 }
+
+var advisoryURL = regexp.MustCompile(`^https://github\.com/advisories/(GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4})$`)
