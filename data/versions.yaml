@@ -640,8 +640,9 @@ revisions:
         guides: []
         claims: [compile, runtime, cluster]
         qualification:
-          state: provisional
-          capabilities: {}
+          state: partial
+          capabilities:
+            runtime: [ev-db-roles-1]
       pgjdbc:
         version: "42.7.14"
         kind: maven
@@ -651,8 +652,9 @@ revisions:
         guides: []
         claims: [runtime]
         qualification:
-          state: provisional
-          capabilities: {}
+          state: qualified
+          capabilities:
+            runtime: [ev-db-roles-1]
       testcontainers:
         version: "2.0.5"
         kind: maven-bom
@@ -662,8 +664,9 @@ revisions:
         guides: []
         claims: [test]
         qualification:
-          state: provisional
-          capabilities: {}
+          state: qualified
+          capabilities:
+            test: [ev-db-roles-1]
       spring-modulith:
         version: "2.1.1"
         kind: maven-bom
@@ -827,8 +830,9 @@ revisions:
         guides: []
         claims: [test, cluster]
         qualification:
-          state: provisional
-          capabilities: {}
+          state: partial
+          capabilities:
+            test: [ev-db-roles-1]
       otel-lgtm-image:
         version: "0.37.0"
         kind: image

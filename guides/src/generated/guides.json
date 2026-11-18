@@ -3097,8 +3097,8 @@
         "reverifyReasons": [],
         "stale": false
       },
-      "verification": "",
-      "coverage": "15 claims: 15 not exercised",
+      "verification": "run 44390746843 attempt 1, commit e2584f5, 2026-11-18, baseline v0.1-b2",
+      "coverage": "15 claims: 1 reproduced, 14 not exercised",
       "sources": [
         {
           "title": "03 · Database in production",
@@ -3288,13 +3288,20 @@
         },
         "db-roles": {
           "title": "4. Who should be allowed to change the schema?",
-          "coverage": "1 claim: 1 not exercised",
+          "coverage": "1 claim: 1 reproduced",
           "records": [
             {
               "id": "ev-db-roles-1",
-              "badge": "not-exercised",
-              "canonical": "Evidence ev-db-roles-1 · not exercised · baseline v0.1-b2. The migration role owns the schema. The runtime role writes business data, cannot drop tables, and can read but not insert/update/delete Liquibase history or lock records. Limitations: DatabaseRolesTest uses the generated role script and changelog on PostgreSQL 18.6. It checks schema/table ownership, business CRUD, denied DDL, readable history/locks and denied metadata writes. It does not test pooling, readiness or rollout behavior.",
-              "reason": "The fixture now requires DatabaseRolesTest; awaiting its passing CI evidence report before recording this claim as reproduced."
+              "badge": "reproduced",
+              "canonical": "Evidence ev-db-roles-1 · reproduced · baseline v0.1-b2 · 2026-11-18. The migration role owns the schema. The runtime role writes business data, cannot drop tables, and can read but not insert/update/delete Liquibase history or lock records. Result: DatabaseRolesTest: 6 tests, 0 failures, 0 errors, 0 skipped. The migrator owns the schema and its tables. Runtime business CRUD and metadata SELECT succeed; CREATE/ALTER/DROP and all six history/lock writes are rejected with SQLSTATE 42501. Limitations: A test-only PostgreSQL container uses the generated role script and changelog. This does not prove Spring Boot data source wiring, pooling, readiness, concurrent migrations or production rollout behavior.",
+              "test": "gradle/single-hexagonal::DatabaseRolesTest",
+              "commands": [
+                "./gradlew -p fixtures/single-hexagonal test --tests io.pyahu.fixture.hexagonal.DatabaseRolesTest"
+              ],
+              "environment": "GitHub-hosted ubuntu-24.04 x64; Temurin 25.0.5+8 container; PostgreSQL 18.6 pinned by digest, Liquibase 5.0.4, PGJDBC 42.7.14, Testcontainers 2.0.5.",
+              "run": "run 44390746843 attempt 1, commit e2584f5",
+              "runUrl": "https://github.com/pyahu/initializer/actions/runs/44390746843/attempts/1",
+              "commitUrl": "https://github.com/pyahu/initializer/commit/e2584f5802881793d9709a0880cc1448bd488e7b"
             }
           ]
         },

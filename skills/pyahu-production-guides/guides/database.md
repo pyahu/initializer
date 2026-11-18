@@ -6,7 +6,7 @@ Connection pools, timeouts, roles, migrations and tests for a Spring Boot servic
 
 On the web: https://initializer.pyahu.io/guides/database/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 15 claims: 15 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/database.yaml).
+**Preview.** 15 claims: 1 reproduced, 14 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/database.yaml).
 
 You deploy on a Friday afternoon. Halfway through the rollout the new pods stop getting ready and PostgreSQL
 answers `FATAL: sorry, too many clients already`. Nothing changed in the database. The deployment itself used up
@@ -33,7 +33,7 @@ PostgreSQL: pools, timeouts, roles, migrations, tests and the metrics that warn 
 - 1. How many connections can my pods open?: 2 claims: 2 not exercised.
 - 2. How long should a request wait for a connection?: 3 claims: 3 not exercised.
 - 3. How do I stop one slow query from holding everything?: 2 claims: 2 not exercised.
-- 4. Who should be allowed to change the schema?: 1 claim: 1 not exercised.
+- 4. Who should be allowed to change the schema?: 1 claim: 1 reproduced.
 - 5. When should migrations run?: 1 claim: 1 not exercised.
 - 6. How do I run the migration Job safely?: 2 claims: 2 not exercised.
 - 7. How do I change the schema without downtime?: 2 claims: 2 not exercised.
@@ -179,8 +179,9 @@ If the application connects as the owner of its tables, any bug or injected quer
 carries credentials that can change the schema.
 
 Split the jobs. The migration user creates and alters tables and owns them. The runtime user gets `SELECT`,
-`INSERT`, `UPDATE` and `DELETE`, nothing more. The source guide tested this split on PostgreSQL 17: `DROP TABLE` as
-the runtime user failed with `must be owner of table orders`.
+`INSERT`, `UPDATE` and `DELETE` on business tables. The fixture tests the generated scripts on PostgreSQL 18.6:
+business CRUD succeeds, schema changes are denied, and Liquibase history and lock records remain readable but
+cannot be written by the runtime user.
 
 ### Do this
 

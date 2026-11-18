@@ -8,7 +8,11 @@ guide:
   state: draft
   baseline: v0.1-b2
   components: [ spring-boot, spring-data, pgjdbc, liquibase, testcontainers, postgres-image, micrometer ]
-  verification: null
+  verification:
+    run: https://github.com/pyahu/initializer/actions/runs/44390746843/attempts/1
+    commit: e2584f5802881793d9709a0880cc1448bd488e7b
+    date: "2026-11-18"
+    baseline: v0.1-b2
   questions:
     - id: DB-Q1
       text: "How many connections can my pods open?"
@@ -209,8 +213,9 @@ If the application connects as the owner of its tables, any bug or injected quer
 carries credentials that can change the schema.
 
 Split the jobs. The migration user creates and alters tables and owns them. The runtime user gets `SELECT`,
-`INSERT`, `UPDATE` and `DELETE`, nothing more. The source guide tested this split on PostgreSQL 17: `DROP TABLE` as
-the runtime user failed with `must be owner of table orders`.
+`INSERT`, `UPDATE` and `DELETE` on business tables. The fixture tests the generated scripts on PostgreSQL 18.6:
+business CRUD succeeds, schema changes are denied, and Liquibase history and lock records remain readable but
+cannot be written by the runtime user.
 
 ### Do this
 
