@@ -4423,9 +4423,10 @@ entries:
     match: "none"
     kind: "guide"
     area: "architecture"
-    url: "https://www.domainlanguage.com/ddd/reference/"
+    url: "https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf"
+    expect: "%PDF-"
     pinned: true
-    pinNote: "The 2015 reference, not versioned with the stack; checked 2026-10-18: 200. The PDF it links holds Layered Architecture on page 10."
+    pinNote: "The author's official 2015 PDF, not versioned with the stack; checked 2026-11-19: HTTP 200 and PDF signature. Layered Architecture is on page 10. Link directly to the static document because the landing page rate limits CI."
     purpose: "Definitions and pattern summaries, including Layered Architecture."
     guides: [ "architecture-styles" ]
     appliesWhen: {}

@@ -150,7 +150,7 @@ Baseline **v0.1-b2**. The baseline version is what the examples use. The documen
 | [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html) | 1.5.1 | not version-pinned | ArchUnit user guide. |
 | [ArchUnit release 1.5.1](https://github.com/TNG/ArchUnit/releases/tag/v1.5.1) | 1.5.1 | pinned to 1.5.1 | ArchUnit release 1.5.1. |
 | [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/) | 2005 | pinned to 2005 | Ports and adapters as defined by its author. |
-| [Eric Evans: Domain-Driven Design Reference](https://www.domainlanguage.com/ddd/reference/) | 2015 | pinned to 2015 | Definitions and pattern summaries, including Layered Architecture. |
+| [Eric Evans: Domain-Driven Design Reference](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf) | 2015 | pinned to 2015 | Definitions and pattern summaries, including Layered Architecture. |
 | [Jeffrey Palermo: The Onion Architecture, part 1](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/) | 2008 | pinned to 2008 | Onion Architecture as defined by its author: all coupling toward the center. |
 | [Robert C. Martin: The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) | 2012 | pinned to 2012 | The Dependency Rule: source code dependencies only point inwards. |
 | [Jimmy Bogard: Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/) | 2018 | pinned to 2018 | Organising code by request: minimise coupling between slices. |
@@ -359,7 +359,7 @@ Baseline **v0.1-b2**. The baseline version is what the examples use. The documen
 - [jmolecules-archunit at tag](https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit)
 - [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html)
 - [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/)
-- [Eric Evans: Domain-Driven Design Reference](https://www.domainlanguage.com/ddd/reference/)
+- [Eric Evans: Domain-Driven Design Reference](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)
 - [Jeffrey Palermo: The Onion Architecture, part 1](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/)
 - [Robert C. Martin: The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 - [Jimmy Bogard: Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/)

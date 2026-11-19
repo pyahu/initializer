@@ -306,7 +306,7 @@ The eight styles side by side, for the same scenario.
 - [jmolecules-archunit at tag](https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit) (0.33.0)
 - [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html) (1.5.1, not version-pinned)
 - [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/) (2005): Ports and adapters as defined by its author.
-- [Eric Evans: Domain-Driven Design Reference](https://www.domainlanguage.com/ddd/reference/) (2015): Definitions and pattern summaries, including Layered Architecture.
+- [Eric Evans: Domain-Driven Design Reference](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf) (2015): Definitions and pattern summaries, including Layered Architecture.
 - [Jeffrey Palermo: The Onion Architecture, part 1](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/) (2008): Onion Architecture as defined by its author: all coupling toward the center.
 - [Robert C. Martin: The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) (2012): The Dependency Rule: source code dependencies only point inwards.
 - [Jimmy Bogard: Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/) (2018): Organising code by request: minimise coupling between slices.
