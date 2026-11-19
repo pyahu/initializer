@@ -9,10 +9,19 @@
 - id: ev-db-connection-budget-2
   card: db-connection-budget
   claim: "A CONNECTION LIMIT on the runtime role makes a pod that would overrun the budget fail with a clear error instead of exhausting the server."
-  badge: not-exercised
+  badge: reproduced
   baseline: v0.1-b2
-  limitations: "PostgreSQL documented behaviour."
-  reason: "The fixture's PostgreSQL permission test does not exercise this behavior."
+  limitations: "An isolated PostgreSQL container uses the generated role script and changelog. Enforcement and recovery use a limit of 2 and sequential JDBC logins. This does not prove Hikari pool sizing, concurrent login races, the pod/HPA/rollout budget calculation, PgBouncer behavior or production server capacity."
+  capabilities: [ test, runtime ]
+  components: [ pgjdbc, testcontainers, postgres-image ]
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::DatabaseRolesTest
+  commands: [ ./gradlew -p fixtures/single-hexagonal test --tests io.pyahu.fixture.hexagonal.DatabaseRolesTest.theRuntimeRoleRejectsExcessConnectionsAndRecoversAfterAConnectionCloses ]
+  environment: "GitHub-hosted ubuntu-24.04 x64, pinned Temurin 25.0.5+8 and PostgreSQL 18.6 containers; Spring Boot 4.1.2, PGJDBC 42.7.14, Liquibase 5.0.4 and Testcontainers 2.0.5 resolved by the fixture."
+  run: https://github.com/pyahu/initializer/actions/runs/44589606611/attempts/1
+  commit: 7baa67bbf9418ddfd87bc65193bd87c93dce2016
+  date: "2026-11-19"
+  result: "io.pyahu.fixture.hexagonal.DatabaseRolesTest: 7 tests, 0 failures, 0 errors, 0 skipped. The generated runtime role has CONNECTION LIMIT 40 and is not a superuser. With its limit temporarily reduced to 2, two JDBC connections succeed and a third is rejected with SQLSTATE 53300 and a message naming the role. An ordinary migrator connection still succeeds while the runtime role is capped. Closing one runtime connection permits another login; the test restores the generated limit afterward."
 - id: ev-db-pool-timeouts-1
   card: db-pool-timeouts
   claim: "HikariCP waits 30 seconds for a connection by default; connection-timeout of 2000 to 5000 ms turns pool saturation into fast errors."

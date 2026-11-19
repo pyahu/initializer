@@ -654,7 +654,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            runtime: [ev-db-roles-1, ev-db-testing-1]
+            runtime: [ev-db-connection-budget-2, ev-db-roles-1, ev-db-testing-1]
       testcontainers:
         version: "2.0.5"
         kind: maven-bom
@@ -666,7 +666,7 @@ revisions:
         qualification:
           state: qualified
           capabilities:
-            test: [ev-db-roles-1, ev-db-testing-1]
+            test: [ev-db-connection-budget-2, ev-db-roles-1, ev-db-testing-1]
       spring-modulith:
         version: "2.1.1"
         kind: maven-bom
@@ -832,7 +832,7 @@ revisions:
         qualification:
           state: partial
           capabilities:
-            test: [ev-db-roles-1, ev-db-testing-1]
+            test: [ev-db-connection-budget-2, ev-db-roles-1, ev-db-testing-1]
       otel-lgtm-image:
         version: "0.37.0"
         kind: image
