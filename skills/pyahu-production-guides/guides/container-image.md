@@ -297,10 +297,13 @@ FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05
 WORKDIR /workspace
 COPY gradlew settings.gradle.kts build.gradle.kts ./
 COPY gradle/ gradle/
-RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon --quiet dependencies > /dev/null
+COPY .github/scripts/gradle-ci.sh .github/scripts/
+RUN --mount=type=cache,target=/root/.gradle \
+    bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet dependencies > /tmp/gradle-dependencies.log 2>&1 \
+    || { cat /tmp/gradle-dependencies.log; exit 1; }
 COPY src/ src/
 # Tests run in CI before the image build.
-RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon --quiet bootJar \
+RUN --mount=type=cache,target=/root/.gradle bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet bootJar \
  && cp build/libs/single-hexagonal-0.1.0.jar /workspace/application.jar
 
 FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f AS extract

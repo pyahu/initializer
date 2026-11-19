@@ -19,11 +19,14 @@ COPY gradle/ gradle/
 COPY build-logic/ build-logic/
 COPY services/start/build.gradle.kts services/start/
 COPY data/versions.yaml data/
-RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon --quiet :start:dependencies > /dev/null
+COPY .github/scripts/gradle-ci.sh .github/scripts/
+RUN --mount=type=cache,target=/root/.gradle \
+    bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :start:dependencies > /tmp/gradle-dependencies.log 2>&1 \
+    || { cat /tmp/gradle-dependencies.log; exit 1; }
 COPY templates/ templates/
 COPY services/start/src/ services/start/src/
 # Tests run in CI before the image build.
-RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon --quiet :start:bootJar \
+RUN --mount=type=cache,target=/root/.gradle bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :start:bootJar \
  && cp services/start/build/libs/start-0.1.0.jar /workspace/application.jar
 
 FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f AS extract

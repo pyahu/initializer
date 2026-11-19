@@ -21,13 +21,10 @@ for attempt in 1 2 3; do
   if grep -Eq 'Could not resolve all (artifacts|files) for configuration' "$log"; then
     if grep -Eq 'Received status code (429|500|502|503|504)|Read timed out|Connection reset|Remote host terminated the handshake' "$log"; then
       retry=true
-    elif grep -q 'Could not find ' "$log"; then
-      # Retry a reachable POM or a transient probe failure; a confirmed HTTP 404 stays final.
-      while IFS= read -r pom; do
-        http_code=$(curl --silent --show-error --head --max-time 10 --output /dev/null --write-out '%{http_code}' "$pom" || true)
-        echo "Dependency probe: HTTP $http_code $pom"
-        case "$http_code" in 200|000|408|429|500|502|503|504) retry=true; break;; esac
-      done < <(grep -Eo 'https://repo.maven.apache.org/maven2/[^ ]+\.pom' "$log" | sort -u | head -n 3)
+    elif [ "$attempt" -eq 1 ] && grep -q 'Could not find ' "$log" && grep -Eq 'https://repo.maven.apache.org/maven2/[^ ]+\.pom' "$log"; then
+      # Central sometimes reports existing artifacts as missing; refresh negative metadata once.
+      # A persistent missing coordinate still fails. This also works in the pinned JDK, without curl.
+      retry=true
     fi
   fi
   if grep -Eq 'There were failing tests|Compilation failed|format violations' "$log"; then retry=false; fi

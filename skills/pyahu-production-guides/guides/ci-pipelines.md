@@ -164,6 +164,8 @@ contents are not signed: anyone who can open a pull request can read the base br
    The generated workflow keys these downloads by platform and version catalog. Every build and test still runs.
 
 The dependency helper makes at most three attempts for acquisition failures, with refreshed metadata on retries.
+The Docker build stages use the same helper. A public Maven artifact reported missing gets one metadata refresh;
+if it is still missing, the build fails.
 Compilation, test and formatting failures stop the job. The generator matrix runs eight jobs at a time to limit
 download bursts, and new pushes cancel obsolete runs on the same ref.
 

@@ -36,19 +36,18 @@ func TestGradleNetworkRetriesAreBoundedAndNeverRetryTestFailures(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, tc := range []struct {
-		name, mode, pom string
-		attempts        string
-		pass            bool
+		name, mode string
+		attempts   string
+		pass       bool
 	}{
-		{"429 recovers", "transient", "404", "2", true},
-		{"existing artifact recovers", "missing", "200", "2", true},
-		{"rate limited probe recovers", "missing", "429", "2", true},
-		{"unavailable probe recovers", "missing", "503", "2", true},
-		{"probe connection failure recovers", "missing", "000", "2", true},
-		{"real missing artifact fails", "missing", "404", "1", false},
-		{"test failure is final", "tests", "200", "1", false},
-		{"compiler failure is final", "compile", "200", "1", false},
-		{"network retry budget", "always", "404", "3", false},
+		{"429 recovers", "transient", "2", true},
+		{"negative Maven metadata recovers", "missing", "2", true},
+		{"real missing artifact still fails", "missing-permanent", "2", false},
+		{"private missing artifact is final", "private-missing", "1", false},
+		{"test failure is final", "tests", "1", false},
+		{"compiler failure is final", "compile", "1", false},
+		{"formatting failure is final", "format", "1", false},
+		{"network retry budget", "always", "3", false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			dir := t.TempDir()
@@ -68,27 +67,34 @@ n=$((n + 1))
 printf '%s\n' "$n" > "$FAKE_GRADLE_COUNT"
 printf '%s\n' "$@" >> "$FAKE_GRADLE_ARGS"
 case "$FAKE_GRADLE_MODE" in
-  tests|compile)
+  tests|compile|format)
     echo "Could not resolve all artifacts for configuration 'classpath'"
     echo 'Received status code 429 from server: Too Many Requests'
-    if [ "$FAKE_GRADLE_MODE" = tests ]; then echo 'There were failing tests'; else echo 'Compilation failed'; fi
+    case "$FAKE_GRADLE_MODE" in
+      tests) echo 'There were failing tests';;
+      compile) echo 'Compilation failed';;
+      format) echo 'format violations';;
+    esac
     exit 21;;
 esac
-if [ "$n" -gt 1 ] && [ "$FAKE_GRADLE_MODE" != always ]; then echo 'BUILD SUCCESSFUL'; exit 0; fi
+if [ "$n" -gt 1 ] && [ "$FAKE_GRADLE_MODE" != always ] && [ "$FAKE_GRADLE_MODE" != missing-permanent ]; then echo 'BUILD SUCCESSFUL'; exit 0; fi
 echo "Could not resolve all artifacts for configuration 'classpath'"
-if [ "$FAKE_GRADLE_MODE" = missing ]; then
+if [ "$FAKE_GRADLE_MODE" = missing ] || [ "$FAKE_GRADLE_MODE" = missing-permanent ] || [ "$FAKE_GRADLE_MODE" = private-missing ]; then
   echo 'Could not find example:artifact:1.0'
-  echo 'https://repo.maven.apache.org/maven2/example/artifact/1.0/artifact-1.0.pom'
+  if [ "$FAKE_GRADLE_MODE" = private-missing ]; then
+    echo 'https://private.example/example/artifact/1.0/artifact-1.0.pom'
+  else
+    echo 'https://repo.maven.apache.org/maven2/example/artifact/1.0/artifact-1.0.pom'
+  fi
 else
   echo 'Received status code 429 from server: Too Many Requests'
 fi
 exit 21
 `)
-			write("curl", "#!/bin/sh\nprintf '%s' \"$FAKE_POM_STATUS\"\n")
 			cmd := exec.Command("bash", script, fake, "a task with spaces")
 			cmd.Dir = dir
 			cmd.Env = append(os.Environ(), "PATH="+dir+string(os.PathListSeparator)+os.Getenv("PATH"),
-				"GRADLE_CI_RETRY_DELAY_SECONDS=0", "FAKE_GRADLE_MODE="+tc.mode, "FAKE_POM_STATUS="+tc.pom,
+				"GRADLE_CI_RETRY_DELAY_SECONDS=0", "FAKE_GRADLE_MODE="+tc.mode,
 				"FAKE_GRADLE_COUNT="+filepath.Join(dir, "count"), "FAKE_GRADLE_ARGS="+filepath.Join(dir, "args"))
 			out, err := cmd.CombinedOutput()
 			if (err == nil) != tc.pass {
@@ -103,5 +109,21 @@ exit 21
 				t.Fatalf("command arguments or metadata refresh lost: %s", args)
 			}
 		})
+	}
+}
+
+func TestDistributedGradleRetryHelpersMatch(t *testing.T) {
+	want, err := os.ReadFile("../../.github/scripts/gradle-ci.sh")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, path := range []string{
+		"../../templates/base/.github/scripts/gradle-ci.sh",
+		"../../fixtures/single-hexagonal/.github/scripts/gradle-ci.sh",
+	} {
+		got, err := os.ReadFile(path)
+		if err != nil || string(got) != string(want) {
+			t.Fatalf("retry behavior differs in %s: %v", path, err)
+		}
 	}
 }
