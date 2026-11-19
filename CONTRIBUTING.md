@@ -233,6 +233,9 @@ The single-hexagonal fixture's `DatabaseRolesTest` runs PostgreSQL as a test con
 changelog from `templates/postgres/`. Its database dependencies are test-only: the service image used by JVM and
 telemetry acceptance tests still has no data source. The fixture workflow watches those template inputs too.
 
+Spring Boot database integration runs in the separate `databaseTest` suite, also required by `build`. This keeps
+JDBC auto-configuration out of the ordinary fixture tests. Both suites' JUnit reports feed the evidence report.
+
 ## Templates
 
 `templates/base/` goes into every project, `templates/<architecture>/` adds the files of one architecture and each

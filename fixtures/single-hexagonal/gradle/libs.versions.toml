@@ -37,6 +37,8 @@ testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgr
 testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-junit-jupiter" }
 liquibase-core = { module = "org.liquibase:liquibase-core" }
 postgresql = { module = "org.postgresql:postgresql" }
+spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc" }
+spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }

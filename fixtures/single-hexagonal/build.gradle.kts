@@ -65,9 +65,38 @@ tasks.named<JavaCompile>("compileTestJava") {
     options.errorprone.enabled = false
 }
 
-tasks.test {
+tasks.withType<Test>().configureEach {
     useJUnitPlatform()
     systemProperty("postgres.image", "postgres@" + libs.versions.postgres.image.get().substringAfter("@"))
+}
+
+// Keep database auto-configuration out of the ordinary service tests and its runtime image.
+val databaseTest = sourceSets.create("databaseTest") {
+    compileClasspath += sourceSets.main.get().output
+    runtimeClasspath += sourceSets.main.get().output
+}
+configurations[databaseTest.implementationConfigurationName].extendsFrom(configurations.testImplementation.get())
+configurations[databaseTest.runtimeOnlyConfigurationName].extendsFrom(configurations.testRuntimeOnly.get())
+
+dependencies {
+    add(databaseTest.implementationConfigurationName, libs.spring.boot.starter.jdbc)
+    add(databaseTest.implementationConfigurationName, libs.spring.boot.testcontainers)
+}
+
+tasks.named<JavaCompile>(databaseTest.compileJavaTaskName) {
+    options.errorprone.enabled = false
+}
+
+val databaseTests = tasks.register<Test>("databaseTest") {
+    description = "Exercises Spring Boot database integration against real PostgreSQL."
+    group = "verification"
+    testClassesDirs = databaseTest.output.classesDirs
+    classpath = databaseTest.runtimeClasspath
+    shouldRunAfter(tasks.test)
+}
+
+tasks.check {
+    dependsOn(databaseTests)
 }
 
 // Exercise the actual generated role grants and changelog, without adding a database to the runtime image.

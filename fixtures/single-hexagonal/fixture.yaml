@@ -47,6 +47,7 @@ exercises:
   - testcontainers
   - postgres-image
 requiredTests:
+  - gradle/single-hexagonal::ServiceConnectionTest
   - gradle/single-hexagonal::DatabaseRolesTest
   - acceptance/promotion::TestSaveLoadPreservesTheTestedImage
   - gradle/single-hexagonal::ConcurrencyLimitsTest
