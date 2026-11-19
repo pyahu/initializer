@@ -52,12 +52,12 @@
   card: db-roles
   claim: "The migration role owns the schema. The runtime role writes business data, cannot drop tables, and can read but not insert/update/delete Liquibase history or lock records."
   badge: reproduced
-  capabilities: [test, runtime]
-  components: [liquibase, pgjdbc, testcontainers, postgres-image]
+  capabilities: [ test, runtime ]
+  components: [ liquibase, pgjdbc, testcontainers, postgres-image ]
   baseline: v0.1-b2
   fixture: single-hexagonal
   test: gradle/single-hexagonal::DatabaseRolesTest
-  commands: ["./gradlew -p fixtures/single-hexagonal test --tests io.pyahu.fixture.hexagonal.DatabaseRolesTest"]
+  commands: [ "./gradlew -p fixtures/single-hexagonal test --tests io.pyahu.fixture.hexagonal.DatabaseRolesTest" ]
   environment: "GitHub-hosted ubuntu-24.04 x64; Temurin 25.0.5+8 container; PostgreSQL 18.6 pinned by digest, Liquibase 5.0.4, PGJDBC 42.7.14, Testcontainers 2.0.5."
   run: https://github.com/pyahu/initializer/actions/runs/44390746843/attempts/1
   commit: e2584f5802881793d9709a0880cc1448bd488e7b
@@ -88,10 +88,19 @@
 - id: ev-db-testing-1
   card: db-testing
   claim: "Testcontainers 2.0.5 provides org.testcontainers.postgresql.PostgreSQLContainer in the renamed testcontainers-postgresql artifact. @ServiceConnection points the data source at it."
-  badge: not-exercised
+  badge: reproduced
   baseline: v0.1-b2
-  limitations: "Read from the Testcontainers 2.0.5 artifacts in the source guide."
-  reason: "The permission test uses PostgreSQLContainer directly; no qualified test verifies Spring Boot @ServiceConnection data source wiring."
+  limitations: "Boot's JDBC auto-configuration with a container bean and typed JdbcConnectionDetails. No application-specific DataSource, production database, migration readiness or Liquibase connection override is tested."
+  capabilities: [ test, runtime ]
+  components: [ spring-boot, pgjdbc, testcontainers, postgres-image ]
+  fixture: single-hexagonal
+  test: gradle/single-hexagonal::ServiceConnectionTest
+  commands: [ ./gradlew -p fixtures/single-hexagonal databaseTest --tests io.pyahu.fixture.hexagonal.ServiceConnectionTest ]
+  environment: "GitHub-hosted ubuntu-24.04 x64, pinned Temurin 25.0.5+8 and PostgreSQL 18.6 containers; Spring Boot 4.1.2, PGJDBC 42.7.14, Liquibase 5.0.4 and Testcontainers 2.0.5 resolved by the fixture."
+  run: https://github.com/pyahu/initializer/actions/runs/44564545684/attempts/2
+  commit: 9f1a500edc7522259e23cd68de470c8c216d3717
+  date: "2026-11-19"
+  result: "io.pyahu.fixture.hexagonal.ServiceConnectionTest: 1 tests, 0 failures, 0 errors, 0 skipped. Despite an intentionally wrong datasource URL, username and password, JdbcConnectionDetails and Hikari use the container URL. SQL reads the container database, its username and a marker initialized inside PostgreSQL."
 - id: ev-db-pool-metrics-1
   card: db-pool-metrics
   claim: "HikariCP publishes hikaricp.connections.pending, timeout, active, max, usage and acquire through Micrometer, tagged with the pool name."
