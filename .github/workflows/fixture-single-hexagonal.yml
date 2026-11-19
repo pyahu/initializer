@@ -75,9 +75,10 @@ jobs:
       - name: Image
         id: image
         run: |
-          mkdir -p fixtures/single-hexagonal/build/image-artifact/workspace
-          cp fixtures/single-hexagonal/build/libs/single-hexagonal-0.1.0.jar fixtures/single-hexagonal/build/image-artifact/workspace/application.jar
-          docker buildx build --load --build-context build=fixtures/single-hexagonal/build/image-artifact -t single-hexagonal:ci fixtures/single-hexagonal
+          artifact_context=$(mktemp -d)
+          mkdir -p "$artifact_context/workspace"
+          cp fixtures/single-hexagonal/build/libs/single-hexagonal-0.1.0.jar "$artifact_context/workspace/application.jar"
+          docker buildx build --load --build-context "build=$artifact_context" -t single-hexagonal:ci fixtures/single-hexagonal
       - name: Export the built image for scanning
         run: |
           mkdir -p out

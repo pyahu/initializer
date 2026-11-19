@@ -108,9 +108,10 @@ jobs:
           args: detect-files -d build/manifests --target-versions k8s=v1.37.0
       - name: Image
         run: |
-          mkdir -p build/image-artifact/workspace
-          cp services/start/build/libs/start-0.1.0.jar build/image-artifact/workspace/application.jar
-          docker buildx build --load --build-context build=build/image-artifact -t start:ci -f services/start/Dockerfile .
+          artifact_context=$(mktemp -d)
+          mkdir -p "$artifact_context/workspace"
+          cp services/start/build/libs/start-0.1.0.jar "$artifact_context/workspace/application.jar"
+          docker buildx build --load --build-context "build=$artifact_context" -t start:ci -f services/start/Dockerfile .
       - name: Export the built image for scanning
         run: docker save start:ci -o build/start-image.tar
       - name: Backend image vulnerabilities
