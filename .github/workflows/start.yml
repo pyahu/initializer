@@ -225,6 +225,7 @@ jobs:
           docker logs start
           exit 1
       - name: Generate, twice
+        id: generated
         # POST with form fields as curl -d sends them, then GET with the same fields as a query: same bytes.
         env:
           NAME: ${{ matrix.name }}
@@ -242,13 +243,16 @@ jobs:
           cmp out/post.zip out/get.zip
           cd out && unzip -q post.zip
           test -x "$NAME/gradlew"
+          # Evaluate once, before containers create output owned by root. Never glob the build tree.
+          gradle_key=$(sha256sum "$NAME/gradle/libs.versions.toml" "$NAME/gradle/wrapper/gradle-wrapper.properties" | sha256sum | cut -d' ' -f1)
+          printf 'gradle_key=%s\n' "$gradle_key" >> "$GITHUB_OUTPUT"
       - name: Gradle dependencies
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             ~/.cache/pyahu-gradle/caches/modules-2
             ~/.cache/pyahu-gradle/wrapper/dists
-          key: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-${{ hashFiles('out/**/gradle/libs.versions.toml', 'out/**/gradle/wrapper/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-${{ steps.generated.outputs.gradle_key }}
           restore-keys: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-
       - name: The generated project's own workflow
         run: go run ./cmd/runworkflow -dir "out/${{ matrix.name }}"

@@ -42,6 +42,9 @@ func TestGradleNetworkRetriesAreBoundedAndNeverRetryTestFailures(t *testing.T) {
 	}{
 		{"429 recovers", "transient", "404", "2", true},
 		{"existing artifact recovers", "missing", "200", "2", true},
+		{"rate limited probe recovers", "missing", "429", "2", true},
+		{"unavailable probe recovers", "missing", "503", "2", true},
+		{"probe connection failure recovers", "missing", "000", "2", true},
 		{"real missing artifact fails", "missing", "404", "1", false},
 		{"test failure is final", "tests", "200", "1", false},
 		{"compiler failure is final", "compile", "200", "1", false},

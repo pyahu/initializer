@@ -287,7 +287,8 @@ distributions, keyed by platform and version catalogs; builds and tests always r
 runs at most eight jobs at once. New pushes cancel obsolete runs on the same ref.
 
 `.github/scripts/gradle-ci.sh` makes at most three attempts for dependency acquisition failures, refreshing
-metadata on retries. A reported missing public Maven artifact is retried only if its POM is reachable. Test,
+metadata on retries. A reported missing public Maven artifact is retried if its POM is reachable or the probe
+itself encounters a transient network error; an HTTP 404 remains final. Test,
 compilation and formatting failures are final. The link and BOM checks respect bounded `Retry-After` delays;
 the link checker sends only one request at a time to each origin. Persistent failures still block publication.
 

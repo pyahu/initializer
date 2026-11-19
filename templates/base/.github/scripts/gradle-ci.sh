@@ -22,10 +22,11 @@ for attempt in 1 2 3; do
     if grep -Eq 'Received status code (429|500|502|503|504)|Read timed out|Connection reset|Remote host terminated the handshake' "$log"; then
       retry=true
     elif grep -q 'Could not find ' "$log"; then
-      # Treat an apparently missing module as transient only when Central can serve its public POM.
+      # Retry a reachable POM or a transient probe failure; a confirmed HTTP 404 stays final.
       while IFS= read -r pom; do
         http_code=$(curl --silent --show-error --head --max-time 10 --output /dev/null --write-out '%{http_code}' "$pom" || true)
-        if [ "$http_code" = 200 ]; then retry=true; break; fi
+        echo "Dependency probe: HTTP $http_code $pom"
+        case "$http_code" in 200|000|408|429|500|502|503|504) retry=true; break;; esac
       done < <(grep -Eo 'https://repo.maven.apache.org/maven2/[^ ]+\.pom' "$log" | sort -u | head -n 3)
     fi
   fi
