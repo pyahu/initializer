@@ -303,7 +303,7 @@ all required workflows. Earlier fixture-attempt artifacts never replace the sele
 
 | Workflow | Does |
 | -------- | ---- |
-| `guides.yml` | `go test`, `check`, `generate --check`, `qualify --check`, `npm audit`, site build, `site` |
+| `guides.yml` | clean checkout, `go test`, `check`, `generate --check`, `qualify --check`, `npm audit`, site build, `site` |
 | `links.yml` | external links and BOM pins, also weekly |
 | `fixture-single-hexagonal.yml` | fixture build, image, acceptance tests, evidence report |
 | `start.yml` | the Initializer service: Gradle build in the pinned JDK, convention plugin tests, image, smoke; then every combination generated through the API, built, rendered, imaged and started by its own workflow |
@@ -327,6 +327,10 @@ push paths: a documentation-only commit may reuse an earlier service build, whil
 A pending, failed, cancelled or missing check prevents deployment. The check also rejects a dirty checkout or a
 commit superseded on main. It uses GitHub's public read API; an optional read-only `GITHUB_TOKEN` increases the
 API rate limit. No new token is needed for a normal public check. A timeout or API failure stops publication.
+
+Windows wrappers are stored with LF in Git and checked out with CRLF, as `.gitattributes` declares. Normalize
+existing files with `git add --renormalize` when applying text attributes: an unnormalized blob can make a fresh
+clone dirty and block every Workers build. The Guides workflow checks that the checkout starts clean.
 
 The fixture report fetch uses the same input comparison and waits for the matching run instead of borrowing an
 older completed report. It verifies the artifact's run ID, attempt and source commit before qualification.
