@@ -33,7 +33,7 @@
       "fixture": "single-hexagonal",
       "baseline": "v0.1-b2",
       "lang": "kotlin",
-      "sha256": "2451e79aeb59fb66dbd5d05b9625bec176e90206ca69b3137cd37e001f37a704"
+      "sha256": "37668f93563bfeb4e7beade586335e2b9a4291b1a69e643246b4f9dbb5f6a7be"
     },
     {
       "path": "fixtures/single-hexagonal/src/main/java/io/pyahu/fixture/hexagonal/config/OpenTelemetryLoggingConfig.java",
