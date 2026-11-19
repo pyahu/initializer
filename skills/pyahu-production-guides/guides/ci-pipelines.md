@@ -108,7 +108,10 @@ The `permissions` key fixes this. As soon as you name one permission, every perm
 bits.
 
 ```sh
-docker run --rm -v "$PWD/fixtures/single-hexagonal:/w" -w /w "$JDK_IMAGE" ./gradlew --no-daemon build
+bash .github/scripts/gradle-ci.sh docker run --rm \
+  -v "$PWD:/repo" -w /repo/fixtures/single-hexagonal \
+  -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache \
+  -v /var/run/docker.sock:/var/run/docker.sock "$JDK_IMAGE" ./gradlew --no-daemon build
 ```
 
 ### What's going on
@@ -123,7 +126,7 @@ the Dockerfile's build stage uses.
 ### Do this
 
 1. Put the JDK image digest in one variable at the top of the workflow, such as `JDK_IMAGE`.
-2. Run the Gradle build inside that image, as above.
+2. Run the Gradle build inside that image, as above. The fixture's socket mount lets Testcontainers start PostgreSQL.
 3. Use the same digest in the Dockerfile's build stage.
 4. Keep the Gradle wrapper's `distributionSha256Sum`, so a changed Gradle download fails the build.
 5. Before using any other tool in the job, check its version, as this repository does for Go.
@@ -131,13 +134,12 @@ the Dockerfile's build stage uses.
 ### When this is not for you
 
 - A library that must work on several JDKs: test them with a matrix instead, since there is no single production JDK.
-- The cost: the build runs in a fresh container, so the Gradle cache is not reused between runs here. Step 4 shows
-  what caching would take.
+- A container without a cache mount downloads dependencies again on every run. Mount a download cache as shown
+  above and restore it as described in step 4.
 
 ## 4. How do I cache without trusting other branches?
 
-**In short:** cache downloads, key them by the lock files, keep secrets out and let only trusted runs write to the
-cache.
+**In short:** cache downloads, key them by the lock files, keep secrets out and protect the default branch's cache.
 
 ### What's going on
 
@@ -156,7 +158,14 @@ contents are not signed: anyone who can open a pull request can read the base br
 1. Cache dependency downloads with the cache your setup action offers, such as `setup-go` with `cache: true`.
 2. Key caches by the hash of your lock or version files, so a changed dependency makes a new cache.
 3. Never write tokens, credentials or secrets to a cached path.
-4. Let caches be written only by runs on trusted triggers, such as a push to the default branch.
+4. Keep default branch cache writes on trusted triggers. Pull requests may restore that cache and write only
+   their own scoped cache.
+5. For Gradle in Docker, persist `caches/modules-2` and `wrapper/dists` under the mounted `GRADLE_USER_HOME`.
+   The generated workflow keys these downloads by platform and version catalog. Every build and test still runs.
+
+The dependency helper makes at most three attempts for acquisition failures, with refreshed metadata on retries.
+Compilation, test and formatting failures stop the job. The generator matrix runs eight jobs at a time to limit
+download bursts, and new pushes cancel obsolete runs on the same ref.
 
 ### When this is not for you
 

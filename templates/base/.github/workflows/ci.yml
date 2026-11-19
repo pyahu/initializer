@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  cancel-in-progress: true
 
 env:
   # The JDK image of baseline [[baseline]], pinned by digest.
@@ -36,6 +36,14 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Gradle dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cache/pyahu-gradle/caches/modules-2
+            ~/.cache/pyahu-gradle/wrapper/dists
+          key: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-${{ hashFiles('gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-
       # Keep the output parent owned by the runner before the container writes Gradle output as root.
       - name: Manifest output directory
         run: mkdir -p build/manifests
@@ -43,11 +51,16 @@ jobs:
 [[#postgres]]
         # Testcontainers starts PostgreSQL next to this container, through the runner's Docker.
         run: >-
-          docker run --rm -v "$PWD:/w" -w /w -v /var/run/docker.sock:/var/run/docker.sock
+          bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
+          -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          -v /var/run/docker.sock:/var/run/docker.sock
           "$JDK_IMAGE" ./gradlew --no-daemon build
 [[/postgres]]
 [[^postgres]]
-        run: docker run --rm -v "$PWD:/w" -w /w "$JDK_IMAGE" ./gradlew --no-daemon build
+        run: >-
+          bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
+          -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          "$JDK_IMAGE" ./gradlew --no-daemon build
 [[/postgres]]
       - name: Render the dev overlay
         uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4

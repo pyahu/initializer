@@ -19,6 +19,7 @@ on:
       - .dockerignore
       - .gitattributes
       - .github/workflows/start.yml
+      - .github/scripts/**
   pull_request:
     paths:
       - services/start/**
@@ -36,6 +37,7 @@ on:
       - .dockerignore
       - .gitattributes
       - .github/workflows/start.yml
+      - .github/scripts/**
   workflow_dispatch:
 
 permissions:
@@ -60,13 +62,22 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Gradle dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cache/pyahu-gradle/caches/modules-2
+            ~/.cache/pyahu-gradle/wrapper/dists
+          key: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-${{ hashFiles('gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties', 'build-logic/build.gradle.kts') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-
       # Keep the output parent owned by the runner before the container writes Gradle output as root.
       - name: Manifest output directory
         run: mkdir -p build/manifests
       - name: Gradle build in the pinned JDK
         run: |
-          docker run --rm -v "$PWD:/w" -w /w "$JDK_IMAGE" sh -c \
-            './gradlew --no-daemon build && ./gradlew --no-daemon -p build-logic test'
+          bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w \
+            -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache \
+            "$JDK_IMAGE" ./gradlew --no-daemon build :build-logic:test
       - name: Render the dev overlay
         uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
         with:
@@ -180,6 +191,7 @@ jobs:
     timeout-minutes: 40
     strategy:
       fail-fast: false
+      max-parallel: 8
       matrix:
         architecture: [hexagonal, ddd-layered]
         database: [none, postgres]
@@ -230,5 +242,13 @@ jobs:
           cmp out/post.zip out/get.zip
           cd out && unzip -q post.zip
           test -x "$NAME/gradlew"
+      - name: Gradle dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cache/pyahu-gradle/caches/modules-2
+            ~/.cache/pyahu-gradle/wrapper/dists
+          key: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-${{ hashFiles('out/**/gradle/libs.versions.toml', 'out/**/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-
       - name: The generated project's own workflow
         run: go run ./cmd/runworkflow -dir "out/${{ matrix.name }}"

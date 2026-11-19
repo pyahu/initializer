@@ -32,6 +32,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: links-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   GOTOOLCHAIN: go1.27.2
 

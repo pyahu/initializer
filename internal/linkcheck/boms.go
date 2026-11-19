@@ -3,7 +3,6 @@ package linkcheck
 import (
 	"encoding/xml"
 	"fmt"
-	"io"
 	"net/http"
 	"regexp"
 	"strings"
@@ -13,7 +12,7 @@ import (
 )
 
 // Central is the Maven Central base URL.
-const Central = "https://repo1.maven.org/maven2/"
+const Central = "https://repo.maven.apache.org/maven2/"
 
 type pom struct {
 	Parent struct {
@@ -49,34 +48,9 @@ func (r *resolver) get(g, a, v string) (*pom, error) {
 		return p, nil
 	}
 	u := fmt.Sprintf("%s%s/%s/%s/%s-%s.pom", Central, strings.ReplaceAll(g, ".", "/"), a, v, a, v)
-	var b []byte
-	var last error
-	// Same retry policy as the link check: Central rate-limits CI runners with 429.
-	for attempt, wait := range []time.Duration{0, 2 * time.Second, 8 * time.Second} {
-		if attempt > 0 {
-			time.Sleep(wait)
-		}
-		req, _ := http.NewRequest(http.MethodGet, u, nil)
-		req.Header.Set("User-Agent", UserAgent)
-		resp, err := r.client.Do(req)
-		if err != nil {
-			last = err
-			continue
-		}
-		body, _ := io.ReadAll(resp.Body)
-		resp.Body.Close()
-		if resp.StatusCode == 429 || resp.StatusCode >= 500 {
-			last = fmt.Errorf("%s: status %d", u, resp.StatusCode)
-			continue
-		}
-		if resp.StatusCode != 200 {
-			return nil, fmt.Errorf("%s: status %d", u, resp.StatusCode)
-		}
-		b, last = body, nil
-		break
-	}
-	if last != nil {
-		return nil, last
+	b, err := readURL(r.client, u)
+	if err != nil {
+		return nil, err
 	}
 	var p pom
 	if err := xml.Unmarshal(b, &p); err != nil {

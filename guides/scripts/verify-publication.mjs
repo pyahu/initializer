@@ -50,7 +50,7 @@ export async function verifyPublication() {
   const token = process.env.GITHUB_TOKEN;
   const headers = { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'pyahu-publication-check' };
   if (token) headers.Authorization = `Bearer ${token}`;
-  const deadline = Date.now() + 12 * 60 * 1000;
+  const deadline = Date.now() + 30 * 60 * 1000;
   while (true) {
     const runs = [];
     let checks;
@@ -69,8 +69,8 @@ export async function verifyPublication() {
       console.log(`Publication approved for ${target}`);
       return;
     }
-    if (Date.now() >= deadline) throw new Error('Required checks did not pass within 12 minutes; publication stopped');
-    await new Promise(resolve => setTimeout(resolve, 30_000));
+    if (Date.now() >= deadline) throw new Error('Required checks did not pass within 30 minutes; publication stopped');
+    await new Promise(resolve => setTimeout(resolve, 60_000));
   }
 }
 

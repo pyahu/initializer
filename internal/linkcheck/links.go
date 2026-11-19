@@ -2,9 +2,7 @@
 package linkcheck
 
 import (
-	"context"
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
 	"os"
@@ -86,6 +84,7 @@ func Check(r *guidedata.Repo, dist, site string, now time.Time) []error {
 	var mu sync.Mutex
 	sem := make(chan struct{}, 8)
 	var wg sync.WaitGroup
+	hosts := map[string][]target{}
 	for _, t := range list {
 		if x, ok := exceptions[t.url]; ok {
 			exp, _ := time.Parse("2006-01-02", x.Expires)
@@ -96,17 +95,29 @@ func Check(r *guidedata.Repo, dist, site string, now time.Time) []error {
 			}
 			continue
 		}
+		u, err := url.Parse(t.url)
+		if err != nil {
+			errs = append(errs, fmt.Errorf("%s: %v", t.url, err))
+			continue
+		}
+		hosts[u.Host] = append(hosts[u.Host], t)
+	}
+	// One worker per origin avoids sending concurrent requests to one documentation host.
+	for _, targets := range hosts {
 		wg.Add(1)
-		sem <- struct{}{}
-		go func(t target) {
+		go func(targets []target) {
 			defer wg.Done()
-			defer func() { <-sem }()
-			if err := fetch(client, t); err != nil {
-				mu.Lock()
-				errs = append(errs, fmt.Errorf("%s (%s): %v", t.url, t.from, err))
-				mu.Unlock()
+			for _, t := range targets {
+				sem <- struct{}{}
+				err := fetch(client, t)
+				<-sem
+				if err != nil {
+					mu.Lock()
+					errs = append(errs, fmt.Errorf("%s (%s): %v", t.url, t.from, err))
+					mu.Unlock()
+				}
 			}
-		}(t)
+		}(targets)
 	}
 	wg.Wait()
 	sort.Slice(errs, func(i, j int) bool { return errs[i].Error() < errs[j].Error() })
@@ -114,54 +125,21 @@ func Check(r *guidedata.Repo, dist, site string, now time.Time) []error {
 }
 
 func fetch(client *http.Client, t target) error {
-	backoff := []time.Duration{2 * time.Second, 8 * time.Second}
-	var last error
-	for attempt := 0; attempt <= len(backoff); attempt++ {
-		if attempt > 0 {
-			time.Sleep(backoff[attempt-1])
-		}
-		retry, err := once(client, t)
-		if err == nil {
-			return nil
-		}
-		last = err
-		if !retry {
-			return err
-		}
-	}
-	return last
-}
-
-func once(client *http.Client, t target) (retry bool, err error) {
-	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, t.url, nil)
-	req.Header.Set("User-Agent", UserAgent)
-	req.Header.Set("Accept", "text/html,application/xhtml+xml,*/*")
-	resp, err := client.Do(req)
+	body, err := readURL(client, t.url)
 	if err != nil {
-		return true, err
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode == 429 || resp.StatusCode >= 500 {
-		return true, fmt.Errorf("status %d", resp.StatusCode)
-	}
-	if resp.StatusCode != 200 {
-		return false, fmt.Errorf("status %d", resp.StatusCode)
-	}
-	body, err := io.ReadAll(io.LimitReader(resp.Body, 32<<20))
-	if err != nil {
-		return true, err
+		return err
 	}
 	if t.expect != "" && !strings.Contains(string(body), t.expect) {
-		return false, fmt.Errorf("expected text %q not found", t.expect)
+		return fmt.Errorf("expected text %q not found", t.expect)
 	}
 	u, _ := url.Parse(t.url)
 	if u.Fragment != "" {
 		frag, _ := url.PathUnescape(u.Fragment)
 		if !hasID(string(body), frag) {
-			return false, fmt.Errorf("fragment %q not found as id or name", frag)
+			return fmt.Errorf("fragment %q not found as id or name", frag)
 		}
 	}
-	return false, nil
+	return nil
 }
 
 func hasID(body, id string) bool {

@@ -282,6 +282,18 @@ changes; a renewal is a new record.
 
 ## CI and publication
 
+Gradle containers mount a persistent dependency cache. CI restores only downloaded modules and wrapper
+distributions, keyed by platform and version catalogs; builds and tests always run. The generated-project matrix
+runs at most eight jobs at once. New pushes cancel obsolete runs on the same ref.
+
+`.github/scripts/gradle-ci.sh` makes at most three attempts for dependency acquisition failures, refreshing
+metadata on retries. A reported missing public Maven artifact is retried only if its POM is reachable. Test,
+compilation and formatting failures are final. The link and BOM checks respect bounded `Retry-After` delays;
+the link checker sends only one request at a time to each origin. Persistent failures still block publication.
+
+Guide qualification can wait up to 25 minutes for the matching fixture, and publication up to 30 minutes for
+all required workflows. Earlier fixture-attempt artifacts never replace the selected attempt's report.
+
 | Workflow | Does |
 | -------- | ---- |
 | `guides.yml` | `go test`, `check`, `generate --check`, `qualify --check`, `npm audit`, site build, `site` |

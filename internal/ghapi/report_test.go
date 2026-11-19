@@ -153,3 +153,54 @@ func TestPullRequestRunNamesTheHeadWhileEvidenceNamesTheMerge(t *testing.T) {
 		t.Fatal("different PR head accepted", err)
 	}
 }
+
+func TestFetchReportChoosesTheCurrentAttemptArtifact(t *testing.T) {
+	root, _, _, target := reportRepository(t)
+	for _, tc := range []struct{ includeCurrent, oldOK bool }{{true, true}, {true, false}, {false, true}} {
+		t.Run(fmt.Sprintf("current=%v/oldOK=%v", tc.includeCurrent, tc.oldOK), func(t *testing.T) {
+			var server *httptest.Server
+			server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				switch r.URL.Path {
+				case "/repos/owner/repo/actions/workflows/fixture.yml/runs":
+					_ = json.NewEncoder(w).Encode(map[string]any{"workflow_runs": []workflowRun{{ID: 42, HeadSHA: target, Status: "completed", Conclusion: "success", Attempt: 2}}})
+				case "/repos/owner/repo/actions/runs/42/artifacts":
+					artifacts := []map[string]any{{"name": "evidence-report", "archive_download_url": server.URL + "/old"}}
+					if tc.includeCurrent {
+						artifacts = append(artifacts, map[string]any{"name": "evidence-report", "archive_download_url": server.URL + "/current"})
+					}
+					_ = json.NewEncoder(w).Encode(map[string]any{"artifacts": artifacts})
+				case "/old", "/current":
+					attempt := 1
+					if r.URL.Path == "/current" {
+						attempt = 2
+					}
+					var b bytes.Buffer
+					z := zip.NewWriter(&b)
+					f, _ := z.Create("evidence-report.json")
+					_, _ = fmt.Fprintf(f, `{"ok":%t,"commit":%q,"runId":42,"runAttempt":%d}`, r.URL.Path == "/current" || tc.oldOK, target, attempt)
+					_ = z.Close()
+					_, _ = w.Write(b.Bytes())
+				default:
+					t.Errorf("unexpected URL %s", r.URL)
+					w.WriteHeader(404)
+				}
+			}))
+			defer server.Close()
+			body, _, err := FetchReport("owner/repo", "fixture.yml", "main", "test-token", FetchOptions{Root: root, Commit: target, api: server.URL})
+			if tc.includeCurrent {
+				if err != nil {
+					t.Fatal(err)
+				}
+				var identity struct {
+					Attempt int64 `json:"runAttempt"`
+				}
+				_ = json.Unmarshal(body, &identity)
+				if identity.Attempt != 2 {
+					t.Fatal("old attempt accepted")
+				}
+			} else if err == nil {
+				t.Fatal("old successful artifact replaced missing current attempt")
+			}
+		})
+	}
+}

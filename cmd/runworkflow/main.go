@@ -4,8 +4,8 @@
 //	go run ./cmd/runworkflow -dir orders [-workflow .github/workflows/ci.yml] [-job build]
 //
 // It runs what the project templates use and refuses anything else, so a new kind of step cannot pass untested:
-// run steps with bash, docker:// actions and actions/checkout, which it skips because the project is already on
-// disk. Expressions (${{ }}) are refused in steps for the same reason.
+// run steps with bash, docker:// actions, checkout (already on disk), and optional GitHub dependency caches
+// (skipped locally; builds still run). Expressions (${{ }}) are refused in executed commands.
 package main
 
 import (
@@ -95,6 +95,9 @@ func runStep(dir string, s step, env map[string]string) error {
 		return execute(cmd, dir, env)
 	case strings.HasPrefix(s.Uses, "actions/checkout@"):
 		fmt.Println("skipped: the project is already on disk")
+		return nil
+	case strings.HasPrefix(s.Uses, "actions/cache@"):
+		fmt.Println("skipped: GitHub dependency cache; every build step still runs")
 		return nil
 	case strings.HasPrefix(s.Uses, "docker://"):
 		for k := range s.With {

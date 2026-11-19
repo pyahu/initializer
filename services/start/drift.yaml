@@ -25,6 +25,7 @@ paths:
 
 rules:
   - { path: .gitattributes, mode: same }
+  - { path: .github/scripts/gradle-ci.sh, mode: same }
   - { path: gradlew, mode: same }
   - { path: gradlew.bat, mode: same }
   - { path: gradle/wrapper/**, mode: same }

@@ -114,6 +114,7 @@ func FetchReport(repo, workflow, branch, token string, options FetchOptions) ([]
 	if err := get(fmt.Sprintf("%s/repos/%s/actions/runs/%d/artifacts?name=evidence-report", api, repo, id), &arts); err != nil {
 		return nil, id, err
 	}
+artifacts:
 	for _, a := range arts.Artifacts {
 		if a.Name != "evidence-report" || a.Expired {
 			continue
@@ -145,6 +146,10 @@ func FetchReport(repo, workflow, branch, token string, options FetchOptions) ([]
 				}
 				if err := json.Unmarshal(b, &identity); err != nil {
 					return nil, id, err
+				}
+				// Retries keep earlier attempts' artifacts. Only the selected attempt may qualify.
+				if identity.RunID == id && identity.Attempt > 0 && identity.Attempt < selected.Attempt {
+					continue artifacts
 				}
 				if !identity.OK || identity.RunID != id || identity.Attempt != selected.Attempt || !sameInputs(options.Root, identity.Commit, target, paths) {
 					return nil, id, fmt.Errorf("run %d: report identity or workflow inputs do not match the target checkout", id)

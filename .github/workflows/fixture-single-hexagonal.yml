@@ -16,6 +16,7 @@ on:
       - go.mod
       - go.sum
       - .github/workflows/fixture-single-hexagonal.yml
+      - .github/scripts/**
   pull_request:
     paths:
       - fixtures/single-hexagonal/**
@@ -29,6 +30,7 @@ on:
       - go.mod
       - go.sum
       - .github/workflows/fixture-single-hexagonal.yml
+      - .github/scripts/**
   workflow_dispatch:
 
 permissions:
@@ -36,7 +38,7 @@ permissions:
 
 concurrency:
   group: fixture-single-hexagonal-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  cancel-in-progress: true
 
 env:
   GOTOOLCHAIN: go1.27.2
@@ -55,11 +57,20 @@ jobs:
           cache: true
       - name: Go toolchain
         run: test "$(go version | cut -d' ' -f3)" = go1.27.2
+      - name: Gradle dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cache/pyahu-gradle/caches/modules-2
+            ~/.cache/pyahu-gradle/wrapper/dists
+          key: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-${{ hashFiles('fixtures/single-hexagonal/gradle/libs.versions.toml', 'fixtures/single-hexagonal/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-
       - name: Gradle build in the pinned JDK
         id: gradle
         # The permission test copies the real SQL/changelog templates and starts PostgreSQL through Docker.
         run: >-
-          docker run --rm -v "$PWD:/repo" -w /repo/fixtures/single-hexagonal
+          bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/repo" -w /repo/fixtures/single-hexagonal
+          -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
           -v /var/run/docker.sock:/var/run/docker.sock "$JDK_IMAGE" ./gradlew --no-daemon build
       - name: Image
         id: image
