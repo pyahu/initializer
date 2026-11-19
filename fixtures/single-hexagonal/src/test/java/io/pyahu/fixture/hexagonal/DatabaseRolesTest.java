@@ -2,11 +2,13 @@ package io.pyahu.fixture.hexagonal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.awaitility.Awaitility.await;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.util.List;
 import liquibase.command.CommandScope;
 import org.junit.jupiter.api.BeforeAll;
@@ -116,6 +118,54 @@ class DatabaseRolesTest {
             denied(sql, "UPDATE " + table + " SET id = id WHERE FALSE");
             denied(sql, "DELETE FROM " + table + " WHERE FALSE");
             denied(sql, "INSERT INTO " + table + " SELECT * FROM " + table + " WHERE FALSE");
+        }
+    }
+
+    @Test
+    void theRuntimeRoleRejectsExcessConnectionsAndRecoversAfterAConnectionCloses() throws SQLException {
+        try (Connection admin = DriverManager.getConnection(
+                        postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword());
+                Statement sql = admin.createStatement()) {
+            try (var role =
+                    sql.executeQuery("SELECT rolconnlimit, rolsuper FROM pg_roles WHERE rolname = 'fixture_app'")) {
+                assertThat(role.next()).isTrue();
+                assertThat(role.getInt("rolconnlimit")).isEqualTo(40);
+                assertThat(role.getBoolean("rolsuper")).isFalse();
+            }
+            sql.execute("ALTER ROLE fixture_app CONNECTION LIMIT 2");
+            try {
+                try (Connection first = connection("fixture_app")) {
+                    assertThat(first.isValid(1)).isTrue();
+                    try (Connection second = connection("fixture_app")) {
+                        assertThat(second.isValid(1)).isTrue();
+                        assertThatThrownBy(() -> {
+                                    try (Connection excess = connection("fixture_app")) {
+                                        assertThat(excess.isValid(1)).isTrue();
+                                    }
+                                })
+                                .isInstanceOfSatisfying(SQLException.class, error -> {
+                                    assertThat(error.getSQLState()).isEqualTo("53300");
+                                    assertThat(error.getMessage())
+                                            .contains("too many connections for role", "fixture_app");
+                                });
+                        // An uncapped ordinary role can still connect: the server itself has capacity.
+                        try (Connection migrator = connection("fixture_migrator")) {
+                            assertThat(migrator.isValid(1)).isTrue();
+                        }
+                    }
+                    // PostgreSQL may still be processing the closed connection's Terminate message.
+                    await().atMost(Duration.ofSeconds(5))
+                            .ignoreExceptionsMatching(error ->
+                                    error instanceof SQLException sqlError && "53300".equals(sqlError.getSQLState()))
+                            .untilAsserted(() -> {
+                                try (Connection recovered = connection("fixture_app")) {
+                                    assertThat(recovered.isValid(1)).isTrue();
+                                }
+                            });
+                }
+            } finally {
+                sql.execute("ALTER ROLE fixture_app CONNECTION LIMIT 40");
+            }
         }
     }
 
