@@ -2039,6 +2039,16 @@
           "later": false
         },
         {
+          "id": "ci-docker-named-contexts",
+          "title": "Docker Build: named contexts",
+          "url": "https://docs.docker.com/build/concepts/context/#named-contexts",
+          "version": "n/a",
+          "docVersion": "n/a",
+          "pinned": false,
+          "purpose": "Supply the tested artifact while retaining the Dockerfile's extraction, runtime and AOT stages.",
+          "later": false
+        },
+        {
           "id": "supply-chain-slsa-v1-2-build-track-basics",
           "title": "SLSA v1.2 Build track basics",
           "url": "https://slsa.dev/spec/v1.2/build-track-basics",
@@ -2953,6 +2963,16 @@
           "docVersion": "n/a",
           "pinned": false,
           "purpose": "OpenID Connect in Actions (keyless cosign).",
+          "later": false
+        },
+        {
+          "id": "ci-docker-named-contexts",
+          "title": "Docker Build: named contexts",
+          "url": "https://docs.docker.com/build/concepts/context/#named-contexts",
+          "version": "n/a",
+          "docVersion": "n/a",
+          "pinned": false,
+          "purpose": "Supply the tested artifact while retaining the Dockerfile's extraction, runtime and AOT stages.",
           "later": false
         },
         {

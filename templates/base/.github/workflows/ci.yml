@@ -99,7 +99,10 @@ jobs:
           sh -c 'npm ci --no-audit --no-fund && npm audit --audit-level=high && npm run api:check'
 [[/nextjs]]
       - name: Image
-        run: docker buildx build --load -t [[name]]:ci .
+        run: |
+          mkdir -p build/image-artifact/workspace
+          cp build/libs/[[name]]-0.1.0.jar build/image-artifact/workspace/application.jar
+          docker buildx build --load --build-context build=build/image-artifact -t [[name]]:ci .
 [[#nextjs]]
       - name: Frontend image
         run: |

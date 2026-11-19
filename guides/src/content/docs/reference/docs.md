@@ -278,6 +278,7 @@ Baseline **v0.1-b2**. The baseline version is what the examples use. The documen
 | [Reuse workflows (how-to)](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows) | n/a | not version-pinned | Reuse workflows (how-to). |
 | [Reusing workflow configurations (reference)](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations) | n/a | not version-pinned | Reusing workflow configurations (reference). |
 | [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect) | n/a | not version-pinned | OpenID Connect in Actions (keyless cosign). |
+| [Docker Build: named contexts](https://docs.docker.com/build/concepts/context/#named-contexts) | n/a | not version-pinned | Supply the tested artifact while retaining the Dockerfile's extraction, runtime and AOT stages. |
 
 ## Supply chain
 
@@ -406,6 +407,7 @@ Baseline **v0.1-b2**. The baseline version is what the examples use. The documen
 - [Secure use reference (formerly "Security hardening for GitHub Actions"; the old URL redirects here)](https://docs.github.com/en/actions/reference/security/secure-use)
 - [Reuse workflows (how-to)](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows)
 - [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect)
+- [Docker Build: named contexts](https://docs.docker.com/build/concepts/context/#named-contexts)
 - [SLSA v1.2 Build track basics](https://slsa.dev/spec/v1.2/build-track-basics)
 - [SLSA v1.2 Provenance](https://slsa.dev/spec/v1.2/provenance)
 - [cosign: signing containers](https://docs.sigstore.dev/cosign/signing/signing_with_containers/)
@@ -430,6 +432,7 @@ Baseline **v0.1-b2**. The baseline version is what the examples use. The documen
 - [Efficient deployments](https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html)
 - [Gradle plugin: packaging OCI images](https://docs.spring.io/spring-boot/4.1/gradle-plugin/packaging-oci-image.html)
 - [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect)
+- [Docker Build: named contexts](https://docs.docker.com/build/concepts/context/#named-contexts)
 - [SLSA spec v1.2 (current; /spec/ and /spec/latest/ both redirect to v1.2)](https://slsa.dev/spec/v1.2/)
 - [SLSA v1.2 Provenance](https://slsa.dev/spec/v1.2/provenance)
 - [Sigstore docs](https://docs.sigstore.dev/)

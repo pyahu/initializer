@@ -11,6 +11,8 @@
 # Base images are pinned by digest (data/versions.yaml, baseline v0.1-b1). The training run happens
 # in the runtime stage, so training and production use the same JRE build: any other build rejects
 # the cache.
+# CI supplies the tested jar at workspace/application.jar through --build-context build=...,
+# replacing only the build stage. Extraction, runtime layers and AOT training still run here.
 
 FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f AS build
 WORKDIR /workspace

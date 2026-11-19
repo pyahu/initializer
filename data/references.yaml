@@ -3024,6 +3024,23 @@ entries:
     jep: null
     llms: { txt: "https://docs.github.com/llms.txt" }
     baselines: [ "v0.1-b1", v0.1-b2 ]
+  - id: ci-docker-named-contexts
+    title: "Docker Build: named contexts"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "ci"
+    url: "https://docs.docker.com/build/concepts/context/#named-contexts"
+    expect: "--build-context"
+    pinned: false
+    pinNote: "Docker documentation is unversioned. Named contexts let CI provide the tested jar to the Dockerfile's build stage."
+    purpose: "Supply the tested artifact while retaining the Dockerfile's extraction, runtime and AOT stages."
+    guides: [ "container-image", "ci-pipelines" ]
+    appliesWhen: {}
+    jep: null
+    llms: null
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-slsa-spec-v1-2
     title: "SLSA spec v1.2 (current; /spec/ and /spec/latest/ both redirect to v1.2)"
     component: "slsa"

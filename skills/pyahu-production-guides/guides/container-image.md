@@ -400,6 +400,7 @@ tasks.cyclonedxBom {
 - [Efficient deployments](https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html) (4.1.2 (docs 4.1); docs 4.1)
 - [Gradle plugin: packaging OCI images](https://docs.spring.io/spring-boot/4.1/gradle-plugin/packaging-oci-image.html) (4.1.2 (docs 4.1); docs 4.1)
 - [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect) (n/a, not version-pinned)
+- [Docker Build: named contexts](https://docs.docker.com/build/concepts/context/#named-contexts) (n/a, not version-pinned): Supply the tested artifact while retaining the Dockerfile's extraction, runtime and AOT stages.
 - [SLSA spec v1.2 (current; /spec/ and /spec/latest/ both redirect to v1.2)](https://slsa.dev/spec/v1.2/) (1.2)
 - [SLSA v1.2 Provenance](https://slsa.dev/spec/v1.2/provenance) (1.2)
 - [Sigstore docs](https://docs.sigstore.dev/) (3.1.3 (docs 3); docs 3, not version-pinned)

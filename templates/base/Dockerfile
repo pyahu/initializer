@@ -8,6 +8,8 @@
 #
 # Base images are pinned by digest. The training run happens in the runtime stage, so training and
 # production use the same JRE build: any other build rejects the cache.
+# CI supplies the tested jar at workspace/application.jar through --build-context build=...,
+# replacing only the build stage. Extraction, runtime layers and AOT training still run here.
 
 FROM [[jdkImage]] AS build
 WORKDIR /workspace

@@ -224,6 +224,9 @@ builds the image and Go acceptance tests start that exact image and check it fro
 
 1. Run the Gradle build: compile, unit and architecture tests (see [Testing](/guides/testing/)).
 2. Build the image from the same Dockerfile production uses and load it locally.
+   The workflow supplies the jar from the successful Gradle build through `--build-context build=...`.
+   Docker replaces the `build` stage with that artifact; extraction, runtime layers and AOT training still run.
+   A missing jar fails the copy. This avoids downloading and compiling the same dependencies again inside Docker.
 3. Scan that exact image with `trivy image --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1`.
    The generated workflow exports the local image and scans that archive; it does not scan an older registry tag.
 4. Run behaviour tests against that image: start it, call it and check what it does.

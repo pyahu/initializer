@@ -293,6 +293,11 @@ runs inside the Docker build stages, where the pinned JDK has no curl. Test,
 compilation and formatting failures are final. The link and BOM checks respect bounded `Retry-After` delays;
 the link checker sends only one request at a time to each origin. Persistent failures still block publication.
 
+CI supplies the jar from the successful Gradle build as a named Docker context (`--build-context build=...`).
+This replaces the source compilation stage with the tested artifact and avoids a second dependency download.
+The same Dockerfile still performs extraction and AOT training and assembles the runtime image. Without the
+named context, ordinary image builds compile from source as before. Both paths are exercised locally.
+
 Guide qualification can wait up to 25 minutes for the matching fixture, and publication up to 30 minutes for
 all required workflows. Earlier fixture-attempt artifacts never replace the selected attempt's report.
 

@@ -195,6 +195,9 @@ builds the image and Go acceptance tests start that exact image and check it fro
 
 1. Run the Gradle build: compile, unit and architecture tests (see [Testing](testing.md)).
 2. Build the image from the same Dockerfile production uses and load it locally.
+   The workflow supplies the jar from the successful Gradle build through `--build-context build=...`.
+   Docker replaces the `build` stage with that artifact; extraction, runtime layers and AOT training still run.
+   A missing jar fails the copy. This avoids downloading and compiling the same dependencies again inside Docker.
 3. Scan that exact image with `trivy image --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1`.
    The generated workflow exports the local image and scans that archive; it does not scan an older registry tag.
 4. Run behaviour tests against that image: start it, call it and check what it does.
@@ -419,6 +422,7 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-9.8.1-bin.zip
 - [Secure use reference (formerly "Security hardening for GitHub Actions"; the old URL redirects here)](https://docs.github.com/en/actions/reference/security/secure-use) (n/a, not version-pinned)
 - [Reuse workflows (how-to)](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows) (n/a, not version-pinned)
 - [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect) (n/a, not version-pinned)
+- [Docker Build: named contexts](https://docs.docker.com/build/concepts/context/#named-contexts) (n/a, not version-pinned): Supply the tested artifact while retaining the Dockerfile's extraction, runtime and AOT stages.
 - [SLSA v1.2 Build track basics](https://slsa.dev/spec/v1.2/build-track-basics) (1.2)
 - [SLSA v1.2 Provenance](https://slsa.dev/spec/v1.2/provenance) (1.2)
 - [cosign: signing containers](https://docs.sigstore.dev/cosign/signing/signing_with_containers/) (3.1.3 (docs 3); docs 3, not version-pinned)

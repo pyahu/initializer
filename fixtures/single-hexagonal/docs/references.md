@@ -274,6 +274,7 @@ Official documentation for this project's versions (baseline v0.1-b2), filtered 
 | [Reuse workflows (how-to)](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows) | n/a | not version-pinned | Reuse workflows (how-to). |
 | [Reusing workflow configurations (reference)](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations) | n/a | not version-pinned | Reusing workflow configurations (reference). |
 | [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect) | n/a | not version-pinned | OpenID Connect in Actions (keyless cosign). |
+| [Docker Build: named contexts](https://docs.docker.com/build/concepts/context/#named-contexts) | n/a | not version-pinned | Supply the tested artifact while retaining the Dockerfile's extraction, runtime and AOT stages. |
 
 ## Supply chain
 
