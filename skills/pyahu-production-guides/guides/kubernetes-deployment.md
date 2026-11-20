@@ -374,7 +374,7 @@ endpoint:
 ```
 
 **Check it:** start the service and run `curl -s localhost:8080/readyz`. It answers `{"status":"UP"}` on the main
-port, while Actuator itself listens on 8081.
+port, while Actuator itself listens on 8081. With a database, it answers 503 until the migrations ran.
 
 ### In the Deployment
 

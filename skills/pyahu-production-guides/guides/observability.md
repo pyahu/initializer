@@ -134,25 +134,33 @@ that wrote it.
 
 ## 4. How many traces should I keep?
 
-**In short:** keep Boot's parent-based sampler. When a collector does tail sampling, send it everything.
+**In short:** choose the share of traces you keep, never leave it to the default. Send everything (1.0) when a
+collector picks what to store; keep a share, such as 0.1, when the app sends straight to the backend.
 
 ```yaml
-management.tracing.sampling.probability: 1.0
+management.tracing.sampling.probability: ${TRACING_SAMPLING_PROBABILITY:0.1}
 ```
 
 ### What's going on
 
-Boot keeps 10% of traces by default. Nine out of ten errors vanish and the links from metrics and logs point to
-traces that were never stored.
+Boot keeps 10% of traces by default. That is a fair share for a busy service with no collector, but it is a
+choice with a cost: nine out of ten errors have no trace and links from metrics and logs point to traces that
+were never stored.
 
 The app has to decide at the start of a request, before it knows the request will fail. A collector can decide at
-the end: keep every error and every slow trace, plus a sample of the rest. That is tail sampling.
+the end: keep every error and every slow trace, plus a sample of the rest. That is tail sampling, and it only
+works when the app sends the collector everything.
+
+Boot's sampler is parent-based: when the caller already decided to keep a trace, this service keeps its part
+too, so a trace is never cut in half.
 
 ### Do this
 
 1. Keep the parent-based sampler, so a trace an upstream service decided to keep stays whole.
-2. Set `management.tracing.sampling.probability` on purpose, never by default.
-3. With a collector that does tail sampling, set it to 1.0 and let the collector choose.
+2. Write `management.tracing.sampling.probability` in `application.yaml` with a placeholder, as above, so each
+   environment sets it. The generated project keeps 0.1 in its base manifests and 1.0 in the dev overlay.
+3. With a collector that does tail sampling, set `TRACING_SAMPLING_PROBABILITY` to 1.0 and let the collector
+   choose.
 
 ### When this is not for you
 

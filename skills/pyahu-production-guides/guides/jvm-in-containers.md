@@ -277,8 +277,10 @@ hides a pod that hangs forever.
 ### Do this
 
 1. Measure the slowest normal startup (p99), with the AOT cache, on the smallest node type you run.
-2. Set `periodSeconds: 5` and a `failureThreshold` that covers about three times that. For 10 seconds, that is
-   30 seconds, so `failureThreshold: 6`.
+2. Set `periodSeconds: 2`, so a pod that is up gets traffic quickly, and a `failureThreshold` that covers about
+   three times the measured time. For 10 seconds, that is 30 seconds, so `failureThreshold: 15`. The generated
+   Deployment starts at 30 (60 seconds), because nobody has measured it on your nodes yet; lower it once you
+   have.
 3. Probe `/livez`, which never checks the database or other dependencies.
 4. Measure again after a JDK, Spring Boot or node type change.
 

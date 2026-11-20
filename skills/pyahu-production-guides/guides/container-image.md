@@ -186,8 +186,8 @@ even if a later step deletes the file.
 
 ### Do this
 
-1. Write `.dockerignore` as an allow list: ignore everything, then allow `gradlew`, `gradle/`, the build files and
-   `src/`.
+1. Write `.dockerignore` as an allow list: ignore everything with `*`, then allow each path the Dockerfile copies
+   with `!`: `gradlew`, `gradle/`, the build files, `src/` and the script the build runs.
 2. Copy files by name, never `COPY . .`.
 3. For build credentials, such as a private Maven repository, use a BuildKit secret mount
    (`RUN --mount=type=secret,...`). Never `ARG` or `ENV`.
@@ -339,7 +339,8 @@ ENTRYPOINT ["java", "-XX:+UseG1GC", "-XX:AOTCache=/app/app.aot", "-XX:ErrorFile=
 ```
 
 **Check it:** `docker run --read-only --tmpfs /tmp --user 10001:10001 single-hexagonal:ci` starts and `/readyz`
-answers 200.
+answers 200. A service that waits for its migrations answers 503 there until the migration Job ran; check
+`/livez` instead.
 
 ### The app SBOM
 

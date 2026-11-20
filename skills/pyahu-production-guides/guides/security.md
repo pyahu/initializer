@@ -388,7 +388,7 @@ USER 10001:10001
 ```
 
 **Check it:** run the image the way the pod will, with
-`docker run --read-only --tmpfs /tmp --user 10001:10001 -p 8080:8080 <image>`. `/readyz` answers 200.
+`docker run --read-only --tmpfs /tmp --user 10001:10001 -p 8080:8080 <image>`. `/livez` answers 200.
 
 ### In the application
 

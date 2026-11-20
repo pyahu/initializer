@@ -1,8 +1,8 @@
-.git
-build/
-.gradle/
-.kotlin/
-deploy/
-[[#nextjs]]
-frontends/
-[[/nextjs]]
+# Allow list: the builder gets only what the Dockerfile copies (container image guide, step 5).
+*
+!gradlew
+!settings.gradle.kts
+!build.gradle.kts
+!gradle/
+!src/
+!.github/scripts/gradle-ci.sh

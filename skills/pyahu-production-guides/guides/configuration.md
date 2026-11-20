@@ -205,7 +205,8 @@ instead. And a record prints every component in its default `toString()` unless 
 ## 5. Where should secrets come from?
 
 **In short:** from a secret vault, mounted as files by the Secrets Store CSI driver and read with `configtree:`. No
-Kubernetes Secret and no vault SDK in the app.
+Kubernetes Secret and no vault SDK in the app. Until your cluster has the driver, start with a Kubernetes Secret
+read through `secretKeyRef`, as the generated project does.
 
 ```yaml
 spring:
@@ -236,7 +237,11 @@ If the vault refuses or is down, the volume never mounts and the pod waits in `C
 
 ### When this is not for you
 
-- No CSI driver, such as App Service or plain VMs: Spring Cloud Azure can read Key Vault as a property source. It
+- The cluster has no CSI driver yet: keep the password in a Kubernetes Secret and pass it with `secretKeyRef`. The
+  generated Deployment does this for the database. The secret stays out of the manifest and the image, but it
+  lives in etcd, readable by anyone allowed to `get secrets` in the namespace. Move to files when the driver
+  arrives; only the Deployment and one line of `application.yaml` change.
+- No Kubernetes at all, such as App Service or plain VMs: Spring Cloud Azure can read Key Vault as a property source. It
   adds the Azure SDK and a network call at startup; check that it supports Spring Boot 4.1.2 before adopting it.
 - Tools that need a real Kubernetes Secret, such as image pulls or ingress TLS: sync one with an operator. The app
   still reads files.
@@ -390,7 +395,7 @@ management:
   and 7).
 - `enableServiceLinks: false` (step 2).
 - A read only CSI volume at `/mnt/secrets` from a `SecretProviderClass` and a service account with a workload
-  identity (step 5).
+  identity, or `secretKeyRef` to a Kubernetes Secret until the cluster has the driver (step 5).
 - No secret as a literal `env.value` (step 6).
 - `maxUnavailable: 0`, so a bad setting stalls the rollout while the old pods keep serving (step 3).
 
