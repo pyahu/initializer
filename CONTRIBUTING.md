@@ -18,7 +18,7 @@ Site packages are pinned exactly in `guides/package.json`, lock file committed.
 
 ```sh
 go test ./cmd/... ./internal/...                 # guidekit's own tests
-go run ./cmd/guidekit check --base origin/main   # data, guides, cross-references, history
+go run ./cmd/guidekit check --base origin/main   # data, guides, cross-references, retired URLs
 go run ./cmd/guidekit generate                   # rewrite every generated file
 go run ./cmd/guidekit generate --check           # fail if a generated file is stale
 cd guides && npm ci && npm run check && npm run build
@@ -266,62 +266,30 @@ changes; a renewal is a new record.
 
 ## CI and publication
 
-Gradle containers mount a persistent dependency cache. CI restores only downloaded modules and wrapper
-distributions, keyed by platform and version catalogs; builds and tests always run. The generated-project matrix
-runs at most eight jobs at once. New pushes cancel obsolete runs on the same ref.
+Each workflow runs only for the paths that can change its result, and a new push cancels the older run on the
+same ref.
 
-`.github/scripts/gradle-ci.sh` makes at most three attempts for dependency acquisition failures, refreshing
-metadata on retries. A reported missing public Maven artifact gets one metadata refresh, because Central has
-also reported existing artifacts as missing in CI; a persistent missing coordinate still fails. The same helper
-runs inside the Docker build stages, where the pinned JDK has no curl. Test,
-compilation and formatting failures are final. The link and BOM checks respect bounded `Retry-After` delays;
-the link checker sends only one request at a time to each origin.
+| Workflow | Does | Blocks publication |
+| -------- | ---- | ------------------ |
+| `guides.yml` | clean checkout, `go test`, `check`, `generate --check`, site build, `site` | yes |
+| `fixture-single-hexagonal.yml` | fixture build, image, acceptance tests, `evidence verify` | yes |
+| `start.yml` | the Initializer: build, image, smoke, then all 16 generated combinations through their own CI | no |
+| `links.yml` | online: external links, BOM pins, `npm audit` of the site; also every Monday | no |
 
-CI supplies the jar from the successful Gradle build as a named Docker context (`--build-context build=...`).
-This replaces the source compilation stage with the tested artifact and avoids a second dependency download.
-The same Dockerfile still performs extraction and AOT training and assembles the runtime image. Without the
-named context, ordinary image builds compile from source as before. Both paths are exercised locally.
+The site is published at https://initializer.pyahu.io by Cloudflare Workers Builds (root directory `guides`,
+branch `main`, `NODE_VERSION=24.22.3`). Its deploy command, `npm run deploy`, first runs `publication:check`,
+which waits up to 30 minutes for successful Guides and fixture runs whose inputs match the commit and refuses a
+dirty checkout or a commit superseded on `main`. `guides/wrangler.jsonc` declares the Worker and its domain; the
+repository connection and build variables live in the Worker's Settings > Builds. For a local packaging check,
+run `cd guides && npx wrangler deploy --dry-run` after a build.
 
-Each workflow runs only for the paths that can change its result. Publication waits up to 30 minutes for the
-Guides and fixture workflows, the two that prove what the site shows.
+Things that have bitten us:
 
-| Workflow | Does |
-| -------- | ---- |
-| `guides.yml` | clean checkout, `go test`, `check`, `generate --check`, site build, `site` |
-| `links.yml` | online and non-blocking: external links, BOM pins and `npm audit`, also weekly |
-| `fixture-single-hexagonal.yml` | fixture build, image, acceptance tests, evidence report |
-| `start.yml` | the Initializer service: Gradle build in the pinned JDK, convention plugin tests, image, smoke; then every combination generated through the API, built, rendered, imaged and started by its own workflow |
-
-The guides are published at https://initializer.pyahu.io on Cloudflare Workers. `guides/wrangler.jsonc`
-names the Worker `initializer` and serves the static `guides/dist` directory with a real 404 page.
-It also declares the custom domain `initializer.pyahu.io`; deploying applies that domain association.
-
-Cloudflare Workers Builds is connected to `pyahu/initializer`, with production branch `main` and root directory
-`guides`. Pushes to `main` build with `npm run toolchain && npm run check && npm run build` after dependency
-installation, then deploy with `npm run deploy`. The build environment sets `NODE_VERSION=24.22.3`.
-The Wrangler dependency and npm lockfile pin the deployment tooling.
-
-Builds watch every repository path, because the site also reads generated data and fixture files outside
-`guides/`. Preview builds are disabled. Manage the connection and build variables in the Worker's
-Settings > Builds in the Cloudflare dashboard.
-
-`npm run deploy` first runs `publication:check`. It waits for successful Guides and fixture workflows with the
-same inputs as the commit being published. Links and the Start service workflow report on their own: an outage of
-an external site or of Maven Central does not hold back a correct guide. The inputs are read from each workflow's actual
-push paths: a documentation-only commit may reuse an earlier service build, while a source change cannot.
-A pending, failed, cancelled or missing check prevents deployment. The check also rejects a dirty checkout or a
-commit superseded on main. It uses GitHub's public read API; an optional read-only `GITHUB_TOKEN` increases the
-API rate limit. No new token is needed for a normal public check. A timeout or API failure stops publication.
-
-Windows wrappers are stored with LF in Git and checked out with CRLF, as `.gitattributes` declares. Normalize
-existing files with `git add --renormalize` when applying text attributes: an unnormalized blob can make a fresh
-clone dirty and block every Workers build. The Guides workflow checks that the checkout starts clean.
-
-Workers Builds still builds separately from GitHub Actions, but its deploy command now enforces their results.
-For a local packaging check after building, run `cd guides && npx wrangler deploy --dry-run`.
-Initial publication requires creating the Worker and applying its custom domain in the hosting account.
-Workers Builds also needs a repository connection in the Cloudflare dashboard; checked-in configuration alone
-does not create that connection. Its API needs a user token with Workers Builds Configuration permission,
-which the Wrangler OAuth login does not provide.
+- Gradle downloads fail now and then. `.github/scripts/gradle-ci.sh` retries dependency acquisition up to three
+  times, also inside the Docker build stages; test, compile and formatting failures are final.
+- CI passes the tested jar to the Dockerfile as a named context (`--build-context build=...`), so the image holds
+  the artifact that passed the tests. Without it, the Dockerfile compiles from source.
+- Windows wrappers are LF in Git and CRLF on checkout (`.gitattributes`). An unnormalized blob makes a fresh clone
+  dirty and blocks every Workers build; normalize with `git add --renormalize`. The Guides workflow checks it.
 
 Commits go straight to `main`; a red pipeline is fixed with a new commit.

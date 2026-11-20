@@ -9,7 +9,8 @@ claim. The other steps rest on the official documentation the guide lists.
 - [The guides](https://initializer.pyahu.io/guides/): 24 guides in six parts (foundations, build the service,
   events and data, run in production, ship, grow)
 - [Agent Skill](skills/): the same guides as plain Markdown for AI coding tools and team reviews
-- How to contribute: [CONTRIBUTING.md](CONTRIBUTING.md)
+- How to contribute: [CONTRIBUTING.md](CONTRIBUTING.md), or [AGENTS.md](AGENTS.md) for the short version
+- Why the scope is what it is: [ADR 0002](docs/adr/0002-a-smaller-scope.md)
 
 ## How a claim is proven
 
@@ -19,7 +20,7 @@ unless every required test passes and every version matches. A tested claim has 
 that names one of those tests, so it holds for as long as `main` is green. The summary at the top of each guide
 says which steps are tested here: compiled code, reproduced behaviour or a measurement.
 
-The generator has a separate check: the Start workflow builds all 16 combinations of architecture, PostgreSQL,
+The generator is frozen at its current options while teams try it. The Start workflow builds all 16 combinations of architecture, PostgreSQL,
 OIDC and Next.js, runs their own generated CI and tests the form in a browser. These checks cover the generated
 paths; the tested claims and their limitations say what each guide proves.
 
