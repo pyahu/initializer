@@ -53,8 +53,8 @@ The database fails over at 3 a.m. Thirty seconds later every pod of your service
 hits the database while it is still recovering. Next day a routine deploy returns a burst of 502s. Nothing in the
 code changed: the Deployment and the app disagree about how pods start, stop and fail.
 
-This guide sets the eight Deployment decisions that make them agree: probes, shutdown, resources, rollouts,
-disruptions, scaling, placement and scheduled work. How the manifests are packaged is in
+This guide sets the nine Deployment decisions that make them agree: probes, shutdown, resources, rollouts,
+disruptions, scaling, placement, scheduled work and troubleshooting. How the manifests are packaged is in
 [Kubernetes manifests](/guides/kubernetes-manifests/) and JVM sizing is in
 [The JVM in containers](/guides/jvm-in-containers/).
 
@@ -93,7 +93,10 @@ gateway returns 503 even for routes that never touch the database.
 
 1. Set `add-additional-paths: true`, so `/livez` and `/readyz` are served on the main port 8080. A probe on the
    management port would still pass while the main connector is stuck.
-2. Point liveness at `/livez` and readiness at `/readyz`. Leave both groups at their defaults.
+2. Point liveness at `/livez` and readiness at `/readyz`. Leave both groups at their defaults, with one exception:
+   a service with a migration Job adds its pending migrations check to readiness, so a pod gets no traffic
+   before its schema is there ([database guide, step 5](/guides/database/#db-migrations)). It reads the
+   migration history once, not the health of the database.
 3. Use a `startupProbe` instead of `initialDelaySeconds`, sized from measured startup, as in
    [step 8 of the JVM guide](/guides/jvm-in-containers/#jvm-startup-probe).
 4. Set `timeoutSeconds: 2` on every probe. The default of 1 second can fail during a long GC pause.

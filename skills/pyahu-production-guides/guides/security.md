@@ -12,7 +12,7 @@ A security review lands on your desk. A token issued to another app opens your A
 query and the pod runs as root with a writable disk. Nobody broke in with an exotic exploit: each finding is a
 default that nobody revisited.
 
-This guide walks through the eight decisions that close those doors: tokens, permissions, headers, errors,
+This guide walks through the nine decisions that close those doors: tokens, permissions, headers, errors,
 outbound calls and the pod. Most take one or two lines of configuration. Secrets live in
 [Configuration and secrets](configuration.md), the image in
 [The container image](container-image.md) and Actuator in [Observability](observability.md).

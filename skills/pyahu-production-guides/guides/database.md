@@ -13,7 +13,7 @@ answers `FATAL: sorry, too many clients already`. Nothing changed in the databas
 every connection.
 
 Most database outages in Kubernetes start like this, inside your own deployment. Configuration and process prevent
-them; a bigger database does not. This guide walks through the eight decisions that matter for a Spring Boot service on
+them; a bigger database does not. This guide walks through the nine decisions that matter for a Spring Boot service on
 PostgreSQL: pools, timeouts, roles, migrations, tests and the metrics that warn you first.
 
 ## What you'll learn

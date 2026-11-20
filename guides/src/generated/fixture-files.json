@@ -5,7 +5,7 @@
       "fixture": "single-hexagonal",
       "baseline": "v0.1-b2",
       "lang": "dockerfile",
-      "sha256": "eb0db9185f683607f2affdeac00b4fdf76b48337cb064674b7750f57a51a06b1"
+      "sha256": "cc9d732fb9f30ca064da97bb76dbc5dd0c98b81a265eb4f1e68ced2318543f77"
     },
     {
       "path": "fixtures/single-hexagonal/build.gradle.kts",

@@ -6,7 +6,7 @@
 #   extract  splits the jar into layers (jarmode=tools, without --launcher)
 #   runtime  JRE + layers + AOT cache from a training run in this same stage
 #
-# Base images are pinned by digest (data/versions.yaml, baseline v0.1-b1). The training run happens
+# Base images are pinned by digest (the baseline in data/versions.yaml). The training run happens
 # in the runtime stage, so training and production use the same JRE build: any other build rejects
 # the cache.
 # CI supplies the tested jar at workspace/application.jar through --build-context build=...,

@@ -7,7 +7,7 @@ import java.util.function.Function;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The frozen list of versions a generated project uses: one revision of data/versions.yaml.
+ * The list of versions a generated project uses: the active baseline of data/versions.yaml.
  *
  * @param id the revision, such as {@code v0.1-b1}
  * @param components every component of the revision by its key, such as {@code spring-boot}

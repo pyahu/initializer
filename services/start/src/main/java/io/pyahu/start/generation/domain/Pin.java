@@ -5,7 +5,7 @@ import static java.util.Objects.requireNonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
- * One component of a baseline revision.
+ * One component of the baseline.
  *
  * @param image the image reference with its tag, for images that name it
  * @param digest the image digest, for images

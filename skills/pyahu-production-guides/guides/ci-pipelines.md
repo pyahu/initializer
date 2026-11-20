@@ -269,7 +269,7 @@ the registry manifest digest is a separate value, obtained after pushing.
 ```yaml
 concurrency:
   group: fixture-single-hexagonal-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  cancel-in-progress: true
 ```
 
 ### What's going on
@@ -284,15 +284,15 @@ request cannot merge.
 ### Do this
 
 1. List in `paths` everything the workflow reads, including the workflow file itself.
-2. Add a `concurrency` group per workflow and ref and cancel in progress on pull requests.
+2. Add a `concurrency` group per workflow and ref and cancel the runs a newer push replaced.
 3. Set `timeout-minutes` on every job, close to its normal duration.
 4. Do not make a path filtered workflow a required check.
 
 ### When this is not for you
 
-- Runs on the default branch that produce something later runs read, such as a fixture report: let them finish.
-  The fixture workflow does that. Start's image artifacts belong only to jobs of the same run, so it cancels a
-  superseded main run as well; the new candidate builds and tests its own image.
+- Runs on the default branch that produce something a later run or a deployment reads, such as a published
+  image: let them finish, with `cancel-in-progress: ${{ github.event_name == 'pull_request' }}`. The workflows
+  of this repository publish nothing, so they cancel on every ref.
 
 ## 8. Who keeps the pipeline itself up to date?
 
@@ -341,7 +341,7 @@ permissions:
 
 concurrency:
   group: fixture-single-hexagonal-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  cancel-in-progress: true
 
 env:
   GOTOOLCHAIN: go1.27.2
@@ -352,7 +352,8 @@ env:
 ### The build stages
 
 The steps of the same job in order (steps 3 and 5): build in the pinned JDK, build the image, test the image and
-always keep the report.
+always keep the report. They are shortened here: the real steps also mount the dependency cache, retry downloads
+and pass the tested jar to the image build.
 
 ```yaml
 - name: Gradle build in the pinned JDK
