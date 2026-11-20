@@ -192,11 +192,12 @@ Only the composition root, the `config` package, sees every layer, because it wi
 1. Put controllers in `presentation`, use cases in `application`, rules in `domain` and database or client code
    in `infrastructure`.
 2. Define repository interfaces in `domain` or `application`; implement them in `infrastructure`.
-3. Write the dependency graph above as your own ArchUnit rule. jMolecules' `ensureLayering()` allows every layer
-   to use the layers below it, including domain to infrastructure, so it does not enforce this variant.
-4. Leave the layer packages without jMolecules' layered annotations (`@DomainLayer`, `@InfrastructureLayer` and the
-   rest). With `jmolecules-archunit` on the test classpath, Spring Modulith's `verify()` applies `ensureLayering()`
-   to annotated packages and fails the build as soon as infrastructure implements a domain interface.
+3. Write the dependency graph above as your own ArchUnit rule (step 7 shows the tests). The ready-made rule of
+   jMolecules, `ensureLayering()`, lets every layer use the layers below it, including domain to infrastructure,
+   so it does not enforce this variant.
+4. Leave the layer packages without the layer annotations of jMolecules (`@DomainLayer`, `@InfrastructureLayer`
+   and the rest). Spring Modulith's `verify()` applies that ready-made rule to annotated packages and would fail
+   the build as soon as infrastructure implements a domain interface.
 
 ### When this is not for you
 
@@ -285,10 +286,10 @@ when a class reaches across a boundary keeps it.
 - Two rules close the gaps the library leaves: the domain depends on nothing else and nothing outside the
   adapters depends on them.
 
-There is a trap. In `STRICT`, a port may only reference ports and classes without a hexagonal annotation. If you
-mark the domain as `@Application`, every port signature that uses a domain type breaks the rule. So the domain
-stays unannotated. Unannotated classes are not checked by the library at all. That is why the domain needs its
-own rule.
+There is a trap in `STRICT`. A port may mention only other ports and classes that carry no hexagonal annotation.
+Ports mention domain types all the time, so the domain must carry none: annotate it and every such port breaks
+the rule. But the library does not check a class without an annotation at all. That is why the domain needs a
+rule of its own.
 
 ### Do this
 

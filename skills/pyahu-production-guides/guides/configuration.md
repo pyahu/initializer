@@ -101,11 +101,12 @@ app no longer starts.
 3. Check what the container received, names only, never values:
 
    ```sh
-   kubectl exec deploy/orders-service -- sh -c 'env | cut -d= -f1 | sort'
+   kubectl exec deploy/orders -- sh -c 'env | cut -d= -f1 | sort'
    ```
 
-4. Keep maps in YAML: map keys lose their case and dots in variable names. Or pass a whole YAML document in one
-   variable with `spring.config.import: "optional:env:ORDERS_EXTRA_CONFIG[.yaml]"`.
+4. Keep maps in the YAML file. A variable name cannot carry a map key: the key loses its case and its dots.
+5. When a map must differ per environment, put a small YAML document in one variable and import it with
+   `spring.config.import: "optional:env:ORDERS_EXTRA_CONFIG[.yaml]"`.
 
 ### When this is not for you
 
@@ -182,10 +183,13 @@ When the binder meets `${payment-api-key}` and nothing provides that value, it d
 `${payment-api-key}` into the field. A nonblank check accepts it and the app sends that text as its API key.
 `@Value("${x}")` behaves the other way and fails, so mixing the two styles gives two different behaviours.
 
-Two more ways a secret leaks at this point. When validation fails, Boot prints the rejected value in its failure
-message. A regex on the secret itself is not safe: `.` does not match line breaks by default, so a real multiline
-secret can fail the pattern and appear in the log. The boolean getter above makes the rejected value `false`
-instead. And a record prints every component in its default `toString()` unless you mask it.
+The check itself can leak the secret, in three ways:
+
+- When validation fails, Boot prints the rejected value. With a constraint on the secret, that value is the
+  secret. The boolean getter above makes the rejected value `false` instead.
+- A `@Pattern` on the secret looks safe and is not. In a regular expression `.` does not match a line break, so a
+  real secret with several lines, such as a private key, fails the pattern and is printed.
+- A record prints every component in its default `toString()` unless you mask it.
 
 ### Do this
 
@@ -226,8 +230,45 @@ If the vault refuses or is down, the volume never mounts and the pod waits in `C
 
 ### Do this
 
-1. Store the secrets in the vault and give the pod a workload identity that may read them (Workload ID on AKS).
-2. Mount them read only at `/mnt/secrets` with a `SecretProviderClass` and the CSI driver.
+1. Store the secrets in the vault. Give the pod a workload identity, an identity the cluster vouches for with no
+   password of its own, and allow it to read them (Workload ID on AKS).
+2. Mount them read only at `/mnt/secrets`. A `SecretProviderClass` says which secrets to fetch and the pod mounts
+   it as a volume:
+
+   ```yaml
+   apiVersion: secrets-store.csi.x-k8s.io/v1
+   kind: SecretProviderClass
+   metadata:
+     name: orders-secrets
+   spec:
+     provider: azure
+     parameters:
+       keyvaultName: <vault name>
+       tenantId: <tenant id>
+       clientID: <client id of the workload identity>
+       objects: |
+         array:
+           - |
+             objectName: orders-db-password
+             objectType: secret
+   ```
+
+   ```yaml
+   # In the pod spec of the Deployment.
+   volumes:
+     - name: secrets
+       csi:
+         driver: secrets-store.csi.k8s.io
+         readOnly: true
+         volumeAttributes:
+           secretProviderClass: orders-secrets
+   containers:
+     - name: app
+       volumeMounts:
+         - name: secrets
+           mountPath: /mnt/secrets
+           readOnly: true
+   ```
 3. Import them with the `configtree:` line above. Keep `optional:` so local runs work; the guard from step 4 catches
    a missing file in production.
 4. Do not add `secretObjects` to the `SecretProviderClass` unless something else needs a Kubernetes Secret. Syncing

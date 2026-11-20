@@ -46,7 +46,8 @@ PostgreSQL: pools, timeouts, roles, migrations, tests and the metrics that warn 
 keep the total below what the database allows.
 
 ```text
-pool × (max replicas + surge pods + draining pods) × services + migrations + admin ≤ user connections
+for each service: pool × (max replicas + surge pods + draining pods)
+all services + migrations + admin ≤ connections the database gives to applications
 ```
 
 ### What's going on
@@ -235,10 +236,11 @@ A Job runs the changelog once, before the new pods start. The pods only connect 
 2. Run the same changelog from a Job, as the migration user, before the rollout. Step 6 shows how to order it
    and what to do when it fails.
 3. Never edit a changeset that already ran. Add a new one.
-4. The generated readiness guard checks the full changeset identity (file path, id and author) and applies the
-   same context, label, database and ignore filters as Liquibase. Give the Job and application the same changelog
-   settings. It checks history presence, not checksums, `runAlways` or `runOnChange`; the successful migration Job
-   remains the release gate. After the required history is confirmed, the guard keeps that result for this process.
+4. Keep a pod out of rotation until its schema is there. The generated project does it with a readiness check,
+   `PendingMigrations`: the pod is ready only when every changeset of its changelog is in the database's history.
+   Give the Job and the application the same changelog settings, because the check applies the same context and
+   label filters as Liquibase. It confirms that the changesets ran, once per process, not that their content is
+   unchanged, so a successful migration Job remains what allows a release.
 
 ### When this is not for you
 

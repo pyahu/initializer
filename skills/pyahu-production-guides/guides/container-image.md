@@ -61,8 +61,8 @@ less often than code, a normal commit only pushes the small top layers.
 
 1. Use a Dockerfile with several stages: one builds the jar, one extracts it, the last one only runs it. The final
    image has no JDK, no Gradle and no source code.
-2. Extract with `-Djarmode=tools ... extract --layers`, without `--launcher`. That layout is the one the AOT cache can
-   use.
+2. Extract with `java -Djarmode=tools -jar application.jar extract --layers`, without `--launcher`. The startup
+   cache of the [JVM guide](https://initializer.pyahu.io/guides/jvm-in-containers/#jvm-aot-cache) needs that layout.
 3. Copy the layers in this order: `dependencies`, `spring-boot-loader`, `snapshot-dependencies`, `application`.
 4. Cache Gradle downloads with `RUN --mount=type=cache,target=/root/.gradle`, so builds do not fetch everything again.
 
@@ -103,8 +103,10 @@ the tag, you stay on 24.04 until you choose to move.
 
 1. Start from `eclipse-temurin:25.0.5_8-jre-noble` for the runtime stage and the matching `-jdk-noble` image for the
    build stages.
-2. Add company CA certificates at build time or mount a truststore. Your own `ENTRYPOINT` replaces the Temurin
-   script that would import them.
+2. If the service calls hosts signed by a company CA, add its certificate in the runtime stage with
+   `keytool -importcert -cacerts -noprompt -alias company-ca -file company-ca.crt`, or mount a truststore and
+   point `javax.net.ssl.trustStore` at it. The Temurin image can import certificates when it starts, but only
+   through its own entrypoint script, which your `ENTRYPOINT` replaces.
 
 ### When this is not for you
 
@@ -132,10 +134,9 @@ pull request when its digest changes. The tag says what you meant; the digest sa
 
 1. Write every base image as `tag@sha256:digest`, in plain `FROM` lines the bots can read.
 2. Turn on digest updates: Renovate with `docker:pinDigests` or Dependabot with `package-ecosystem: docker`.
-3. Keep the Temurin image rule on Java 25 with Renovate `allowedVersions: "/^25[.]/"`, matching the pinned
-   patch tags. Keep the Java versioning rules inherited from `config:recommended`, so numeric build suffixes
-   remain eligible for updates and JDK/JRE and OS variants stay separate. Update the image rule and Gradle
-   toolchain together when deliberately moving to another Java feature release.
+3. Keep the bot on Java 25: give the Temurin image a Renovate rule with `allowedVersions: "/^25[.]/"`, so it
+   proposes new patches and never Java 26. Moving to another Java release is your decision: change that rule
+   and the Gradle toolchain together.
 4. Deploy by digest too: the Deployment, the migration Job and every CronJob use the digest CI pushed, never a tag.
 5. Pin GitHub Actions by commit SHA.
 

@@ -62,8 +62,10 @@ The JVM default makes the opposite mistake: it uses only 25%, so a 1 GiB pod get
 1. Set the memory request equal to the limit in the Deployment.
 2. Add the two flags above. In a 1 GiB pod that is a 768 MiB heap and 256 MiB for the rest.
 3. Add `-XX:+ExitOnOutOfMemoryError`, so a real `OutOfMemoryError` restarts the pod cleanly.
-4. Under a load test, confirm the rest fits: start with `-XX:NativeMemoryTracking=summary` and compare its total
-   with the container's memory use.
+4. Under a load test, confirm that everything outside the heap fits in the remaining quarter. Start the JVM with
+   `-XX:NativeMemoryTracking=summary` and read `jcmd 1 VM.native_memory summary` from a debug container
+   ([deployment guide, step 9](https://initializer.pyahu.io/guides/kubernetes-deployment/#kube-diagnose)). Its `Total: committed` line is
+   what the JVM holds; it must stay below the pod's memory limit with room to spare.
 
 ### When this is not for you
 
@@ -90,13 +92,14 @@ A pod with `cpu: 1` or with a 1 GiB limit, falls into this. Nothing in the logs 
 
 1. Put `-XX:+UseG1GC` in the image `ENTRYPOINT` (step 5 explains why there).
 2. Use the same flag in the AOT training run (step 6) or the cache is rejected.
-3. Check what a running pod got:
+3. Check the flags the running JVM was started with:
 
    ```sh
-   java -XX:+PrintFlagsFinal -version | grep -E 'UseG1GC|UseSerialGC'
+   kubectl exec <pod> -- cat /proc/1/cmdline | tr '\0' ' '
    ```
 
-   `UseG1GC` must be `true`.
+   The line must contain `-XX:+UseG1GC`. To see what the JVM would pick on its own with this pod's limits, run
+   `java -XX:+PrintFlagsFinal -version | grep -E 'UseG1GC|UseSerialGC'` in the same pod.
 
 ### When this is not for you
 
@@ -216,16 +219,21 @@ exactly like no cache, so you have to test for it.
 
 ### Do this
 
-1. In the image's runtime stage, extract the jar with `-Djarmode=tools extract --layers` (without `--launcher`).
-2. Run the app once to train the cache. It stops by itself after creating its beans:
+1. In the Dockerfile, extract the jar into layers, without `--launcher`, and copy them into the runtime stage:
+
+   ```sh
+   java -Djarmode=tools -jar application.jar extract --layers --destination extracted
+   ```
+2. In the runtime stage, run the app once to train the cache. It stops by itself after creating its beans:
 
    ```sh
    java -XX:+UseG1GC -XX:AOTCacheOutput=/app/app.aot -Dspring.context.exit=onRefresh -jar /app/application.jar
    ```
 
 3. Add `-XX:AOTCache=/app/app.aot` to the `ENTRYPOINT`.
-4. In CI, prove it is used: `-XX:AOTMode=on` exits with an error if the cache is unusable and `-Xlog:aot` prints
-   `Opened AOT cache` when it loads.
+4. In CI, prove the cache is used. Run the image once with `-XX:AOTMode=on` added, which exits with an error
+   when the cache is unusable. Then start it normally with `-e JDK_JAVA_OPTIONS=-Xlog:aot` and look for
+   `Opened AOT cache` in the log.
 
 ### When this is not for you
 

@@ -111,10 +111,13 @@ application through a port and maps the answer back.
 
    `useJspecify` marks optional fields with JSpecify's `@Nullable`, the annotation NullAway reads.
 
-2. Add the generated sources to the main source set and make `compileJava` depend on `openApiGenerate`. Two
-   checks then see the generated code too. Set `option("NullAway:TreatGeneratedAsUnannotated", "true")`, or
-   NullAway fails on models whose required fields the no-argument constructor leaves unset. Give Spotless
-   `target("src/*/java/**/*.java")`, or `spotlessCheck` fails on the generated files.
+2. Add the generated sources to the main source set and make `compileJava` depend on `openApiGenerate`. The two
+   code checks of the [build guide](build-quality.md) then read the generated files too and need one
+   setting each:
+   - NullAway, the null check: `option("NullAway:TreatGeneratedAsUnannotated", "true")`. Without it the build
+     fails on generated models whose required fields the no-argument constructor leaves unset.
+   - Spotless, the formatter: `target("src/*/java/**/*.java")`, so it formats your sources and leaves the
+     generated ones alone.
 3. Write a controller in `adapter/in/web` that implements the generated interface.
 4. Keep generated models in the adapter. Map them to your own domain types, so the domain never depends on the
    contract.
@@ -138,8 +141,8 @@ into annotations such as `@NotNull`, `@Size` and `@Min`.
 
 Spring MVC validates annotated parameters and request bodies itself, before calling your method.
 A failure raises `MethodArgumentNotValidException` or `HandlerMethodValidationException`, which become a `400`
-response. A class level `@Validated` switches that off in favour of an AOP proxy, which is why the generator
-option `useSpringBuiltInValidation` removes it.
+response. The older way, `@Validated` on the class, replaces that with a proxy around the controller that
+raises a different exception. The generator option `useSpringBuiltInValidation` leaves the annotation out.
 
 ### Do this
 
@@ -206,8 +209,10 @@ the client tries again. HTTP calls `PUT` and `DELETE` idempotent: sending them t
 1. Return `201` with `Location` for creates, `200` or `204` for updates and deletes and describe each one in the
    contract.
 2. When the client can pick the ID, prefer `PUT` to that ID; a repeat then updates the same resource.
-3. For `POST`, accept an `Idempotency-Key` header, store the key with the result and return the stored result when
-   the same key comes back.
+3. For `POST`, accept an `Idempotency-Key` header. Store the key and the response in the same transaction as the
+   write, with a unique constraint on the key, and keep them for as long as clients may retry, such as 24 hours.
+   When the key comes back, return the stored response. The constraint makes a retry that arrives at the same
+   time fail instead of creating a second order.
 4. Document the error responses too: `400`, `404`, `409` and `422` where they apply.
 
 ### When this is not for you
@@ -310,8 +315,9 @@ Everything above lands in the build, the contract file and the web adapter.
 
 ### The controller today
 
-The example service has one endpoint, written by hand. With a contract, this method becomes the implementation of a
-generated interface (step 2) and its answer is described in the contract (step 1).
+The fixture has one endpoint, written by hand, which is where most services start. With a contract, this method
+becomes the implementation of a generated interface (step 2) and its answer is described in the contract
+(step 1). A generated project is already there: its `PingController` implements the generated `PingApi`.
 
 From [`PingController.java`](https://github.com/pyahu/initializer/blob/main/fixtures/single-hexagonal/src/main/java/io/pyahu/fixture/hexagonal/ping/adapter/in/web/PingController.java):
 
@@ -322,7 +328,8 @@ String ping() {
 }
 ```
 
-**Check it:** `curl localhost:8080/ping` answers `pong`.
+**Check it:** `curl localhost:8080/ping` answers `pong`. A generated project answers with the JSON its
+contract describes.
 
 ### In the build
 

@@ -81,9 +81,8 @@ Kubernetes asks your pod three questions and does something different with each 
 | `livenessProbe` | Is the process broken in a way only a restart fixes? | Restarts the container |
 | `readinessProbe` | Should this pod receive new requests right now? | Takes the pod out of the Service, no restart |
 
-Spring Boot answers from its own lifecycle, not from health checks. Liveness is `CORRECT` once the context has
-started. Readiness turns to "accepting traffic" when startup finishes and back to "refusing" the moment shutdown
-begins.
+Spring Boot answers both from its own lifecycle, not from checks on other systems. Liveness says yes once the
+application has started. Readiness says yes when startup finishes and no again the moment shutdown begins.
 
 Now picture the database in liveness. The database fails over and every pod fails the check. Kubernetes restarts
 all of them together. A database in readiness is gentler but still takes every pod out of rotation at once, so the
@@ -328,8 +327,10 @@ gives it its own pod, retries and a hard timeout.
 
 ### Do this
 
-1. For short frequent tasks, use `@Scheduled` with ShedLock and the database clock. Set `lockAtMostFor` longer than
-   the slowest run and shorter than the interval.
+1. For short frequent tasks, use `@Scheduled` with ShedLock, a library that takes a lock in the database so only
+   one pod runs the task. Let it use the database clock, because pod clocks differ. Its `lockAtMostFor` releases
+   the lock of a pod that died: set it longer than the slowest run and shorter than the interval, such as
+   `@SchedulerLock(name = "expire-orders", lockAtMostFor = "4m")` for a task that runs every five minutes.
 2. For batch work, use a `CronJob` with `concurrencyPolicy: Forbid` and an explicit `timeZone`, reusing the
    service's image and configuration.
 3. Make jobs idempotent either way: a job can run more than once.
@@ -376,9 +377,17 @@ yet.
 4. For a ready pod that gets no traffic, list the Service's endpoints with
    `kubectl get endpointslices -l kubernetes.io/service-name=<service>`, then compare the Service selector and port
    name with the pod. Check that a NetworkPolicy admits the caller.
-5. For a JVM problem in an image without a shell, attach a debug container that shares the app's processes:
-   `kubectl debug -it <pod> --image=<jdk image> --target=app -- jcmd 1 Thread.print`. It needs the right to create
-   ephemeral containers and the same user ID as the JVM.
+5. For a JVM problem, the runtime image has no JDK tools, so attach a debug container that has them and shares
+   the app's processes:
+
+   ```sh
+   kubectl debug -it <pod> --image=<jdk image> --target=app --profile=restricted \
+     --custom=debug-user.yaml -- jcmd 1 Thread.print
+   ```
+
+   `jcmd` only talks to a JVM of the same user. `debug-user.yaml` holds
+   `{"securityContext": {"runAsUser": 10001, "runAsGroup": 10001}}`, the user of the image. Your account needs
+   the right to create ephemeral containers.
 
 ### When this is not for you
 

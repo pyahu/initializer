@@ -108,10 +108,9 @@ The `permissions` key fixes this. As soon as you name one permission, every perm
 bits.
 
 ```sh
-bash .github/scripts/gradle-ci.sh docker run --rm \
-  -v "$PWD:/repo" -w /repo/fixtures/single-hexagonal \
-  -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache \
-  -v /var/run/docker.sock:/var/run/docker.sock "$JDK_IMAGE" ./gradlew --no-daemon build
+docker run --rm -v "$PWD:/w" -w /w \
+  -v "$HOME/.cache/gradle-ci:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache \
+  "$JDK_IMAGE" ./gradlew --no-daemon build
 ```
 
 ### What's going on
@@ -126,10 +125,12 @@ the Dockerfile's build stage uses.
 ### Do this
 
 1. Put the JDK image digest in one variable at the top of the workflow, such as `JDK_IMAGE`.
-2. Run the Gradle build inside that image, as above. The fixture's socket mount lets Testcontainers start PostgreSQL.
+2. Run the Gradle build inside that image, as above. When tests start containers with Testcontainers, also mount
+   the Docker socket: `-v /var/run/docker.sock:/var/run/docker.sock`.
 3. Use the same digest in the Dockerfile's build stage.
 4. Keep the Gradle wrapper's `distributionSha256Sum`, so a changed Gradle download fails the build.
-5. Before using any other tool in the job, check its version, as this repository does for Go.
+5. Before using any other tool in the job, check its version and fail when it differs, such as
+   `test "$(go version | cut -d' ' -f3)" = go1.27.2`.
 
 ### When this is not for you
 
@@ -161,13 +162,10 @@ contents are not signed: anyone who can open a pull request can read the base br
 4. Keep default branch cache writes on trusted triggers. Pull requests may restore that cache and write only
    their own scoped cache.
 5. For Gradle in Docker, persist `caches/modules-2` and `wrapper/dists` under the mounted `GRADLE_USER_HOME`.
-   The generated workflow keys these downloads by platform and version catalog. Every build and test still runs.
-
-The dependency helper makes at most three attempts for acquisition failures, with refreshed metadata on retries.
-The Docker build stages use the same helper. A public Maven artifact reported missing gets one metadata refresh;
-if it is still missing, the build fails.
-Compilation, test and formatting failures stop the job. The generator matrix runs eight jobs at a time to limit
-download bursts, and new pushes cancel obsolete runs on the same ref.
+   Cache the downloads only: every build and test still runs.
+6. Retry the dependency download a few times and nothing else. A repository that is down for a minute should
+   not fail the build; a failing test, compile error or formatting check must. The generated project does this
+   in `.github/scripts/gradle-ci.sh`.
 
 ### When this is not for you
 
@@ -194,12 +192,11 @@ builds the image and Go acceptance tests start that exact image and check it fro
 ### Do this
 
 1. Run the Gradle build: compile, unit and architecture tests (see [Testing](testing.md)).
-2. Build the image from the same Dockerfile production uses and load it locally.
-   The workflow supplies the jar from the successful Gradle build through `--build-context build=...`.
-   Docker replaces the `build` stage with that artifact; extraction, runtime layers and AOT training still run.
-   A missing jar fails the copy. This avoids downloading and compiling the same dependencies again inside Docker.
+2. Build the image from the same Dockerfile production uses and load it locally. To avoid compiling twice, hand
+   Docker the jar the Gradle build made with `--build-context build=<folder with the jar>`. It replaces the
+   Dockerfile's `build` stage; the other stages run as usual, so the image holds the jar that passed the tests.
 3. Scan that exact image with `trivy image --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1`.
-   The generated workflow exports the local image and scans that archive; it does not scan an older registry tag.
+   Scan the image you just built, not a tag in the registry.
 4. Run behaviour tests against that image: start it, call it and check what it does.
 5. Upload test reports with `if: always()`, so a red run still explains itself.
 6. Make the publishing job depend on the test job with `needs:`, so a failure stops it.

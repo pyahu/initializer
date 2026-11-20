@@ -53,8 +53,8 @@ A security review lands on your desk. A token issued to another app opens your A
 query and the pod runs as root with a writable disk. Nobody broke in with an exotic exploit: each finding is a
 default that nobody revisited.
 
-This guide walks through the nine decisions that close those doors: tokens, permissions, headers, errors,
-outbound calls and the pod. Most take one or two lines of configuration. Secrets live in
+This guide walks through the nine decisions that close those doors: tokens, permissions, access rules, browser
+protections, headers, errors, outbound calls, the pod and TLS. Most take one or two lines of configuration. Secrets live in
 [Configuration and secrets](/guides/configuration/), the image in
 [The container image](/guides/container-image/) and Actuator in [Observability](/guides/observability/).
 
@@ -122,13 +122,29 @@ the new `authorities-claim-expressions`). Two claims with two prefixes need a fe
 
 ### Do this
 
-1. Declare a `DelegatingJwtGrantedAuthoritiesConverter` with two converters: `scp` to `SCOPE_` and `roles` to
-   `ROLE_`.
+1. Give the filter chain a converter that reads both claims. One converter keeps the default (`scp` to
+   `SCOPE_`), the other reads `roles` into `ROLE_`:
+
+   ```java
+   static JwtAuthenticationConverter authentication() {
+       JwtGrantedAuthoritiesConverter scopes = new JwtGrantedAuthoritiesConverter();
+       JwtGrantedAuthoritiesConverter roles = new JwtGrantedAuthoritiesConverter();
+       roles.setAuthoritiesClaimName("roles");
+       roles.setAuthorityPrefix("ROLE_");
+       JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+       converter.setJwtGrantedAuthoritiesConverter(
+               new DelegatingJwtGrantedAuthoritiesConverter(scopes, roles));
+       return converter;
+   }
+   ```
+
+   Wire it into the chain with
+   `.oauth2ResourceServer(server -> server.jwt(jwt -> jwt.jwtAuthenticationConverter(authentication())))`.
 2. Accept both kinds of caller in your rules, such as
    `hasAnyAuthority("SCOPE_Orders.Read", "ROLE_Orders.Read.All")`.
-3. Use `oid` as the principal with `principal-claim-name`. `sub` differs per application, while `oid` is stable for
-   a user in the tenant. Check that your tokens carry it: Microsoft documents that it depends on the `profile`
-   scope.
+3. Use `oid` as the principal: `converter.setPrincipalClaimName("oid")`. `sub` differs per application, while
+   `oid` is stable for a user in the tenant. Check that your tokens carry it: Microsoft documents that it depends
+   on the `profile` scope.
 4. Ask Entra for v2 tokens in the API's app registration. A v1 token has a different issuer
    (`sts.windows.net`), the most common cause of a 401 with Entra.
 
@@ -223,8 +239,10 @@ IPs in audit logs and rate limits.
 
 1. Add `Content-Security-Policy: default-src 'none'; frame-ancestors 'none'` and `Referrer-Policy: no-referrer` in
    the filter chain's `headers` section.
-2. Pin `server.forward-headers-strategy: native`.
-3. Narrow `server.tomcat.remoteip.internal-proxies` to the ingress controller's addresses.
+2. Pin `server.forward-headers-strategy: native`. Tomcat then reads the `X-Forwarded-*` headers itself and only
+   from addresses it trusts.
+3. Narrow that trust to the ingress controller. `server.tomcat.remoteip.internal-proxies` is a regular
+   expression over the caller's address, such as `10\.42\.7\.\d{1,3}` for the pods of the ingress.
 4. Add HSTS `preload` only at the edge, for the whole domain.
 5. Check through the ingress: `curl -sI` shows HSTS, the CSP and `X-Content-Type-Options`.
 

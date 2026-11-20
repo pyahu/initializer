@@ -78,7 +78,7 @@ with the same tags and the versions come from the Boot BOM.
 1. Add `spring-boot-starter-opentelemetry`. No version: the Boot BOM sets it.
 2. Make sure nothing adds `-javaagent` behind your back, such as a base image or a platform setting
    `JAVA_TOOL_OPTIONS`.
-3. Add `datasource-micrometer` if you want JDBC spans and the log bridge from step 3.
+3. Add `datasource-micrometer-spring-boot` if you want a span for every SQL statement.
 
 ### When this is not for you
 
@@ -242,8 +242,18 @@ and fans out to each backend. Your apps never hold backend credentials.
 ### Do this
 
 1. Run Grafana Alloy or the OpenTelemetry Collector as a gateway.
-2. Order its steps: memory limiter first, then Kubernetes metadata, personal data scrubbing, tail sampling,
-   batching and retries, then the exporters.
+2. Order its processors as below. The memory limiter comes first, so the collector refuses data before it runs
+   out of memory. Then it adds the pod and namespace, removes personal data, picks the traces to keep and groups
+   what is left into batches. Retries are a setting of each exporter.
+
+   ```yaml
+   service:
+     pipelines:
+       traces:
+         receivers: [otlp]
+         processors: [memory_limiter, k8sattributes, transform, tail_sampling, batch]
+         exporters: [otlp]
+   ```
 3. On your laptop and in tests, use the `grafana/otel-lgtm` image: a collector and all three backends in one
    container. It is for development only.
 
@@ -270,8 +280,8 @@ With the links set up, you click the spike, open the trace and jump to that requ
 
 1. Install the log appender (step 3) and keep enough traces (step 4). Exemplars only point to traces that were
    kept.
-2. In Grafana, link exemplars to the trace backend, traces to their logs and metrics and add a derived field on
-   `trace_id` from logs back to traces.
+2. In Grafana, set three links, one per data source: on metrics, an exemplar opens its trace; on traces, a span
+   opens its logs; on logs, a derived field on `trace_id` opens the trace.
 3. Provision those links with the stack. They are configuration, not code.
 
 ### When this is not for you

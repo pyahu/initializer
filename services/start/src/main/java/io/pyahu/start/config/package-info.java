@@ -1,4 +1,4 @@
-/** Composition root: the only package that sees every capability and layer. */
+/** Configuration every capability shares, such as telemetry and security. It holds no business rule. */
 @NullMarked
 package io.pyahu.start.config;
 
