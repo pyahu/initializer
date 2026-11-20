@@ -202,7 +202,8 @@ so it gets 1 carrier and behaves like a single threaded server.
    and explicit rejection. `Executors.newFixedThreadPool` has an unbounded queue. The example queues at most one
    task per worker; tune this budget to your latency target and map rejection to an overload response.
 2. Give the pod a CPU request of at least 1. Then set either `-XX:ActiveProcessorCount` of 2 or more with no
-   CPU limit or a CPU limit of at least 2. The JVM in containers guide explains the flag.
+   CPU limit or a CPU limit of at least 2.
+   [The JVM in containers, step 3](/guides/jvm-in-containers/#jvm-cpu-count) explains the flag.
 3. Never run blocking I/O on `ForkJoinPool.commonPool()`. It is shared by the whole JVM and sized for CPU work.
 
 ### When this is not for you
@@ -256,7 +257,8 @@ Transactions never cross threads. An `@Async @Transactional` method opens a new,
 
 ### Do this
 
-1. On Spring executors, set a `TaskDecorator` that copies the context into the task.
+1. On Spring executors, declare a `TaskDecorator` bean that copies the context into the task, such as
+   `new ContextPropagatingTaskDecorator()`. Boot applies it to the executors it configures.
 2. On your own executors, wrap them with Micrometer context propagation: `ContextExecutorService.wrap(executor,
    ContextSnapshotFactory.builder().build())`. It carries MDC and the trace context.
 3. For work that must run after a commit, use `@TransactionalEventListener(phase = AFTER_COMMIT)` or an outbox when
@@ -276,8 +278,11 @@ Transactions never cross threads. An `@Async @Transactional` method opens a new,
 **In short:** submit both calls to one long lived executor, wait with one shared deadline and cancel what is late.
 
 ```java
-Future<RiskScore> risk = fanOut.submit(() -> riskClient.score(id));
-RiskScore score = await(risk, deadline, RiskScore.UNKNOWN);   // get(remaining time), cancel(true) on timeout
+Instant deadline = Instant.now().plusMillis(500);
+Future<RiskScore> risk = fanOut.submit(() -> riskClient.score(id));     // fanOut: the shared executor
+Future<Stock> stock = fanOut.submit(() -> stockClient.level(id));
+RiskScore score = await(risk, deadline, RiskScore.UNKNOWN);             // waits for the time that is left
+Stock level = await(stock, deadline, Stock.UNKNOWN);
 ```
 
 ### What's going on
@@ -294,9 +299,25 @@ two common ways to add a deadline do not work:
 
 1. Create one executor bean with `Executors.newVirtualThreadPerTaskExecutor()`, wrapped with
    `ContextExecutorService.wrap` from step 6.
-2. Compute one deadline for the whole fan out, such as 500 ms. Wait on each `Future` with
-   `get(remaining, NANOSECONDS)`.
-3. On a timeout or an error, call `cancel(true)` to interrupt the virtual thread and use a fallback value.
+2. Compute one deadline for the whole fan out, such as 500 ms. Wait on each `Future` for the time that is left.
+3. On a timeout or an error, call `cancel(true)` to interrupt the virtual thread and use a fallback value. The
+   `await` of the example above is this helper:
+
+   ```java
+   static <T> T await(Future<T> future, Instant deadline, T fallback) {
+       try {
+           long left = Duration.between(Instant.now(), deadline).toNanos();
+           return future.get(Math.max(left, 0), TimeUnit.NANOSECONDS);
+       } catch (TimeoutException | ExecutionException e) {
+           future.cancel(true);
+           return fallback;
+       } catch (InterruptedException e) {
+           future.cancel(true);
+           Thread.currentThread().interrupt();
+           return fallback;
+       }
+   }
+   ```
 4. Keep connect and read timeouts on every client anyway. They bound the work; the deadline bounds the caller.
 
 ### When this is not for you

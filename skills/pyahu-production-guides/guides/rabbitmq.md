@@ -134,7 +134,8 @@ something your code can see and act on.
 
 - Fire and forget metrics or notifications where losing a few is fine: skip the wait and keep the throughput.
 - You publish as part of a database transaction: a confirm still does not make the two atomic. Use an outbox
-  ([Kafka with the outbox](kafka.md) explains the pattern).
+  ([Kafka with the outbox](kafka.md) explains the pattern; the table and the transaction are the same,
+  only the publisher differs).
 
 ## 4. How many messages should a consumer take at once?
 
@@ -169,7 +170,7 @@ mode. That is what you want: the message is only gone once the work is done.
 - Tiny, fast messages at high rates: a large prefetch is fine. RabbitMQ's docs note that very large values
   add little over a few hundred.
 - Jobs that take longer than the consumer timeout: split them or track progress elsewhere and acknowledge
-  early on purpose.
+  early on purpose, which needs the `manual` acknowledge mode.
 
 ## 5. What happens when a message keeps failing?
 
@@ -192,13 +193,19 @@ drops the message or dead letters it if the queue has a dead letter exchange. Dr
 want to avoid.
 
 With listener retry on, Spring retries in the consumer with backoff. When the retries run out, Spring Boot's
-default recoverer rejects the message without requeueing, so it goes straight to the dead letter exchange.
+default recoverer rejects the message without requeueing. It then goes to the queue's dead letter exchange, or
+is dropped when the queue has none.
 
 ### Do this
 
 1. Turn on listener retry with a small `max-retries` and a backoff. In Spring Boot 4, `max-retries` replaces the
    old `max-attempts`.
-2. Give every work queue a dead letter exchange and a dead letter queue, through a policy or queue arguments.
+2. Give every work queue a dead letter exchange and a dead letter queue, through a policy or queue arguments. A
+   policy is a rule in the broker that applies settings to every queue whose name matches a pattern:
+
+   ```sh
+   rabbitmqctl set_policy orders-dlx "^orders\." '{"dead-letter-exchange":"orders.dlx"}' --apply-to queues
+   ```
 3. On quorum queues, set `dead-letter-strategy` to `at-least-once`, so a message is not lost while it moves to the
    dead letter queue. It needs the `reject-publish` overflow setting on the source queue.
 4. Alert on messages in dead letter queues and keep a way to inspect and replay them.
@@ -245,8 +252,8 @@ it.
 A queue is a buffer. If consumers stop or slow down, it grows until the broker runs short of memory or disk. Then publishers everywhere slow down or block. One forgotten queue can hurt every service on the broker.
 
 Limits turn that into a decision. A TTL says how long a message is still worth processing. A maximum length says
-what happens when the buffer is full: by default the oldest messages are dropped (`drop-head`) or new publishes
-are refused (`reject-publish`), which a publisher with confirms will see.
+what happens when the buffer is full: the oldest messages are dropped (`drop-head`, the default) or new
+publishes are refused (`reject-publish`), which a publisher with confirms will see.
 
 ### Do this
 
@@ -290,7 +297,7 @@ can add traces around publish and consume, so a message is part of the same trac
 
 ## Put it all together
 
-No tested example service uses RabbitMQ yet, so the pieces are lists.
+This is where each step lands.
 
 ### In application.yaml
 

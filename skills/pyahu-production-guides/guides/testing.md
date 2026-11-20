@@ -183,7 +183,21 @@ migrations, versions and pools.
 
 1. Add `spring-boot-testcontainers` and `testcontainers-postgresql`.
 2. Declare a `@Bean` returning `org.testcontainers.postgresql.PostgreSQLContainer` with your production major
-   version and annotate it with `@ServiceConnection`.
+   version and annotate it with `@ServiceConnection`, which points the data source at the container:
+
+   ```java
+   @TestConfiguration(proxyBeanMethods = false)
+   public class Postgres {
+
+       @Bean
+       @ServiceConnection
+       PostgreSQLContainer postgres() {
+           return new PostgreSQLContainer("postgres:18.6");
+       }
+   }
+   ```
+
+   A test uses it with `@Import(Postgres.class)`.
 3. Use `@DataJdbcTest` for repository tests or `@SpringBootTest` for the full path. Import the same
    configuration in both. `@DataJdbcTest` keeps a `@ServiceConnection` database instead of swapping in an embedded
    one.
@@ -256,15 +270,16 @@ the outside.
 Every test so far runs your code inside the test JVM. None of them runs the Dockerfile, the JVM flags in the
 `ENTRYPOINT`, the user the container runs as or a read-only disk. Those break in production and nowhere else.
 
-This repository's example service is checked that way: Go tests start its image with Docker as user 10001 on a
-read-only root filesystem, then assert that `/readyz` answers. Others send a request and look for its trace, metric and
-log in a real observability backend.
+A small suite closes that gap. It starts the image with Docker as its real user on a read-only root filesystem,
+then asserts from outside that the probe answers. A second test can send a request and look for its trace,
+metric and log in a real observability backend.
 
 ### Do this
 
 1. Build the image in CI, then run a small suite against it before pushing it.
 2. Start it like production: the same `ENTRYPOINT`, a read-only root filesystem, a user other than root and the
-   same memory limit.
+   same memory limit, such as
+   `docker run -d --read-only --tmpfs /tmp --user 10001:10001 --memory 1g -p 8080:8080 <image>`.
 3. Assert behaviour from outside: a probe answers, a request succeeds, telemetry arrives.
 4. Keep this suite small. It is the top of the pyramid.
 
@@ -274,7 +289,8 @@ log in a real observability backend.
 
 ## Put it all together
 
-The example service has the tests from steps 1, 4 and 8. Its build runs them on every change.
+The example service has one full context test and the tests from steps 4, 5 and 8. Its build runs them on every
+change.
 
 ### The application starts and answers
 
@@ -295,7 +311,8 @@ class ApplicationTest {
     }
 ```
 
-**Check it:** `./gradlew build` reports `ApplicationTest: 1 tests, 0 failures`.
+**Check it:** `./gradlew test` passes and `build/reports/tests/test/index.html` lists `ApplicationTest` with no
+failure.
 
 ### The modules and the layers stay in place
 
@@ -339,8 +356,9 @@ class ArchitectureTest {
 }
 ```
 
-**Check it:** add an import of an adapter class to a domain class and run `./gradlew test`: `ArchitectureTest`
-fails and names the class.
+**Check it:** make a domain class use an adapter class, as a field or a parameter, and run `./gradlew test`:
+`ArchitectureTest` fails and names the class. An unused import is not enough, because the test reads compiled
+classes.
 
 ### In CI
 

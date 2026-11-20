@@ -78,7 +78,7 @@ environment becomes a copy.
 
 ### Do this
 
-1. For your own service, use Kustomize. The Initializer will generate Kustomize.
+1. For your own service, use Kustomize. Generated projects come with a Kustomize base and two overlays.
 2. Pick one tool per service and write the choice down.
 3. Whatever you pick, review and validate the rendered YAML (`kustomize build` or `helm template`), not the
    templates.
@@ -116,7 +116,22 @@ still work and print a warning but they will not exist in the next API version.
 
 ### Do this
 
-1. Keep the base complete and free of environment details: no namespace, no image digest, no secrets.
+1. Keep the base complete and free of environment details: no namespace, no image digest, no secrets. An
+   overlay then adds only what its environment owns:
+
+   ```yaml
+   # deploy/overlays/prod/kustomization.yaml
+   apiVersion: kustomize.config.k8s.io/v1beta1
+   kind: Kustomization
+   namespace: orders
+   resources:
+     - namespace.yaml
+     - ../../base
+   images:
+     - name: orders
+       newName: ghcr.io/your-org/orders
+       digest: sha256:<digest CI pushed>
+   ```
 2. Put each optional feature in a component and list it in the overlays that need it.
 3. Use `labels`, `patches` and `replacements` only. `replacements` copies a value from one object into others
    without string templating.
@@ -183,8 +198,16 @@ pod template for the same effect. Plain YAML has neither.
 
 ### Do this
 
-1. In Kustomize, generate ConfigMaps with `configMapGenerator`. Never set `disableNameSuffixHash`: the hash is the
-   feature.
+1. In Kustomize, generate ConfigMaps with `configMapGenerator`. It adds a hash of the content to the name and
+   rewrites every reference, so a changed value rolls the pods. Never set `disableNameSuffixHash`: the hash is
+   the feature.
+
+   ```yaml
+   configMapGenerator:
+     - name: orders-config
+       literals:
+         - DEPLOYMENT_ENVIRONMENT=prod
+   ```
 2. In Helm, add a `checksum/config` annotation computed from the ConfigMap template.
 3. With plain YAML, add `kubectl rollout restart` to the pipeline after a config change.
 
@@ -199,7 +222,8 @@ pod template for the same effect. Plain YAML has neither.
 **In short:** pin the image by digest in production, never by tag.
 
 ```sh
-kustomize edit set image orders-service=myregistry.azurecr.io/orders-service@sha256:<digest>
+cd deploy/overlays/prod
+kustomize edit set image orders=ghcr.io/your-org/orders@sha256:<digest>
 ```
 
 ### What's going on
@@ -213,7 +237,8 @@ digest, you get `repo:tag@sha256:…` and the digest wins when the image is pull
 ### Do this
 
 1. In the prod overlay, set the image with a `digest`.
-2. Let CI write it with `kustomize edit set image` after it builds and pushes the image.
+2. Let the job that pushes the image write it, with the command above, run inside the overlay folder. The
+   generated project leaves a placeholder digest of zeros there until you add that job.
 3. In a Helm chart, take an `image.digest` value and use `repo@sha256:…` when it is set.
 
 ### When this is not for you
@@ -228,7 +253,7 @@ digest, you get `repo:tag@sha256:…` and the digest wins when the image is pull
 the Deployment.
 
 ```sh
-kustomize build overlays/prod | kubectl apply --server-side --field-manager=orders-ci -f -
+kustomize build deploy/overlays/prod | kubectl apply --server-side --field-manager=orders-ci -f -
 ```
 
 ### What's going on
@@ -246,6 +271,9 @@ does not delete objects you removed from Git: its pruning is still alpha.
 2. Leave `spec.replicas` out of every manifest that an HPA manages.
 3. Detect drift in CI with `kubectl diff --server-side` using the same field manager.
 4. To delete objects removed from Git, use a GitOps controller, Helm or an explicit delete step.
+5. When one object must finish before another starts, such as a migration Job before the Deployment, apply in
+   phases and wait in between. One apply of the whole overlay does not wait. The generated `deploy/apply.sh` does
+   this ([database guide, step 6](/guides/database/#db-migration-job)).
 
 ### When this is not for you
 
@@ -320,10 +348,10 @@ Each tool catches something different:
 1. Render each environment in CI: `kustomize build overlays/<env>` or `helm template` with each values file.
 2. Run `kubeconform -strict` for Kubernetes 1.36 and 1.37, with schemas for the custom resources you use, such as
    Gateway API's `HTTPRoute`.
-3. Run kube-linter and `trivy config --exit-code 1 --severity HIGH,CRITICAL`. The generated workflow applies both
-   to the rendered dev and prod YAML; it blocks HIGH/CRITICAL security misconfigurations and uses kube-linter's
-   default checks. Give every suppression a written reason; there are none in the generated sample.
-4. Run pluto against the newest Kubernetes version you support.
+3. Run `kube-linter lint <rendered file>` and `trivy config --exit-code 1 --severity HIGH,CRITICAL <folder>` on
+   the rendered YAML. Give every suppression a written reason.
+4. Run pluto against the newest Kubernetes version you support, such as
+   `pluto detect-files -d <folder> --target-versions k8s=v1.37.0`.
 5. For a Helm chart, add `helm lint --strict` and a `values.schema.json` with `additionalProperties: false`, so a
    typo in a value is an error.
 
@@ -337,7 +365,8 @@ Everything above lives in one folder next to the service and one job in CI.
 
 ### The layout
 
-- `base/`: the Deployment, Service, ServiceAccount, HPA, PodDisruptionBudget and NetworkPolicies, with the
+- `base/`: the Deployment, Service, ServiceAccount, HPA, PodDisruptionBudget, NetworkPolicies and the migration
+  Job when there is a database, with the
   recommended labels and a `configMapGenerator`, no namespace and no image digest (steps 2, 3 and 4).
 - `components/`: one folder per optional feature, each a `kind: Component` (step 2).
 - `overlays/<env>/`: the namespace, the environment's values, the image by digest and small patches (steps 2 and

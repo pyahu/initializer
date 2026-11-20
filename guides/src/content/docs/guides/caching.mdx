@@ -114,7 +114,8 @@ the annotations work through a proxy, so a method calling another method of the 
 ### When this is not for you
 
 - A method called from inside the same class: move it to another bean or the annotation does nothing.
-- Values that need a different time to live per entry: use the manager's `TtlFunction` or write the code yourself.
+- Values that need a different time to live per entry: use a `RedisCacheWriter.TtlFunction` (step 3) or write the
+  code yourself.
 
 <a id="cache-ttl"></a>
 
@@ -137,7 +138,8 @@ wrong answer is acceptable. Prices may be a minute. A list of countries may be a
 
 ### Do this
 
-1. Set `spring.cache.redis.time-to-live` as the default for every cache.
+1. Set `spring.cache.redis.time-to-live` as the default for every cache. Once you define the configuration bean of
+   step 4, set it on that bean instead.
 2. Give caches with different needs their own time to live with a `RedisCacheManagerBuilderCustomizer` bean.
 3. For many keys written at the same moment, spread their expiry with a `RedisCacheWriter.TtlFunction` that adds a
    small random amount, so they do not all expire together (step 6).
@@ -165,15 +167,18 @@ deploy a new version next to an old one and the new pods fail to read what the o
 with `valkey-cli`, works across versions that add fields and does not run Java deserialisation on data from the
 network.
 
-A version in the key, such as `products::v2:42`, lets a deploy that changes the shape start with fresh keys while the
-old ones expire on their own.
+A version in front of the key, such as `v2:products::42`, lets a deploy that changes the shape start with fresh
+keys while the old ones expire on their own.
 
 ### Do this
 
 1. Keep `spring.cache.redis.use-key-prefix` at its default, `true`.
 2. Define a `RedisCacheConfiguration` bean that sets a JSON value serialiser. In Spring Data Redis 4.1 that is
-   `JacksonJsonRedisSerializer` for one type or `GenericJacksonJsonRedisSerializer` for many.
-3. Put a version in the prefix or the key. Raise it when the cached shape changes in a way old pods cannot read.
+   `JacksonJsonRedisSerializer` for one type or `GenericJacksonJsonRedisSerializer` for many. Boot then uses
+   your bean instead of the `spring.cache.redis.*` properties, so set the default time to live on it too, with
+   `entryTtl(...)`, or entries never expire.
+3. Put a version in front of the cache name on the same bean, with `prefixCacheNameWith("v2:")`. Raise it when
+   the cached shape changes in a way old pods cannot read.
 4. Build keys from stable business ids, never from whole objects or from user input you have not bounded.
 
 ### When this is not for you
@@ -200,8 +205,9 @@ be transaction aware.
 ### Do this
 
 1. Evict on write with `@CacheEvict` (or a `delete` call), not `@CachePut`, unless you have a strong reason.
-2. Make the cache manager transaction aware (`RedisCacheManager.builder(...).transactionAware()`), so the eviction
-   runs after the commit.
+2. Make the cache manager transaction aware, so the eviction runs after the commit: declare a
+   `RedisCacheManagerBuilderCustomizer` bean that calls `builder.transactionAware()`. Do not build your own
+   `RedisCacheManager`, which would switch off the cache names and statistics Boot sets up.
 3. Keep the time to live short enough that a missed eviction heals itself.
 4. Write down, per cache, how stale its data may be. That number is the time to live.
 
@@ -230,9 +236,10 @@ whole cache, not per key.
 ### Do this
 
 1. Add a little random spread to the time to live of hot keys (step 3), so they do not expire together.
-2. Use `sync = true` on hot reads and put a small Caffeine cache in front of Valkey for the hottest keys, so each
-   pod loads a key once.
-3. For values that are expensive to compute, refresh them on a schedule before they expire instead of waiting for
+2. Use `sync = true` on hot reads.
+3. For the hottest keys, keep a small Caffeine cache in the pod as well, in front of Valkey, so each pod loads a
+   key once. Spring has no ready two level cache: it is a second cache manager and a few lines of your own.
+4. For values that are expensive to compute, refresh them on a schedule before they expire instead of waiting for
    a miss.
 4. Watch the database during a deploy or a Valkey restart: that is when every key is cold at once.
 
@@ -258,8 +265,19 @@ holds every request thread.
 
 1. Set `spring.data.redis.connect-timeout` and `spring.data.redis.timeout` to values far below your request
    deadline, such as a few hundred milliseconds.
-2. Register a `CacheErrorHandler` (through `CachingConfigurer`) that logs the error and returns, so a failed read
-   becomes a miss and a failed write is skipped.
+2. Register a `CacheErrorHandler` that logs the error and returns, so a failed read becomes a miss and a failed
+   write is skipped:
+
+   ```java
+   @Configuration
+   class CacheErrors implements CachingConfigurer {
+
+       @Override
+       public CacheErrorHandler errorHandler() {
+           return new LoggingCacheErrorHandler();
+       }
+   }
+   ```
 3. Make sure the database can take the load of a full miss for a while (step 6) or limit how much of it reaches the
    database.
 4. Alert on cache errors, so a silent fallback does not hide an outage for days.
@@ -296,13 +314,15 @@ faster than the database and evictions say whether it is too small.
 
 ### Do this
 
-1. Set `maxmemory` below the memory you give the Valkey container and `maxmemory-policy allkeys-lru`.
+1. In Valkey's own configuration, set `maxmemory` below the memory you give its container and
+   `maxmemory-policy allkeys-lru`.
 2. Turn on `spring.cache.redis.enable-statistics: true`. Spring Boot then publishes `cache.*` metrics for the caches
    declared at startup.
 3. Watch the hit ratio per cache, command latency and Valkey's evicted keys. A low hit ratio means the cache costs
    more than it saves.
-4. Clearing a whole cache uses `KEYS` by default, which blocks Valkey on a big keyspace. Switch the cache writer to
-   `BatchStrategies.scan(1000)` if you ever clear caches.
+4. Clearing a whole cache uses `KEYS` by default, which blocks Valkey on a big keyspace. If you ever clear
+   caches, give the builder customizer of step 5 a cache writer that scans instead:
+   `RedisCacheWriter.nonLockingRedisCacheWriter(connectionFactory, BatchStrategies.scan(1000))`.
 
 ### When this is not for you
 

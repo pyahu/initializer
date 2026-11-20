@@ -218,6 +218,11 @@ also helps anyone who can reach the port.
    `readiness` for readiness:
 
    ```yaml
+   startupProbe:
+     grpc: { port: 9090, service: liveness }
+     periodSeconds: 2
+     timeoutSeconds: 2
+     failureThreshold: 30
    livenessProbe:
      grpc: { port: 9090, service: liveness }
      timeoutSeconds: 2
@@ -299,7 +304,7 @@ each client channel. With mutual TLS, the server also checks the client's certif
 
 ## Put it all together
 
-No tested gRPC service exists in this repository yet, so the setup is a list.
+This is where each step lands.
 
 ### In the build
 
@@ -311,8 +316,9 @@ No tested gRPC service exists in this repository yet, so the setup is a list.
 
 - A default deadline and the target for each client channel (steps 4 and 7).
 - A per method retry policy only for methods that are safe to repeat (step 5).
-- `spring.grpc.server.keepalive.connection.max-age` set and reflection off in production (steps 6 and 7).
-- An SSL bundle on the server and on each channel (step 8).
+- Reflection off in production (step 6) and `spring.grpc.server.keepalive.connection.max-age` set (step 7).
+- An SSL bundle on the server and on each channel, unless a mesh already encrypts the traffic (step 8). With
+  TLS on the gRPC port, the probes move to HTTP (step 6).
 
 ### In the Deployment
 

@@ -84,16 +84,29 @@ compiling instead of failing at run time. `openapi-typescript` turns OpenAPI 3.0
 
 ### Do this
 
-1. Keep the frontend under `frontends/web` and point the generator at the service's `openapi.yaml` in the same
+1. Keep the frontend under `frontends/web` and point the generator at the service's contract in the same
    repository:
 
    ```sh
-   npx openapi-typescript ../../src/main/openapi/openapi.yaml -o src/api/schema.d.ts
+   npx openapi-typescript ../../src/main/openapi/api.yaml -o src/api/schema.d.ts
    ```
 
-2. Create one client in a `server-only` module with `createClient` from `openapi-fetch`, using the service URL
-   from a server environment variable such as `API_BASE_URL`.
-3. Run the generator in CI and fail the build when the generated file changes without being committed.
+2. Create one client in a `server-only` module, with the service URL from a server environment variable:
+
+   ```ts
+   import 'server-only';
+   import createClient from 'openapi-fetch';
+   import type { paths } from './schema';
+
+   export function api(accessToken: string) {
+     return createClient<paths>({
+       baseUrl: process.env.API_BASE_URL ?? 'http://localhost:8080',
+       headers: { Authorization: `Bearer ${accessToken}` },
+     });
+   }
+   ```
+
+3. Run the generator in CI with `--check` added, which fails when `schema.d.ts` no longer matches the contract.
 4. Call the service by its cluster name from the server. The browser never needs the service's address.
 
 ### When this is not for you
@@ -103,8 +116,8 @@ compiling instead of failing at run time. `openapi-typescript` turns OpenAPI 3.0
 
 ## 3. How does the user log in and where does the token live?
 
-**In short:** run the OIDC code flow on the Next.js server, keep the session in an httpOnly cookie and keep the
-access token on the server.
+**In short:** run the OIDC code flow on the Next.js server and keep the session and the tokens where scripts in
+the browser cannot read them: in a server side store or in an encrypted httpOnly cookie.
 
 ### What's going on
 
@@ -120,8 +133,11 @@ OIDC discovery URL.
 ### Do this
 
 1. Pick a maintained library from the Next.js list that supports a generic OIDC provider and refresh tokens.
-2. Store the session in an `httpOnly`, `secure`, `sameSite` cookie. Keep tokens on the server.
-3. Check the session again where the data is read, in a small data access layer, not only in `proxy.ts`.
+2. Store the session in an `httpOnly`, `secure`, `sameSite` cookie. Keep the tokens in a session store on the
+   server, or, without a database, inside that cookie, encrypted, as the generated project does. Either way no
+   script in the page can read them.
+3. Check the session again where the data is read: in the functions that fetch data for a page, not only in
+   `proxy.ts`, the file where Next.js runs code before every request.
 4. Treat every Server Action as a public endpoint: Next.js says they are reachable by direct POST. Check the
    user inside each one.
 5. The service still validates every token ([Security hardening](security.md)). The frontend is one more
@@ -185,10 +201,11 @@ leaves the others serving the old copy.
 3. After a write, call `updateTag` in the Server Action when the user must see the change at once. Call
    `revalidateTag(tag, 'max')` when slightly stale data is fine. The one argument form of `revalidateTag` is
    deprecated in Next.js 16.
-4. If cached data must be shared across pods, use `'use cache: remote'` with a `cacheHandlers.remote`
-   implementation backed by shared storage and coordinated tag invalidation. The older `cacheHandler` option
-   serves a different cache API; it does not by itself share Cache Components entries. Per-pod caches with a short
-   lifetime are an explicit alternative when stale copies are acceptable.
+4. Decide whether pods must share cached data. If stale copies for a short time are fine, let each pod keep its
+   own cache with a short lifetime.
+5. If they must share it, mark those reads with `'use cache: remote'` and give `cacheHandlers.remote` in
+   `next.config.ts` an implementation backed by shared storage, which also spreads tag invalidation to every
+   pod. The older `cacheHandler` option serves a different cache API and does not share these entries.
 
 ### When this is not for you
 
@@ -200,8 +217,9 @@ leaves the others serving the old copy.
 **In short:** build with `output: "standalone"`, run `node server.js` as a user that is not root and treat
 shutdown and probes like any service.
 
-```js
-module.exports = { output: 'standalone' }
+```ts
+// next.config.ts
+export default { output: 'standalone' };
 ```
 
 ### What's going on
@@ -220,17 +238,17 @@ both into the image and runs as the `node` user. On shutdown, Next.js finishes r
    the official `with-docker` example does.
 2. Set `HOSTNAME=0.0.0.0` and `PORT`, run `USER node` and start with `CMD ["node", "server.js"]`, so Node is
    PID 1 and gets the signal.
-3. Add a route handler such as `app/livez/route.ts` that returns 200 and point the probes at it
+3. Add a route handler such as `src/app/livez/route.ts` that returns 200 and point the probes at it
    ([Deploying to Kubernetes](kubernetes-deployment.md)). Route handlers are not cached by default.
 4. Give the pod a grace period that covers your slowest request.
-5. Set `deploymentId` in `next.config.ts` from the build's release identifier. The generated Dockerfile requires
-   `--build-arg DEPLOYMENT_ID=<release>`; CI uses the commit SHA and checks the built configuration. Promote the
-   resulting image unchanged across environments and replicas. This enables Next.js version skew handling during
-   a rollout; a mismatched client can reload and lose state kept only in memory.
-6. If the app uses Server Actions, make their encryption key consistent across instances/builds that must
-   interoperate. Supply `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` securely to `next build`, as a base64 AES key of the
-   supported length. It is embedded in the server build, so setting it only at runtime is insufficient. The
-   generated sample has no Server Actions and does not require this additional secret.
+5. Set `deploymentId` in `next.config.ts` from a release identifier passed to the image build, such as
+   `--build-arg DEPLOYMENT_ID=<commit SHA>`. During a rollout Next.js then notices a browser that still runs the
+   old release and reloads it, instead of mixing two versions. Promote that one image unchanged across
+   environments and replicas.
+6. Server Actions are encrypted with a key Next.js creates at build time, so replicas of one image agree. When
+   two different builds must accept each other's actions, give both the same key: pass
+   `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY`, a base64 AES key, as a build secret to `next build`. Setting it only at
+   run time has no effect.
 
 ### When this is not for you
 
@@ -239,7 +257,7 @@ both into the image and runs as the `node` user. On shutdown, Next.js finishes r
 
 ## 7. Which security headers does the frontend need?
 
-**In short:** set the basic headers in `next.config.js`, turn off `x-powered-by` and add a Content Security Policy
+**In short:** set the basic headers in `next.config.ts`, turn off `x-powered-by` and add a Content Security Policy
 with a nonce when you can.
 
 ### What's going on
@@ -247,13 +265,13 @@ with a nonce when you can.
 The frontend is what the browser runs, so it is where most browser attacks land: injected scripts, clickjacking,
 leaking URLs to other sites. Response headers tell the browser to refuse those.
 
-Next.js lets you set headers per path in `next.config.js`. It adds `x-powered-by` unless you turn it off. A
+Next.js lets you set headers per path in `next.config.ts`. It adds `x-powered-by` unless you turn it off. A
 Content Security Policy with a nonce is stronger. The nonce must be new for each request, so pages that use it
 render per request.
 
 ### Do this
 
-1. Add `headers()` in `next.config.js` for every path: `X-Content-Type-Options: nosniff`,
+1. Add `headers()` in `next.config.ts` for every path: `X-Content-Type-Options: nosniff`,
    `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: DENY` and `Strict-Transport-Security`
    when you serve HTTPS.
 2. Set `poweredByHeader: false`.
@@ -280,8 +298,21 @@ Spring Boot service start a new trace. The frontend and the backend never connec
 
 ### Do this
 
-1. Add `instrumentation.ts` at the project root with `registerOTel({ serviceName: 'web' })`.
-2. Set `fetch: { propagateContextUrls: [...] }` to the service's address, so its calls carry `traceparent`.
+1. Add `instrumentation.ts` at the root of the frontend and name the service in it.
+2. List the service's address in `propagateContextUrls`, so calls to it carry `traceparent`:
+
+   ```ts
+   import { registerOTel } from '@vercel/otel';
+
+   export function register() {
+     registerOTel({
+       serviceName: 'orders-web',
+       instrumentationConfig: {
+         fetch: { propagateContextUrls: [process.env.API_BASE_URL ?? 'http://localhost:8080'] },
+       },
+     });
+   }
+   ```
 3. Point `OTEL_EXPORTER_OTLP_ENDPOINT` at the same collector as the service ([Observability](observability.md)).
 4. Set `NEXT_OTEL_VERBOSE=1` only while debugging: it adds many spans.
 
@@ -292,16 +323,16 @@ Spring Boot service start a new trace. The frontend and the backend never connec
 
 ## Put it all together
 
-The frontend lives in `frontends/web`, next to the service, with its own build, image and Deployment. No tested
-file exists for it yet, so these are lists.
+The frontend lives in `frontends/web`, next to the service, with its own build, image and Deployment. A project
+generated with the Next.js option has every file listed here.
 
 ### In the repository
 
 - `frontends/web` with its own `package.json`, lock file and Node version (Next.js 16 needs Node 20.9 or newer).
-- `src/api/schema.d.ts` generated from the service's `openapi.yaml`, checked in CI (step 2).
-- `server-only` modules for the API client and the session (steps 1 and 3).
+- `src/api/schema.d.ts` generated from the service's contract, checked in CI (step 2).
+- `server-only` modules for the API client and the session (steps 2 and 3).
 - `instrumentation.ts` with `propagateContextUrls` for the service (step 8).
-- `next.config.js` with `output: 'standalone'`, `poweredByHeader: false` and `headers()` (steps 6 and 7).
+- `next.config.ts` with `output: 'standalone'`, `poweredByHeader: false` and `headers()` (steps 6 and 7).
 
 ### In the image
 

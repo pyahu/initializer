@@ -58,10 +58,12 @@ toolchain in the build file solves it: the build asks for Java 25 instead of usi
 
 ### Do this
 
-1. Generate the wrapper with the version and its published checksum:
+1. Generate the wrapper with the version and its published checksum, listed for each version on
+   [gradle.org/release-checksums](https://gradle.org/release-checksums/). In a project that has no wrapper yet,
+   run the same command with an installed `gradle` once:
 
    ```sh
-   ./gradlew wrapper --gradle-version 9.8.1 --gradle-distribution-sha256-sum <sha256 from gradle.org>
+   ./gradlew wrapper --gradle-version 9.8.1 --gradle-distribution-sha256-sum <checksum of the binary zip>
    ```
 
 2. Commit `gradlew`, `gradlew.bat` and the whole `gradle/wrapper` folder.
@@ -120,14 +122,15 @@ There are two ways to use it. The `io.spring.dependency-management` plugin bring
 change a version through a property. Gradle's own `platform()` does the same job natively and the Spring Boot
 docs say it will likely give you faster builds. The catch: a platform only constrains the configuration it is
 declared in and the ones that extend it. That is why the build declares it for `implementation`,
-`testImplementation` and `testRuntimeOnly`.
+`testImplementation` and `testRuntimeOnly`, and for `developmentOnly` once it uses Boot's development tools.
 
 ### Do this
 
 1. Add `platform(...)` for each BOM you use: Spring Boot and others such as Spring Modulith and jMolecules.
 2. Repeat it in every configuration that resolves dependencies without extending `implementation`.
 3. Leave versions off every library the BOM manages.
-4. Need a different version of one library? Use a Gradle resolution strategy, not a property: the properties only
+4. Need a different version of one library? Declare it as a constraint, such as
+   `constraints { implementation("org.example:lib:1.2.3") }`. The version properties of the Spring Boot docs only
    work with the dependency management plugin.
 
 ### When this is not for you
@@ -154,8 +157,8 @@ fails stops the build.
 
 1. Apply the `net.ltgt.errorprone` Gradle plugin and add `error_prone_core` to the `errorprone` configuration.
 2. Set `disableWarningsInGeneratedCode = true`, so generated code does not drown your own warnings.
-3. Keep it on for main code. The build in this repository turns it off for test code, a deliberate choice to
-   keep tests quick to write.
+3. Keep it on for main code. Turning it off for test code is a fair choice that keeps tests quick to write; the
+   generated project does that.
 4. Run it on JDK 21 or later: Error Prone 2.43 and newer need it.
 
 ### When this is not for you
@@ -260,10 +263,25 @@ before it reaches you.
 
 ### Do this
 
-1. Add a `renovate.json` that extends `config:recommended`.
-2. Set `minimumReleaseAge`, for example to 7 days.
-3. Group libraries that must move together into one pull request, with a `groupName` in a package rule.
-4. Require the full build, gates included, to pass before merge.
+1. Install the Renovate app on the repository and add a `renovate.json` that extends `config:recommended`:
+
+   ```json
+   {
+     "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+     "minimumReleaseAge": "7 days",
+     "packageRules": [
+       {
+         "matchPackageNames": ["com.google.errorprone**", "com.uber.nullaway**", "net.ltgt.errorprone**"],
+         "groupName": "Error Prone"
+       }
+     ]
+   }
+   ```
+
+2. Keep `minimumReleaseAge`, so a release that gets pulled never reaches you.
+3. Group libraries that must move together into one pull request, with a `groupName` in a package rule, as above.
+4. Require the full build, gates included, to pass before merge: make it a required check in the branch
+   protection of the default branch.
 
 ### When this is not for you
 
@@ -273,7 +291,7 @@ before it reaches you.
 
 ## Put it all together
 
-Every step above lives in four files of the example service and `./gradlew build` runs all the gates.
+Every step above lives in five files of the example service and `./gradlew build` runs all the gates.
 
 ### The wrapper
 
@@ -327,7 +345,7 @@ nowhere in the build.
 
 ### The BOMs
 
-Three BOMs through `platform()`, repeated for the test configurations (step 3).
+The BOMs through `platform()`, repeated for the test configurations (step 3).
 
 From [`build.gradle.kts`](https://github.com/pyahu/initializer/blob/main/fixtures/single-hexagonal/build.gradle.kts):
 

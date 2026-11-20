@@ -173,7 +173,17 @@ keeps aligning the libraries it manages.
 1. Keep one catalog at `gradle/libs.versions.toml` and add every library there.
 2. In `build-logic/settings.gradle.kts`, import it with
    `versionCatalogs { create("libs") { from(files("../gradle/libs.versions.toml")) } }`.
-3. Declare the external Gradle plugins your conventions use as dependencies of `build-logic`.
+3. Declare the external Gradle plugins your conventions use as dependencies of `build-logic`. A plugin from the
+   catalog becomes a dependency through its marker artifact:
+
+   ```kotlin
+   // build-logic/build.gradle.kts
+   fun plugin(p: Provider<PluginDependency>) = p.map { "${it.pluginId}:${it.pluginId}.gradle.plugin:${it.version}" }
+
+   dependencies {
+       implementation(plugin(libs.plugins.spring.boot))
+   }
+   ```
 4. Keep the Spring Boot BOM for the libraries it manages. When you must override one, add a constraint with a
    reason.
 
@@ -230,7 +240,25 @@ one required check.
 1. Write one reusable workflow that builds, tests and packages a single service.
 2. Write one orchestration workflow that runs on every pull request and calls it for each service, through a
    matrix.
-3. End with a gate job that runs with `if: always()` and fails when any expected job failed or was skipped.
+3. End with a gate job that runs with `if: always()` and fails when any expected job failed or was skipped. Make
+   that one job the required check:
+
+   ```yaml
+   jobs:
+     services:
+       strategy:
+         matrix:
+           service: [orders, billing]
+       uses: ./.github/workflows/service.yml
+       with:
+         service: ${{ matrix.service }}
+     gate:
+       if: always()
+       needs: [services]
+       runs-on: ubuntu-24.04
+       steps:
+         - run: test "${{ needs.services.result }}" = success
+   ```
 4. Start by building every service on every change. Build only the affected services later, once you can compute
    which services depend on a changed contract, library, catalog or convention. When unsure, build everything.
 
@@ -280,7 +308,7 @@ Everything above lands in the repository layout, the settings file and one CI wo
 - `contracts/<service>/`: each contract with its owner, plus a generated client project (step 3).
 - `services/<service>/`: code, build file, Dockerfile and `deploy/` of one service (steps 2 and 8).
 - `libs/`: empty until code is deliberately reusable (step 2).
-- `docs/adr/`: the decision to share a repository and every exception to the rules (steps 1 and 2).
+- `docs/adr/`: the decision to share a repository and every exception to the rules (step 1).
 
 ### In CI
 

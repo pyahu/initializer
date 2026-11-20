@@ -79,7 +79,8 @@ is driving on a map you drew yourself.
 
 - A team that already runs JPA well: keep it. Switching tools is a cost too.
 - Mixing is fine: JPA or JDBC for writes and jOOQ for heavy reads in the same service share one data source and
-  one transaction.
+  one transaction. One trap: jOOQ does not see changes JPA has not sent yet. Call `entityManager.flush()` before
+  a jOOQ read that depends on them.
 
 <a id="orm-persistence-context"></a>
 
@@ -138,14 +139,23 @@ query loads them, needed or not, often with extra selects of their own.
 ### Do this
 
 1. Mark every association `fetch = FetchType.LAZY`, including `@ManyToOne` and `@OneToOne`.
-2. Load what a use case needs on purpose: a `JOIN FETCH` query or an `@EntityGraph` on the Spring Data repository
-   method.
-3. As a safety net, set `spring.jpa.properties.hibernate.default_batch_fetch_size`, so forgotten lazy loads go
-   in batches instead of one by one.
+2. Load what a use case needs on purpose, with a `JOIN FETCH` query or an `@EntityGraph` on the Spring Data
+   repository method:
+
+   ```java
+   @Query("select o from Order o join fetch o.lines where o.id = :id")
+   Optional<Order> findWithLines(UUID id);
+
+   @EntityGraph(attributePaths = "lines")
+   List<Order> findByCustomerId(UUID customerId);
+   ```
+
+3. As a safety net, set `spring.jpa.properties.hibernate.default_batch_fetch_size`, such as 16, so forgotten lazy
+   loads go in batches instead of one by one.
 4. Set `spring.jpa.properties.hibernate.query.fail_on_pagination_over_collection_fetch: true`: paging over a
    fetched collection then fails instead of loading the whole table into memory.
-5. Turn on `spring.jpa.properties.hibernate.log_slow_query` with a millisecond threshold, so slow queries reach
-   the log.
+5. Set `spring.jpa.properties.hibernate.log_slow_query` to a number of milliseconds, such as 200: every query
+   slower than that reaches the log.
 
 ### When this is not for you
 
@@ -230,7 +240,8 @@ ahead of time and its pooled optimizer hands out a block of ids per database cal
 ### Do this
 
 1. Set a batch size and turn on ordered inserts and updates, as above.
-2. Map ids with `GenerationType.SEQUENCE`, backed by a sequence created in a Liquibase changeset.
+2. Map ids with `GenerationType.SEQUENCE`, backed by a sequence created in a Liquibase changeset. Give the
+   sequence the increment the mapping expects, its `allocationSize`, which is 50 unless you set it.
 3. For very large loads, process in chunks and clear the persistence context between them (step 7).
 
 ### When this is not for you
@@ -294,7 +305,7 @@ together.
 ### When this is not for you
 
 - Simple create, read, update and delete over aggregates: Spring Data JDBC needs less setup.
-- Teams that cannot run Docker in the build: generation from a live database needs it.
+- Teams that cannot run Docker in the build: this way of generating needs a container.
 
 ## Put it all together
 
@@ -303,7 +314,7 @@ Each choice lands in the build, in `application.yaml` and in the persistence ada
 ### In the build
 
 - `spring-boot-starter-data-jpa` or `spring-boot-starter-jooq`, with versions from the Spring Boot BOM: Hibernate
-  7.4.13.Final, Spring Data JPA 4.1.2 and jOOQ 3.21.9 in Spring Boot 4.1.2 (step 1).
+  7.4.13.Final, Spring Data JPA 4.1.2 and jOOQ 3.21.9 in Spring Boot 4.1.2.
 - For jOOQ, a generation task that migrates a PostgreSQL container with Liquibase and then generates (step 8).
 
 ### In application.yaml, with JPA

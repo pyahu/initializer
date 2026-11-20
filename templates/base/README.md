@@ -68,7 +68,8 @@ Renovate keeps the versions current (`renovate.json`).
 
 The frontend image requires `DEPLOYMENT_ID` at build time: choose a different identifier for each release. CI uses
 the commit SHA and verifies that Next.js embedded it. Promote that image unchanged between environments and replicas.
-The sample has no Server Actions. If you add them, coordinate their build-time encryption key as described in the
+Replicas of one image share the key that encrypts Server Actions. If two different builds must accept each other's
+actions, give both the same key as described in the
 [Next.js guide](https://initializer.pyahu.io/guides/nextjs/#next-kubernetes).
 [[/nextjs]]
 

@@ -105,11 +105,12 @@ third has no property: step 3 sets it in code.
 
 1. Set `connect-timeout` and `read-timeout` under `spring.http.clients`.
 2. Set tighter values per group, such as `connect-timeout: 1s` and `read-timeout: 3s` for payments.
-3. Choose the HTTP library on purpose with `spring.http.clients.imperative.factory: http-components`. Otherwise Boot
+3. Choose the HTTP library on purpose with `spring.http.clients.imperative.factory: http-components`, once step 3
+   has added that library. Otherwise Boot
    detects one from the class path: Apache HttpClient 5, then Jetty, Reactor Netty, the JDK `HttpClient` and last
    `SimpleClientHttpRequestFactory`. With only the web and client starters you get the JDK client.
-4. Upgrading from Boot 3: the old `spring.http.client.*` names are deprecated. Rename them to `spring.http.clients.*`
-   or your timeouts are silently ignored.
+4. Upgrading from Boot 3: the `spring.http.client.*` names moved to `spring.http.clients.*`. Rename them and
+   check that your timeouts still apply; a name Boot no longer reads fails without a message.
 
 ### When this is not for you
 
@@ -188,7 +189,10 @@ starting but never interrupts the one in flight. So the worst case is the retry 
 layer.
 
 ```java
-@Retryable(includes = { ResourceAccessException.class, HttpServerErrorException.ServiceUnavailable.class },
+@Retryable(includes = { ResourceAccessException.class, HttpServerErrorException.BadGateway.class,
+                        HttpServerErrorException.ServiceUnavailable.class,
+                        HttpServerErrorException.GatewayTimeout.class,
+                        HttpClientErrorException.TooManyRequests.class },
            maxRetries = 2, delay = 200, multiplier = 2.0, jitter = 100, maxDelay = 2000, timeout = 6000)
 ```
 
@@ -205,10 +209,12 @@ delay. It also does nothing until you add `@EnableResilientMethods`: Boot 4.1 do
 ### Do this
 
 1. Add `@EnableResilientMethods` to a configuration class.
-2. On every `@Retryable`, set `includes`, `maxRetries` at 2 or less, `multiplier`, `jitter` and `timeout`.
-3. List only short failures in `includes`: connection errors (`ResourceAccessException`), 502, 503, 504 and 429.
-4. Retry at one layer only, the one closest to the failing service. Callers above it get a fast error.
-5. Never retry inside a database transaction: the connection stays busy during the backoff. Call the other service
+2. Wrap each downstream client in a small class of your own, one per system, and put `@Retryable` on its methods.
+   This guide calls it the gateway class; step 7 puts the concurrency limit on it too.
+3. On every `@Retryable`, set `includes`, `maxRetries` at 2 or less, `multiplier`, `jitter` and `timeout`.
+4. List only short failures in `includes`: connection errors (`ResourceAccessException`), 502, 503, 504 and 429.
+5. Retry at one layer only, the one closest to the failing service. Callers above it get a fast error.
+6. Never retry inside a database transaction: the connection stays busy during the backoff. Call the other service
    outside the transaction.
 
 ### When this is not for you
@@ -307,8 +313,7 @@ built by string concatenation creates a new tag value per call. After 100 values
 
 ## Put it all together
 
-The example service makes no outbound call yet, so this section lists where each step lands instead of showing a
-tested file.
+This section lists where each step lands.
 
 ### In the build
 

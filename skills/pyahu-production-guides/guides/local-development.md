@@ -58,7 +58,7 @@ first real flight. A container with the real database costs a few seconds to sta
 ### Do this
 
 1. Run your real dependencies in containers: PostgreSQL first, then anything else the service calls.
-2. Use the image and version that production runs. Baseline v0.1-b2 pins `postgres:18.6`.
+2. Use the image and version that production runs. These guides use `postgres:18.6`.
 3. Keep mocks for unit tests of your own code, where they belong.
 
 ### When this is not for you
@@ -80,7 +80,7 @@ developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 When this module is on the class path, Spring Boot looks for a `compose.yml` in the working directory, runs
 `docker compose up` when the app starts and `docker compose stop` when it shuts down. For every container it
 recognises, such as `postgres` or `grafana/otel-lgtm`, it creates a service connection: the URL, user and
-password come from the container, so your config needs none of them.
+password come from the container and win over whatever your config holds.
 
 If the containers are already running, Boot only connects to them. It needs the Docker Compose CLI, version
 2.2.0 or later.
@@ -98,14 +98,19 @@ If the containers are already running, Boot only connects to them. It needs the 
      postgres:
        image: postgres:18.6
        environment:
-         POSTGRES_USER: app
          POSTGRES_PASSWORD: local
-         POSTGRES_DB: app
+         POSTGRES_DB: orders
        ports:
          - "5432"
+       healthcheck:
+         test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -d orders"]
+         interval: 2s
+         timeout: 2s
+         retries: 30
    ```
 
-3. Add a `healthcheck` to each service. Without one, Boot only waits until the port accepts a connection.
+3. Give each service a `healthcheck` when its image has a way to check itself, as above. Without one, Boot only
+   waits until the port accepts a connection, which PostgreSQL does before it is ready.
 4. Set `spring.docker.compose.lifecycle-management: start-only` if you want the containers to keep running
    between restarts.
 
@@ -167,7 +172,7 @@ metrics and logs flow without any endpoint in your config. The same pipeline as 
 
 1. Add `grafana/otel-lgtm:0.37.0` to your `compose.yml` or an `LgtmStackContainer` bean to your test
    configuration.
-2. Start the app and send a request.
+2. Start the app with `TRACING_SAMPLING_PROBABILITY=1.0`, so every request leaves a trace, and send a request.
 3. Open Grafana on `http://localhost:3000` and find the request's trace, then its log lines by trace ID.
 
 ### When this is not for you
@@ -182,7 +187,8 @@ metrics and logs flow without any endpoint in your config. The same pipeline as 
 with environment variables.
 
 ```yaml
-deployment.environment.name: ${DEPLOYMENT_ENVIRONMENT:local}
+management.opentelemetry.resource-attributes:
+  deployment.environment.name: ${DEPLOYMENT_ENVIRONMENT:local}
 ```
 
 ### What's going on
@@ -191,7 +197,7 @@ A separate local profile full of different keys slowly becomes a second applicat
 hides the settings production depends on.
 
 Two things keep the gap small. Service connections from steps 2 to 4 take precedence over connection properties,
-so local URLs never enter your files. And a placeholder with a default, like the line above, gives every key a
+so the app reaches the containers whatever URL the file holds. And a placeholder with a default, like the line above, gives every key a
 safe local value that the cluster overrides through an environment variable.
 
 ### Do this
@@ -255,7 +261,8 @@ default is the other way round: every environment names its context and only loc
 ### Do this
 
 1. Put sample data in changesets with `context: dev`.
-2. Locally, set `spring.liquibase.contexts: dev`.
+2. Locally, ask for them when you start the app: `SPRING_LIQUIBASE_CONTEXTS=dev ./gradlew bootRun`. Do not write
+   `dev` into `application.yaml`, where it would become the default everywhere.
 3. In every other environment, set a context such as `prod`, so the `dev` changesets are skipped. Changesets
    without a context still run everywhere.
 4. Keep sample data small and fake. Never copy production data to a laptop.
@@ -291,11 +298,11 @@ dependencies.
 
 ## Put it all together
 
-The repository's example service already follows step 5. The rest you add next to it.
+A generated project has all of it. The excerpt below comes from the example service.
 
 ### Settings with local defaults
 
-The fixture's `application.yaml` names the service and its environment with local defaults that the cluster
+Its `application.yaml` names the service and its environment with local defaults that the cluster
 overrides through environment variables (step 5).
 
 From [`application.yaml`](https://github.com/pyahu/initializer/blob/main/fixtures/single-hexagonal/src/main/resources/application.yaml):
@@ -307,7 +314,8 @@ opentelemetry:
     deployment.environment.name: ${DEPLOYMENT_ENVIRONMENT:local}
 ```
 
-**Check it:** start the service with `-e DEPLOYMENT_ENVIRONMENT=dev`, send a request and look at the trace's
+**Check it:** start the service with `DEPLOYMENT_ENVIRONMENT=dev TRACING_SAMPLING_PROBABILITY=1.0 ./gradlew bootRun`,
+send a request and look at the trace's
 resource attributes: `deployment.environment.name` is `dev`, not `local`.
 
 ### Next to the service

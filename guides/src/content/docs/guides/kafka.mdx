@@ -106,14 +106,22 @@ connector can fill the disk. `max_slot_wal_keep_size` puts a ceiling on that; pa
 
 ### Do this
 
-1. Create the outbox table with the router's columns and an index on the time the row was written.
+1. Create the outbox table with the router's columns, plus a `created_at` column of your own with an index, which
+   the cleanup job uses.
 2. Never delete in the writing transaction. A cleanup job deletes only rows older than the retention window and
    below a reliably confirmed published watermark. The outbox router does not mark database rows as delivered;
    publication tracking is an operational prerequisite. If you cannot establish that confirmation, keep the rows
    and monitor their growth instead of deleting by age during a connector outage.
-3. Create the publication and the replication slot right after migrations, before the app takes writes. With the
-   `pgoutput` plugin, set `publication.autocreate.mode` to `filtered` so the connector does not try to publish
-   every table.
+3. Create the publication, for the outbox table only, and the replication slot right after migrations, before
+   the app takes writes:
+
+   ```sql
+   CREATE PUBLICATION outbox_publication FOR TABLE outbox;
+   SELECT pg_create_logical_replication_slot('outbox_slot', 'pgoutput');
+   ```
+
+   If you let the connector create the publication instead, set `publication.autocreate.mode` to `filtered`, so
+   it does not try to publish every table.
 4. Set `max_slot_wal_keep_size` in PostgreSQL and alert when the slot falls behind.
 5. Set `heartbeat.interval.ms` on the connector, so a quiet outbox still moves the slot forward.
 
@@ -299,8 +307,8 @@ record block the partition.
 
 ### What's going on
 
-By default Spring Kafka's `DefaultErrorHandler` retries a failed record ten times with no delay, then logs it and
-moves on. That is too fast to ride out a short outage and too quiet to notice the record was dropped.
+By default Spring Kafka's `DefaultErrorHandler` delivers a failed record ten times in a row with no delay, then
+logs it and moves on. That is too fast to ride out a short outage and too quiet to notice the record was dropped.
 
 Some failures will never succeed: a record that cannot be deserialized, for example. The handler treats those as
 fatal and skips the retries. With a `DeadLetterPublishingRecoverer`, an exhausted or fatal record goes to a topic
@@ -337,9 +345,10 @@ kafka-consumer-groups.sh --bootstrap-server <broker> --group <group> --topic <to
 
 ### What's going on
 
-Consumer lag is how far a group is behind the newest record. It is the one number that tells you a consumer is slow,
-stuck or down, long before users notice. The Kafka client reports it as `records-lag-max`. Spring Boot exposes
-client metrics through Micrometer.
+Consumer lag is how far a group is behind the newest record. It is the one number that tells you a consumer is slow
+or stuck, long before users notice. The Kafka client reports it as `records-lag-max` and Spring Boot exposes
+client metrics through Micrometer. A consumer that is down reports nothing, so also measure the group's lag at
+the broker, with Kafka's own tools or an exporter.
 
 Replay comes in two kinds. Consumers that missed or mishandled records can rewind: stop the group, reset its offsets
 to a point in time and start it again. Idempotent handlers make the second pass safe. If events never reached
