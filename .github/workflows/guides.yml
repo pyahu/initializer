@@ -96,7 +96,6 @@ jobs:
           npm run toolchain
           npm ci
           npm test
-          cd .. && go run ./cmd/guidekit audit --dir guides
       - name: Site
         working-directory: guides
         run: |

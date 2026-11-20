@@ -271,19 +271,20 @@ metadata on retries. A reported missing public Maven artifact gets one metadata 
 also reported existing artifacts as missing in CI; a persistent missing coordinate still fails. The same helper
 runs inside the Docker build stages, where the pinned JDK has no curl. Test,
 compilation and formatting failures are final. The link and BOM checks respect bounded `Retry-After` delays;
-the link checker sends only one request at a time to each origin. Persistent failures still block publication.
+the link checker sends only one request at a time to each origin.
 
 CI supplies the jar from the successful Gradle build as a named Docker context (`--build-context build=...`).
 This replaces the source compilation stage with the tested artifact and avoids a second dependency download.
 The same Dockerfile still performs extraction and AOT training and assembles the runtime image. Without the
 named context, ordinary image builds compile from source as before. Both paths are exercised locally.
 
-Publication waits up to 30 minutes for the required workflows.
+Each workflow runs only for the paths that can change its result. Publication waits up to 30 minutes for the
+Guides and fixture workflows, the two that prove what the site shows.
 
 | Workflow | Does |
 | -------- | ---- |
-| `guides.yml` | clean checkout, `go test`, `check`, `generate --check`, `npm audit`, site build, `site` |
-| `links.yml` | external links and BOM pins, also weekly |
+| `guides.yml` | clean checkout, `go test`, `check`, `generate --check`, site build, `site` |
+| `links.yml` | online and non-blocking: external links, BOM pins and `npm audit`, also weekly |
 | `fixture-single-hexagonal.yml` | fixture build, image, acceptance tests, evidence report |
 | `start.yml` | the Initializer service: Gradle build in the pinned JDK, convention plugin tests, image, smoke; then every combination generated through the API, built, rendered, imaged and started by its own workflow |
 
@@ -300,8 +301,9 @@ Builds watch every repository path, because the site also reads generated data a
 `guides/`. Preview builds are disabled. Manage the connection and build variables in the Worker's
 Settings > Builds in the Cloudflare dashboard.
 
-`npm run deploy` first runs `publication:check`. It waits for successful Guides, Links, fixture and Start service
-workflows with the same inputs as the commit being published. The inputs are read from each workflow's actual
+`npm run deploy` first runs `publication:check`. It waits for successful Guides and fixture workflows with the
+same inputs as the commit being published. Links and the Start service workflow report on their own: an outage of
+an external site or of Maven Central does not hold back a correct guide. The inputs are read from each workflow's actual
 push paths: a documentation-only commit may reuse an earlier service build, while a source change cannot.
 A pending, failed, cancelled or missing check prevents deployment. The check also rejects a dirty checkout or a
 commit superseded on main. It uses GitHub's public read API; an optional read-only `GITHUB_TOKEN` increases the

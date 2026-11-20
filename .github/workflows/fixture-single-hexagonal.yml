@@ -1,4 +1,5 @@
-# Stage 1 fixture: build, image, acceptance, evidence.
+# The fixture that proves the guides: build, image, acceptance tests, then fail unless every required test
+# passed and every pin matched the baseline.
 name: Fixture single-hexagonal
 
 on:
@@ -10,9 +11,10 @@ on:
       - templates/postgres/src/main/resources/db/changelog/**
       - acceptance/**
       - data/versions.yaml
-      - data/evidence/**
-      - cmd/**
-      - internal/**
+      - data/schemas/**
+      - cmd/guidekit/**
+      - internal/evidence/**
+      - internal/guidedata/**
       - go.mod
       - go.sum
       - .github/workflows/fixture-single-hexagonal.yml
@@ -24,9 +26,10 @@ on:
       - templates/postgres/src/main/resources/db/changelog/**
       - acceptance/**
       - data/versions.yaml
-      - data/evidence/**
-      - cmd/**
-      - internal/**
+      - data/schemas/**
+      - cmd/guidekit/**
+      - internal/evidence/**
+      - internal/guidedata/**
       - go.mod
       - go.sum
       - .github/workflows/fixture-single-hexagonal.yml

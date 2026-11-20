@@ -1,4 +1,4 @@
-# External links and BOM-managed pins, online.
+# Online checks: external links, BOM-managed pins and npm audit of the site. They report; they never block publication.
 name: Links
 
 on:
@@ -66,4 +66,8 @@ jobs:
       - name: External links
         run: go run ./cmd/guidekit links --dist guides/dist
       - name: BOM-managed pins
+        if: always()
         run: go run ./cmd/guidekit boms
+      - name: npm audit of the site
+        if: always()
+        run: go run ./cmd/guidekit audit --dir guides

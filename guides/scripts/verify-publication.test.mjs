@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readFileSync } from 'node:fs';
-import { selectChecks, workflowPaths } from './verify-publication.mjs';
+import { required, selectChecks, workflowPaths } from './verify-publication.mjs';
 
 const workflow = 'guides.yml';
 const run = (id, status, conclusion, sha = 'current') => ({ id, event: 'push', path: `.github/workflows/${workflow}`, head_branch: 'main', head_sha: sha, status, conclusion });
@@ -32,7 +32,7 @@ test('paths come from the actual workflow configuration', () => {
   assert.throws(() => workflowPaths('on:\n  push:\n    paths: ["!guides/**"]\n'), /Negated/);
 });
 test('all publication workflows parse and declare their inputs', () => {
-  for (const file of ['guides.yml', 'links.yml', 'fixture-single-hexagonal.yml', 'start.yml']) {
+  for (const file of required) {
     assert.ok(workflowPaths(readFileSync(new URL(`../../.github/workflows/${file}`, import.meta.url), 'utf8')).length);
   }
 });
