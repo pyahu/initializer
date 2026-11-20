@@ -177,10 +177,14 @@ checks this weekly.
 
 ## References
 
-Each entry in `data/references.yaml` names a `component`, the `docVersion` it covers and how
-that must `match` the pin (`exact`, `minor`, `major` or `none` with a `pinNote` stating the
-skew), for every revision in `baselines`. A new revision that breaks the match gets a new entry;
-the old one keeps its list. `baselines: []` marks documents for later releases.
+Each entry in `data/references.yaml` names a `component`, the `docVersion` it covers and how that must `match`
+the pin (`exact`, `minor`, `major` or `none`). `baselines: [<active id>]` puts it on the reference page and in the
+fixture's references; `baselines: []` marks a document for a later release, shown only on the guides that list it
+in `guides`. An entry that is on neither has no reader: delete it. `pinNote` is optional and says only what the
+fields cannot, such as a version skew. `expect` is text the link check must find on the page; for a release-line
+document, expect the release line (`content="2.1.`), not a patch, which upstream replaces.
+
+`guides`, `appliesWhen`, `jep` and `llms` are left out when empty.
 
 ## Checklist
 

@@ -35,10 +35,6 @@
         "url",
         "pinned",
         "purpose",
-        "guides",
-        "appliesWhen",
-        "jep",
-        "llms",
         "baselines"
       ],
       "properties": {
@@ -213,26 +209,15 @@
         {
           "if": {
             "properties": {
-              "match": {
-                "const": "none"
-              }
-            }
-          },
-          "then": {
-            "required": [
-              "pinNote"
-            ]
-          }
-        },
-        {
-          "if": {
-            "properties": {
               "kind": {
                 "const": "jep"
               }
             }
           },
           "then": {
+            "required": [
+              "jep"
+            ],
             "properties": {
               "jep": {
                 "type": "object"
@@ -240,10 +225,10 @@
             }
           },
           "else": {
-            "properties": {
-              "jep": {
-                "type": "null"
-              }
+            "not": {
+              "required": [
+                "jep"
+              ]
             }
           }
         }
