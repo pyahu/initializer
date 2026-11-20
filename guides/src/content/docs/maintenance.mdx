@@ -15,25 +15,24 @@ these steps and everything they mention is public, from the versions to the test
 
 | What | How we notice | What we do |
 | ---- | ------------- | ---------- |
-| Versions | Renovate watches configured package managers and pinned tooling | Tooling updates merge on their own pull request. The versions the guides are written for change together in a new baseline revision. |
-| Advice | A guide's components change or someone reports a problem | The guide shows "Re-verify" until we read it again and the tests pass. |
+| Versions | Renovate watches configured package managers and pinned tooling | Tooling updates merge on their own pull request. The versions the guides are written for change together in the baseline. |
+| Advice | A tested claim's test fails, a baseline update touches a guide, or someone reports a problem | We fix the guide, or the test, before the change lands. |
 | Links to official docs | A check on every change and every Monday | We fix the link or record an exception that expires. |
-| The generator preview | Its workflow builds every supported combination | The generated CI checks the build, manifests, images and smoke paths; fixture reports qualify individual guide claims. |
+| The generator preview | Its workflow builds every supported combination | The generated CI checks the build, manifests, images and smoke paths. |
 
-## The baseline: one frozen list of versions
+## The baseline: one list of versions
 
-Every guide is written for a **baseline revision**, a list of exact versions kept in
+Every guide is written for the **baseline**, a list of exact versions kept in
 [`data/versions.yaml`](https://github.com/pyahu/initializer/blob/main/data/versions.yaml).
-The active revision is **{guideData.active}**.
+The active baseline is **{guideData.active}**.
 
-A revision never changes once it is published. New versions arrive as a new revision appended to the list, so
-every guide always says which versions it was checked against. Each version in a revision also carries how well
-the tests cover it: **qualified** when every claim about it has a passing test, **partial** when some do and
-**provisional** when none do yet.
+The fixture, the service that proves the guides, runs exactly those versions, and its CI fails when one differs.
+A tested claim names a test of that fixture, so a baseline update that breaks a claim cannot land. Git keeps
+every earlier baseline.
 
-The [reference docs](/reference/docs/) list the active platform revision with its official documentation. Frontend
-packages and auxiliary tooling have additional exact pins in lockfiles, Dockerfiles and workflows. The generator
-matrix checks those combinations; the Java fixture report does not qualify every frontend dependency.
+The [reference docs](/reference/docs/) list the baseline with its official documentation. Frontend packages and
+auxiliary tooling have additional exact pins in lockfiles, Dockerfiles and workflows; the generator matrix checks
+those combinations.
 
 ## Updates we take right away
 
@@ -44,66 +43,59 @@ merge, like any other change.
 
 This is the setup the [build quality guide](/guides/build-quality/) recommends, applied to this repository.
 
-## Updates that wait for a new revision
+## Updates that wait for the next baseline
 
-Updates to the baseline are different. The service that proves the guides runs exactly the versions of the
-baseline and its CI fails when they differ. The versions also appear in the guides' text and in the test results.
-Bumping one file would leave the rest saying something else.
+Updates to the baseline are different. The fixture runs exactly the versions of the baseline and its CI fails
+when they differ. The versions also appear in the guides' text. Bumping one file would leave the rest saying
+something else.
 
 So Renovate does not open pull requests for them. It lists them on the
 [Dependency Dashboard](https://github.com/pyahu/initializer/issues?q=is%3Aissue%20%22Dependency%20Dashboard%22),
 an issue it keeps up to date. The same applies to the Go and Node.js toolchains, which are pinned in several
-files at once. We cut a new revision when enough has piled up or when one update matters.
+files at once. We update the baseline when enough has piled up or when one update matters.
 
 **Security fixes do not wait.** Available Renovate vulnerability alerts bypass the ordinary release-age delay.
 CI also blocks fixable HIGH/CRITICAL vulnerabilities in built images and runs the frontend npm audit. A baseline
 security update needs consistent pins and passing checks before it can ship. Scanning deployed registry digests
 on a schedule remains an operational prerequisite for each adopting team.
 
-## Cutting a new revision
+## Updating the baseline
 
 These are the steps we follow, in order.
 
 1. **Pick the updates** from the Dependency Dashboard. Read the release notes of each one.
-2. **Save the previous proof** in `data/history/<baseline>/<fixture>/`: its fixture manifest, evidence files and
-   real passing CI report. Append a new revision to `data/versions.yaml`, with updated versions and image digests,
-   and make it `active`. Its qualification starts provisional.
+2. **Change the pins** in `data/versions.yaml`, with updated versions and image digests, and give the baseline a
+   new `id` (`v0.1-b3` after `v0.1-b2`) so pages and generated projects say which list they follow.
 3. **Update the services** to the same versions: the fixtures in `fixtures/` and the Initializer's own build
    (`gradle/libs.versions.toml`, the Gradle wrapper and each Dockerfile).
-4. **Run both test tracks.** The fixture workflow checks its required tests and resolved pins. The Start workflow
-   builds and runs all 16 supported project combinations and the frontend browser tests. Use the real fixture
-   report with `guidekit qualify`; saved reports preserve older revisions independently.
-5. **Read every guide that shows "Re-verify".** It lists the components that changed. Check each step that
-   depends on them, fix the text and the version numbers, then move the guide's `baseline` forward and record
-   the run that verified it.
-6. **Check the references.** Add the new revision to the official documentation entries. `guidekit check`
-   fails for every entry whose documentation version no longer matches a new version; give those a new entry
-   and keep the old one for the old revision.
+4. **Run both test tracks.** The fixture workflow runs every required test and checks every resolved pin. The
+   Start workflow builds and runs all 16 supported project combinations and the frontend browser tests.
+5. **Read the guides of the components that changed.** Fix the text and the version numbers. A measured claim
+   keeps the run it was measured in; measure it again if the change could move the numbers.
+6. **Check the references.** `guidekit check` fails for every entry whose documentation version no longer
+   matches; point those at the new documentation.
 7. **Commit.** The site, the [Agent Skill](https://github.com/pyahu/initializer/tree/main/skills) and
    `llms.txt` are generated from the same data, so all of them change together.
 
 ## Keeping the advice right
 
-- **Re-verify.** A guide shows it when a later revision changed one of its components or when an open
-  invalidation names it. It stays until the guide is checked against the new versions.
-- **Stale.** A guide shows it when its baseline is more than two revisions behind the active one.
-- **Invalidations.** When we learn that advice is wrong, for example because of an upstream bug or a changed
-  default, we record it in
-  [`data/invalidations.yaml`](https://github.com/pyahu/initializer/blob/main/data/invalidations.yaml) with the
-  reason. Every guide it touches shows "Re-verify" until the record is closed.
-- **Untested claims say so.** Every guide shows its evidence coverage at the top and by step. Claims without
-  a test result, including advice based on documentation or design reasoning, say "not exercised" in
-  [`data/evidence`](https://github.com/pyahu/initializer/tree/main/data/evidence), with the source and the gap.
-- **Steps are retired, not deleted.** A removed step keeps its anchor in
-  [`data/retired.yaml`](https://github.com/pyahu/initializer/blob/main/data/retired.yaml), so links to it keep
-  working.
+- **Tested claims fail loudly.** Each record in
+  [`data/evidence`](https://github.com/pyahu/initializer/tree/main/data/evidence) names a required test of the
+  fixture. When the behaviour changes, CI fails and the guide is fixed in the same change.
+- **Untested steps say so.** Every guide shows at the top and by step which steps are tested here. The others
+  rest on the official documentation the guide lists and on Pyahu's practice.
+- **Steps are retired, not deleted.** A removed guide, step or checklist item gets a record in
+  [`data/retired.yaml`](https://github.com/pyahu/initializer/blob/main/data/retired.yaml) and a removed step
+  keeps its anchor, so links to it keep working.
+- **Someone reports a problem.** [Open an issue](https://github.com/pyahu/initializer/issues); we fix the guide
+  or say why it stands.
 
 ## Keeping the links alive
 
 Every external link is checked on every change and again every Monday, together with the versions that a BOM
 manages. Some official documentation is pinned to a release line, such as Spring Boot 4.1, and follows its
 latest patch. The link check verifies that release line; the examples and their evidence stay on the exact
-baseline patch until a new baseline is qualified. A link that is down for a reason we accept gets an exception
+baseline patch until the baseline is updated. A link that is down for a reason we accept gets an exception
 with that reason. So does a security
 advisory with no fix yet. Every exception expires after at most 30 days, so none of them lasts by accident. They
 are in [`data/link-exceptions.yaml`](https://github.com/pyahu/initializer/blob/main/data/link-exceptions.yaml)
@@ -114,8 +106,8 @@ and [`data/audit-exceptions.yaml`](https://github.com/pyahu/initializer/blob/mai
 The preview generator is implemented in `services/start/` with its page in `frontends/start-web/`. It supports
 hexagonal and DDD layered services, REST, optional PostgreSQL, OIDC and Next.js. Its workflow generates all 16
 combinations and runs each generated project's CI, including strict manifest checks, vulnerability scans and smoke
-tests. The fixture report separately records the claims it has exercised; passing the matrix does not qualify
-every operational recommendation in the guides.
+tests. Passing the matrix does not prove every operational recommendation in the guides; the tested claims say
+what is proven.
 
 Site publication requires successful Guides, Links, fixture and Start workflows for the relevant source inputs.
 The publication check rejects pending, failed or superseded candidates. Publishing and operating a customer's
@@ -127,9 +119,8 @@ A project you generate is yours from then on. Keep it current with Renovate in y
 ## See it for yourself
 
 - [Dependency Dashboard](https://github.com/pyahu/initializer/issues?q=is%3Aissue%20%22Dependency%20Dashboard%22):
-  updates waiting for the next revision.
-- [`data/versions.yaml`](https://github.com/pyahu/initializer/blob/main/data/versions.yaml): every baseline
-  revision and how well each version is tested.
+  updates waiting for the next baseline.
+- [`data/versions.yaml`](https://github.com/pyahu/initializer/blob/main/data/versions.yaml): the baseline.
 - [CI runs](https://github.com/pyahu/initializer/actions): every build, test and link check.
 - [`renovate.json`](https://github.com/pyahu/initializer/blob/main/renovate.json): the rules on this page, as
   Renovate reads them.

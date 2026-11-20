@@ -6,7 +6,7 @@ Hexagonal, DDD layered, classic layered, Onion, Clean, vertical slice, BCE and M
 
 On the web: https://initializer.pyahu.io/guides/architecture-styles/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Evidence coverage.** 8 claims: 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/architecture-styles.yaml).
+**How this guide is proven.** None of its 8 steps is tested here yet. A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/architecture-styles.yaml).
 
 Every team meeting about architecture ends the same way. One person draws hexagons, another draws circles, a third
 says "we just need controllers, services and repositories". Each picture looks reasonable and nobody can say what
@@ -27,16 +27,16 @@ explains; it does not generate. For the two styles the Initializer generates, re
 7. What are BCE and MVC and are they service architectures?
 8. What can no architecture test prove?
 
-### Evidence by step
+### Tests by step
 
-- 1. How do I compare styles fairly?: 1 claim: 1 not exercised.
-- 2. What do the styles really disagree about?: 1 claim: 1 not exercised.
-- 3. When is classic layered enough?: 1 claim: 1 not exercised.
-- 4. Are hexagonal, Onion and Clean the same thing?: 1 claim: 1 not exercised.
-- 5. Where does DDD layered fit?: 1 claim: 1 not exercised.
-- 6. When does vertical slice make sense?: 1 claim: 1 not exercised.
-- 7. What are BCE and MVC and are they service architectures?: 1 claim: 1 not exercised.
-- 8. What can no architecture test prove?: 1 claim: 1 not exercised.
+- 1. How do I compare styles fairly?: not tested here.
+- 2. What do the styles really disagree about?: not tested here.
+- 3. When is classic layered enough?: not tested here.
+- 4. Are hexagonal, Onion and Clean the same thing?: not tested here.
+- 5. Where does DDD layered fit?: not tested here.
+- 6. When does vertical slice make sense?: not tested here.
+- 7. What are BCE and MVC and are they service architectures?: not tested here.
+- 8. What can no architecture test prove?: not tested here.
 
 ## 1. How do I compare styles fairly?
 

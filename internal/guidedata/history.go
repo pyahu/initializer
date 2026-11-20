@@ -2,7 +2,6 @@ package guidedata
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"os/exec"
 	"regexp"
@@ -31,36 +30,13 @@ func (r *Repo) showAt(base, path string) ([]byte, error) {
 	return r.git("show", base+":"+path)
 }
 
-// CheckHistory compares the working tree with base: frozen revisions,
-// removed stable IDs, and link exception dates.
+// CheckHistory compares the working tree with base: guides, steps and checklist items that disappeared
+// without a record in data/retired.yaml, and exception dates.
 func (r *Repo) CheckHistory(base string) []error {
 	var errs []error
 	add := func(format string, a ...any) { errs = append(errs, fmt.Errorf(format, a...)) }
 	if _, err := r.git("cat-file", "-e", base+"^{commit}"); err != nil {
 		return []error{fmt.Errorf("base commit %s is not available (check out with fetch-depth: 0): %v", base, err)}
-	}
-
-	// Frozen revisions.
-	if b, err := r.showAt(base, "data/versions.yaml"); err != nil {
-		add("%v", err)
-	} else if b != nil {
-		v, err := ParseYAML("base:data/versions.yaml", b)
-		if err != nil {
-			add("%v", err)
-		} else {
-			var old Versions
-			_ = Decode(v, &old)
-			for _, orev := range old.Revisions {
-				nrev := r.Versions.Revision(orev.ID)
-				if nrev == nil {
-					add("versions: revision %s existed at base and was deleted", orev.ID)
-					continue
-				}
-				if frozen(orev) != frozen(*nrev) {
-					add("versions: revision %s changed; it is frozen except qualification (add a new revision instead)", orev.ID)
-				}
-			}
-		}
 	}
 
 	// Removed IDs.
@@ -140,26 +116,13 @@ func (r *Repo) CheckHistory(base string) []error {
 	return errs
 }
 
-func frozen(rev Revision) string {
-	c := map[string]Component{}
-	for k, v := range rev.Components {
-		v.Qualification = Qualification{}
-		c[k] = v
-	}
-	rev.Components = c
-	b, _ := json.Marshal(rev)
-	return string(b)
-}
-
 var (
-	reQuestionID = regexp.MustCompile(`(?m)^\s+(?:- )?id: ([A-Z]{2,5}-Q[0-9]+)\s*$|\{ ?id: ([A-Z]{2,5}-Q[0-9]+)`)
-	reIDLine     = regexp.MustCompile(`(?m)^\s*- id: ([A-Za-z0-9-]+)\s*$`)
-	reDiagramID  = regexp.MustCompile(`<Diagram\s+id="([a-z0-9-]+)"`)
+	reIDLine = regexp.MustCompile(`(?m)^\s*- id: ([A-Za-z0-9-]+)\s*$`)
 )
 
 // idsAt lists the stable IDs present at a commit, by kind.
 func (r *Repo) idsAt(base string) (map[string]map[string]bool, error) {
-	m := map[string]map[string]bool{"guide": {}, "question": {}, "card": {}, "checklist": {}, "evidence": {}, "reference": {}, "diagram": {}}
+	m := map[string]map[string]bool{"guide": {}, "card": {}, "checklist": {}}
 	list, err := r.git("ls-tree", "-r", "--name-only", base)
 	if err != nil {
 		return nil, err
@@ -173,29 +136,11 @@ func (r *Repo) idsAt(base string) (map[string]map[string]bool, error) {
 				if mm := reAnchor.FindStringSubmatch(l); mm != nil {
 					m["card"][mm[1]] = true
 				}
-				if mm := reQuestionID.FindStringSubmatch(l); mm != nil {
-					m["question"][mm[1]+mm[2]] = true
-				}
 			}
 		case p == "data/checklist.yaml":
 			b, _ := r.showAt(base, p)
 			for _, mm := range reIDLine.FindAllStringSubmatch(string(b), -1) {
 				m["checklist"][mm[1]] = true
-			}
-		case strings.HasPrefix(p, "data/evidence/") && strings.HasSuffix(p, ".yaml"):
-			b, _ := r.showAt(base, p)
-			for _, mm := range reIDLine.FindAllStringSubmatch(string(b), -1) {
-				m["evidence"][mm[1]] = true
-			}
-		case p == "data/references.yaml":
-			b, _ := r.showAt(base, p)
-			for _, mm := range reIDLine.FindAllStringSubmatch(string(b), -1) {
-				m["reference"][mm[1]] = true
-			}
-		case strings.HasPrefix(p, "guides/src/components/diagrams/") && strings.HasSuffix(p, "Diagram.astro"):
-			b, _ := r.showAt(base, p)
-			for _, mm := range reDiagramID.FindAllStringSubmatch(string(b), -1) {
-				m["diagram"][mm[1]] = true
 			}
 		}
 	}

@@ -6,7 +6,7 @@ What to test at each layer and with which tool, from fast domain tests to tests 
 
 On the web: https://initializer.pyahu.io/guides/testing/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 10 claims: 1 reproduced, 3 compiled, 6 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/testing.yaml).
+**How this guide is proven.** 3 of 8 steps are tested here (4 tested claims: 1 reproduced, 3 compiled). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/testing.yaml).
 
 The build takes twelve minutes and half of that is tests that start the whole application to check one `if`. A
 change to a controller breaks a test about the database. A bug still reaches production, because the one thing
@@ -27,16 +27,16 @@ built image.
 7. Why is my test suite so slow?
 8. How do I know the image really works?
 
-### Evidence by step
+### Tests by step
 
-- 1. Where should most of my tests live?: 1 claim: 1 not exercised.
-- 2. How do I test business rules without starting Spring?: 1 claim: 1 not exercised.
-- 3. How do I test one endpoint quickly?: 2 claims: 1 compiled, 1 not exercised.
-- 4. How do I stop the architecture from drifting?: 2 claims: 2 compiled.
-- 5. How do I test against a real database?: 1 claim: 1 not exercised.
-- 6. How do I test calls to other services?: 1 claim: 1 not exercised.
-- 7. Why is my test suite so slow?: 1 claim: 1 not exercised.
-- 8. How do I know the image really works?: 1 claim: 1 reproduced.
+- 1. Where should most of my tests live?: not tested here.
+- 2. How do I test business rules without starting Spring?: not tested here.
+- 3. How do I test one endpoint quickly?: 1 tested claim: 1 compiled.
+- 4. How do I stop the architecture from drifting?: 2 tested claims: 2 compiled.
+- 5. How do I test against a real database?: not tested here.
+- 6. How do I test calls to other services?: not tested here.
+- 7. Why is my test suite so slow?: not tested here.
+- 8. How do I know the image really works?: 1 tested claim: 1 reproduced.
 
 ## 1. Where should most of my tests live?
 

@@ -6,7 +6,7 @@ Call other services from Spring Boot 4.1 with timeouts, bounded retries and a li
 
 On the web: https://initializer.pyahu.io/guides/http-clients/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 10 claims: 1 reproduced, 9 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/http-clients.yaml).
+**How this guide is proven.** 1 of 8 steps are tested here (1 tested claim: 1 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/http-clients.yaml).
 
 The payments service did not go down. It just got slow. Within a minute your own service stops answering: every
 request is stuck waiting on payments and the retries you added to be safe triple the load on a service that is
@@ -27,16 +27,16 @@ everything goes.
 7. How do I stop one slow service from taking mine down?
 8. Why do some calls have no metrics or traces?
 
-### Evidence by step
+### Tests by step
 
-- 1. Which HTTP client should I use?: 2 claims: 2 not exercised.
-- 2. Which timeouts does every call need?: 1 claim: 1 not exercised.
-- 3. Why do calls wait minutes for a connection?: 1 claim: 1 not exercised.
-- 4. Does a read timeout stop a slow call?: 2 claims: 2 not exercised.
-- 5. When is it safe to retry?: 1 claim: 1 not exercised.
-- 6. How do I retry a payment without charging it twice?: 1 claim: 1 not exercised.
-- 7. How do I stop one slow service from taking mine down?: 1 claim: 1 reproduced.
-- 8. Why do some calls have no metrics or traces?: 1 claim: 1 not exercised.
+- 1. Which HTTP client should I use?: not tested here.
+- 2. Which timeouts does every call need?: not tested here.
+- 3. Why do calls wait minutes for a connection?: not tested here.
+- 4. Does a read timeout stop a slow call?: not tested here.
+- 5. When is it safe to retry?: not tested here.
+- 6. How do I retry a payment without charging it twice?: not tested here.
+- 7. How do I stop one slow service from taking mine down?: 1 tested claim: 1 reproduced.
+- 8. Why do some calls have no metrics or traces?: not tested here.
 
 ## 1. Which HTTP client should I use?
 

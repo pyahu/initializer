@@ -6,7 +6,7 @@ Serve and call gRPC from Spring Boot 4.1 with a safe contract, deadlines, honest
 
 On the web: https://initializer.pyahu.io/guides/grpc/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 10 claims: 1 reproduced, 9 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/grpc.yaml).
+**How this guide is proven.** 1 of 8 steps are tested here (1 tested claim: 1 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/grpc.yaml).
 
 You moved two internal services from JSON to gRPC and the first week looks great. Then you scale the server to
 four pods and one of them runs hot while three sit idle. A slow call hangs for minutes because nothing told it to
@@ -26,16 +26,16 @@ contract safe and how to run it in Kubernetes with Spring Boot 4.1, which now su
 7. Why does one pod get all the calls?
 8. How do I see and secure gRPC traffic?
 
-### Evidence by step
+### Tests by step
 
-- 1. When is gRPC the right choice?: 1 claim: 1 not exercised.
-- 2. How do I change the contract without breaking clients?: 1 claim: 1 not exercised.
-- 3. How do I add gRPC to a Spring Boot service?: 1 claim: 1 not exercised.
-- 4. How long should a call wait?: 1 claim: 1 not exercised.
-- 5. Which errors should I return and which calls can be retried?: 1 claim: 1 not exercised.
-- 6. How does Kubernetes know a gRPC service is healthy?: 3 claims: 1 reproduced, 2 not exercised.
-- 7. Why does one pod get all the calls?: 1 claim: 1 not exercised.
-- 8. How do I see and secure gRPC traffic?: 1 claim: 1 not exercised.
+- 1. When is gRPC the right choice?: not tested here.
+- 2. How do I change the contract without breaking clients?: not tested here.
+- 3. How do I add gRPC to a Spring Boot service?: not tested here.
+- 4. How long should a call wait?: not tested here.
+- 5. Which errors should I return and which calls can be retried?: not tested here.
+- 6. How does Kubernetes know a gRPC service is healthy?: 1 tested claim: 1 reproduced.
+- 7. Why does one pod get all the calls?: not tested here.
+- 8. How do I see and secure gRPC traffic?: not tested here.
 
 ## 1. When is gRPC the right choice?
 

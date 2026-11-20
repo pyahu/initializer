@@ -17,27 +17,18 @@ type Revision struct {
 
 // Component is one pin of a revision.
 type Component struct {
-	Version               string        `json:"version"`
-	Kind                  string        `json:"kind"`
-	Coordinates           string        `json:"coordinates,omitempty"`
-	PluginID              string        `json:"pluginId,omitempty"`
-	Vendor                string        `json:"vendor,omitempty"`
-	Feature               string        `json:"feature,omitempty"`
-	Build                 string        `json:"build,omitempty"`
-	Image                 string        `json:"image,omitempty"`
-	Digest                string        `json:"digest,omitempty"`
-	DistributionSha256Sum string        `json:"distributionSha256Sum,omitempty"`
-	ManagedBy             *string       `json:"managedBy"`
-	VerifiedAt            string        `json:"verifiedAt"`
-	Guides                []string      `json:"guides"`
-	Claims                []string      `json:"claims"`
-	Qualification         Qualification `json:"qualification"`
-}
-
-// Qualification is the mutable block written by guidekit qualify.
-type Qualification struct {
-	State        string              `json:"state"`
-	Capabilities map[string][]string `json:"capabilities"`
+	Version               string  `json:"version"`
+	Kind                  string  `json:"kind"`
+	Coordinates           string  `json:"coordinates,omitempty"`
+	PluginID              string  `json:"pluginId,omitempty"`
+	Vendor                string  `json:"vendor,omitempty"`
+	Feature               string  `json:"feature,omitempty"`
+	Build                 string  `json:"build,omitempty"`
+	Image                 string  `json:"image,omitempty"`
+	Digest                string  `json:"digest,omitempty"`
+	DistributionSha256Sum string  `json:"distributionSha256Sum,omitempty"`
+	ManagedBy             *string `json:"managedBy"`
+	VerifiedAt            string  `json:"verifiedAt"`
 }
 
 // Revision returns the revision with the id, or nil.
@@ -50,15 +41,8 @@ func (v *Versions) Revision(id string) *Revision {
 	return nil
 }
 
-// RevisionIndex returns the position of the revision, or -1.
-func (v *Versions) RevisionIndex(id string) int {
-	for i := range v.Revisions {
-		if v.Revisions[i].ID == id {
-			return i
-		}
-	}
-	return -1
-}
+// ActiveRevision returns the baseline the guides, the fixture and the generator use.
+func (v *Versions) ActiveRevision() *Revision { return v.Revision(v.Active) }
 
 // References is data/references.yaml.
 type References struct {
@@ -106,48 +90,29 @@ type Filter map[string][]any
 
 // ChecklistItem is one record of data/checklist.yaml.
 type ChecklistItem struct {
-	ID          string   `json:"id"`
-	Guide       string   `json:"guide"`
-	Card        string   `json:"card"`
-	Type        string   `json:"type"`
-	Text        string   `json:"text"`
-	Claim       string   `json:"claim"`
-	Tests       []string `json:"tests"`
-	AppliesWhen Filter   `json:"appliesWhen"`
+	ID          string `json:"id"`
+	Guide       string `json:"guide"`
+	Card        string `json:"card"`
+	Type        string `json:"type"`
+	Text        string `json:"text"`
+	AppliesWhen Filter `json:"appliesWhen"`
 }
 
-// EvidenceRecord is one record of data/evidence/<guide>.yaml.
+// EvidenceRecord is one tested claim of data/evidence/<guide>.yaml. Its test is a required test of a
+// fixture, so CI on main fails as soon as the claim stops holding. Only a measurement names its run,
+// because its numbers belong to that run.
 type EvidenceRecord struct {
-	ID           string       `json:"id"`
-	Card         string       `json:"card"`
-	Claim        string       `json:"claim"`
-	Badge        string       `json:"badge"`
-	Capabilities []string     `json:"capabilities,omitempty"`
-	Components   []string     `json:"components,omitempty"`
-	Baseline     string       `json:"baseline"`
-	Fixture      string       `json:"fixture,omitempty"`
-	Test         string       `json:"test,omitempty"`
-	Commands     []string     `json:"commands,omitempty"`
-	Environment  string       `json:"environment,omitempty"`
-	Run          string       `json:"run,omitempty"`
-	Commit       string       `json:"commit,omitempty"`
-	Date         string       `json:"date,omitempty"`
-	Result       string       `json:"result,omitempty"`
-	Limitations  string       `json:"limitations"`
-	Cluster      *Cluster     `json:"cluster,omitempty"`
-	Measurement  *Measurement `json:"measurement,omitempty"`
-	Reason       string       `json:"reason,omitempty"`
-	Guide        string       `json:"guide"` // set by the loader
-}
-
-// Exercised reports whether the record claims a run.
-func (e EvidenceRecord) Exercised() bool { return e.Badge != "not-exercised" }
-
-// Cluster describes a cluster-run environment.
-type Cluster struct {
-	Kind              string `json:"kind"`
-	KubernetesVersion string `json:"kubernetesVersion"`
-	CNI               string `json:"cni"`
+	ID          string       `json:"id"`
+	Card        string       `json:"card"`
+	Claim       string       `json:"claim"`
+	Badge       string       `json:"badge"`
+	Test        string       `json:"test"`
+	Result      string       `json:"result,omitempty"`
+	Limitations string       `json:"limitations"`
+	Run         string       `json:"run,omitempty"`
+	Date        string       `json:"date,omitempty"`
+	Measurement *Measurement `json:"measurement,omitempty"`
+	Guide       string       `json:"guide"` // set by the loader
 }
 
 // Measurement describes a measured record.
@@ -156,16 +121,6 @@ type Measurement struct {
 	Statistic string `json:"statistic"`
 	Unit      string `json:"unit"`
 	Protocol  string `json:"protocol"`
-}
-
-// Invalidation is one record of data/invalidations.yaml.
-type Invalidation struct {
-	ID         string   `json:"id"`
-	Guides     []string `json:"guides"`
-	Components []string `json:"components"`
-	Reason     string   `json:"reason"`
-	Opened     string   `json:"opened"`
-	Closed     *string  `json:"closed"`
 }
 
 // Retired is one record of data/retired.yaml.
@@ -189,8 +144,6 @@ type LinkException struct {
 type Fixture struct {
 	Schema        string         `json:"schema"`
 	Name          string         `json:"name"`
-	Baseline      string         `json:"baseline"`
-	Stage         int            `json:"stage"`
 	Options       map[string]any `json:"options"`
 	Exercises     []string       `json:"exercises"`
 	RequiredTests []string       `json:"requiredTests"`
@@ -199,22 +152,11 @@ type Fixture struct {
 
 // GuideMeta is the guide block of a guide page's frontmatter.
 type GuideMeta struct {
-	ID           string        `json:"id"`
-	Prefix       string        `json:"prefix"`
-	State        string        `json:"state"`
-	Baseline     string        `json:"baseline"`
-	Components   []string      `json:"components"`
-	Verification *Verification `json:"verification"`
-	Questions    []Question    `json:"questions"`
-	Sources      []Source      `json:"sources,omitempty"`
-}
-
-// Verification records one complete fixture run for a guide.
-type Verification struct {
-	Run      string `json:"run"`
-	Commit   string `json:"commit"`
-	Date     string `json:"date"`
-	Baseline string `json:"baseline"`
+	ID        string     `json:"id"`
+	Prefix    string     `json:"prefix"`
+	State     string     `json:"state"`
+	Questions []Question `json:"questions"`
+	Sources   []Source   `json:"sources,omitempty"`
 }
 
 // Question is a question the guide must answer.

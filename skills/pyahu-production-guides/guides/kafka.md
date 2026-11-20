@@ -6,7 +6,7 @@ Publish and consume events from Spring Boot 4.1 without losing them or sending t
 
 On the web: https://initializer.pyahu.io/guides/kafka/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 10 claims: 10 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/kafka.yaml).
+**How this guide is proven.** None of its 8 steps is tested here yet. A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/kafka.yaml).
 
 An order is saved and the "order placed" event never reaches billing. Or it reaches billing twice and the customer
 is charged twice. Nobody sees an error: the database committed and Kafka said yes. The gap was in between.
@@ -26,16 +26,16 @@ and the Kafka 4.2.2 client, the versions Spring Boot 4.1.2 manages.
 7. What happens to a message that keeps failing?
 8. How do I spot trouble and replay events?
 
-### Evidence by step
+### Tests by step
 
-- 1. Why do events get lost or sent twice?: 1 claim: 1 not exercised.
-- 2. How do I run the outbox without losing events?: 2 claims: 2 not exercised.
-- 3. How do producers and consumers agree on the event format?: 1 claim: 1 not exercised.
-- 4. How should I choose topics and keys?: 1 claim: 1 not exercised.
-- 5. Which producer settings matter?: 2 claims: 2 not exercised.
-- 6. When does a consumer commit and what if it crashes?: 1 claim: 1 not exercised.
-- 7. What happens to a message that keeps failing?: 1 claim: 1 not exercised.
-- 8. How do I spot trouble and replay events?: 1 claim: 1 not exercised.
+- 1. Why do events get lost or sent twice?: not tested here.
+- 2. How do I run the outbox without losing events?: not tested here.
+- 3. How do producers and consumers agree on the event format?: not tested here.
+- 4. How should I choose topics and keys?: not tested here.
+- 5. Which producer settings matter?: not tested here.
+- 6. When does a consumer commit and what if it crashes?: not tested here.
+- 7. What happens to a message that keeps failing?: not tested here.
+- 8. How do I spot trouble and replay events?: not tested here.
 
 ## 1. Why do events get lost or sent twice?
 

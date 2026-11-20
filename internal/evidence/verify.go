@@ -34,8 +34,8 @@ func Verify(r *guidedata.Repo, in VerifyInput) (*Report, []error) {
 	if fx == nil {
 		return nil, []error{fmt.Errorf("unknown fixture %s", in.Fixture)}
 	}
-	rev := r.Versions.Revision(fx.Baseline)
-	rep := &Report{Schema: ReportSchema, Fixture: fx.Name, Baseline: fx.Baseline, Commit: os.Getenv("GITHUB_SHA"),
+	rev := r.Versions.ActiveRevision()
+	rep := &Report{Schema: ReportSchema, Fixture: fx.Name, Baseline: rev.ID, Commit: os.Getenv("GITHUB_SHA"),
 		RunID: envInt("GITHUB_RUN_ID"), RunAttempt: envInt("GITHUB_RUN_ATTEMPT"), Tests: []TestResult{}, Components: []ComponentResult{}}
 	results := map[string]TestResult{}
 	if in.GoTestJSON != "" {
@@ -69,11 +69,6 @@ func Verify(r *guidedata.Repo, in VerifyInput) (*Report, []error) {
 			res.Status = "fail"
 		}
 		rep.Tests = append(rep.Tests, res)
-	}
-	for _, e := range r.Evidence {
-		if e.Exercised() && e.Fixture == fx.Name && !containsStr(fx.RequiredTests, e.Test) {
-			errs = append(errs, fmt.Errorf("evidence %s names test %s, which is not in the inventory", e.ID, e.Test))
-		}
 	}
 
 	sbom := map[string]string{}

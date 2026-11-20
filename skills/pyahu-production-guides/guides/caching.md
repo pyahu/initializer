@@ -6,7 +6,7 @@ When a cache helps a Spring Boot 4.1 service and how to run one on Valkey with T
 
 On the web: https://initializer.pyahu.io/guides/caching/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 9 claims: 9 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/caching.yaml).
+**How this guide is proven.** None of its 8 steps is tested here yet. A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/caching.yaml).
 
 The product page got slow, so someone added a cache. It was fast for a week. Then a price change took an hour to
 show up and a deploy filled the cache with values the new code could not read. The day Valkey restarted, every pod
@@ -26,16 +26,16 @@ Spring Boot 4.1 service on Valkey so that it stays a speed boost and never becom
 7. What if Valkey is slow or down?
 8. How much memory does the cache get and what should I watch?
 
-### Evidence by step
+### Tests by step
 
-- 1. Do I need a cache and where should it live?: 1 claim: 1 not exercised.
-- 2. Should I use @Cacheable or write the cache code myself?: 1 claim: 1 not exercised.
-- 3. How long should an entry live?: 1 claim: 1 not exercised.
-- 4. How should I name keys and store values?: 1 claim: 1 not exercised.
-- 5. How do I keep the cache in step with the database?: 1 claim: 1 not exercised.
-- 6. What happens when a popular entry expires?: 1 claim: 1 not exercised.
-- 7. What if Valkey is slow or down?: 1 claim: 1 not exercised.
-- 8. How much memory does the cache get and what should I watch?: 2 claims: 2 not exercised.
+- 1. Do I need a cache and where should it live?: not tested here.
+- 2. Should I use @Cacheable or write the cache code myself?: not tested here.
+- 3. How long should an entry live?: not tested here.
+- 4. How should I name keys and store values?: not tested here.
+- 5. How do I keep the cache in step with the database?: not tested here.
+- 6. What happens when a popular entry expires?: not tested here.
+- 7. What if Valkey is slow or down?: not tested here.
+- 8. How much memory does the cache get and what should I watch?: not tested here.
 
 ## 1. Do I need a cache and where should it live?
 

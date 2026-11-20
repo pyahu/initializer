@@ -86,9 +86,6 @@ guide:
   id: g
   prefix: GG
   state: draft
-  baseline: v0.1-b1
-  components: [java]
-  verification: null
   questions:
     - id: GG-Q1
       text: Q?

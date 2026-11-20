@@ -6,7 +6,7 @@ Package, vary per environment, validate and apply the manifests of a Spring Boot
 
 On the web: https://initializer.pyahu.io/guides/kubernetes-manifests/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 8 claims: 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/kubernetes-manifests.yaml).
+**How this guide is proven.** None of its 8 steps is tested here yet. A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/kubernetes-manifests.yaml).
 
 A label added to "every object" breaks the next deploy, because it also landed in the Deployment's selector. A
 config change sits in the cluster for a week and no pod ever reads it. Someone ran `kubectl edit` in production and
@@ -27,16 +27,16 @@ and applied. This guide covers that part. What the Deployment itself should cont
 7. Should a GitOps controller apply the manifests?
 8. How do I catch broken manifests before they reach a cluster?
 
-### Evidence by step
+### Tests by step
 
-- 1. Plain YAML, Helm or Kustomize: which one should I use?: 1 claim: 1 not exercised.
-- 2. How do I change a few values per environment without copying everything?: 1 claim: 1 not exercised.
-- 3. Which labels go on every object and which go in the selector?: 1 claim: 1 not exercised.
-- 4. Why did my config change not reach the pods?: 1 claim: 1 not exercised.
-- 5. How do I make sure the cluster runs the image I tested?: 1 claim: 1 not exercised.
-- 6. How should I apply manifests to the cluster?: 1 claim: 1 not exercised.
-- 7. Should a GitOps controller apply the manifests?: 1 claim: 1 not exercised.
-- 8. How do I catch broken manifests before they reach a cluster?: 1 claim: 1 not exercised.
+- 1. Plain YAML, Helm or Kustomize: which one should I use?: not tested here.
+- 2. How do I change a few values per environment without copying everything?: not tested here.
+- 3. Which labels go on every object and which go in the selector?: not tested here.
+- 4. Why did my config change not reach the pods?: not tested here.
+- 5. How do I make sure the cluster runs the image I tested?: not tested here.
+- 6. How should I apply manifests to the cluster?: not tested here.
+- 7. Should a GitOps controller apply the manifests?: not tested here.
+- 8. How do I catch broken manifests before they reach a cluster?: not tested here.
 
 ## 1. Plain YAML, Helm or Kustomize: which one should I use?
 

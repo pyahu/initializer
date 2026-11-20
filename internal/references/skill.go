@@ -220,11 +220,7 @@ func skillGuide(r *guidedata.Repo, g *guidedata.Guide) ([]byte, error) {
 	var b strings.Builder
 	b.WriteString(Header + "\n\n")
 	fmt.Fprintf(&b, "# %s\n\n%s\n\nOn the web: %s/guides/%s/. Written for %s.\n", g.Title, g.Description, Site, g.Meta.ID, baselineLine(r))
-	state := "Evidence coverage"
-	if g.Meta.State == "draft" {
-		state = "Preview"
-	}
-	fmt.Fprintf(&b, "\n**%s.** %s. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](%s/blob/main/data/evidence/%s.yaml).\n", state, Coverage(guideEvidence(r, g)), guidedata.Repository, g.Meta.ID)
+	fmt.Fprintf(&b, "\n**How this guide is proven.** %s. %s Read the [tested claims and their limitations](%s/blob/main/data/evidence/%s.yaml).\n", GuideCoverage(r, g), ProofNote, guidedata.Repository, g.Meta.ID)
 	inFence, blank := false, false
 	emit := func(s string) {
 		if s == "" {
@@ -275,16 +271,10 @@ func skillGuide(r *guidedata.Repo, g *guidedata.Guide) ([]byte, error) {
 				emit(fmt.Sprintf("%d. %s", n+1, q.Text))
 			}
 			emit("")
-			emit("### Evidence by step")
+			emit("### Tests by step")
 			emit("")
 			for _, c := range g.Cards {
-				var records []guidedata.EvidenceRecord
-				for _, e := range r.Evidence {
-					if e.Card == c.ID {
-						records = append(records, e)
-					}
-				}
-				emit(fmt.Sprintf("- %s: %s.", c.Title, Coverage(records)))
+				emit(fmt.Sprintf("- %s: %s.", c.Title, Coverage(cardEvidence(r, c.ID))))
 			}
 		case name == "Recipe":
 			code, err := recipeCode(r, attrs)

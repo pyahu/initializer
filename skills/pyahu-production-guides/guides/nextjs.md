@@ -6,7 +6,7 @@ A production Next.js frontend in the same repository as the Spring Boot service,
 
 On the web: https://initializer.pyahu.io/guides/nextjs/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 11 claims: 11 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/nextjs.yaml).
+**How this guide is proven.** None of its 8 steps is tested here yet. A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/nextjs.yaml).
 
 The new screen works on your laptop. In staging it calls the production API, the access token shows up in the
 browser's developer tools and a deploy drops every open request. The frontend is fine; it just runs in more places
@@ -27,16 +27,16 @@ advice is wrong for you.
 7. Which security headers does the frontend need?
 8. How do I follow a click into the service's trace?
 
-### Evidence by step
+### Tests by step
 
-- 1. What runs on the server and what runs in the browser?: 1 claim: 1 not exercised.
-- 2. How does the frontend call the Spring Boot service?: 1 claim: 1 not exercised.
-- 3. How does the user log in and where does the token live?: 2 claims: 2 not exercised.
-- 4. Why does my staging image call the production API?: 1 claim: 1 not exercised.
-- 5. What does Next.js cache and how do I refresh it?: 2 claims: 2 not exercised.
-- 6. How do I run the frontend in Kubernetes?: 2 claims: 2 not exercised.
-- 7. Which security headers does the frontend need?: 1 claim: 1 not exercised.
-- 8. How do I follow a click into the service's trace?: 1 claim: 1 not exercised.
+- 1. What runs on the server and what runs in the browser?: not tested here.
+- 2. How does the frontend call the Spring Boot service?: not tested here.
+- 3. How does the user log in and where does the token live?: not tested here.
+- 4. Why does my staging image call the production API?: not tested here.
+- 5. What does Next.js cache and how do I refresh it?: not tested here.
+- 6. How do I run the frontend in Kubernetes?: not tested here.
+- 7. Which security headers does the frontend need?: not tested here.
+- 8. How do I follow a click into the service's trace?: not tested here.
 
 ## 1. What runs on the server and what runs in the browser?
 

@@ -16,7 +16,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-jls-se-25
     title: "JLS SE 25 (HTML)"
     component: "java"
@@ -32,7 +32,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-jls-se-25-2
     title: "JLS SE 25 (PDF)"
     component: "java"
@@ -48,7 +48,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-jvms-se-25
     title: "JVMS SE 25"
     component: "java"
@@ -64,7 +64,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-se-25-platform-jsr-400
     title: "Java SE 25 Platform JSR 400 (spec root)"
     component: "java"
@@ -80,7 +80,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-jdk-25-project-page
     title: "JDK 25 project page (JEP list)"
     component: "java"
@@ -96,7 +96,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-jdk-25-release-notes
     title: "JDK 25 release notes (Oracle, covers OpenJDK changes)"
     component: "java"
@@ -112,7 +112,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-jdk-25-consolidated-release-notes
     title: "JDK 25 consolidated release notes (all updates)"
     component: "java"
@@ -128,7 +128,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-launcher-tool-reference
     title: "java launcher tool reference"
     component: "java"
@@ -144,7 +144,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-jdk-25-documentation-home
     title: "JDK 25 documentation home"
     component: "java"
@@ -160,7 +160,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-virtual-threads-guide
     title: "Virtual threads guide (Core Libraries)"
     component: "java"
@@ -176,7 +176,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-hotspot-gc-tuning-guide
     title: "HotSpot GC tuning guide"
     component: "java"
@@ -192,7 +192,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-class-data-sharing-aot-cache
     title: "Class Data Sharing / AOT cache (VM guide)"
     component: "java"
@@ -208,7 +208,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-jdk-migration-guide
     title: "JDK migration guide"
     component: "java"
@@ -224,7 +224,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: java-openjdk-builds-page
     title: "OpenJDK builds page"
     component: "java"
@@ -240,7 +240,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-444
     title: "JEP 444: Virtual Threads"
     component: null
@@ -256,7 +256,7 @@ entries:
     appliesWhen: {}
     jep: { number: 444, title: "Virtual Threads", status: "Closed / Delivered", release: "21" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-491
     title: "JEP 491: Synchronize Virtual Threads without Pinning"
     component: null
@@ -272,7 +272,7 @@ entries:
     appliesWhen: {}
     jep: { number: 491, title: "Synchronize Virtual Threads without Pinning", status: "Closed / Delivered", release: "24" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-505
     title: "JEP 505: Structured Concurrency (Fifth Preview), the preview in JDK 25"
     component: null
@@ -288,7 +288,7 @@ entries:
     appliesWhen: {}
     jep: { number: 505, title: "Structured Concurrency", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-525
     title: "JEP 525: Structured Concurrency (Sixth Preview), for context: still preview in 26"
     component: null
@@ -304,7 +304,7 @@ entries:
     appliesWhen: {}
     jep: { number: 525, title: "Structured Concurrency", status: "Closed / Delivered", release: "26" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-506
     title: "JEP 506: Scoped Values (final)"
     component: null
@@ -320,7 +320,7 @@ entries:
     appliesWhen: {}
     jep: { number: 506, title: "Scoped Values", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-483
     title: "JEP 483: Ahead-of-Time Class Loading & Linking"
     component: null
@@ -336,7 +336,7 @@ entries:
     appliesWhen: {}
     jep: { number: 483, title: "Ahead-of-Time Class Loading & Linking", status: "Closed / Delivered", release: "24" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-514
     title: "JEP 514: Ahead-of-Time Command-Line Ergonomics"
     component: null
@@ -352,7 +352,7 @@ entries:
     appliesWhen: {}
     jep: { number: 514, title: "Ahead-of-Time Command-Line Ergonomics", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-515
     title: "JEP 515: Ahead-of-Time Method Profiling"
     component: null
@@ -368,7 +368,7 @@ entries:
     appliesWhen: {}
     jep: { number: 515, title: "Ahead-of-Time Method Profiling", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-516
     title: "JEP 516: Ahead-of-Time Object Caching with Any GC (context, not in 25)"
     component: null
@@ -384,7 +384,7 @@ entries:
     appliesWhen: {}
     jep: { number: 516, title: "Ahead-of-Time Object Caching with Any GC", status: "Closed / Delivered", release: "26" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-519
     title: "JEP 519: Compact Object Headers (product feature, opt-in)"
     component: null
@@ -400,7 +400,7 @@ entries:
     appliesWhen: {}
     jep: { number: 519, title: "Compact Object Headers", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-248
     title: "JEP 248: Make G1 the Default Garbage Collector (default-GC context)"
     component: null
@@ -416,7 +416,7 @@ entries:
     appliesWhen: {}
     jep: { number: 248, title: "Make G1 the Default Garbage Collector", status: "Closed / Delivered", release: "9" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-439
     title: "JEP 439: Generational ZGC"
     component: null
@@ -432,7 +432,7 @@ entries:
     appliesWhen: {}
     jep: { number: 439, title: "Generational ZGC", status: "Closed / Delivered", release: "21" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-474
     title: "JEP 474: ZGC: Generational Mode by Default"
     component: null
@@ -448,7 +448,7 @@ entries:
     appliesWhen: {}
     jep: { number: 474, title: "ZGC: Generational Mode by Default", status: "Closed / Delivered", release: "23" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-490
     title: "JEP 490: ZGC: Remove the Non-Generational Mode"
     component: null
@@ -464,7 +464,7 @@ entries:
     appliesWhen: {}
     jep: { number: 490, title: "ZGC: Remove the Non-Generational Mode", status: "Closed / Delivered", release: "24" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-521
     title: "JEP 521: Generational Shenandoah"
     component: null
@@ -480,7 +480,7 @@ entries:
     appliesWhen: {}
     jep: { number: 521, title: "Generational Shenandoah", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-513
     title: "JEP 513: Flexible Constructor Bodies (final)"
     component: null
@@ -496,7 +496,7 @@ entries:
     appliesWhen: {}
     jep: { number: 513, title: "Flexible Constructor Bodies", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-511
     title: "JEP 511: Module Import Declarations (final)"
     component: null
@@ -512,7 +512,7 @@ entries:
     appliesWhen: {}
     jep: { number: 511, title: "Module Import Declarations", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-512
     title: "JEP 512: Compact Source Files and Instance Main Methods (final)"
     component: null
@@ -528,7 +528,7 @@ entries:
     appliesWhen: {}
     jep: { number: 512, title: "Compact Source Files and Instance Main Methods", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-502
     title: "JEP 502: Stable Values (Preview)"
     component: null
@@ -544,7 +544,7 @@ entries:
     appliesWhen: {}
     jep: { number: 502, title: "Stable Values", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-526
     title: "JEP 526: Lazy Constants (Second Preview), the renamed successor of 502, for context"
     component: null
@@ -560,7 +560,7 @@ entries:
     appliesWhen: {}
     jep: { number: 526, title: "Lazy Constants", status: "Closed / Delivered", release: "26" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-510
     title: "JEP 510: Key Derivation Function API (final)"
     component: null
@@ -576,7 +576,7 @@ entries:
     appliesWhen: {}
     jep: { number: 510, title: "Key Derivation Function API", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-470
     title: "JEP 470: PEM Encodings of Cryptographic Objects (Preview)"
     component: null
@@ -592,7 +592,7 @@ entries:
     appliesWhen: {}
     jep: { number: 470, title: "PEM Encodings of Cryptographic Objects", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-509
     title: "JEP 509: JFR CPU-Time Profiling (Experimental)"
     component: null
@@ -608,7 +608,7 @@ entries:
     appliesWhen: {}
     jep: { number: 509, title: "JFR CPU-Time Profiling", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-518
     title: "JEP 518: JFR Cooperative Sampling"
     component: null
@@ -624,7 +624,7 @@ entries:
     appliesWhen: {}
     jep: { number: 518, title: "JFR Cooperative Sampling", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-520
     title: "JEP 520: JFR Method Timing & Tracing"
     component: null
@@ -640,7 +640,7 @@ entries:
     appliesWhen: {}
     jep: { number: 520, title: "JFR Method Timing & Tracing", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-485
     title: "JEP 485: Stream Gatherers"
     component: null
@@ -656,7 +656,7 @@ entries:
     appliesWhen: {}
     jep: { number: 485, title: "Stream Gatherers", status: "Closed / Delivered", release: "24" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: jep-507
     title: "JEP 507: Primitive Types in Patterns, instanceof, and switch (Third Preview)"
     component: null
@@ -672,7 +672,7 @@ entries:
     appliesWhen: {}
     jep: { number: 507, title: "Primitive Types in Patterns", status: "Closed / Delivered", release: "25" }
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-reference-root
     title: "Reference root"
     component: "spring-boot"
@@ -689,7 +689,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-system-requirements
     title: "System requirements"
     component: "spring-boot"
@@ -706,7 +706,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-release-notes-4-1
     title: "Release notes 4.1 (wiki)"
     component: "spring-boot"
@@ -722,23 +722,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
-  - id: spring-boot-release-v4-1-1
-    title: "Release v4.1.1 (GitHub)"
-    component: "spring-boot"
-    docVersion: "4.1.1"
-    match: "exact"
-    kind: "release"
-    area: "spring-boot"
-    url: "https://github.com/spring-projects/spring-boot/releases/tag/v4.1.1"
-    pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200."
-    purpose: "Release v4.1.1 (GitHub)."
-    guides: []
-    appliesWhen: {}
-    jep: null
-    llms: null
-    baselines: [ "v0.1-b1" ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-migration-guide-3-x-to-4-0
     title: "Migration guide 3.x to 4.0 (wiki)"
     component: "spring-boot"
@@ -754,7 +738,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-release-notes-4-0
     title: "Release notes 4.0 (wiki)"
     component: "spring-boot"
@@ -770,7 +754,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-upgrading-spring-boot
     title: "Upgrading Spring Boot (reference)"
     component: "spring-boot"
@@ -787,7 +771,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-dependency-versions-appendix
     title: "Dependency versions appendix (managed versions)"
     component: "spring-boot"
@@ -804,7 +788,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-application-properties-appendix
     title: "Application properties appendix"
     component: "spring-boot"
@@ -821,7 +805,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-actuator
     title: "Actuator (production-ready features)"
     component: "spring-boot"
@@ -838,7 +822,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-actuator-endpoints
     title: "Actuator endpoints (incl. Kubernetes probes anchor, verified)"
     component: "spring-boot"
@@ -855,7 +839,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-actuator-rest-api
     title: "Actuator REST API"
     component: "spring-boot"
@@ -872,7 +856,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-observability-opentelemetry-section
     title: "Observability, OpenTelemetry section (anchor verified)"
     component: "spring-boot"
@@ -889,7 +873,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-tracing
     title: "Tracing (names spring-boot-starter-opentelemetry, OTLP export)"
     component: "spring-boot"
@@ -906,7 +890,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-metrics
     title: "Metrics (incl. #actuator.metrics.export.otlp)"
     component: "spring-boot"
@@ -923,7 +907,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-container-images
     title: "Container images"
     component: "spring-boot"
@@ -940,7 +924,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-efficient-container-images
     title: "Efficient container images (layering)"
     component: "spring-boot"
@@ -957,7 +941,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-dockerfiles
     title: "Dockerfiles"
     component: "spring-boot"
@@ -974,7 +958,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-cloud-native-buildpacks
     title: "Cloud Native Buildpacks"
     component: "spring-boot"
@@ -991,7 +975,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-efficient-deployments
     title: "Efficient deployments"
     component: "spring-boot"
@@ -1008,7 +992,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-aot-cache-and-cds
     title: "AOT cache and CDS (reference, sections #packaging.aot-cache.aot-cache and #packaging.aot-cache.cds)"
     component: "spring-boot"
@@ -1025,7 +1009,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-aot-cache
     title: "AOT cache (how-to)"
     component: "spring-boot"
@@ -1042,7 +1026,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-virtual-threads
     title: "Virtual threads (anchor verified)"
     component: "spring-boot"
@@ -1059,7 +1043,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-task-execution
     title: "Task execution (virtual-thread executors)"
     component: "spring-boot"
@@ -1076,7 +1060,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-testcontainers-support
     title: "Testcontainers support"
     component: "spring-boot"
@@ -1093,7 +1077,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-sql-databases
     title: "SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)"
     component: "spring-boot"
@@ -1110,7 +1094,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-database-initialization
     title: "Database initialization (Liquibase)"
     component: "spring-boot"
@@ -1127,7 +1111,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-oauth2
     title: "OAuth2 (resource server auto-config)"
     component: "spring-boot"
@@ -1144,7 +1128,7 @@ entries:
     appliesWhen: { auth: [ true ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-deploying-to-the-cloud
     title: "Deploying to the cloud (Kubernetes)"
     component: "spring-boot"
@@ -1161,7 +1145,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-gradle-plugin
     title: "Gradle plugin"
     component: "spring-boot"
@@ -1178,7 +1162,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-gradle-plugin-packaging-oci-images
     title: "Gradle plugin: packaging OCI images"
     component: "spring-boot"
@@ -1195,7 +1179,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-boot-boot-api-javadoc
     title: "Boot API javadoc"
     component: "spring-boot"
@@ -1212,7 +1196,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-framework-reference
     title: "Reference"
     component: "spring-framework"
@@ -1229,7 +1213,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-framework-null-safety
     title: "Null-safety (JSpecify in Spring 7)"
     component: "spring-framework"
@@ -1246,23 +1230,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
-  - id: spring-framework-javadoc
-    title: "Javadoc"
-    component: "spring-framework"
-    docVersion: "7.0.9"
-    match: "exact"
-    kind: "api"
-    area: "spring-framework"
-    url: "https://docs.spring.io/spring-framework/docs/7.0.9/javadoc-api/"
-    pinned: true
-    pinNote: "Status on 2026-10-17: pinned (patch); checked: 200."
-    purpose: "Javadoc."
-    guides: []
-    appliesWhen: {}
-    jep: null
-    llms: null
-    baselines: [ "v0.1-b1" ]
+    baselines: [ v0.1-b2 ]
   - id: spring-framework-7-0-release-notes
     title: "7.0 release notes (wiki, also covers upgrading)"
     component: "spring-framework"
@@ -1278,7 +1246,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-data-relational-reference
     title: "Spring Data Relational reference"
     component: "spring-data"
@@ -1295,7 +1263,7 @@ entries:
     appliesWhen: { persistence: [ "jdbc" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-data-jdbc-section
     title: "JDBC section"
     component: "spring-data"
@@ -1312,7 +1280,7 @@ entries:
     appliesWhen: { persistence: [ "jdbc" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-data-jdbc-getting-started
     title: "JDBC getting started"
     component: "spring-data"
@@ -1329,7 +1297,7 @@ entries:
     appliesWhen: { persistence: [ "jdbc" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-data-persisting-entities
     title: "Persisting entities (aggregates)"
     component: "spring-data"
@@ -1346,7 +1314,7 @@ entries:
     appliesWhen: { persistence: [ "jdbc" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-data-2026-0-release-notes
     title: "Spring Data 2026.0 release notes"
     component: "spring-data"
@@ -1362,7 +1330,7 @@ entries:
     appliesWhen: { persistence: [ "jdbc" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-security-reference
     title: "Reference"
     component: "spring-security"
@@ -1379,7 +1347,7 @@ entries:
     appliesWhen: { auth: [ true ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-security-oauth-2-0-resource-server
     title: "OAuth 2.0 Resource Server"
     component: "spring-security"
@@ -1396,7 +1364,7 @@ entries:
     appliesWhen: { auth: [ true ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-security-resource-server-jwt
     title: "Resource Server JWT"
     component: "spring-security"
@@ -1413,7 +1381,7 @@ entries:
     appliesWhen: { auth: [ true ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-security-what-s-new-in-7-1
     title: "What's new in 7.1"
     component: "spring-security"
@@ -1430,7 +1398,7 @@ entries:
     appliesWhen: { auth: [ true ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-security-migration
     title: "Migration (page title \"Migrating to 7.0\")"
     component: "spring-security"
@@ -1447,7 +1415,7 @@ entries:
     appliesWhen: { auth: [ true ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-modulith-reference
     title: "Reference"
     component: "spring-modulith"
@@ -1464,7 +1432,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-modulith-fundamentals
     title: "Fundamentals"
     component: "spring-modulith"
@@ -1481,7 +1449,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-modulith-verifying-module-structure
     title: "Verifying module structure"
     component: "spring-modulith"
@@ -1498,7 +1466,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-modulith-application-events
     title: "Application events (event publication registry)"
     component: "spring-modulith"
@@ -1515,7 +1483,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-modulith-integration-testing-modules
     title: "Integration testing modules"
     component: "spring-modulith"
@@ -1532,7 +1500,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-modulith-documenting-modules
     title: "Documenting modules"
     component: "spring-modulith"
@@ -1549,7 +1517,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-modulith-appendix
     title: "Appendix (compatibility, properties)"
     component: "spring-modulith"
@@ -1566,7 +1534,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: spring-modulith-2-0-reference
     title: "(2.0 reference, for Boot 4.0 only)"
     component: "spring-modulith"
@@ -1599,7 +1567,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: architecture-jmolecules-release-2-0-1
     title: "jMolecules release 2.0.1"
     component: "jmolecules-bom"
@@ -1615,7 +1583,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: architecture-jmolecules-at-1-9-0
     title: "jMolecules at 1.9.0 (the brief's line, superseded)"
     component: "jmolecules-bom"
@@ -1647,7 +1615,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: architecture-jmolecules-integrations-repo
     title: "jmolecules-integrations repo"
     component: "jmolecules-archunit"
@@ -1663,7 +1631,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: architecture-archunit-user-guide
     title: "ArchUnit user guide"
     component: "archunit"
@@ -1679,7 +1647,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: architecture-archunit-release-1-5-1
     title: "ArchUnit release 1.5.1"
     component: "archunit"
@@ -1695,7 +1663,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: database-what-is-a-changelog
     title: "What is a changelog (Community)"
     component: "liquibase"
@@ -1711,7 +1679,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: { txt: "https://docs.liquibase.com/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: database-install-with-spring-boot
     title: "Install with Spring Boot (Community)"
     component: "liquibase"
@@ -1727,7 +1695,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: { txt: "https://docs.liquibase.com/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: database-connect-with-postgresql
     title: "Connect with PostgreSQL (Community)"
     component: "liquibase"
@@ -1743,23 +1711,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: { txt: "https://docs.liquibase.com/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
-  - id: database-community-5-0-3-release-notes
-    title: "Community 5.0.3 release notes"
-    component: "liquibase"
-    docVersion: "5.0.3"
-    match: "exact"
-    kind: "release-notes"
-    area: "database"
-    url: "https://docs.liquibase.com/community/release-notes/liquibase-community-5-0-3-release-notes"
-    pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200."
-    purpose: "Community 5.0.3 release notes."
-    guides: [ "database" ]
-    appliesWhen: { database: [ "postgres" ] }
-    jep: null
-    llms: { txt: "https://docs.liquibase.com/llms.txt" }
-    baselines: [ "v0.1-b1" ]
+    baselines: [ v0.1-b2 ]
   - id: database-community-5-0-4-release-notes
     title: "Community 5.0.4 release notes"
     component: "liquibase"
@@ -1775,23 +1727,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: { txt: "https://docs.liquibase.com/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
-  - id: database-github-release-v5-0-3
-    title: "GitHub release v5.0.3"
-    component: "liquibase"
-    docVersion: "5.0.3"
-    match: "exact"
-    kind: "release"
-    area: "database"
-    url: "https://github.com/liquibase/liquibase/releases/tag/v5.0.3"
-    pinned: true
-    pinNote: "Status on 2026-10-17: pinned; checked: 200."
-    purpose: "GitHub release v5.0.3."
-    guides: []
-    appliesWhen: { database: [ "postgres" ] }
-    jep: null
-    llms: null
-    baselines: [ "v0.1-b1" ]
+    baselines: [ v0.1-b2 ]
   - id: database-documentation
     title: "Documentation"
     component: "postgres-image"
@@ -1807,7 +1743,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: database-release-18-notes
     title: "Release 18 notes"
     component: "postgres-image"
@@ -1823,7 +1759,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: database-release-18-6-notes
     title: "Release 18.6 notes"
     component: "postgres-image"
@@ -1839,7 +1775,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: database-versioning-policy
     title: "Versioning policy"
     component: null
@@ -1855,7 +1791,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: database-pgjdbc-documentation
     title: "pgJDBC documentation"
     component: "pgjdbc"
@@ -1871,7 +1807,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: testing-testcontainers-for-java-docs
     title: "Testcontainers for Java docs"
     component: "testcontainers"
@@ -1887,7 +1823,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: testing-postgres-module
     title: "Postgres module"
     component: "testcontainers"
@@ -1903,7 +1839,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: testing-junit-5-quickstart
     title: "JUnit 5 quickstart"
     component: "testcontainers"
@@ -1919,7 +1855,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: testing-docs-source-at-tag
     title: "Docs source at tag (pinned alternative)"
     component: "testcontainers"
@@ -1935,7 +1871,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: testing-release-2-0-5
     title: "Release 2.0.5"
     component: "testcontainers"
@@ -1951,7 +1887,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-otel-java-docs
     title: "OTel Java docs"
     component: "opentelemetry-java"
@@ -1967,7 +1903,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://opentelemetry.io/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-otel-java-sdk-management
     title: "OTel Java SDK management"
     component: "opentelemetry-java"
@@ -1983,7 +1919,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://opentelemetry.io/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-otel-java-sdk-configuration
     title: "OTel Java SDK configuration"
     component: "opentelemetry-java"
@@ -1999,7 +1935,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://opentelemetry.io/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-otel-java-release-1-62-0
     title: "OTel Java release 1.62.0 (Boot-managed)"
     component: "opentelemetry-java"
@@ -2015,7 +1951,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-otlp-specification
     title: "OTLP specification"
     component: null
@@ -2031,7 +1967,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://opentelemetry.io/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-otlp-specification-at-tag
     title: "OTLP specification at tag"
     component: null
@@ -2047,7 +1983,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-semantic-conventions
     title: "Semantic conventions"
     component: null
@@ -2063,7 +1999,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://opentelemetry.io/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-semantic-conventions-at-tag
     title: "Semantic conventions at tag"
     component: null
@@ -2079,7 +2015,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-semconv-http-spans
     title: "Semconv HTTP spans"
     component: null
@@ -2095,7 +2031,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://opentelemetry.io/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-semconv-db-client-spans
     title: "Semconv DB client spans"
     component: null
@@ -2111,7 +2047,7 @@ entries:
     appliesWhen: { database: [ "postgres" ] }
     jep: null
     llms: { txt: "https://opentelemetry.io/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-semconv-messaging-spans
     title: "Semconv messaging spans"
     component: null
@@ -2143,7 +2079,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://opentelemetry.io/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-otel-specification
     title: "OTel specification"
     component: null
@@ -2159,7 +2095,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://opentelemetry.io/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-otel-specification-at-tag
     title: "OTel specification at tag"
     component: null
@@ -2175,7 +2111,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-otel-s-own-spring-boot-starter
     title: "OTel's own Spring Boot starter (a different artifact from Boot's starter; listed to avoid confusion)"
     component: null
@@ -2191,7 +2127,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://opentelemetry.io/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-micrometer-reference
     title: "Micrometer reference"
     component: "micrometer"
@@ -2207,7 +2143,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-micrometer-otlp-registry
     title: "Micrometer OTLP registry"
     component: "micrometer"
@@ -2223,7 +2159,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-micrometer-observation
     title: "Micrometer Observation"
     component: "micrometer"
@@ -2239,7 +2175,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: observability-micrometer-tracing-reference
     title: "Micrometer Tracing reference"
     component: "micrometer-tracing"
@@ -2255,7 +2191,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-user-manual
     title: "User manual"
     component: "gradle"
@@ -2271,7 +2207,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-release-notes
     title: "Release notes"
     component: "gradle"
@@ -2287,7 +2223,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-best-practices
     title: "Best practices"
     component: "gradle"
@@ -2303,7 +2239,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-version-catalogs
     title: "Version catalogs"
     component: "gradle"
@@ -2319,7 +2255,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-sharing-build-logic
     title: "Sharing build logic (buildSrc)"
     component: "gradle"
@@ -2335,7 +2271,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-pre-compiled-script-plugins
     title: "Pre-compiled script plugins"
     component: "gradle"
@@ -2351,7 +2287,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-jvm-test-suite-plugin
     title: "JVM Test Suite plugin"
     component: "gradle"
@@ -2367,7 +2303,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-toolchains
     title: "Toolchains"
     component: "gradle"
@@ -2383,7 +2319,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-configuration-cache
     title: "Configuration cache"
     component: "gradle"
@@ -2399,7 +2335,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-compatibility-matrix
     title: "Compatibility matrix (Java 25 support)"
     component: "gradle"
@@ -2415,7 +2351,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-dependency-verification
     title: "Dependency verification"
     component: "gradle"
@@ -2431,7 +2367,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-dsl-reference
     title: "DSL reference"
     component: "gradle"
@@ -2447,7 +2383,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-convention-plugins
     title: "Convention plugins"
     component: "gradle"
@@ -2463,7 +2399,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-best-practices-for-structuring-builds
     title: "Best practices for structuring builds"
     component: "gradle"
@@ -2479,7 +2415,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: build-composite-builds
     title: "Composite builds (included build-logic)"
     component: "gradle"
@@ -2495,7 +2431,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-docs-home
     title: "Docs home"
     component: "kubernetes-1.36"
@@ -2511,7 +2447,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-probes
     title: "Probes (concept)"
     component: "kubernetes-1.36"
@@ -2527,7 +2463,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-configure-liveness-readiness-startup-probes
     title: "Configure liveness/readiness/startup probes (task)"
     component: "kubernetes-1.36"
@@ -2543,7 +2479,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-pod-security-standards
     title: "Pod Security Standards"
     component: "kubernetes-1.36"
@@ -2559,7 +2495,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-pod-security-admission
     title: "Pod Security Admission"
     component: "kubernetes-1.36"
@@ -2575,7 +2511,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-networkpolicy
     title: "NetworkPolicy"
     component: "kubernetes-1.36"
@@ -2591,7 +2527,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-disruptions
     title: "Disruptions (PDB concept)"
     component: "kubernetes-1.36"
@@ -2607,7 +2543,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-configure-a-poddisruptionbudget
     title: "Configure a PodDisruptionBudget"
     component: "kubernetes-1.36"
@@ -2623,7 +2559,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-pod-topology-spread-constraints
     title: "Pod topology spread constraints"
     component: "kubernetes-1.36"
@@ -2639,7 +2575,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-pod-lifecycle
     title: "Pod lifecycle (graceful termination)"
     component: "kubernetes-1.36"
@@ -2655,7 +2591,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-resource-management
     title: "Resource management"
     component: "kubernetes-1.36"
@@ -2671,7 +2607,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-kustomize-via-kubectl
     title: "Kustomize via kubectl (task)"
     component: "kubernetes-1.36"
@@ -2687,7 +2623,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-changelog-1-36
     title: "CHANGELOG 1.36"
     component: "kubernetes-1.36"
@@ -2703,7 +2639,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-kustomize-reference
     title: "Kustomize reference"
     component: "kustomize"
@@ -2719,7 +2655,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-kustomization-yaml-reference
     title: "kustomization.yaml reference"
     component: "kustomize"
@@ -2735,7 +2671,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: kubernetes-release-kustomize-v5-8-3
     title: "Release kustomize/v5.8.3"
     component: "kustomize"
@@ -2751,7 +2687,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: api-openapi-specification-v3-1-2
     title: "OpenAPI Specification v3.1.2 (latest 3.1 patch)"
     component: "openapi-spec"
@@ -2767,7 +2703,7 @@ entries:
     appliesWhen: { api: [ "rest" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: api-openapi-specification-v3-1-0
     title: "OpenAPI Specification v3.1.0"
     component: "openapi-spec"
@@ -2783,7 +2719,7 @@ entries:
     appliesWhen: { api: [ "rest" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: api-openapi-generator-spring-generator
     title: "openapi-generator Spring generator"
     component: "openapi-generator-gradle-plugin"
@@ -2799,7 +2735,7 @@ entries:
     appliesWhen: { api: [ "rest" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: api-spring-generator-doc-at-tag
     title: "Spring generator doc at tag"
     component: "openapi-generator-gradle-plugin"
@@ -2815,7 +2751,7 @@ entries:
     appliesWhen: { api: [ "rest" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: api-gradle-plugin-readme-at-tag
     title: "Gradle plugin README at tag"
     component: "openapi-generator-gradle-plugin"
@@ -2831,7 +2767,7 @@ entries:
     appliesWhen: { api: [ "rest" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: api-plugins-overview
     title: "Plugins overview"
     component: "openapi-generator-gradle-plugin"
@@ -2847,7 +2783,7 @@ entries:
     appliesWhen: { api: [ "rest" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: api-release-v7-26-0
     title: "Release v7.26.0"
     component: "openapi-generator-gradle-plugin"
@@ -2863,7 +2799,7 @@ entries:
     appliesWhen: { api: [ "rest" ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: identity-openid-connect-core-1-0
     title: "OpenID Connect Core 1.0 (errata set 2)"
     component: null
@@ -2879,7 +2815,7 @@ entries:
     appliesWhen: { auth: [ true ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: identity-openid-connect-discovery-1-0
     title: "OpenID Connect Discovery 1.0"
     component: null
@@ -2895,7 +2831,7 @@ entries:
     appliesWhen: { auth: [ true ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: identity-rfc-6750-bearer-token-usage
     title: "RFC 6750 Bearer Token Usage"
     component: null
@@ -2911,7 +2847,7 @@ entries:
     appliesWhen: { auth: [ true ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: identity-rfc-7519-jwt
     title: "RFC 7519 JWT"
     component: null
@@ -2927,7 +2863,7 @@ entries:
     appliesWhen: { auth: [ true ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: identity-rfc-9068-jwt-profile-for-oauth-2-0-access-tokens
     title: "RFC 9068 JWT Profile for OAuth 2.0 Access Tokens"
     component: null
@@ -2943,7 +2879,7 @@ entries:
     appliesWhen: { auth: [ true ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: identity-rfc-9700-oauth-2-0-security-bcp
     title: "RFC 9700 OAuth 2.0 Security BCP"
     component: null
@@ -2959,7 +2895,7 @@ entries:
     appliesWhen: { auth: [ true ] }
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: ci-secure-use-reference
     title: "Secure use reference (formerly \"Security hardening for GitHub Actions\"; the old URL redirects here)"
     component: null
@@ -2975,7 +2911,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.github.com/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: ci-reuse-workflows
     title: "Reuse workflows (how-to)"
     component: null
@@ -2991,7 +2927,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.github.com/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: ci-reusing-workflow-configurations
     title: "Reusing workflow configurations (reference)"
     component: null
@@ -3007,7 +2943,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.github.com/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: ci-openid-connect-in-actions
     title: "OpenID Connect in Actions (keyless cosign)"
     component: null
@@ -3023,7 +2959,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: { txt: "https://docs.github.com/llms.txt" }
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: ci-docker-named-contexts
     title: "Docker Build: named contexts"
     component: null
@@ -3056,7 +2992,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-slsa-v1-2-build-track-basics
     title: "SLSA v1.2 Build track basics"
     component: "slsa"
@@ -3072,7 +3008,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-slsa-v1-2-provenance
     title: "SLSA v1.2 Provenance"
     component: "slsa"
@@ -3088,7 +3024,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-slsa-v1-1-v1-0
     title: "SLSA v1.1 / v1.0 (older)"
     component: "slsa"
@@ -3136,7 +3072,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-cosign-signing-containers
     title: "cosign: signing containers"
     component: "cosign"
@@ -3152,7 +3088,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-cosign-verifying
     title: "cosign: verifying"
     component: "cosign"
@@ -3168,7 +3104,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-cosign-in-toto-attestations
     title: "cosign: in-toto attestations"
     component: "cosign"
@@ -3184,7 +3120,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-cosign-release-v3-1-3
     title: "cosign release v3.1.3"
     component: "cosign"
@@ -3200,7 +3136,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-syft-docs
     title: "Syft docs (Anchore OSS site)"
     component: "syft"
@@ -3216,7 +3152,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-syft-cli-reference
     title: "Syft CLI reference"
     component: "syft"
@@ -3232,7 +3168,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-syft-repo-release-v1-54-1
     title: "Syft repo / release v1.54.1"
     component: "syft"
@@ -3248,7 +3184,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-syft-repo-release-v1-54-1-2
     title: "Syft repo / release v1.54.1"
     component: "syft"
@@ -3264,7 +3200,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-trivy-docs
     title: "Trivy docs"
     component: "trivy"
@@ -3280,7 +3216,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: supply-chain-trivy-release-v0-76-0
     title: "Trivy release v0.76.0"
     component: "trivy"
@@ -3296,7 +3232,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: dependencies-renovate-docs
     title: "Renovate docs"
     component: "renovate"
@@ -3312,7 +3248,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: dependencies-renovate-configuration-options
     title: "Renovate configuration options"
     component: "renovate"
@@ -3328,7 +3264,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: dependencies-renovate-gradle-manager
     title: "Renovate Gradle manager"
     component: "renovate"
@@ -3344,7 +3280,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: dependencies-renovate-upgrade-best-practices
     title: "Renovate upgrade best practices"
     component: "renovate"
@@ -3360,7 +3296,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-jspecify-start-here
     title: "JSpecify start here"
     component: "jspecify"
@@ -3376,7 +3312,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-jspecify-user-guide
     title: "JSpecify user guide"
     component: "jspecify"
@@ -3392,7 +3328,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-jspecify-spec
     title: "JSpecify spec"
     component: "jspecify"
@@ -3408,7 +3344,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-jspecify-annotations-javadoc-1-0-0
     title: "JSpecify annotations javadoc 1.0.0"
     component: "jspecify"
@@ -3424,7 +3360,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-jspecify-release-1-0-0
     title: "JSpecify release 1.0.0"
     component: "jspecify"
@@ -3440,7 +3376,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-nullaway-readme-at-tag
     title: "NullAway README at tag"
     component: "nullaway"
@@ -3456,7 +3392,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-nullaway-jspecify-support
     title: "NullAway JSpecify support (wiki)"
     component: "nullaway"
@@ -3472,7 +3408,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-nullaway-release-0-14-2
     title: "NullAway release 0.14.2"
     component: "nullaway"
@@ -3488,7 +3424,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-error-prone-docs
     title: "Error Prone docs"
     component: "error-prone"
@@ -3504,7 +3440,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-error-prone-installation
     title: "Error Prone installation"
     component: "error-prone"
@@ -3520,7 +3456,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-error-prone-bug-patterns
     title: "Error Prone bug patterns"
     component: "error-prone"
@@ -3536,7 +3472,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-error-prone-release-2-50-0
     title: "Error Prone release 2.50.0"
     component: "error-prone"
@@ -3552,7 +3488,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: static-analysis-gradle-errorprone-plugin
     title: "gradle-errorprone-plugin (README)"
     component: "errorprone-gradle-plugin"
@@ -3568,7 +3504,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: database-jakarta-persistence-3-2-spec-page
     title: "Jakarta Persistence 3.2 spec page"
     component: null
@@ -4112,7 +4048,7 @@ entries:
     appliesWhen: { "kafka.enabled": [ true ] }
     jep: null
     llms: null
-    baselines: [ v0.1-b1, v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: messaging-karapace-policy-api
     title: "Karapace subject compatibility API"
     component: null
@@ -4128,7 +4064,7 @@ entries:
     appliesWhen: { "kafka.enabled": [ true ] }
     jep: null
     llms: null
-    baselines: [ v0.1-b1, v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: messaging-karapace-docs
     title: "Karapace docs"
     component: null
@@ -4416,7 +4352,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: architecture-cockburn-hexagonal
     title: "Alistair Cockburn: Hexagonal architecture"
     component: null
@@ -4432,7 +4368,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: architecture-evans-ddd-reference
     title: "Eric Evans: Domain-Driven Design Reference"
     component: null
@@ -4449,7 +4385,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: architecture-palermo-onion
     title: "Jeffrey Palermo: The Onion Architecture, part 1"
     component: null
@@ -4465,7 +4401,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: architecture-martin-clean
     title: "Robert C. Martin: The Clean Architecture"
     component: null
@@ -4481,7 +4417,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: architecture-bogard-vertical-slice
     title: "Jimmy Bogard: Vertical Slice Architecture"
     component: null
@@ -4497,7 +4433,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: architecture-fowler-presentation-domain-data
     title: "Martin Fowler: Presentation Domain Data Layering"
     component: null
@@ -4513,7 +4449,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: architecture-fowler-gui-architectures
     title: "Martin Fowler: GUI Architectures"
     component: null
@@ -4529,7 +4465,7 @@ entries:
     appliesWhen: {}
     jep: null
     llms: null
-    baselines: [ "v0.1-b1", v0.1-b2 ]
+    baselines: [ v0.1-b2 ]
   - id: database-spring-data-jpa-projections
     title: "Spring Data JPA: projections"
     component: "spring-data"
@@ -4788,8 +4724,7 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]
   - id: next-data-security
     title: Next.js data security
     component: null
@@ -4808,8 +4743,7 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]
   - id: next-environment
     title: Next.js environment variables
     component: null
@@ -4828,8 +4762,7 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]
   - id: next-self-hosting
     title: Self-hosting Next.js
     component: null
@@ -4848,8 +4781,7 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]
   - id: next-standalone
     title: Next.js output and standalone tracing
     component: null
@@ -4868,8 +4800,7 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]
   - id: next-cache-components-handlers
     title: Next.js cacheHandlers
     component: null
@@ -4888,8 +4819,7 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]
   - id: next-use-cache-remote
     title: "Next.js use cache: remote"
     component: null
@@ -4908,8 +4838,7 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]
   - id: next-csp
     title: Next.js Content Security Policy
     component: null
@@ -4928,8 +4857,7 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]
   - id: next-headers
     title: Next.js response headers
     component: null
@@ -4948,8 +4876,7 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]
   - id: openapi-typescript
     title: openapi-typescript
     component: null
@@ -4968,8 +4895,7 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]
   - id: openapi-fetch
     title: openapi-fetch
     component: null
@@ -4988,8 +4914,7 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]
   - id: vercel-otel
     title: Vercel OpenTelemetry library
     component: null
@@ -5008,8 +4933,7 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]
   - id: better-auth-generic-oauth
     title: Better Auth generic OAuth plugin
     component: null
@@ -5028,5 +4952,4 @@ entries:
         - nextjs
     jep: null
     llms: null
-    baselines:
-      - v0.1-b2
+    baselines: [ v0.1-b2 ]

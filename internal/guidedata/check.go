@@ -10,15 +10,6 @@ import (
 	"time"
 )
 
-// BadgeCapabilities lists the capabilities each badge may claim.
-var BadgeCapabilities = map[string][]string{
-	"compiled":      {"compile", "test"},
-	"reproduced":    {"test", "image", "runtime"},
-	"measured":      {"runtime"},
-	"cluster-run":   {"cluster"},
-	"not-exercised": {},
-}
-
 // PilotQuestions are the question IDs the pilot guides must answer.
 var PilotQuestions = map[string][]string{
 	"jvm-in-containers": {"JVM-Q1", "JVM-Q2", "JVM-Q3", "JVM-Q4", "JVM-Q5", "JVM-Q6", "JVM-Q7", "JVM-Q8"},
@@ -31,7 +22,7 @@ func (r *Repo) Check() []error {
 	add := func(format string, a ...any) { errs = append(errs, fmt.Errorf(format, a...)) }
 
 	// Versions.
-	if r.Versions.Revision(r.Versions.Active) == nil {
+	if r.Versions.ActiveRevision() == nil {
 		add("versions: active %s is not a revision", r.Versions.Active)
 	}
 	seenRev := map[string]bool{}
@@ -49,11 +40,6 @@ func (r *Repo) Check() []error {
 					add("versions %s: %s managedBy %s is not a component", rev.ID, key, *c.ManagedBy)
 				}
 			}
-			for _, g := range c.Guides {
-				if r.Guide(g) == nil {
-					add("versions %s: %s lists unknown guide %s", rev.ID, key, g)
-				}
-			}
 		}
 	}
 
@@ -66,19 +52,6 @@ func (r *Repo) Check() []error {
 			add("%s: prefix %s already used by %s", g.Path, m.Prefix, p)
 		}
 		prefixes[m.Prefix] = m.ID
-		if m.State == "released" {
-			add("%s: state released is not supported yet", g.Path)
-		}
-		rev := r.Versions.Revision(m.Baseline)
-		if rev == nil {
-			add("%s: baseline %s unknown", g.Path, m.Baseline)
-		} else {
-			for _, c := range m.Components {
-				if _, ok := rev.Components[c]; !ok {
-					add("%s: component %s not in %s", g.Path, c, m.Baseline)
-				}
-			}
-		}
 		pageCards := map[string]bool{}
 		for _, c := range g.Cards {
 			if other, dup := cards[c.ID]; dup {
@@ -147,9 +120,8 @@ func (r *Repo) Check() []error {
 		}
 	}
 
-	// Evidence.
+	// Evidence: one tested claim per record, proven by a required test of a fixture.
 	evIDs := map[string]bool{}
-	evByCard := map[string]int{}
 	for _, e := range r.Evidence {
 		if evIDs[e.ID] {
 			add("evidence: duplicate id %s", e.ID)
@@ -161,40 +133,8 @@ func (r *Repo) Check() []error {
 		if cards[e.Card] != e.Guide {
 			add("evidence %s: card %s is not a card of guide %s", e.ID, e.Card, e.Guide)
 		}
-		evByCard[e.Card]++
-		allowed := BadgeCapabilities[e.Badge]
-		for _, c := range e.Capabilities {
-			if !containsStr(allowed, c) {
-				add("evidence %s: badge %s may not claim %s", e.ID, e.Badge, c)
-			}
-		}
-		rev := r.Versions.Revision(e.Baseline)
-		if rev == nil {
-			add("evidence %s: baseline %s unknown", e.ID, e.Baseline)
-			continue
-		}
-		for _, c := range e.Components {
-			if _, ok := rev.Components[c]; !ok {
-				add("evidence %s: component %s not in %s", e.ID, c, e.Baseline)
-			}
-		}
-		if e.Exercised() {
-			fx := r.FixtureAt(e.Fixture, e.Baseline)
-			if fx == nil {
-				add("evidence %s: fixture %s unknown", e.ID, e.Fixture)
-			} else {
-				if !containsStr(fx.RequiredTests, e.Test) {
-					add("evidence %s: test %s is not in the required tests of %s", e.ID, e.Test, fx.Name)
-				}
-				if fx.Baseline != e.Baseline {
-					add("evidence %s: baseline %s differs from fixture %s (%s)", e.ID, e.Baseline, fx.Name, fx.Baseline)
-				}
-			}
-		}
-	}
-	for card, guide := range cards {
-		if evByCard[card] == 0 {
-			add("guide %s: card %s has no evidence record", guide, card)
+		if !r.isRequiredTest(e.Test) {
+			add("evidence %s: test %s is in no fixture's required tests", e.ID, e.Test)
 		}
 	}
 
@@ -218,11 +158,6 @@ func (r *Repo) Check() []error {
 		}
 		if err := CheckFilter(c.AppliesWhen); err != nil {
 			add("checklist %s: %v", c.ID, err)
-		}
-		for _, t := range c.Tests {
-			if !r.isRequiredTest(t) {
-				add("checklist %s: test %s is in no fixture's required tests", c.ID, t)
-			}
 		}
 	}
 
@@ -264,14 +199,7 @@ func (r *Repo) Check() []error {
 		}
 	}
 
-	// Invalidations, retired, exceptions, fixtures.
-	for _, inv := range r.Invalidations {
-		for _, g := range inv.Guides {
-			if r.Guide(g) == nil {
-				add("invalidation %s: unknown guide %s", inv.ID, g)
-			}
-		}
-	}
+	// Retired, exceptions, fixtures.
 	live := r.liveIDs()
 	for _, x := range r.Retired {
 		if live[x.Kind][x.ID] {
@@ -295,15 +223,12 @@ func (r *Repo) Check() []error {
 			add("audit exception %s: expires must be within 30 days after added", x.Advisory)
 		}
 	}
-	for _, fx := range append(append([]Fixture{}, r.Fixtures...), r.HistoricalFixtures...) {
-		rev := r.Versions.Revision(fx.Baseline)
-		if rev == nil {
-			add("fixture %s: baseline %s unknown", fx.Name, fx.Baseline)
-			continue
-		}
-		for _, c := range fx.Exercises {
-			if _, ok := rev.Components[c]; !ok {
-				add("fixture %s: exercises %s, not in %s", fx.Name, c, fx.Baseline)
+	if rev := r.Versions.ActiveRevision(); rev != nil {
+		for _, fx := range r.Fixtures {
+			for _, c := range fx.Exercises {
+				if _, ok := rev.Components[c]; !ok {
+					add("fixture %s: exercises %s, not in %s", fx.Name, c, rev.ID)
+				}
 			}
 		}
 	}
@@ -386,14 +311,11 @@ func VersionMatches(match, doc, pin string) bool {
 	return true
 }
 
-// liveIDs returns the IDs currently in use, by retired kind.
+// liveIDs returns the IDs whose URLs or anchors readers may have saved, by retired kind.
 func (r *Repo) liveIDs() map[string]map[string]bool {
-	m := map[string]map[string]bool{"guide": {}, "question": {}, "card": {}, "checklist": {}, "evidence": {}, "reference": {}, "diagram": {}}
+	m := map[string]map[string]bool{"guide": {}, "card": {}, "checklist": {}}
 	for _, g := range r.Guides {
 		m["guide"][g.Meta.ID] = true
-		for _, q := range g.Meta.Questions {
-			m["question"][q.ID] = true
-		}
 		for _, c := range g.Cards {
 			m["card"][c.ID] = true
 		}
@@ -401,20 +323,8 @@ func (r *Repo) liveIDs() map[string]map[string]bool {
 	for _, c := range r.Checklist {
 		m["checklist"][c.ID] = true
 	}
-	for _, e := range r.Evidence {
-		m["evidence"][e.ID] = true
-	}
-	for _, e := range r.References.Entries {
-		m["reference"][e.ID] = true
-	}
-	for _, d := range r.Diagrams {
-		m["diagram"][d.ID] = true
-	}
 	return m
 }
-
-// LiveIDs is liveIDs for the history check.
-func (r *Repo) LiveIDs() map[string]map[string]bool { return r.liveIDs() }
 
 func (r *Repo) checkDashes() []error {
 	var errs []error

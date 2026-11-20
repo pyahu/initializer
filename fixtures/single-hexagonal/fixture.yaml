@@ -1,8 +1,6 @@
 # Fixture manifest. See CONTRIBUTING.md, "Fixtures".
 schema: initializer.pyahu.io/fixture/v1
 name: single-hexagonal
-baseline: v0.1-b2
-stage: 1
 options:
   apiVersion: initializer.pyahu.io/v1alpha1
   kind: Project

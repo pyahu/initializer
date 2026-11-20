@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://initializer.pyahu.io/schemas/versions.schema.json",
-  "title": "Baseline revisions",
+  "title": "The baseline",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -21,7 +21,8 @@
       "minItems": 1,
       "items": {
         "$ref": "#/$defs/revision"
-      }
+      },
+      "maxItems": 1
     }
   },
   "$defs": {
@@ -65,10 +66,7 @@
         "version",
         "kind",
         "managedBy",
-        "verifiedAt",
-        "guides",
-        "claims",
-        "qualification"
+        "verifiedAt"
       ],
       "properties": {
         "version": {
@@ -132,51 +130,6 @@
         "verifiedAt": {
           "type": "string",
           "minLength": 1
-        },
-        "guides": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "uniqueItems": true
-        },
-        "claims": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "common.schema.json#/$defs/capability"
-          },
-          "uniqueItems": true
-        },
-        "qualification": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "state",
-            "capabilities"
-          ],
-          "properties": {
-            "state": {
-              "enum": [
-                "provisional",
-                "partial",
-                "qualified"
-              ]
-            },
-            "capabilities": {
-              "type": "object",
-              "propertyNames": {
-                "$ref": "common.schema.json#/$defs/capability"
-              },
-              "additionalProperties": {
-                "type": "array",
-                "minItems": 1,
-                "items": {
-                  "type": "string"
-                }
-              }
-            }
-          }
         }
       },
       "allOf": [

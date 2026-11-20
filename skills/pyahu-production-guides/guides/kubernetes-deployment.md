@@ -6,7 +6,7 @@ Probes, shutdown, resources, rollouts, disruption, scaling and placement for a S
 
 On the web: https://initializer.pyahu.io/guides/kubernetes-deployment/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 10 claims: 1 reproduced, 9 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/kubernetes-deployment.yaml).
+**How this guide is proven.** 1 of 9 steps are tested here (1 tested claim: 1 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/kubernetes-deployment.yaml).
 
 The database fails over at 3 a.m. Thirty seconds later every pod of your service restarts at once and each one
 hits the database while it is still recovering. Next day a routine deploy returns a burst of 502s. Nothing in the
@@ -29,17 +29,17 @@ disruptions, scaling, placement and scheduled work. How the manifests are packag
 8. Where should scheduled jobs run?
 9. Why is my pod not ready?
 
-### Evidence by step
+### Tests by step
 
-- 1. What should each probe check?: 2 claims: 1 reproduced, 1 not exercised.
-- 2. How do I stop a pod without failing requests?: 1 claim: 1 not exercised.
-- 3. How much CPU and memory should the pod ask for?: 1 claim: 1 not exercised.
-- 4. How do I roll out a new version without losing capacity?: 1 claim: 1 not exercised.
-- 5. How do I survive node drains and cluster upgrades?: 1 claim: 1 not exercised.
-- 6. How should the service scale?: 1 claim: 1 not exercised.
-- 7. How do I keep replicas from failing together?: 1 claim: 1 not exercised.
-- 8. Where should scheduled jobs run?: 1 claim: 1 not exercised.
-- 9. Why is my pod not ready?: 1 claim: 1 not exercised.
+- 1. What should each probe check?: 1 tested claim: 1 reproduced.
+- 2. How do I stop a pod without failing requests?: not tested here.
+- 3. How much CPU and memory should the pod ask for?: not tested here.
+- 4. How do I roll out a new version without losing capacity?: not tested here.
+- 5. How do I survive node drains and cluster upgrades?: not tested here.
+- 6. How should the service scale?: not tested here.
+- 7. How do I keep replicas from failing together?: not tested here.
+- 8. Where should scheduled jobs run?: not tested here.
+- 9. Why is my pod not ready?: not tested here.
 
 ## 1. What should each probe check?
 

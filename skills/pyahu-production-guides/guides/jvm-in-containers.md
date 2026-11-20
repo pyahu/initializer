@@ -6,7 +6,7 @@ Size memory, CPU, GC and startup for a Java 25 service in a pod and prove each c
 
 On the web: https://initializer.pyahu.io/guides/jvm-in-containers/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 16 claims: 1 measured, 9 reproduced, 6 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/jvm-in-containers.yaml).
+**How this guide is proven.** 5 of 8 steps are tested here (10 tested claims: 1 measured, 9 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/jvm-in-containers.yaml).
 
 Your Spring Boot service runs fine on your laptop. In Kubernetes it restarts every few hours, takes ages to start
 and pauses for no reason. Usually the code is fine: the JVM is guessing the size of a machine it cannot see.
@@ -25,16 +25,16 @@ Each one takes a few minutes and the last section gives you the files to copy.
 7. What about native image, CRaC and Spring AOT?
 8. How long should Kubernetes wait for startup?
 
-### Evidence by step
+### Tests by step
 
-- 1. How much memory can the heap take?: 2 claims: 1 reproduced, 1 not exercised.
-- 2. Why did my pod get the slow garbage collector?: 4 claims: 4 reproduced.
-- 3. How many CPUs does the JVM think it has?: 2 claims: 1 reproduced, 1 not exercised.
-- 4. Which garbage collector should I use?: 1 claim: 1 not exercised.
-- 5. Where do JVM flags go: the image or the Deployment?: 2 claims: 1 reproduced, 1 not exercised.
-- 6. How do I make the service start faster?: 3 claims: 1 measured, 2 reproduced.
-- 7. What about native image, CRaC and Spring AOT?: 1 claim: 1 not exercised.
-- 8. How long should Kubernetes wait for startup?: 1 claim: 1 not exercised.
+- 1. How much memory can the heap take?: 1 tested claim: 1 reproduced.
+- 2. Why did my pod get the slow garbage collector?: 4 tested claims: 4 reproduced.
+- 3. How many CPUs does the JVM think it has?: 1 tested claim: 1 reproduced.
+- 4. Which garbage collector should I use?: not tested here.
+- 5. Where do JVM flags go: the image or the Deployment?: 1 tested claim: 1 reproduced.
+- 6. How do I make the service start faster?: 3 tested claims: 1 measured, 2 reproduced.
+- 7. What about native image, CRaC and Spring AOT?: not tested here.
+- 8. How long should Kubernetes wait for startup?: not tested here.
 
 ## 1. How much memory can the heap take?
 

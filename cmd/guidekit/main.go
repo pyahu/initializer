@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/pyahu/initializer/internal/evidence"
-	"github.com/pyahu/initializer/internal/ghapi"
 	"github.com/pyahu/initializer/internal/guidedata"
 	"github.com/pyahu/initializer/internal/linkcheck"
 	"github.com/pyahu/initializer/internal/references"
@@ -20,11 +19,10 @@ import (
 
 const usage = `guidekit <command> [flags]
 
-  check     [--base <sha>]           schemas, grammar, cross-refs, history
+  check     [--base <sha>]           schemas, grammar, cross-refs, retired URLs
   generate  [--check]                reference page, guides.json, fixture files, fixture references
-  qualify   [--check] --report <f>   recompute qualification from evidence (repeat --report per fixture)
-  report    fetch --workflow <file> [--branch main] [--commit HEAD] [--wait 10m] [--repo pyahu/initializer] --out <f>
   evidence  verify --fixture <name> [--go-test-json f] [--junit dir] [--sbom f] [--image ref] --out <f>
+                                     fail unless every required test passed and every pin matched
   site      [--dist guides/dist] [--site URL]   built site and llms exports
   links     [--dist guides/dist] [--site URL]   external links
   boms                               managedBy pins against Maven Central
@@ -77,62 +75,6 @@ func main() {
 			die(err)
 		}
 		fmt.Printf("generate: wrote %d files\n", len(out))
-	case "qualify":
-		fs := flag.NewFlagSet(cmd, flag.ExitOnError)
-		check := fs.Bool("check", false, "fail when versions.yaml disagrees instead of writing")
-		var reports multi
-		fs.Var(&reports, "report", "evidence report (repeatable)")
-		_ = fs.Parse(args)
-		r := mustLoad(root)
-		reps := map[string]*evidence.Report{}
-		for _, fx := range r.HistoricalFixtures {
-			reports = append(reports, filepath.Join(fx.Dir, "evidence-report.json"))
-		}
-		for _, p := range reports {
-			rep, err := evidence.ReadReport(r, p)
-			if err != nil {
-				die(err)
-			}
-			reps[rep.Key()] = rep
-		}
-		for _, fx := range r.Fixtures {
-			if reps[fx.Name+"@"+fx.Baseline] == nil {
-				die(fmt.Errorf("no evidence report for fixture %s", fx.Name))
-			}
-		}
-		q := evidence.Qualify(r, reps)
-		if *check {
-			if d := evidence.Differences(r, q); len(d) > 0 {
-				for _, s := range d {
-					fmt.Fprintln(os.Stderr, s)
-				}
-				die(fmt.Errorf("qualification is stale; run: go run ./cmd/guidekit qualify --report <report>"))
-			}
-			fmt.Println("qualify: versions.yaml agrees with the evidence")
-			return
-		}
-		if err := evidence.WriteQualification(r, q); err != nil {
-			die(err)
-		}
-		fmt.Println("qualify: wrote data/versions.yaml")
-	case "report":
-		if len(args) == 0 || args[0] != "fetch" {
-			die(fmt.Errorf("usage: guidekit report fetch ..."))
-		}
-		fs := flag.NewFlagSet("report fetch", flag.ExitOnError)
-		wf := fs.String("workflow", "", "workflow file name")
-		branch := fs.String("branch", "main", "branch")
-		repo := fs.String("repo", envOr("GITHUB_REPOSITORY", "pyahu/initializer"), "owner/name")
-		out := fs.String("out", "out/evidence-report.json", "output file")
-		commit := fs.String("commit", "HEAD", "checkout whose workflow inputs must match")
-		wait := fs.Duration("wait", 10*time.Minute, "time to wait for matching fixture evidence")
-		_ = fs.Parse(args[1:])
-		b, id, err := ghapi.FetchReport(*repo, *wf, *branch, ghapi.Token(), ghapi.FetchOptions{Root: root, Commit: *commit, Wait: *wait})
-		if err != nil {
-			die(err)
-		}
-		writeFile(*out, b)
-		fmt.Printf("report: run %d -> %s\n", id, *out)
 	case "evidence":
 		if len(args) == 0 || args[0] != "verify" {
 			die(fmt.Errorf("usage: guidekit evidence verify ..."))
@@ -187,11 +129,6 @@ func main() {
 	}
 }
 
-type multi []string
-
-func (m *multi) String() string     { return fmt.Sprint(*m) }
-func (m *multi) Set(s string) error { *m = append(*m, s); return nil }
-
 func mustLoad(root string) *guidedata.Repo {
 	r, errs, err := guidedata.Load(root)
 	if err != nil {
@@ -225,13 +162,6 @@ func abs(root, p string) string {
 		return p
 	}
 	return filepath.Join(root, p)
-}
-
-func envOr(k, def string) string {
-	if v := os.Getenv(k); v != "" {
-		return v
-	}
-	return def
 }
 
 func writeFile(p string, b []byte) {

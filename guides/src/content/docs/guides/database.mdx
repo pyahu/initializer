@@ -6,13 +6,6 @@ guide:
   id: database
   prefix: DB
   state: draft
-  baseline: v0.1-b2
-  components: [ spring-boot, spring-data, pgjdbc, liquibase, testcontainers, postgres-image, micrometer ]
-  verification:
-    run: https://github.com/pyahu/initializer/actions/runs/44589606611/attempts/1
-    commit: 7baa67bbf9418ddfd87bc65193bd87c93dce2016
-    date: "2026-11-19"
-    baseline: v0.1-b2
   questions:
     - id: DB-Q1
       text: "How many connections can my pods open?"

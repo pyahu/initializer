@@ -6,7 +6,7 @@ Turn on virtual threads in Spring Boot 4.1 and put back the limits that protect 
 
 On the web: https://initializer.pyahu.io/guides/virtual-threads/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 11 claims: 3 reproduced, 1 compiled, 7 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/virtual-threads.yaml).
+**How this guide is proven.** 3 of 8 steps are tested here (4 tested claims: 3 reproduced, 1 compiled). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/virtual-threads.yaml).
 
 You turn on virtual threads with one property and the benchmark looks great. Then production gets slower: the
 database pool is always full, a service you call starts failing and the slowest requests take longer than before.
@@ -25,16 +25,16 @@ default for most Spring Boot services, as long as you know what they stop doing 
 7. How do I call two services at once with one deadline?
 8. Is synchronized still a problem?
 
-### Evidence by step
+### Tests by step
 
-- 1. Should I turn on virtual threads?: 2 claims: 1 compiled, 1 not exercised.
-- 2. Why did latency get worse after I turned them on?: 1 claim: 1 not exercised.
-- 3. How do I keep a slow service from drowning in my calls?: 1 claim: 1 reproduced.
-- 4. Where does CPU heavy work go?: 3 claims: 2 reproduced, 1 not exercised.
-- 5. Why does my @Async code still run on old threads?: 1 claim: 1 not exercised.
-- 6. Why do my logs lose the trace ID in async work?: 1 claim: 1 not exercised.
-- 7. How do I call two services at once with one deadline?: 1 claim: 1 not exercised.
-- 8. Is synchronized still a problem?: 1 claim: 1 not exercised.
+- 1. Should I turn on virtual threads?: 1 tested claim: 1 compiled.
+- 2. Why did latency get worse after I turned them on?: not tested here.
+- 3. How do I keep a slow service from drowning in my calls?: 1 tested claim: 1 reproduced.
+- 4. Where does CPU heavy work go?: 2 tested claims: 2 reproduced.
+- 5. Why does my @Async code still run on old threads?: not tested here.
+- 6. Why do my logs lose the trace ID in async work?: not tested here.
+- 7. How do I call two services at once with one deadline?: not tested here.
+- 8. Is synchronized still a problem?: not tested here.
 
 ## 1. Should I turn on virtual threads?
 

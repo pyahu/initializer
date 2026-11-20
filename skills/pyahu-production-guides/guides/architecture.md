@@ -6,7 +6,7 @@ How a Spring Boot service is split into capabilities, what goes inside each one 
 
 On the web: https://initializer.pyahu.io/guides/architecture/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 10 claims: 4 compiled, 6 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/architecture.yaml).
+**How this guide is proven.** 4 of 8 steps are tested here (4 tested claims: 4 compiled). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/architecture.yaml).
 
 A new developer opens the service and asks where the order rules live. Someone answers "in OrderService, a bit in
 the controller and the SQL handles the rest". Every change touches five packages and nobody is sure what
@@ -27,16 +27,16 @@ are organised. For a wider look at other styles, read [Architecture styles compa
 7. How do tests keep the rules true?
 8. What can the tests not prove?
 
-### Evidence by step
+### Tests by step
 
-- 1. How should I split the service into parts?: 2 claims: 1 compiled, 1 not exercised.
-- 2. What goes inside each capability?: 1 claim: 1 not exercised.
-- 3. How does hexagonal work?: 1 claim: 1 compiled.
-- 4. How does DDD layered work?: 1 claim: 1 not exercised.
-- 5. Where does the transaction start?: 1 claim: 1 not exercised.
-- 6. How do I keep the domain free of Spring?: 1 claim: 1 compiled.
-- 7. How do tests keep the rules true?: 2 claims: 1 compiled, 1 not exercised.
-- 8. What can the tests not prove?: 1 claim: 1 not exercised.
+- 1. How should I split the service into parts?: 1 tested claim: 1 compiled.
+- 2. What goes inside each capability?: not tested here.
+- 3. How does hexagonal work?: 1 tested claim: 1 compiled.
+- 4. How does DDD layered work?: not tested here.
+- 5. Where does the transaction start?: not tested here.
+- 6. How do I keep the domain free of Spring?: 1 tested claim: 1 compiled.
+- 7. How do tests keep the rules true?: 1 tested claim: 1 compiled.
+- 8. What can the tests not prove?: not tested here.
 
 ## 1. How should I split the service into parts?
 

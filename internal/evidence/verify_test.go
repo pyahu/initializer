@@ -38,10 +38,10 @@ func TestPostgresEvidenceRequiresThePinnedTestImage(t *testing.T) {
 			write("Dockerfile", "FROM scratch\n")
 			write("junit/TEST-DatabaseRolesTest.xml", `<testsuite name="example.DatabaseRolesTest" tests="6" failures="0" errors="0" skipped="0"/>`)
 			r := &guidedata.Repo{
-				Versions: guidedata.Versions{Revisions: []guidedata.Revision{{ID: "v0.1-b2", Components: map[string]guidedata.Component{
+				Versions: guidedata.Versions{Active: "v0.1-b2", Revisions: []guidedata.Revision{{ID: "v0.1-b2", Components: map[string]guidedata.Component{
 					"postgres-image": {Kind: "image", Image: "postgres:18.6", Version: "18.6", Digest: digest},
 				}}}},
-				Fixtures: []guidedata.Fixture{{Name: "example", Dir: dir, Baseline: "v0.1-b2", Exercises: []string{"postgres-image"}, RequiredTests: []string{"gradle/example::DatabaseRolesTest"}}},
+				Fixtures: []guidedata.Fixture{{Name: "example", Dir: dir, Exercises: []string{"postgres-image"}, RequiredTests: []string{"gradle/example::DatabaseRolesTest"}}},
 			}
 			report, errs := Verify(r, VerifyInput{Fixture: "example", JUnitDir: filepath.Join(dir, "junit"), GradleOutcome: "success"})
 			if len(errs) != 0 {

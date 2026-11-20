@@ -6,7 +6,7 @@ Work queues and commands with Spring AMQP on Spring Boot 4.1, with no message lo
 
 On the web: https://initializer.pyahu.io/guides/rabbitmq/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 13 claims: 13 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/rabbitmq.yaml).
+**How this guide is proven.** None of its 8 steps is tested here yet. A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/rabbitmq.yaml).
 
 An order is paid, the service publishes "send the receipt" and moves on. The receipt never arrives. The broker
 restarted a second after the publish, the message lived only in memory and nobody noticed. A week later the
@@ -27,16 +27,16 @@ publisher knows it is not. A message that cannot be handled ends up somewhere yo
 7. How do I stop a queue from growing forever?
 8. What should I watch in production?
 
-### Evidence by step
+### Tests by step
 
-- 1. When should I use RabbitMQ instead of Kafka?: 2 claims: 2 not exercised.
-- 2. Which kind of queue should I declare?: 1 claim: 1 not exercised.
-- 3. How do I know the broker really has my message?: 2 claims: 2 not exercised.
-- 4. How many messages should a consumer take at once?: 2 claims: 2 not exercised.
-- 5. What happens when a message keeps failing?: 2 claims: 2 not exercised.
-- 6. Why was the same message processed twice?: 1 claim: 1 not exercised.
-- 7. How do I stop a queue from growing forever?: 1 claim: 1 not exercised.
-- 8. What should I watch in production?: 2 claims: 2 not exercised.
+- 1. When should I use RabbitMQ instead of Kafka?: not tested here.
+- 2. Which kind of queue should I declare?: not tested here.
+- 3. How do I know the broker really has my message?: not tested here.
+- 4. How many messages should a consumer take at once?: not tested here.
+- 5. What happens when a message keeps failing?: not tested here.
+- 6. Why was the same message processed twice?: not tested here.
+- 7. How do I stop a queue from growing forever?: not tested here.
+- 8. What should I watch in production?: not tested here.
 
 ## 1. When should I use RabbitMQ instead of Kafka?
 

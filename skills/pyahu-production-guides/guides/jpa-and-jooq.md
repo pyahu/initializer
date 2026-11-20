@@ -6,7 +6,7 @@ Choose between Spring Data JDBC, JPA and jOOQ and use each one well in productio
 
 On the web: https://initializer.pyahu.io/guides/jpa-and-jooq/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 13 claims: 13 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/jpa-and-jooq.yaml).
+**How this guide is proven.** None of its 8 steps is tested here yet. A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/jpa-and-jooq.yaml).
 
 The orders page was fast in review. In production it takes four seconds and the database log shows why: one
 query for the orders, then one more for every order on the page. Nobody wrote those queries. The mapping did.
@@ -26,16 +26,16 @@ that Liquibase owns. For pools, timeouts and migrations, read [the database guid
 7. What goes wrong in long transactions and entity caches?
 8. How do I use jOOQ with my migrations?
 
-### Evidence by step
+### Tests by step
 
-- 1. Spring Data JDBC, JPA or jOOQ: which one fits my service?: 2 claims: 2 not exercised.
-- 2. What does JPA do behind my back?: 2 claims: 2 not exercised.
-- 3. Why does one page run a hundred queries?: 2 claims: 2 not exercised.
-- 4. Why do queries run after my controller returns?: 1 claim: 1 not exercised.
-- 5. How do I read data without loading entities?: 1 claim: 1 not exercised.
-- 6. How do I write many rows fast?: 1 claim: 1 not exercised.
-- 7. What goes wrong in long transactions and entity caches?: 2 claims: 2 not exercised.
-- 8. How do I use jOOQ with my migrations?: 2 claims: 2 not exercised.
+- 1. Spring Data JDBC, JPA or jOOQ: which one fits my service?: not tested here.
+- 2. What does JPA do behind my back?: not tested here.
+- 3. Why does one page run a hundred queries?: not tested here.
+- 4. Why do queries run after my controller returns?: not tested here.
+- 5. How do I read data without loading entities?: not tested here.
+- 6. How do I write many rows fast?: not tested here.
+- 7. What goes wrong in long transactions and entity caches?: not tested here.
+- 8. How do I use jOOQ with my migrations?: not tested here.
 
 ## 1. Spring Data JDBC, JPA or jOOQ: which one fits my service?
 

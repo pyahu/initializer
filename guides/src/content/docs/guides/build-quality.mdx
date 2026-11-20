@@ -6,13 +6,6 @@ guide:
   id: build-quality
   prefix: BLD
   state: draft
-  baseline: v0.1-b2
-  components: [ java, temurin-jdk-image, gradle, spring-boot, spring-modulith, jmolecules-bom, error-prone, errorprone-gradle-plugin, nullaway, jspecify, spotless-gradle-plugin, palantir-java-format, cyclonedx-gradle-plugin, renovate ]
-  verification:
-    run: https://github.com/pyahu/initializer/actions/runs/43912675718/attempts/1
-    commit: f61ac7e840d9245b3ca833fa874374df26245cc0
-    date: "2026-11-16"
-    baseline: v0.1-b2
   questions:
     - id: BLD-Q1
       text: "How do I make sure every machine builds the same way?"

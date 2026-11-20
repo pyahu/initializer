@@ -169,8 +169,7 @@ func renderEntries(b *strings.Builder, r *guidedata.Repo, baseline string, es []
 // ReferencePage renders guides/src/content/docs/reference/docs.md for the active baseline.
 func ReferencePage(r *guidedata.Repo) ([]byte, error) {
 	active := r.Versions.Active
-	idx := r.Versions.RevisionIndex(active)
-	if idx < 0 {
+	if r.Versions.ActiveRevision() == nil {
 		return nil, fmt.Errorf("active baseline %s not found", active)
 	}
 	es := entriesFor(r, active, nil)
@@ -178,9 +177,6 @@ func ReferencePage(r *guidedata.Repo) ([]byte, error) {
 	b.WriteString("---\ntitle: Reference docs\ndescription: Official documentation for the exact versions the guides and the generator use.\ntableOfContents: { maxHeadingLevel: 2 }\n---\n\n")
 	b.WriteString(Header + "\n\n")
 	fmt.Fprintf(&b, "Baseline **%s**. The baseline version is what the examples use. The documentation pin is the version or release line the official site serves; a release line such as Spring Boot 4.1 follows its latest patch. Links that cannot be pinned say \"not version-pinned\".\n\n", active)
-	if gaps := ReferenceGaps(r); len(gaps) > 0 {
-		fmt.Fprintf(&b, ":::caution[Re-verify]\nThese components had entries in the previous baseline and have none in %s: %s.\n:::\n\n", active, strings.Join(gaps, ", "))
-	}
 	renderEntries(&b, r, active, es, "##")
 	b.WriteString("## By guide\n\n")
 	for _, g := range r.Guides {
@@ -212,43 +208,14 @@ func ReferencePage(r *guidedata.Repo) ([]byte, error) {
 	return []byte(b.String()), nil
 }
 
-// ReferenceGaps lists components of the active revision that had entries in the previous
-// revision and have none in the active one.
-func ReferenceGaps(r *guidedata.Repo) []string {
-	idx := r.Versions.RevisionIndex(r.Versions.Active)
-	if idx <= 0 {
-		return nil
-	}
-	prev := r.Versions.Revisions[idx-1].ID
-	had, has := map[string]bool{}, map[string]bool{}
-	for _, e := range r.References.Entries {
-		if e.Component == nil {
-			continue
-		}
-		if contains(e.Baselines, prev) {
-			had[*e.Component] = true
-		}
-		if contains(e.Baselines, r.Versions.Active) {
-			has[*e.Component] = true
-		}
-	}
-	var gaps []string
-	for c := range had {
-		if !has[c] {
-			gaps = append(gaps, c)
-		}
-	}
-	sort.Strings(gaps)
-	return gaps
-}
-
 // FixtureReferences renders fixtures/<name>/docs/references.md.
 func FixtureReferences(r *guidedata.Repo, fx guidedata.Fixture) ([]byte, error) {
-	es := entriesFor(r, fx.Baseline, fx.Options)
+	active := r.Versions.Active
+	es := entriesFor(r, active, fx.Options)
 	var b strings.Builder
 	b.WriteString(Header + "\n\n# References\n\n")
-	fmt.Fprintf(&b, "Official documentation for this project's versions (baseline %s), filtered to its options. Start here when you need the source for a decision.\n\n", fx.Baseline)
-	renderEntries(&b, r, fx.Baseline, es, "##")
+	fmt.Fprintf(&b, "Official documentation for this project's versions (baseline %s), filtered to its options. Start here when you need the source for a decision.\n\n", active)
+	renderEntries(&b, r, active, es, "##")
 	return []byte(b.String()), nil
 }
 
@@ -280,7 +247,7 @@ func FixtureFiles(r *guidedata.Repo) ([]byte, error) {
 				return nil, err
 			}
 			sum := sha256.Sum256(b)
-			byPath[rc.Path] = file{Path: rc.Path, Fixture: fx.Name, Baseline: fx.Baseline, Lang: rc.Lang, Sha256: hex.EncodeToString(sum[:])}
+			byPath[rc.Path] = file{Path: rc.Path, Fixture: fx.Name, Baseline: r.Versions.Active, Lang: rc.Lang, Sha256: hex.EncodeToString(sum[:])}
 		}
 	}
 	paths := make([]string, 0, len(byPath))

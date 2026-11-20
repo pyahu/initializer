@@ -1,8 +1,8 @@
 # Contributing
 
 The guides are the product, published as a public preview while their test coverage grows. Each step answers
-one question with the failure it prevents. Every claim has an evidence record: a test and result when exercised,
-or the source and reason it has not been exercised. `guidekit` enforces the rules below; CI runs it on every change.
+one question with the failure it prevents. A claim tested here has an evidence record naming its test; the rest
+rests on the official documentation each guide lists. `guidekit` enforces the rules below; CI runs it on every change.
 
 ## Toolchain
 
@@ -50,11 +50,11 @@ go run ./cmd/runworkflow -dir orders             # the generated project's own C
 | Path | What |
 | ---- | ---- |
 | `guides/` | Astro and Starlight site: pages, components, diagrams |
-| `data/versions.yaml` | Baseline revisions: every pinned version and its qualification |
+| `data/versions.yaml` | The baseline: every pinned version |
 | `data/references.yaml` | Official documentation per component and baseline |
 | `data/checklist.yaml` | Checklist items of every guide |
 | `data/evidence/<guide>.yaml` | Evidence records, one claim each |
-| `data/invalidations.yaml`, `retired.yaml` | Open invalidations; retired stable IDs |
+| `data/retired.yaml` | Retired guides, steps and checklist items, so their links keep working |
 | `data/link-exceptions.yaml`, `audit-exceptions.yaml` | Expiring exceptions for the link check and `npm audit` |
 | `data/schemas/` | JSON Schema 2020-12 for every data file, the guide frontmatter and fixtures |
 | `fixtures/<name>/` | Services written by hand that prove the guides |
@@ -68,21 +68,22 @@ go run ./cmd/runworkflow -dir orders             # the generated project's own C
 
 - YAML is strict: no duplicate keys, no anchors or aliases, no non-string keys. Quote dates and
   versions (`"2026-10-17"`, `"1.10"`). Every object rejects unknown fields.
-- Stable IDs never change and are never reused:
+- IDs:
 
   | ID | Format | Example |
   | -- | ------ | ------- |
   | guide | kebab-case | `jvm-in-containers` |
   | guide prefix | 2 to 5 capitals | `JVM` |
   | question | `<prefix>-Q<n>` | `JVM-Q1` |
-  | card | `<prefix lowercase>-<kebab>` | `jvm-heap-sizing` |
+  | card (a step) | `<prefix lowercase>-<kebab>` | `jvm-heap-sizing` |
   | checklist item | `<prefix>-<two digits>` | `JVM-03` |
   | evidence record | `ev-<card>-<n>` | `ev-jvm-heap-sizing-1` |
   | reference entry, diagram | kebab-case | `jvm-container-memory` |
-  | baseline revision | `<release>-b<n>` | `v0.1-b1` |
+  | baseline | `<release>-b<n>` | `v0.1-b2` |
 
-- Removing or renaming an ID fails unless `data/retired.yaml` gains a record in the same change
-  (`id`, `kind`, `retired`, `reason` and `replacedBy` for a guide or card). A retired card keeps
+- Guides, cards and checklist items are in URLs and anchors readers save. Removing or renaming one fails unless
+  `data/retired.yaml` gains a record in the same change (`id`, `kind`, `retired`, `reason` and `replacedBy` for a
+  guide or card). The other IDs may change freely. A retired card keeps
   `<a id="<old>"></a>` before its replacement's anchor, so deep links keep working.
 - No em or en dashes anywhere in guides or data.
 
@@ -133,65 +134,46 @@ must match exactly one line. The complete file is published at `/fixtures/<path>
 
 ## Evidence
 
-One record states one claim, in `data/evidence/<guide>.yaml`:
+Only tested claims get a record, in `data/evidence/<guide>.yaml`:
 
 ```yaml
 - id: ev-jvm-heap-sizing-1
   card: jvm-heap-sizing
   claim: "With -XX:MaxRAMPercentage=75 and a 1 GiB memory limit, MaxHeapSize is 805306368 bytes."
   badge: reproduced
-  capabilities: [runtime]
-  components: [temurin-jre-image]
-  baseline: v0.1-b1
-  fixture: single-hexagonal
   test: acceptance/jvm::TestHeapIsSeventyFivePercent
-  commands: ["go test -tags acceptance -count=1 -run '^TestHeapIsSeventyFivePercent$' ./acceptance/jvm"]
-  environment: "GitHub-hosted ubuntu-24.04 x64, Docker"
-  run: https://github.com/pyahu/initializer/actions/runs/<id>/attempts/<n>
-  commit: <40-hex sha>
-  date: "2026-10-17"
-  result: "MaxHeapSize = 805306368"
-  limitations: "Flags only."
+  result: "--memory=1g -XX:MaxRAMPercentage=75: MaxHeapSize = 805306368"
+  limitations: "Flags only. Native memory under load is not measured here."
 ```
 
-| Badge | May claim |
-| ----- | --------- |
-| `compiled` | `compile`, `test` |
-| `reproduced` | `test`, `image`, `runtime` |
-| `measured` | `runtime`; needs `measurement` |
-| `cluster-run` | `cluster`; needs `cluster` |
-| `not-exercised` | nothing; needs `reason` and has no run fields |
+| Badge | Means |
+| ----- | ----- |
+| `compiled` | the code the claim is about builds and loads |
+| `reproduced` | a test observes the behaviour |
+| `measured` | a recorded measurement; also needs `measurement`, `result`, `run` and `date`, because the numbers belong to that run |
 
-`result` is the decisive output, inline, because run logs expire. Every step has at least one
-record. Each guide shows its coverage at the top and by step, with a link to these records for the results and
-limitations. The Agent Skill and llms exports carry the same coverage. A record counts toward qualification only when its test is in the fixture's
-`requiredTests` and passed in the latest completed fixture run on `main`.
+`test` must be in a fixture's `requiredTests`. The fixture workflow runs every required test on every change and
+fails when one does not pass, so a record is true for as long as `main` is green; there is nothing to record by
+hand after a run. `result` says what the test observes, `limitations` what it does not prove.
+
+A step without a record is explained from the official documentation the guide lists and from our practice. Each
+guide says at the top and by step which steps are tested here; the Agent Skill and llms exports say the same.
+
+Test what protects a reader most: database permissions, migrations, authentication, startup and failure handling.
+For a library default, cite its official documentation instead of reproducing it.
 
 ## Baselines
 
 The process, step by step, is public at https://initializer.pyahu.io/maintenance/. Renovate
 (`renovate.json`) opens pull requests for tooling only; baseline and toolchain updates wait on the
-Dependency Dashboard for the next revision.
+Dependency Dashboard.
 
-`data/versions.yaml` holds revisions, oldest first; `active` is the one the site and new
-fixtures use. A revision is frozen once it is on `main`: a bump is a new revision appended to
-the list. Only each component's `qualification` block changes and only through
-`guidekit qualify --report <evidence-report.json>`, which sets `qualified` when every claim has
-an eligible record, `partial` when some do, `provisional` when none do.
-
-Before moving an existing fixture to a new revision, save its manifest, evidence records (one file per guide under
-`evidence/`) and a real passing `evidence-report.json` in `data/history/<baseline>/<fixture>/`. Qualification loads
-these reports automatically and checks them against their saved inventories and pins. Current and historical
-reports are keyed by fixture and revision: a new run cannot erase an older qualification or qualify it by accident.
-Do not copy a qualification to a new revision; it starts provisional until its own evidence passes.
+`data/versions.yaml` holds the one baseline the guides, the fixture and the generator use. Update the pins in
+place and give it a new `id` (`v0.1-b3` after `v0.1-b2`); git keeps the earlier lists. The fixture's CI fails
+when a resolved version, image digest or `java -version` differs from it.
 
 A pin with `managedBy` must equal what the managing BOM gives its `coordinates`; `guidekit boms`
 checks this weekly.
-
-A guide shows "Re-verify" when a later revision changed one of its components or an open
-invalidation names it and "Stale" when its baseline is more than two revisions behind
-`active`. Clear it by moving `baseline` forward after a passing run and recording
-`verification`.
 
 ## References
 
@@ -203,8 +185,7 @@ the old one keeps its list. `baselines: []` marks documents for later releases.
 ## Checklist
 
 Items in `data/checklist.yaml` have a `type` (`generated-config`, `verified-behaviour`,
-`deployment-prerequisite`, `operator-task`) and a `claim`: `documented` or `enforced` with the
-required tests that fail when the behaviour breaks. `appliesWhen` filters by project options:
+`deployment-prerequisite`, `operator-task`). `appliesWhen` filters by project options:
 keys combine with AND, values with OR, `{}` means always.
 
 ## Generated files
@@ -219,15 +200,14 @@ keys combine with AND, values with OR, `{}` means always.
 
 ## Fixtures
 
-`fixtures/<name>/fixture.yaml` sets the baseline, the project options, the components the
+`fixtures/<name>/fixture.yaml` sets the project options, the components the
 fixture `exercises` and its `requiredTests`. The fixture workflow builds it inside the pinned
 JDK image, builds the image, runs the acceptance tests and runs `guidekit evidence verify`,
 which fails when a required test is missing, skipped or failed or when a resolved version,
 image digest or `java -version` differs from the baseline. It uploads `evidence-report` even
 when it fails.
 
-To add a claim: write the test, add it to `requiredTests`, push and record the run in the
-evidence file from the report.
+To add a tested claim: write the test, add it to `requiredTests` and add the record in the same change.
 
 The single-hexagonal fixture's `DatabaseRolesTest` runs PostgreSQL as a test container, using the role script and
 changelog from `templates/postgres/`. Its database dependencies are test-only: the service image used by JVM and
@@ -254,7 +234,7 @@ rendering, so `spotlessCheck` passes for any package. `frontends/web/src/api/sch
 
 Core Java platform versions come from the active baseline when a project is generated. Frontend packages and
 auxiliary build tools have exact pins in their lockfiles, Dockerfiles and workflows; update their related copies
-together and run the generator matrix. These pins are not qualified by the Java fixture report. The
+together and run the generator matrix. The Java fixture does not test these pins. The
 exceptions are tooling that Renovate updates: the generated workflow's action SHAs, the frontend's npm packages
 and lock files, its Node image (listed only, like a toolchain) and the mock identity provider of `compose.yml` and
 the smoke test. Tests keep the kustomize image on the baseline's kustomize version and each image pinned in
@@ -298,12 +278,11 @@ This replaces the source compilation stage with the tested artifact and avoids a
 The same Dockerfile still performs extraction and AOT training and assembles the runtime image. Without the
 named context, ordinary image builds compile from source as before. Both paths are exercised locally.
 
-Guide qualification can wait up to 25 minutes for the matching fixture, and publication up to 30 minutes for
-all required workflows. Earlier fixture-attempt artifacts never replace the selected attempt's report.
+Publication waits up to 30 minutes for the required workflows.
 
 | Workflow | Does |
 | -------- | ---- |
-| `guides.yml` | clean checkout, `go test`, `check`, `generate --check`, `qualify --check`, `npm audit`, site build, `site` |
+| `guides.yml` | clean checkout, `go test`, `check`, `generate --check`, `npm audit`, site build, `site` |
 | `links.yml` | external links and BOM pins, also weekly |
 | `fixture-single-hexagonal.yml` | fixture build, image, acceptance tests, evidence report |
 | `start.yml` | the Initializer service: Gradle build in the pinned JDK, convention plugin tests, image, smoke; then every combination generated through the API, built, rendered, imaged and started by its own workflow |
@@ -332,8 +311,6 @@ Windows wrappers are stored with LF in Git and checked out with CRLF, as `.gitat
 existing files with `git add --renormalize` when applying text attributes: an unnormalized blob can make a fresh
 clone dirty and block every Workers build. The Guides workflow checks that the checkout starts clean.
 
-The fixture report fetch uses the same input comparison and waits for the matching run instead of borrowing an
-older completed report. It verifies the artifact's run ID, attempt and source commit before qualification.
 Workers Builds still builds separately from GitHub Actions, but its deploy command now enforces their results.
 For a local packaging check after building, run `cd guides && npx wrangler deploy --dry-run`.
 Initial publication requires creating the Worker and applying its custom domain in the hosting account.

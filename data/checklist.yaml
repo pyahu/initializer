@@ -1,2210 +1,1657 @@
-# Checklist records. See CONTRIBUTING.md, "Checklist". Ported from the source guides'
-# checklists; every item is documented, none is enforced by a generated test yet.
+# Checklist items of every guide. See CONTRIBUTING.md, "Checklist".
 - id: JVM-01
   guide: jvm-in-containers
   card: jvm-heap-sizing
   type: generated-config
   text: Memory request equals memory limit.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: JVM-02
   guide: jvm-in-containers
   card: jvm-heap-sizing
   type: generated-config
   text: MaxRAMPercentage set from the table, InitialRAMPercentage equal to it.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: JVM-03
   guide: jvm-in-containers
   card: jvm-gc-explicit
   type: generated-config
   text: GC flag explicit in the ENTRYPOINT (-XX:+UseG1GC unless ZGC or Parallel is documented).
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: JVM-04
   guide: jvm-in-containers
   card: jvm-cpu-count
   type: generated-config
   text: No CPU limit and ActiveProcessorCount equal to the CPU request rounded up, at least 2; with a CPU limit, no ActiveProcessorCount.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: JVM-05
   guide: jvm-in-containers
   card: jvm-heap-sizing
   type: generated-config
   text: ExitOnOutOfMemoryError set; heap dumps only to a volume larger than the heap.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: JVM-06
   guide: jvm-in-containers
   card: jvm-flag-placement
   type: generated-config
   text: java.io.tmpdir and ErrorFile point at the writable /tmp volume, with ErrorFile on the ENTRYPOINT.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: JVM-07
   guide: jvm-in-containers
   card: jvm-aot-cache
   type: generated-config
   text: AOT cache built in the image from the extracted layout, without --launcher, with remote calls disabled in the training run.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: JVM-08
   guide: jvm-in-containers
   card: jvm-aot-cache
   type: verified-behaviour
   text: CI fails the build if the cache is rejected (-XX:AOTMode=on check).
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: JVM-09
   guide: jvm-in-containers
   card: jvm-aot-cache
   type: generated-config
   text: Flags that affect the cache (GC, compact headers) are identical in training and production.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: JVM-10
   guide: jvm-in-containers
   card: jvm-startup-probe
   type: deployment-prerequisite
   text: startupProbe budget about three times measured p99 startup on the smallest node type, measured with the AOT cache.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: JVM-11
   guide: jvm-in-containers
   card: jvm-heap-sizing
   type: operator-task
   text: Confirm the heap percentage with Native Memory Tracking under load after each JDK or Boot upgrade.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: OBS-01
   guide: observability
   card: obs-starter-not-agent
   type: generated-config
   text: spring-boot-starter-opentelemetry on the classpath; no -javaagent and no agent injected through JAVA_TOOL_OPTIONS.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: OBS-02
   guide: observability
   card: obs-otlp-config
   type: generated-config
   text: spring.application.name, service.version and deployment.environment.name set.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: OBS-03
   guide: observability
   card: obs-otlp-config
   type: deployment-prerequisite
   text: OTEL_EXPORTER_OTLP_ENDPOINT points at the collector in each environment.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: OBS-04
   guide: observability
   card: obs-sampling
   type: generated-config
   text: management.tracing.sampling.probability chosen deliberately (1.0 with tail sampling).
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: OBS-05
   guide: observability
   card: obs-metric-shape
   type: generated-config
   text: management.otlp.metrics.export.base-time-unit is seconds.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: OBS-06
   guide: observability
   card: obs-metric-shape
   type: generated-config
   text: Histograms on http.server.requests and http.client.requests; explicit SLO buckets for SLI thresholds.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: OBS-07
   guide: observability
   card: obs-metric-shape
   type: verified-behaviour
   text: No unbounded tag values; HTTP clients use URI templates and auto-configured builders only.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: OBS-08
   guide: observability
   card: obs-logs-otlp
   type: generated-config
   text: Logback OpenTelemetry appender installed or stdout JSON collected by an agent, not both.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: OBS-09
   guide: observability
   card: obs-collector
   type: deployment-prerequisite
   text: A collector gateway with memory limiter first, Kubernetes metadata, PII transform, tail sampling, batch and retry.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: OBS-10
   guide: observability
   card: obs-correlation
   type: deployment-prerequisite
   text: Grafana data sources linked from exemplars to traces, traces to logs and metrics and logs back to traces.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: OBS-11
   guide: observability
   card: obs-actuator
   type: generated-config
   text: Actuator on port 8081, exposure limited to health and info (plus prometheus when scraped), health details hidden.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: OBS-12
   guide: observability
   card: obs-actuator
   type: deployment-prerequisite
   text: No NetworkPolicy rule admits port 8081.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: VT-01
   guide: virtual-threads
   card: vt-enable
   type: generated-config
   text: spring.threads.virtual.enabled is true only for I/O bound services; the decision is recorded.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: VT-02
   guide: virtual-threads
   card: vt-resource-limits
   type: generated-config
   text: HikariCP maximum-pool-size comes from the database connection budget; connection-timeout is 5 s or less.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: VT-03
   guide: virtual-threads
   card: vt-downstream-limits
   type: verified-behaviour
   text: Each downstream client shares a concurrency limit with explicit rejection; any waiting queue is bounded with an admission deadline, and outbound calls have connect and read timeouts.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: VT-04
   guide: virtual-threads
   card: vt-cpu-work
   type: verified-behaviour
   text: CPU heavy work runs on a platform pool sized to the cores with a bounded queue and explicit rejection.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: VT-05
   guide: virtual-threads
   card: vt-cpu-work
   type: deployment-prerequisite
   text: Pod CPU request of at least 1; either -XX:ActiveProcessorCount of at least 2 with no CPU limit or a CPU limit of at least 2.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: VT-06
   guide: virtual-threads
   card: vt-executors
   type: verified-behaviour
   text: No custom executor bean silently replaces the virtual thread @Async executor; spring.main.keep-alive is true for apps without a web server.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: VT-07
   guide: virtual-threads
   card: vt-context
   type: verified-behaviour
   text: MDC, security and trace context are propagated across async boundaries; no business logic relies on ThreadLocal caching.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: VT-08
   guide: virtual-threads
   card: vt-fan-out
   type: verified-behaviour
   text: Fan out uses a long lived, context wrapped executor and cancels the tasks that miss the deadline.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: VT-09
   guide: virtual-threads
   card: vt-pinning
   type: operator-task
   text: A JFR pinning check runs once under load; dashboards show pool pending connections and GC.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: DB-01
   guide: database
   card: db-connection-budget
   type: deployment-prerequisite
   text: "Connection budget computed: every pool times HPA maximum, surge and draining pods, plus migrations and admin, fits the user connections of each database server."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: DB-02
   guide: database
   card: db-connection-budget
   type: generated-config
   text: "Fixed pool: maximum-pool-size equals minimum-idle, 10 or less unless measured otherwise."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: DB-03
   guide: database
   card: db-pool-timeouts
   type: generated-config
   text: "connection-timeout between 2000 and 5000 ms, max-lifetime below every connection age cap, keepalive-time below network idle timeouts, leak-detection-threshold set."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: DB-04
   guide: database
   card: db-query-timeouts
   type: generated-config
   text: "spring.transaction.default-timeout and spring.jdbc.template.query-timeout set."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: DB-05
   guide: database
   card: db-query-timeouts
   type: deployment-prerequisite
   text: "Runtime role has statement_timeout and idle_in_transaction_session_timeout."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: DB-06
   guide: database
   card: db-roles
   type: deployment-prerequisite
   text: "Separate migration and runtime users; the runtime user cannot change the schema or write Liquibase history/lock tables, and can read history for readiness."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: DB-07
   guide: database
   card: db-migrations
   type: generated-config
   text: "Migrations run in a Job before the rollout; the application sets spring.liquibase.enabled to false."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: DB-08
   guide: database
   card: db-expand-contract
   type: operator-task
   text: "Every schema change reviewed as expand and contract; no rename or drop in the same release as the code change."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: DB-09
   guide: database
   card: db-expand-contract
   type: generated-config
   text: "Transactional changesets start with SET LOCAL lock_timeout; changesets that ran are never edited."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: DB-10
   guide: database
   card: db-testing
   type: verified-behaviour
   text: "Integration tests run the real changelog on Testcontainers with the production PostgreSQL major version."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: DB-11
   guide: database
   card: db-pool-metrics
   type: operator-task
   text: "Alerts on hikaricp.connections.pending and hikaricp.connections.timeout."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: DB-12
   guide: database
   card: db-pool-metrics
   type: operator-task
   text: "Point in time restore rehearsed in the last quarter."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: HTTP-01
   guide: http-clients
   card: http-client-choice
   type: generated-config
   text: RestClient and HTTP Service Clients for new code; no new RestTemplate usage.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-02
   guide: http-clients
   card: http-client-choice
   type: generated-config
   text: One @ImportHttpServices group per downstream system, with base-url from configuration.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-03
   guide: http-clients
   card: http-client-choice
   type: generated-config
   text: redirects dont-follow for calls between services, plus a status handler that rejects 3xx.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-04
   guide: http-clients
   card: http-timeouts
   type: generated-config
   text: spring.http.clients connect-timeout and read-timeout set globally, tighter per group.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-05
   guide: http-clients
   card: http-timeouts
   type: generated-config
   text: HTTP library chosen explicitly with spring.http.clients.imperative.factory.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-06
   guide: http-clients
   card: http-pool
   type: generated-config
   text: Apache pool with maxConnPerRoute at or above the concurrency limit, a connection request timeout of 1 s or less and a connection TTL.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-07
   guide: http-clients
   card: http-deadline
   type: verified-behaviour
   text: Each attempt is bounded by the client; the retry timeout plus one attempt fits the caller's own timeout.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-08
   guide: http-clients
   card: http-retry
   type: generated-config
   text: "@EnableResilientMethods present whenever @Retryable or @ConcurrencyLimit is used."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-09
   guide: http-clients
   card: http-retry
   type: generated-config
   text: Every @Retryable sets includes, maxRetries of 2 or less, multiplier, jitter and timeout.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-10
   guide: http-clients
   card: http-retry
   type: verified-behaviour
   text: Only one layer in the call chain retries a given dependency.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-11
   guide: http-clients
   card: http-idempotency
   type: verified-behaviour
   text: POST and PATCH are retried only with an idempotency key created outside the retry.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-12
   guide: http-clients
   card: http-bulkhead
   type: generated-config
   text: "@ConcurrencyLimit with policy REJECT on the class for each downstream system, rejection mapped to 503 or 429."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-13
   guide: http-clients
   card: http-bulkhead
   type: deployment-prerequisite
   text: Circuit breaker or rate limiter only with a written reason, using resilience4j-spring-boot4.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-14
   guide: http-clients
   card: http-bulkhead
   type: verified-behaviour
   text: Fallbacks never invent business results.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: HTTP-15
   guide: http-clients
   card: http-observability
   type: generated-config
   text: Clients come from Boot builders or HTTP Service groups, with histograms on http.client.requests.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-01
   guide: configuration
   card: cfg-one-file
   type: generated-config
   text: "Single application.yaml with production safe defaults; no dev, qa or prod profiles."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-02
   guide: configuration
   card: cfg-typed-properties
   type: generated-config
   text: "All app settings bound through @ConfigurationProperties records with @Validated, @Valid on nested records and @DefaultValue for defaults."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-03
   guide: configuration
   card: cfg-placeholder-guard
   type: generated-config
   text: "Secret components guarded against unresolved placeholders, with no other format constraint and toString() overridden."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-04
   guide: configuration
   card: cfg-typed-properties
   type: generated-config
   text: "@ConfigurationPropertiesScan enabled; configuration processor on the annotation processor path."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-05
   guide: configuration
   card: cfg-one-file
   type: deployment-prerequisite
   text: "Per environment values in a versioned ConfigMap loaded with envFrom; a config change triggers a rollout."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-06
   guide: configuration
   card: cfg-env-names
   type: deployment-prerequisite
   text: "enableServiceLinks: false on every pod spec."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-07
   guide: configuration
   card: cfg-secrets-as-files
   type: deployment-prerequisite
   text: "Secrets in a vault, mounted by the CSI driver with a workload identity; spring.config.import: optional:configtree:..."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-08
   guide: configuration
   card: cfg-secrets-as-files
   type: deployment-prerequisite
   text: "No secretObjects sync unless something other than the app needs a Kubernetes Secret."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-09
   guide: configuration
   card: cfg-secrets-as-files
   type: deployment-prerequisite
   text: "Token authentication preferred over stored secrets for databases and cloud services."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-10
   guide: configuration
   card: cfg-restart-to-reload
   type: operator-task
   text: "Secret rotation runbook: add the new credential, update the vault, roll the pods, revoke the old one."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-11
   guide: configuration
   card: cfg-secret-exposure
   type: generated-config
   text: "management.endpoint.env.show-values and configprops.show-values are never or a SanitizingFunction bean exists."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-12
   guide: configuration
   card: cfg-secret-exposure
   type: generated-config
   text: "Only health and info exposed over the web, on the management port."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-13
   guide: configuration
   card: cfg-secret-exposure
   type: deployment-prerequisite
   text: "No secret in manifests, images, ConfigMaps, logs or exception messages."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-14
   guide: configuration
   card: cfg-typed-properties
   type: verified-behaviour
   text: "An invalid setting makes the application context fail to start."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CFG-15
   guide: configuration
   card: cfg-feature-flags
   type: operator-task
   text: "Feature flags evaluated through OpenFeature with safe defaults; stale flags removed."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: SEC-01
   guide: security
   card: sec-token-audience
   type: generated-config
   text: "issuer-uri and audiences set; jws-algorithms explicit."
-  claim: documented
-  tests: []
   appliesWhen: {auth: [true]}
 - id: SEC-02
   guide: security
   card: sec-authorities
   type: generated-config
   text: "scp mapped to SCOPE_ and roles to ROLE_; oid as the principal; the API registration issues v2 tokens."
-  claim: documented
-  tests: []
   appliesWhen: {auth: [true]}
 - id: SEC-03
   guide: security
   card: sec-deny-default
   type: generated-config
   text: "The API chain ends with anyRequest().denyAll(); business rules use @PreAuthorize; a catch-all handler rethrows security exceptions."
-  claim: documented
-  tests: []
   appliesWhen: {auth: [true]}
 - id: SEC-04
   guide: security
   card: sec-csrf-cors
   type: generated-config
   text: "Stateless sessions; CSRF off only because no endpoint uses cookie authentication; CORS with exact origins or none."
-  claim: documented
-  tests: []
   appliesWhen: {auth: [true]}
 - id: SEC-05
   guide: security
   card: sec-headers
   type: verified-behaviour
   text: "Content-Security-Policy, Referrer-Policy and HSTS present on responses through the ingress."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: SEC-06
   guide: security
   card: sec-headers
   type: deployment-prerequisite
   text: "server.forward-headers-strategy pinned; server.tomcat.remoteip.internal-proxies narrowed to the ingress addresses."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: SEC-07
   guide: security
   card: sec-errors
   type: generated-config
   text: "spring.web.error.* at defaults; spring.mvc.problemdetails.enabled true; a catch-all handler returns a fixed text."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: SEC-08
   guide: security
   card: sec-errors
   type: generated-config
   text: "Validation 400s carry errors with field and message, never the rejected value; request sizes bounded on purpose."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: SEC-09
   guide: security
   card: sec-ssrf
   type: generated-config
   text: "URLs that users supply go through a client with InetAddressFilter.externalAddresses(), no redirects and https only."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: SEC-10
   guide: security
   card: sec-pod-hardening
   type: generated-config
   text: "Pod runs non-root with a read-only root filesystem and /tmp emptyDir, drops ALL capabilities, uses RuntimeDefault and mounts no service account token."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: SEC-11
   guide: security
   card: sec-pod-hardening
   type: deployment-prerequisite
   text: "The namespace enforces Pod Security restricted; a NetworkPolicy denies by default with explicit allows and blocks 169.254.169.254."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-01
   guide: container-image
   card: img-layers
   type: generated-config
   text: "Dockerfile with several stages; no JDK, Gradle or source code in the final image."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-02
   guide: container-image
   card: img-layers
   type: generated-config
   text: "extract --layers without --launcher; layers copied dependencies, loader, snapshots, application."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-03
   guide: container-image
   card: img-layers
   type: verified-behaviour
   text: "AOT cache trained in the runtime stage with remote calls disabled; CI fails if -XX:AOTMode=on rejects it."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-04
   guide: container-image
   card: img-pinning
   type: generated-config
   text: "Base images pinned as tag@sha256:digest in plain FROM lines with the distro codename in the tag, auxiliary images included."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-05
   guide: container-image
   card: img-pinning
   type: deployment-prerequisite
   text: "Every workload running the app image (Deployment, migration Job, CronJob) references the release digest, not a tag."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-06
   guide: container-image
   card: img-pinning
   type: operator-task
   text: "Renovate or Dependabot updates base digests and action SHAs; JDK major bumps blocked."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-07
   guide: container-image
   card: img-non-root
   type: generated-config
   text: "Numeric non-root USER 10001:10001 and exec form ENTRYPOINT."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-08
   guide: container-image
   card: img-non-root
   type: deployment-prerequisite
   text: "Runs with readOnlyRootFilesystem: true and /tmp as an emptyDir with a sizeLimit."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-09
   guide: container-image
   card: img-build-context
   type: generated-config
   text: "Allow list .dockerignore; no secrets through ARG or ENV."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-10
   guide: container-image
   card: img-sbom
   type: generated-config
   text: "CycloneDX plugin applied; app SBOM written by the build. /actuator/sbom not exposed by default; if it is, management port only and authenticated."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-11
   guide: container-image
   card: img-sbom
   type: operator-task
   text: "Image SBOM (Syft, CycloneDX) attached as a signed attestation."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-12
   guide: container-image
   card: img-scanning
   type: operator-task
   text: "Trivy or Grype gate on fixable high and critical findings in CI; a registry or cluster scanner rescans shipped images."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: IMG-13
   guide: container-image
   card: img-signing
   type: deployment-prerequisite
   text: "Image signed by digest in CI; Deployments reference digests; an admission policy verifies the signature."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-01
   guide: kubernetes-deployment
   card: kube-probes
   type: generated-config
   text: /livez and /readyz served on the main port (add-additional-paths) and open to the kubelet without authentication.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-02
   guide: kubernetes-deployment
   card: kube-probes
   type: generated-config
   text: Liveness group holds livenessState only; no database, broker or HTTP dependency.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-03
   guide: kubernetes-deployment
   card: kube-probes
   type: generated-config
   text: Readiness group holds readinessState; any added dependency is local to the pod and documented.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-04
   guide: kubernetes-deployment
   card: kube-probes
   type: generated-config
   text: Probe timeoutSeconds is at least 2; startupProbe instead of initialDelaySeconds.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-05
   guide: kubernetes-deployment
   card: kube-graceful-shutdown
   type: generated-config
   text: preStop sleep of at least 10 s with the native sleep action.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-06
   guide: kubernetes-deployment
   card: kube-graceful-shutdown
   type: generated-config
   text: timeout-per-shutdown-phase set to 20s and terminationGracePeriodSeconds at least preStop plus the phase timeout plus 15 s.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-07
   guide: kubernetes-deployment
   card: kube-resources
   type: generated-config
   text: Memory request equals memory limit; CPU request set and no CPU limit or a documented reason for one.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-08
   guide: kubernetes-deployment
   card: kube-rollout
   type: generated-config
   text: maxSurge 1, maxUnavailable 0 and minReadySeconds set; no spec.replicas when an autoscaler exists.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-09
   guide: kubernetes-deployment
   card: kube-disruption
   type: generated-config
   text: PodDisruptionBudget with maxUnavailable 1 and unhealthyPodEvictionPolicy AlwaysAllow.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-10
   guide: kubernetes-deployment
   card: kube-autoscaling
   type: generated-config
   text: HorizontalPodAutoscaler with explicit behavior and a capped scale up; minReplicas at least 3 in production; one autoscaler per Deployment.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-11
   guide: kubernetes-deployment
   card: kube-spread
   type: generated-config
   text: Zone spread with DoNotSchedule and node spread with ScheduleAnyway, both with matchLabelKeys pod-template-hash.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-12
   guide: kubernetes-deployment
   card: kube-scheduled-work
   type: operator-task
   text: Recurring work uses ShedLock or a CronJob with concurrencyPolicy Forbid.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-13
   guide: kubernetes-deployment
   card: kube-graceful-shutdown
   type: verified-behaviour
   text: A rollout under steady load has finished with zero failed requests at least once.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MAN-01
   guide: kubernetes-manifests
   card: man-packaging
   type: generated-config
   text: "One packaging tool per service: Kustomize for a service the team deploys itself, Helm when others install it with their own values. The choice is written down."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MAN-02
   guide: kubernetes-manifests
   card: man-validation
   type: generated-config
   text: "CI renders every environment and validates the rendered output, not the templates."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MAN-03
   guide: kubernetes-manifests
   card: man-labels
   type: generated-config
   text: "Recommended app.kubernetes.io labels on every object. Selectors use name, instance and component only, never version."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MAN-04
   guide: kubernetes-manifests
   card: man-server-side-apply
   type: generated-config
   text: "No spec.replicas in any manifest when an HPA manages the Deployment."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MAN-05
   guide: kubernetes-manifests
   card: man-image-digest
   type: generated-config
   text: "Production images pinned by digest through the Kustomize images transformer."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MAN-06
   guide: kubernetes-manifests
   card: man-config-rollout
   type: generated-config
   text: "Config changes roll the pods: configMapGenerator hash or checksum/config. Plain YAML has an explicit restart step."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MAN-07
   guide: kubernetes-manifests
   card: man-overlays
   type: generated-config
   text: "Kustomize uses labels, patches and replacements only, with components for optional features. No deprecated fields."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MAN-08
   guide: kubernetes-manifests
   card: man-server-side-apply
   type: operator-task
   text: "Applied with --server-side and a named field manager. Drift checked with kubectl diff --server-side or a GitOps controller."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MAN-09
   guide: kubernetes-manifests
   card: man-validation
   type: generated-config
   text: "kubeconform -strict with CRD schemas for Kubernetes 1.36 and 1.37, plus pluto for the newest version."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MAN-10
   guide: kubernetes-manifests
   card: man-validation
   type: generated-config
   text: "kube-linter and trivy config pass. Every suppression has a written reason."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ARCH-01
   guide: architecture
   card: arch-capabilities
   type: generated-config
   text: "One package per business capability under the base package, each a Spring Modulith module with a small API at its root."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ARCH-02
   guide: architecture
   card: arch-rules-tested
   type: verified-behaviour
   text: "A ModulithTest calls ApplicationModules.of(Application.class).verify() in every build."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ARCH-03
   guide: architecture
   card: arch-style-choice
   type: generated-config
   text: "One style per service, with the same package names in every capability."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ARCH-04
   guide: architecture
   card: arch-hexagonal
   type: generated-config
   text: "Ports, adapters and application services marked with jMolecules hexagonal annotations; port signatures use domain types."
-  claim: documented
-  tests: []
   appliesWhen: {architecture: [hexagonal]}
 - id: ARCH-05
   guide: architecture
   card: arch-rules-tested
   type: verified-behaviour
   text: "ArchitectureTest runs JMoleculesArchitectureRules.ensureHexagonal(VerificationDepth.STRICT)."
-  claim: documented
-  tests: []
   appliesWhen: {architecture: [hexagonal]}
 - id: ARCH-06
   guide: architecture
   card: arch-rules-tested
   type: verified-behaviour
   text: "An ArchUnit rule that nothing outside the adapter packages depends on them."
-  claim: documented
-  tests: []
   appliesWhen: {architecture: [hexagonal]}
 - id: ARCH-07
   guide: architecture
   card: arch-ddd-layered
   type: verified-behaviour
   text: "An explicit ArchUnit graph for presentation, application, domain and infrastructure in which the domain depends on no other layer."
-  claim: documented
-  tests: []
   appliesWhen: {architecture: [ddd-layered]}
 - id: ARCH-08
   guide: architecture
   card: arch-pure-domain
   type: verified-behaviour
   text: "An ArchUnit rule keeps the domain package to the JDK, JSpecify and itself."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ARCH-09
   guide: architecture
   card: arch-transactions
   type: generated-config
   text: "@Transactional only on application service methods, one per use case."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ARCH-10
   guide: architecture
   card: arch-limits
   type: operator-task
   text: "Module boundaries reviewed with the people who know the business whenever a capability is added."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: STYLE-01
   guide: architecture-styles
   card: style-scenario
   type: operator-task
   text: "The style was chosen by comparing the consequences on a real scenario and the choice is recorded in an ADR."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: STYLE-02
   guide: architecture-styles
   card: style-direction
   type: operator-task
   text: "Business rules that need tests without a database live in a style whose dependencies point toward the domain."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: STYLE-03
   guide: architecture-styles
   card: style-limits
   type: operator-task
   text: "Each architectural claim is labelled as a definition from a source, a team policy, an executable check or judgment."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: BLD-01
   guide: build-quality
   card: bld-wrapper
   type: generated-config
   text: Gradle wrapper committed with distributionSha256Sum and CI always runs ./gradlew.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: BLD-02
   guide: build-quality
   card: bld-wrapper
   type: generated-config
   text: Java toolchain set to 25 in the build and CI builds inside the pinned JDK image.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: BLD-03
   guide: build-quality
   card: bld-version-catalog
   type: generated-config
   text: Every library and plugin version in gradle/libs.versions.toml; no version typed in a build file.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: BLD-04
   guide: build-quality
   card: bld-version-catalog
   type: generated-config
   text: Repositories declared only in settings.gradle.kts with repositoriesMode FAIL_ON_PROJECT_REPOS.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: BLD-05
   guide: build-quality
   card: bld-boms
   type: generated-config
   text: BOMs imported with platform() in every configuration that needs them; no io.spring.dependency-management plugin.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: BLD-06
   guide: build-quality
   card: bld-error-prone
   type: generated-config
   text: Error Prone runs on main code with warnings in generated code disabled.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: BLD-07
   guide: build-quality
   card: bld-nullaway
   type: generated-config
   text: NullAway as an error with OnlyNullMarked and JSpecifyMode; every package has a package-info.java with @NullMarked.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: BLD-08
   guide: build-quality
   card: bld-format
   type: generated-config
   text: Spotless with a pinned palantir-java-format; spotlessCheck runs as part of check.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: BLD-09
   guide: build-quality
   card: bld-sbom
   type: generated-config
   text: build depends on cyclonedxBom and writes the SBOM to a fixed path.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: BLD-10
   guide: build-quality
   card: bld-updates
   type: generated-config
   text: renovate.json extends config:recommended, sets minimumReleaseAge and groups libraries that must move together.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: BLD-11
   guide: build-quality
   card: bld-updates
   type: operator-task
   text: Dependency update pull requests are reviewed and merged on a green build every week.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CACHE-01
   guide: caching
   card: cache-when
   type: operator-task
   text: Every cache has a written reason, a known staleness limit and a measured slow path it replaces.
-  claim: documented
-  tests: []
   appliesWhen: {cache: [true]}
 - id: CACHE-02
   guide: caching
   card: cache-abstraction
   type: generated-config
   text: "@EnableCaching sits on its own configuration class and every cache is declared in spring.cache.cache-names."
-  claim: documented
-  tests: []
   appliesWhen: {cache: [true]}
 - id: CACHE-03
   guide: caching
   card: cache-ttl
   type: generated-config
   text: spring.cache.redis.time-to-live is set; no cache entry lives forever.
-  claim: documented
-  tests: []
   appliesWhen: {cache: [true]}
 - id: CACHE-04
   guide: caching
   card: cache-keys
   type: generated-config
   text: Cache values are stored as JSON, keys keep the cache name prefix and carry a version.
-  claim: documented
-  tests: []
   appliesWhen: {cache: [true]}
 - id: CACHE-05
   guide: caching
   card: cache-consistency
   type: generated-config
   text: The cache manager is transaction aware and writes evict entries after the commit.
-  claim: documented
-  tests: []
   appliesWhen: {cache: [true]}
 - id: CACHE-06
   guide: caching
   card: cache-stampede
   type: verified-behaviour
   text: Hot keys have spread expiry times and are loaded once per pod.
-  claim: documented
-  tests: []
   appliesWhen: {cache: [true]}
 - id: CACHE-07
   guide: caching
   card: cache-degraded
   type: generated-config
   text: spring.data.redis.connect-timeout and spring.data.redis.timeout are set far below the request deadline.
-  claim: documented
-  tests: []
   appliesWhen: {cache: [true]}
 - id: CACHE-08
   guide: caching
   card: cache-degraded
   type: verified-behaviour
   text: A CacheErrorHandler turns cache errors into misses; the service keeps answering when Valkey is down.
-  claim: documented
-  tests: []
   appliesWhen: {cache: [true]}
 - id: CACHE-09
   guide: caching
   card: cache-memory
   type: deployment-prerequisite
   text: Valkey has maxmemory below its container limit and maxmemory-policy allkeys-lru.
-  claim: documented
-  tests: []
   appliesWhen: {cache: [true]}
 - id: CACHE-10
   guide: caching
   card: cache-memory
   type: operator-task
   text: Hit ratio, command latency and evicted keys are on a dashboard; cache errors raise an alert.
-  claim: documented
-  tests: []
   appliesWhen: {cache: [true]}
 - id: CI-01
   guide: ci-pipelines
   card: ci-pin-actions
   type: generated-config
   text: Every action and reusable workflow is pinned to a full commit SHA with its version in a comment or locked by a workflow lockfile.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-02
   guide: ci-pipelines
   card: ci-permissions
   type: generated-config
   text: Every workflow starts with permissions contents read; write permissions are granted per job and only where needed.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-03
   guide: ci-pipelines
   card: ci-permissions
   type: deployment-prerequisite
   text: The repository or organization default for the workflow token is read only.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-04
   guide: ci-pipelines
   card: ci-permissions
   type: verified-behaviour
   text: No pull_request_target or workflow_run workflow checks out and runs pull request code while holding secrets.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-05
   guide: ci-pipelines
   card: ci-pinned-jdk
   type: generated-config
   text: The Gradle build runs inside the JDK image pinned by digest, the same digest as the Dockerfile's build stage.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-06
   guide: ci-pipelines
   card: ci-pinned-jdk
   type: generated-config
   text: The Gradle wrapper sets distributionSha256Sum.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-07
   guide: ci-pipelines
   card: ci-cache
   type: verified-behaviour
   text: No secret, token or credential is written to a cached path; caches are keyed by lock or version files.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-08
   guide: ci-pipelines
   card: ci-test-order
   type: generated-config
   text: The image is built from the production Dockerfile and behaviour tests run against it before anything is published.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-09
   guide: ci-pipelines
   card: ci-test-order
   type: generated-config
   text: Test reports upload with if always and the publishing job needs the test job.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-10
   guide: ci-pipelines
   card: ci-publish
   type: generated-config
   text: Images are pushed and deployed by digest, with a provenance attestation and an SBOM attached to that digest.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-11
   guide: ci-pipelines
   card: ci-publish
   type: deployment-prerequisite
   text: Pull request runs never publish; only the default branch does.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-12
   guide: ci-pipelines
   card: ci-fast
   type: generated-config
   text: Every workflow has paths filters that include the workflow file, a concurrency group per ref and timeout-minutes on every job.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-13
   guide: ci-pipelines
   card: ci-fast
   type: deployment-prerequisite
   text: No path filtered workflow is a required status check.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: CI-14
   guide: ci-pipelines
   card: ci-renovate
   type: operator-task
   text: Renovate pull requests for actions, images and libraries are reviewed and merged when CI passes, after the minimum release age.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: GRPC-01
   guide: grpc
   card: grpc-contract
   type: generated-config
   text: buf lint and buf breaking against the main branch run in CI for every .proto change.
-  claim: documented
-  tests: []
   appliesWhen: {api: [grpc]}
 - id: GRPC-02
   guide: grpc
   card: grpc-contract
   type: verified-behaviour
   text: Deleted fields have their numbers and names reserved; no field number is reused or changes type.
-  claim: documented
-  tests: []
   appliesWhen: {api: [grpc]}
 - id: GRPC-03
   guide: grpc
   card: grpc-boot-setup
   type: generated-config
   text: gRPC is served by spring-boot-starter-grpc-server on its own port (9090 by default), apart from the HTTP port.
-  claim: documented
-  tests: []
   appliesWhen: {api: [grpc]}
 - id: GRPC-04
   guide: grpc
   card: grpc-deadlines
   type: generated-config
   text: Every gRPC client channel sets default.deadline.
-  claim: documented
-  tests: []
   appliesWhen: {api: [grpc]}
 - id: GRPC-05
   guide: grpc
   card: grpc-status
   type: verified-behaviour
   text: Exceptions map to specific status codes in one @GrpcAdvice; UNAVAILABLE only when the client may retry.
-  claim: documented
-  tests: []
   appliesWhen: {api: [grpc]}
 - id: GRPC-06
   guide: grpc
   card: grpc-status
   type: generated-config
   text: Retry policies only on methods that are safe to repeat, with every attempt inside the deadline.
-  claim: documented
-  tests: []
   appliesWhen: {api: [grpc]}
 - id: GRPC-07
   guide: grpc
   card: grpc-health
   type: deployment-prerequisite
   text: gRPC probes select separate livenessState and readinessState checks; native probes use a plaintext health transport, never a TLS-only port or overall health for liveness.
-  claim: documented
-  tests: []
   appliesWhen: {api: [grpc]}
 - id: GRPC-08
   guide: grpc
   card: grpc-health
   type: generated-config
   text: Server reflection is off in production unless the team relies on it there.
-  claim: documented
-  tests: []
   appliesWhen: {api: [grpc]}
 - id: GRPC-09
   guide: grpc
   card: grpc-load-balancing
   type: deployment-prerequisite
   text: Clients reach gRPC servers through a headless Service with a dns target or through a mesh that balances per call.
-  claim: documented
-  tests: []
   appliesWhen: {api: [grpc]}
 - id: GRPC-10
   guide: grpc
   card: grpc-load-balancing
   type: generated-config
   text: spring.grpc.server.keepalive.connection.max-age is set so clients reconnect and spread over new pods.
-  claim: documented
-  tests: []
   appliesWhen: {api: [grpc]}
 - id: GRPC-11
   guide: grpc
   card: grpc-observe-secure
   type: generated-config
   text: gRPC observations stay enabled on the server and on every client channel.
-  claim: documented
-  tests: []
   appliesWhen: {api: [grpc]}
 - id: GRPC-12
   guide: grpc
   card: grpc-observe-secure
   type: deployment-prerequisite
   text: gRPC traffic uses TLS from an SSL bundle or mesh mutual TLS; bypass-certificate-validation is never set outside tests.
-  claim: documented
-  tests: []
   appliesWhen: {api: [grpc]}
 - id: ORM-01
   guide: jpa-and-jooq
   card: orm-choice
   type: generated-config
   text: "Persistence annotations stay in the persistence adapter; domain classes carry none."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ORM-02
   guide: jpa-and-jooq
   card: orm-persistence-context
   type: generated-config
   text: "spring.jpa.hibernate.ddl-auto is validate; Liquibase owns the schema."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ORM-03
   guide: jpa-and-jooq
   card: orm-n-plus-one
   type: verified-behaviour
   text: "Every JPA association is LAZY, including @ManyToOne and @OneToOne; each use case loads what it needs with JOIN FETCH, an entity graph or a projection."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ORM-04
   guide: jpa-and-jooq
   card: orm-n-plus-one
   type: generated-config
   text: "hibernate.query.fail_on_pagination_over_collection_fetch is true and hibernate.log_slow_query is set."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ORM-05
   guide: jpa-and-jooq
   card: orm-open-in-view
   type: generated-config
   text: "spring.jpa.open-in-view is false."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ORM-06
   guide: jpa-and-jooq
   card: orm-projections
   type: verified-behaviour
   text: "List and search pages read projections; entities are loaded only to be changed."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ORM-07
   guide: jpa-and-jooq
   card: orm-batching
   type: generated-config
   text: "JDBC batching on (hibernate.jdbc.batch_size, order_inserts, order_updates) and SEQUENCE ids instead of IDENTITY."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ORM-08
   guide: jpa-and-jooq
   card: orm-long-transactions
   type: verified-behaviour
   text: "No second level cache by default; batch jobs flush and clear the persistence context per chunk."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: ORM-09
   guide: jpa-and-jooq
   card: orm-jooq
   type: generated-config
   text: "jOOQ classes are generated in the build from a PostgreSQL container migrated by Liquibase, never edited by hand."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KAFKA-01
   guide: kafka
   card: kafka-why-outbox
   type: generated-config
   text: Events tied to a database change are written to an outbox table in the same transaction; no direct KafkaTemplate send on that path.
-  claim: documented
-  tests: []
   appliesWhen: {"kafka.outbox": [true]}
 - id: KAFKA-02
   guide: kafka
   card: kafka-outbox-table
   type: generated-config
   text: Outbox rows are kept; a cleanup job deletes only rows below the published watermark and older than the retention window.
-  claim: documented
-  tests: []
   appliesWhen: {"kafka.outbox": [true]}
 - id: KAFKA-03
   guide: kafka
   card: kafka-outbox-table
   type: deployment-prerequisite
   text: Publication and replication slot created before the app accepts writes; publication.autocreate.mode filtered; heartbeat.interval.ms set.
-  claim: documented
-  tests: []
   appliesWhen: {"kafka.outbox": [true]}
 - id: KAFKA-04
   guide: kafka
   card: kafka-outbox-table
   type: deployment-prerequisite
   text: max_slot_wal_keep_size set in PostgreSQL and an alert on replication slot lag.
-  claim: documented
-  tests: []
   appliesWhen: {"kafka.outbox": [true]}
 - id: KAFKA-05
   guide: kafka
   card: kafka-schemas
   type: generated-config
   text: Event schemas are checked and registered from CI with explicit FULL_TRANSITIVE compatibility per subject, or a documented consumers-first BACKWARD_TRANSITIVE rollout; new fields have defaults and replay history is checked.
-  claim: documented
-  tests: []
   appliesWhen: {"kafka.enabled": [true]}
 - id: KAFKA-06
   guide: kafka
   card: kafka-topics
   type: deployment-prerequisite
   text: Topics created explicitly, one per aggregate type, keyed by aggregate id, with retention longer than the longest incident.
-  claim: documented
-  tests: []
   appliesWhen: {"kafka.enabled": [true]}
 - id: KAFKA-07
   guide: kafka
   card: kafka-producer
   type: generated-config
   text: acks and enable.idempotence left at the Kafka defaults (all and true); spring.kafka.template.observation-enabled true.
-  claim: documented
-  tests: []
   appliesWhen: {"kafka.enabled": [true]}
 - id: KAFKA-08
   guide: kafka
   card: kafka-consumers
   type: generated-config
   text: Consumers store processed event ids in the same transaction as the work and skip duplicates; auto commit off; listener observation enabled.
-  claim: documented
-  tests: []
   appliesWhen: {"kafka.enabled": [true]}
 - id: KAFKA-09
   guide: kafka
   card: kafka-errors
   type: generated-config
   text: DefaultErrorHandler with exponential backoff and a DeadLetterPublishingRecoverer; ErrorHandlingDeserializer around the deserializers.
-  claim: documented
-  tests: []
   appliesWhen: {"kafka.enabled": [true]}
 - id: KAFKA-10
   guide: kafka
   card: kafka-errors
   type: deployment-prerequisite
   text: Each dead letter topic has at least as many partitions as its original topic.
-  claim: documented
-  tests: []
   appliesWhen: {"kafka.enabled": [true]}
 - id: KAFKA-11
   guide: kafka
   card: kafka-lag-replay
   type: operator-task
   text: Alerts on consumer lag, slot lag and records in dead letter topics; a written replay procedure that has been tried.
-  claim: documented
-  tests: []
   appliesWhen: {"kafka.enabled": [true]}
 - id: LOCAL-01
   guide: local-development
   card: local-real-deps
   type: generated-config
   text: Local dependencies run in containers with the image versions production runs; no embedded database stands in for PostgreSQL.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: LOCAL-02
   guide: local-development
   card: local-compose
   type: generated-config
   text: spring-boot-docker-compose is a developmentOnly dependency and compose.yml sits next to the app, with a healthcheck per service.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: LOCAL-03
   guide: local-development
   card: local-compose
   type: verified-behaviour
   text: No connection URL, user or password for a local container appears in application.yaml; service connections provide them.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: LOCAL-04
   guide: local-development
   card: local-testcontainers
   type: generated-config
   text: Containers are started one way only, Docker Compose support or Testcontainers at development time, never both.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: LOCAL-05
   guide: local-development
   card: local-telemetry
   type: generated-config
   text: grafana/otel-lgtm 0.37.0 runs locally for traces, metrics and logs and never in a shared or production environment.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: LOCAL-06
   guide: local-development
   card: local-same-config
   type: verified-behaviour
   text: Every setting uses the same key locally and in the cluster, with local defaults as placeholders overridden by environment variables.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: LOCAL-07
   guide: local-development
   card: local-devtools
   type: generated-config
   text: spring-boot-devtools is a developmentOnly dependency and never reaches the image.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: LOCAL-08
   guide: local-development
   card: local-seed-data
   type: deployment-prerequisite
   text: Every environment except local sets spring.liquibase.contexts to a value without dev, so sample data changesets never run there.
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: LOCAL-09
   guide: local-development
   card: local-kubernetes
   type: operator-task
   text: Probes, mounts and policies are checked in a local cluster before manifests change.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: LOCAL-10
   guide: local-development
   card: local-kubernetes
   type: deployment-prerequisite
   text: pyahu.yaml lists the services the project needs, so pyahu up starts the same local stack for every developer.
-  claim: documented
-  tests: []
   appliesWhen: {pyahuCli: [true]}
 - id: MONO-01
   guide: monorepo
   card: mono-when
   type: deployment-prerequisite
   text: "The decision to keep several services in one repository is recorded in an ADR with its reason and the owning team."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MONO-02
   guide: monorepo
   card: mono-boundaries-rule
   type: verified-behaviour
   text: "No service has a project dependency on another service; services share only contracts and generated client projects."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MONO-03
   guide: monorepo
   card: mono-boundaries-rule
   type: generated-config
   text: "Each service owns its database and its migration history."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MONO-04
   guide: monorepo
   card: mono-boundaries-rule
   type: generated-config
   text: "libs/ holds only deliberately reusable code, never shared entities or service internals."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MONO-05
   guide: monorepo
   card: mono-contracts
   type: generated-config
   text: "Each contract lives in contracts/<service>/ with the producing service as owner."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MONO-06
   guide: monorepo
   card: mono-contracts
   type: verified-behaviour
   text: "CI compares every contract with its last released version and fails on a breaking change."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MONO-07
   guide: monorepo
   card: mono-build-logic
   type: generated-config
   text: "Build logic lives in an included build-logic build, added with includeBuild inside pluginManagement; no buildSrc, allprojects or subprojects."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MONO-08
   guide: monorepo
   card: mono-build-logic
   type: verified-behaviour
   text: "Convention plugins have their own Gradle TestKit tests."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MONO-09
   guide: monorepo
   card: mono-catalog
   type: generated-config
   text: "One version catalog at gradle/libs.versions.toml, imported into build-logic."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MONO-10
   guide: monorepo
   card: mono-one-service
   type: generated-config
   text: "Each service is included by a flat project name with an explicit projectDir; the root project has no sources."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MONO-11
   guide: monorepo
   card: mono-ci
   type: deployment-prerequisite
   text: "One orchestration workflow that always runs ends in a gate job that is the only required check."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MONO-12
   guide: monorepo
   card: mono-ship
   type: generated-config
   text: "Each service has its own image repository, built from the repository root and its own deploy/ folder."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MONO-13
   guide: monorepo
   card: mono-ship
   type: operator-task
   text: "The same image digest is promoted between environments; releases are tagged per service."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: NEXT-01
   guide: nextjs
   card: next-rendering
   type: generated-config
   text: "Data fetching and service calls live in server components; modules that hold secrets or call the service start with import 'server-only'."
-  claim: documented
-  tests: []
   appliesWhen: {frontend: [nextjs]}
 - id: NEXT-02
   guide: nextjs
   card: next-typed-client
   type: generated-config
   text: "The TypeScript client types are generated from the service's OpenAPI document and CI fails when the generated file is out of date."
-  claim: documented
-  tests: []
   appliesWhen: {frontend: [nextjs]}
 - id: NEXT-03
   guide: nextjs
   card: next-typed-client
   type: verified-behaviour
   text: "The browser never calls the service directly; the Next.js server calls it by its cluster name."
-  claim: documented
-  tests: []
   appliesWhen: {frontend: [nextjs]}
 - id: NEXT-04
   guide: nextjs
   card: next-auth
   type: generated-config
   text: "Login runs the OIDC code flow on the server with a maintained library; the session is an httpOnly, secure, sameSite cookie and the access token never reaches the browser."
-  claim: documented
-  tests: []
   appliesWhen: {auth: [true], frontend: [nextjs]}
 - id: NEXT-05
   guide: nextjs
   card: next-auth
   type: verified-behaviour
   text: "Every Server Action and every data access function checks the user itself, not only proxy.ts."
-  claim: documented
-  tests: []
   appliesWhen: {auth: [true], frontend: [nextjs]}
 - id: NEXT-06
   guide: nextjs
   card: next-env
   type: generated-config
   text: "One image is promoted across environments; no environment specific value uses the NEXT_PUBLIC_ prefix."
-  claim: documented
-  tests: []
   appliesWhen: {frontend: [nextjs]}
 - id: NEXT-07
   guide: nextjs
   card: next-caching
   type: verified-behaviour
   text: "Nothing that depends on the user's session is cached in a shared cache; cached reads have a tag and a lifetime."
-  claim: documented
-  tests: []
   appliesWhen: {frontend: [nextjs]}
 - id: NEXT-08
   guide: nextjs
   card: next-caching
   type: deployment-prerequisite
   text: "When cached data must be shared across replicas, Cache Components uses cacheHandlers.remote with shared storage and tag coordination; per-pod caches require an explicit tolerance for staleness."
-  claim: documented
-  tests: []
   appliesWhen: {frontend: [nextjs]}
 - id: NEXT-09
   guide: nextjs
   card: next-kubernetes
   type: generated-config
   text: "The image is built with output: 'standalone', copies only .next/standalone, .next/static and public, runs as the node user and starts with CMD [\"node\", \"server.js\"]."
-  claim: documented
-  tests: []
   appliesWhen: {frontend: [nextjs]}
 - id: NEXT-10
   guide: nextjs
   card: next-kubernetes
   type: deployment-prerequisite
   text: "Probes point at a route handler that returns 200 and the grace period covers the slowest request; each frontend release embeds a unique deploymentId, and apps with Server Actions coordinate their build-time encryption key."
-  claim: documented
-  tests: []
   appliesWhen: {frontend: [nextjs]}
 - id: NEXT-11
   guide: nextjs
   card: next-headers
   type: generated-config
   text: "next.config.js sets nosniff, a referrer policy, frame denial and HSTS on every path, poweredByHeader is false and a Content Security Policy is in place."
-  claim: documented
-  tests: []
   appliesWhen: {frontend: [nextjs]}
 - id: NEXT-12
   guide: nextjs
   card: next-tracing
   type: generated-config
   text: "instrumentation.ts registers OpenTelemetry with the service's address in fetch.propagateContextUrls and exports to the same collector as the service."
-  claim: documented
-  tests: []
   appliesWhen: {frontend: [nextjs]}
 - id: RMQ-01
   guide: rabbitmq
   card: rmq-when
   type: deployment-prerequisite
   text: "RabbitMQ is used for tasks and commands; events that several services read or replay go to Kafka."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-02
   guide: rabbitmq
   card: rmq-quorum-queues
   type: generated-config
   text: "Work queues are durable quorum queues (x-queue-type: quorum)."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-03
   guide: rabbitmq
   card: rmq-quorum-queues
   type: deployment-prerequisite
   text: "The broker runs at least three nodes."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-04
   guide: rabbitmq
   card: rmq-quorum-queues
   type: generated-config
   text: "Queues, exchanges and bindings are declared as beans."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-05
   guide: rabbitmq
   card: rmq-publisher-confirms
   type: generated-config
   text: "spring.rabbitmq.publisher-confirm-type is correlated, publisher-returns and template.mandatory are true."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-06
   guide: rabbitmq
   card: rmq-publisher-confirms
   type: verified-behaviour
   text: "Publishers wait on the CorrelationData confirm and treat a nack or a returned message as a failed send."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-07
   guide: rabbitmq
   card: rmq-acks-prefetch
   type: generated-config
   text: "Listeners acknowledge only after the work is done; prefetch is sized to the time one message takes."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-08
   guide: rabbitmq
   card: rmq-retries-dlx
   type: generated-config
   text: "Listener retry is on with a small max-retries and a backoff."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-09
   guide: rabbitmq
   card: rmq-retries-dlx
   type: deployment-prerequisite
   text: "Every work queue has a dead letter exchange with dead-letter-strategy at-least-once and overflow reject-publish."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-10
   guide: rabbitmq
   card: rmq-retries-dlx
   type: operator-task
   text: "Messages in dead letter queues are reviewed and replayed or discarded."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-11
   guide: rabbitmq
   card: rmq-idempotent
   type: verified-behaviour
   text: "Every message has a messageId and consumers skip ids they already processed in the same transaction as the work."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-12
   guide: rabbitmq
   card: rmq-limits
   type: deployment-prerequisite
   text: "Queues that can fill up have a maximum length and, where old work is useless, a message TTL."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-13
   guide: rabbitmq
   card: rmq-monitoring
   type: deployment-prerequisite
   text: "The rabbitmq_prometheus plugin is scraped with alerts on growing depth, queues without consumers and dead lettered messages."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: RMQ-14
   guide: rabbitmq
   card: rmq-monitoring
   type: generated-config
   text: "Template and listener observation are enabled."
-  claim: documented
-  tests: []
   appliesWhen: {rabbitmq: [true]}
 - id: REST-01
   guide: rest-apis
   card: rest-contract-first
   type: generated-config
   text: An OpenAPI 3.1 contract lives in the repository and describes every response, errors included.
-  claim: documented
-  tests: []
   appliesWhen: {api: [rest]}
 - id: REST-02
   guide: rest-apis
   card: rest-generate
   type: generated-config
   text: openApiGenerate runs the spring generator with interfaceOnly and useSpringBoot4; controllers implement the generated interfaces.
-  claim: documented
-  tests: []
   appliesWhen: {api: [rest]}
 - id: REST-03
   guide: rest-apis
   card: rest-generate
   type: verified-behaviour
   text: Generated models stay in the web adapter; the domain does not depend on generated code.
-  claim: documented
-  tests: []
   appliesWhen: {api: [rest]}
 - id: REST-04
   guide: rest-apis
   card: rest-validation
   type: generated-config
   text: spring-boot-starter-validation on the classpath; input rules written in the contract; useSpringBuiltInValidation on.
-  claim: documented
-  tests: []
   appliesWhen: {api: [rest]}
 - id: REST-05
   guide: rest-apis
   card: rest-errors
   type: generated-config
   text: spring.mvc.problemdetails.enabled is true and every error response uses one Problem schema with a stable type URI.
-  claim: documented
-  tests: []
   appliesWhen: {api: [rest]}
 - id: REST-06
   guide: rest-apis
   card: rest-writes
   type: verified-behaviour
   text: Creates return 201 with Location; a POST retried with the same Idempotency-Key returns the stored result.
-  claim: documented
-  tests: []
   appliesWhen: {api: [rest]}
 - id: REST-07
   guide: rest-apis
   card: rest-pagination
   type: verified-behaviour
   text: Every list endpoint has a default and a maximum limit and rejects a limit above the maximum with 400.
-  claim: documented
-  tests: []
   appliesWhen: {api: [rest]}
 - id: REST-08
   guide: rest-apis
   card: rest-versioning
   type: operator-task
   text: Breaking changes ship as a new version next to the old one; the old version is deprecated with a sunset date before removal.
-  claim: documented
-  tests: []
   appliesWhen: {api: [rest]}
 - id: REST-09
   guide: rest-apis
   card: rest-contract-ci
   type: generated-config
   text: openApiValidate runs in every build and CI fails a pull request that breaks the contract without a new version.
-  claim: documented
-  tests: []
   appliesWhen: {api: [rest]}
 - id: SEC-12
   guide: security
   card: sec-tls
   type: deployment-prerequisite
   text: "Where TLS ends is written down: at the ingress, in the pod or in a mesh."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: SEC-13
   guide: security
   card: sec-tls
   type: generated-config
   text: "TLS in the pod or mTLS to a partner uses a named SSL bundle; server bundles set reload-on-update: true."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: SEC-14
   guide: security
   card: sec-tls
   type: operator-task
   text: "Certificate Secrets mounted as directories, not with subPath; pods rolled when a client certificate is renewed."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: KUBE-14
   guide: kubernetes-deployment
   card: kube-diagnose
   type: operator-task
   text: "A pod that is not ready is diagnosed from its events, kubectl logs --previous and a direct call to /livez and /readyz."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MAN-11
   guide: kubernetes-manifests
   card: man-gitops
   type: deployment-prerequisite
   text: "With more than one person deploying or more than one cluster, a GitOps controller applies the manifests with pruning on."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: MAN-12
   guide: kubernetes-manifests
   card: man-gitops
   type: deployment-prerequisite
   text: "Dependencies such as a migration before the app are ordered explicitly: Argo CD sync waves or Flux dependsOn."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: DB-13
   guide: database
   card: db-migration-job
   type: deployment-prerequisite
   text: "Namespace, ServiceAccount, ConfigMaps, NetworkPolicies, database roles and Secrets exist before the migration Job; it completes before the rollout and a failed Job stops the release."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: DB-14
   guide: database
   card: db-migration-job
   type: generated-config
   text: "The migration Job has a versioned name (or is recreated by its hook), a low backoffLimit, an activeDeadlineSeconds and a ttlSecondsAfterFinished."
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: TEST-01
   guide: testing
   card: test-domain
   type: generated-config
   text: Domain classes depend on no Spring type and their tests start no Spring context.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: TEST-02
   guide: testing
   card: test-slices
   type: generated-config
   text: "Each adapter has a slice test: @WebMvcTest for controllers, @DataJdbcTest for repositories, @RestClientTest for HTTP clients."
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: TEST-03
   guide: testing
   card: test-architecture
   type: generated-config
   text: An ApplicationModules.verify() test and an ArchUnit class with the jMolecules rule for the chosen style run in the normal build.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: TEST-04
   guide: testing
   card: test-real-database
   type: generated-config
   text: Database tests run against Testcontainers PostgreSQL of the production major version through @ServiceConnection, never a database that runs in memory.
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: TEST-05
   guide: testing
   card: test-real-database
   type: generated-config
   text: The real migrations run in tests, so a changeset that does not apply fails the build.
-  claim: documented
-  tests: []
   appliesWhen: {database: [postgres]}
 - id: TEST-06
   guide: testing
   card: test-outbound-http
   type: generated-config
   text: Outbound clients are built from Boot's RestClient.Builder and tested with @RestClientTest, error responses included.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: TEST-07
   guide: testing
   card: test-context-cache
   type: generated-config
   text: Integration tests import one shared @TestConfiguration; no @DirtiesContext and no @MockitoBean in @SpringBootTest classes.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: TEST-08
   guide: testing
   card: test-image
   type: verified-behaviour
   text: A suite starts the built image with a read-only root filesystem as a user other than root and asserts that /readyz answers 200.
-  claim: documented
-  tests: []
   appliesWhen: {}
 - id: TEST-09
   guide: testing
   card: test-real-database
   type: deployment-prerequisite
   text: CI runners have Docker for the Testcontainers and image tests.
-  claim: documented
-  tests: []
   appliesWhen: {}

@@ -6,7 +6,7 @@ Keep several Spring Boot services in one repository without turning them into on
 
 On the web: https://initializer.pyahu.io/guides/monorepo/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 8 claims: 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/monorepo.yaml).
+**How this guide is proven.** None of its 8 steps is tested here yet. A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/monorepo.yaml).
 
 Your team owns five services, so you put them in one repository. A year later, a change in billing breaks the
 orders build, every pull request runs every test and nobody can release orders without a billing fix going out
@@ -26,16 +26,16 @@ each service stays separate: its own code, database, image and release.
 7. How should CI decide what to build?
 8. How does each service ship on its own?
 
-### Evidence by step
+### Tests by step
 
-- 1. Should our services share one repository?: 1 claim: 1 not exercised.
-- 2. What may services share and what must stay apart?: 1 claim: 1 not exercised.
-- 3. Where do the contracts between services live?: 1 claim: 1 not exercised.
-- 4. How do I keep the build the same in every service?: 1 claim: 1 not exercised.
-- 5. How do I keep versions in one place?: 1 claim: 1 not exercised.
-- 6. How do I build and run just one service?: 1 claim: 1 not exercised.
-- 7. How should CI decide what to build?: 1 claim: 1 not exercised.
-- 8. How does each service ship on its own?: 1 claim: 1 not exercised.
+- 1. Should our services share one repository?: not tested here.
+- 2. What may services share and what must stay apart?: not tested here.
+- 3. Where do the contracts between services live?: not tested here.
+- 4. How do I keep the build the same in every service?: not tested here.
+- 5. How do I keep versions in one place?: not tested here.
+- 6. How do I build and run just one service?: not tested here.
+- 7. How should CI decide what to build?: not tested here.
+- 8. How does each service ship on its own?: not tested here.
 
 ## 1. Should our services share one repository?
 

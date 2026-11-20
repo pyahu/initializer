@@ -35,7 +35,6 @@ on:
 
 permissions:
   contents: read
-  actions: read
 
 concurrency:
   group: guides-${{ github.ref }}
@@ -47,7 +46,7 @@ env:
 jobs:
   guides:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -86,13 +85,6 @@ jobs:
           fi
       - name: Generated outputs
         run: go run ./cmd/guidekit generate --check
-      - name: Evidence report
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          EVIDENCE_BRANCH: ${{ github.head_ref || github.ref_name }}
-        run: go run ./cmd/guidekit report fetch --workflow fixture-single-hexagonal.yml --branch "$EVIDENCE_BRANCH" --wait 25m --out out/evidence-report.json
-      - name: Qualification
-        run: go run ./cmd/guidekit qualify --check --report out/evidence-report.json
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: guides/.node-version

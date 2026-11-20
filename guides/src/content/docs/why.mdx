@@ -42,15 +42,15 @@ Code you do not understand is code you cannot run at three in the morning. A gen
 finished project without the reasons behind it saves a day and costs you the first incident.
 
 The guides explain the choices a generated project makes. Every supported combination is generated, built and
-smoke-tested by its own workflow. The fixture tests separately qualify named claims about the baseline. A guide
-can also discuss a pattern that the generator does not offer; its evidence record makes that scope explicit.
+smoke-tested by its own workflow. The fixture tests prove named claims about the baseline. A guide can also
+discuss a pattern that the generator does not offer; it says so.
 
 ## Why every version is pinned
 
 Advice is only true for a version. "Set this timeout" depends on the default it replaces and defaults move.
 "Use the latest" cannot be tested, because the latest changes while the test runs.
 
-Every guide names a **baseline**, a frozen list of exact versions. The active revision is **{guideData.active}**.
+Every guide names a **baseline**, a list of exact versions. The active baseline is **{guideData.active}**.
 A claim can then point to the test that checked it on those versions. The cost is that we trail
 the newest release by days or weeks. Security fixes do not wait; [How we keep it current](/maintenance/)
 explains how a new baseline is cut.
@@ -61,10 +61,11 @@ Executable recipe excerpts come from fixture files whose anchors are checked. CI
 runs its required behaviour tests. The generator matrix checks the supported project combinations. Other examples
 and recommendations are grounded in official documentation or engineering judgment and retain their stated gaps.
 
-Every claim has an evidence record. Tested claims name the test, its command, result and CI run. Others are
-based on the official documentation or design reasoning and say "not exercised", with the reason.
-Each guide shows that coverage at the top and by step. The public preview includes both kinds of advice;
-passing CI does not mean every claim in every guide has been tested.
+A claim tested here has an evidence record that names its test, what the test observed and its limits. CI runs
+that test on every change, so the claim fails as soon as it stops holding. The other steps rest on the official
+documentation each guide lists and on our own practice. Each guide shows at the top and by step which steps are
+tested here. We test what protects you most, such as database roles, migrations, startup and failure handling,
+and cite the official documentation for the rest instead of re-proving every library default.
 
 ## Why questions and steps
 

@@ -6,13 +6,6 @@ guide:
   id: local-development
   prefix: LOCAL
   state: draft
-  baseline: v0.1-b2
-  components: [ java, spring-boot, testcontainers, postgres-image, otel-lgtm-image, liquibase ]
-  verification:
-    run: https://github.com/pyahu/initializer/actions/runs/43912675718/attempts/1
-    commit: f61ac7e840d9245b3ca833fa874374df26245cc0
-    date: "2026-11-16"
-    baseline: v0.1-b2
   questions:
     - id: LOCAL-Q1
       text: "Why run real dependencies instead of mocks?"

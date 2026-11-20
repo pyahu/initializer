@@ -1,5 +1,5 @@
 ---
-// The guide's map: the questions it answers in order and one line on how it is proven.
+// The guide's map: the questions it answers in order and one note on what is tested here.
 import { Aside } from "@astrojs/starlight/components";
 import data from "../generated/guides.json";
 interface Props {
@@ -11,20 +11,13 @@ if (!g) throw new Error(`GuideStatus: unknown guide ${guide}`);
 const evidenceURL = `https://github.com/pyahu/initializer/blob/main/data/evidence/${guide}.yaml`;
 ---
 <div class="guide-map not-content">
-  <Aside type="note" title={g.state === "draft" ? "Preview" : "Evidence coverage"}>
+  <Aside type="note" title="How this guide is proven">
     <p>Written for baseline <strong>{g.baseline}</strong>. {g.coverage}.</p>
     <p>
-      Compiled means the code builds; reproduced means the named behaviour passed a test;
-      measured means a measurement was recorded. A claim marked not exercised has no recorded fixture result proving the full assertion.
-      {" "}<a href={evidenceURL}>Read the claims, results and limitations</a> before treating this guide as verified for your service.
+      {data.proofNote}
+      {" "}<a href={evidenceURL}>Read the tested claims and their limitations</a>.
     </p>
   </Aside>
-  {g.status.reverify && (
-    <Aside type="caution" title="Re-verify">
-      <ul>{g.status.reverifyReasons.map((r: string) => <li>{r}</li>)}</ul>
-    </Aside>
-  )}
-  {g.status.stale && <Aside type="caution" title="Stale">This guide was last verified more than two baseline revisions ago.</Aside>}
   <nav class="guide-map-block" aria-labelledby={`${guide}-learn`}>
     <h2 class="guide-map-title" id={`${guide}-learn`}>What you'll learn</h2>
     <ul class="guide-contents">
@@ -35,12 +28,11 @@ const evidenceURL = `https://github.com/pyahu/initializer/blob/main/data/evidenc
     </p>
   </nav>
   <details class="guide-evidence">
-    <summary>Evidence by step</summary>
+    <summary>Tests by step</summary>
     <ul>
       {g.contents.map((c: any) => (
         <li><a href={`#${c.id}`}>{c.title}</a>: {g.cards[c.id].coverage}.</li>
       ))}
     </ul>
-    <p>See the <a href={evidenceURL}>evidence records</a> for each claim's test or the reason it has not been exercised.</p>
   </details>
 </div>

@@ -6,7 +6,7 @@ A GitHub Actions pipeline for a Spring Boot service that builds in the pinned JD
 
 On the web: https://initializer.pyahu.io/guides/ci-pipelines/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 10 claims: 2 reproduced, 1 compiled, 7 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/ci-pipelines.yaml).
+**How this guide is proven.** 3 of 8 steps are tested here (3 tested claims: 2 reproduced, 1 compiled). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/ci-pipelines.yaml).
 
 Every check is green and the release still breaks. The tests ran on a different JDK than the image, the image itself
 was never started and a popular action changed overnight because its tag now points somewhere else. CI said yes to
@@ -26,16 +26,16 @@ the image, the image running and finally where it came from. It stays fast and k
 7. How do I keep the pipeline fast?
 8. Who keeps the pipeline itself up to date?
 
-### Evidence by step
+### Tests by step
 
-- 1. Can an action I use change under me?: 2 claims: 2 not exercised.
-- 2. What should the workflow token be allowed to do?: 1 claim: 1 not exercised.
-- 3. Which JDK does CI build with?: 1 claim: 1 compiled.
-- 4. How do I cache without trusting other branches?: 1 claim: 1 not exercised.
-- 5. What must pass before an image is published?: 1 claim: 1 reproduced.
-- 6. How do I publish an image others can verify?: 2 claims: 1 reproduced, 1 not exercised.
-- 7. How do I keep the pipeline fast?: 1 claim: 1 not exercised.
-- 8. Who keeps the pipeline itself up to date?: 1 claim: 1 not exercised.
+- 1. Can an action I use change under me?: not tested here.
+- 2. What should the workflow token be allowed to do?: not tested here.
+- 3. Which JDK does CI build with?: 1 tested claim: 1 compiled.
+- 4. How do I cache without trusting other branches?: not tested here.
+- 5. What must pass before an image is published?: 1 tested claim: 1 reproduced.
+- 6. How do I publish an image others can verify?: 1 tested claim: 1 reproduced.
+- 7. How do I keep the pipeline fast?: not tested here.
+- 8. Who keeps the pipeline itself up to date?: not tested here.
 
 ## 1. Can an action I use change under me?
 

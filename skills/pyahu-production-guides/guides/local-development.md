@@ -6,7 +6,7 @@ A fast local loop for a Spring Boot 4.1 service, with the real database and tele
 
 On the web: https://initializer.pyahu.io/guides/local-development/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Preview.** 10 claims: 2 reproduced, 8 not exercised. Compiled means code builds; reproduced means the named behaviour passed a test; measured means a measurement was recorded. Not exercised means no test result here. Read the [claims, results and limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/local-development.yaml).
+**How this guide is proven.** 2 of 8 steps are tested here (2 tested claims: 2 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/local-development.yaml).
 
 A new developer clones the service and asks how to run it. The answer is a wiki page from last year: install
 PostgreSQL by hand, copy a properties file from a colleague and do not worry about the failing tests. Two days
@@ -26,16 +26,16 @@ containers, wired to the app by Spring Boot, with the same settings as the clust
 7. How do I get useful data into the local database?
 8. When is a local Kubernetes worth it?
 
-### Evidence by step
+### Tests by step
 
-- 1. Why run real dependencies instead of mocks?: 1 claim: 1 not exercised.
-- 2. How do I start the dependencies with the app?: 2 claims: 2 not exercised.
-- 3. Can I declare the containers in Java instead?: 1 claim: 1 not exercised.
-- 4. How do I see traces, metrics and logs on my laptop?: 2 claims: 1 reproduced, 1 not exercised.
-- 5. How do I keep local settings close to production?: 1 claim: 1 reproduced.
-- 6. How do I get fast restarts while I code?: 1 claim: 1 not exercised.
-- 7. How do I get useful data into the local database?: 1 claim: 1 not exercised.
-- 8. When is a local Kubernetes worth it?: 1 claim: 1 not exercised.
+- 1. Why run real dependencies instead of mocks?: not tested here.
+- 2. How do I start the dependencies with the app?: not tested here.
+- 3. Can I declare the containers in Java instead?: not tested here.
+- 4. How do I see traces, metrics and logs on my laptop?: 1 tested claim: 1 reproduced.
+- 5. How do I keep local settings close to production?: 1 tested claim: 1 reproduced.
+- 6. How do I get fast restarts while I code?: not tested here.
+- 7. How do I get useful data into the local database?: not tested here.
+- 8. When is a local Kubernetes worth it?: not tested here.
 
 ## 1. Why run real dependencies instead of mocks?
 
