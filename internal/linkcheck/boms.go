@@ -14,6 +14,10 @@ import (
 // Central is the Maven Central base URL.
 const Central = "https://repo.maven.apache.org/maven2/"
 
+// CentralMirrors are the hosts the resolver reads a POM from, in order. Central sometimes answers 404 for an
+// artifact that exists; repo1 is Central's other official host, so a 404 there too means the POM is missing.
+var CentralMirrors = []string{Central, "https://repo1.maven.org/maven2/"}
+
 type pom struct {
 	Parent struct {
 		GroupID    string `xml:"groupId"`
@@ -40,6 +44,7 @@ type pom struct {
 type resolver struct {
 	client *http.Client
 	cache  map[string]*pom
+	hosts  []string
 }
 
 func (r *resolver) get(g, a, v string) (*pom, error) {
@@ -47,8 +52,16 @@ func (r *resolver) get(g, a, v string) (*pom, error) {
 	if p, ok := r.cache[key]; ok {
 		return p, nil
 	}
-	u := fmt.Sprintf("%s%s/%s/%s/%s-%s.pom", Central, strings.ReplaceAll(g, ".", "/"), a, v, a, v)
-	b, err := readURL(r.client, u)
+	path := fmt.Sprintf("%s/%s/%s/%s-%s.pom", strings.ReplaceAll(g, ".", "/"), a, v, a, v)
+	var b []byte
+	var err error
+	u := ""
+	for _, host := range r.hosts {
+		u = host + path
+		if b, err = readURL(r.client, u); err == nil {
+			break
+		}
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +127,7 @@ func (r *resolver) managed(bomG, bomA, bomV, coord string, depth int) (string, e
 
 // CheckBOMs verifies every managedBy pin against its BOM on Maven Central.
 func CheckBOMs(repo *guidedata.Repo) []error {
-	res := &resolver{client: &http.Client{Timeout: 20 * time.Second}, cache: map[string]*pom{}}
+	res := &resolver{client: &http.Client{Timeout: 20 * time.Second}, cache: map[string]*pom{}, hosts: CentralMirrors}
 	var errs []error
 	for _, rev := range repo.Versions.Revisions {
 		for key, c := range rev.Components {
