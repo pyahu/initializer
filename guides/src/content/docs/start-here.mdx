@@ -14,18 +14,19 @@ guides build on it.
 
 ## 1. Generate the project
 
-The generator is a preview that runs from the repository. It needs Java 25 and Docker.
+Open the generator with the recommended options already chosen:
+[start.pyahu.io](https://start.pyahu.io/?name=orders&architecture=hexagonal&database=postgres&auth=oidc). Change the
+name and the group, look through the files it will give you, then download the zip. From a terminal, the same
+project is one command:
 
 ```sh
-git clone https://github.com/pyahu/initializer && cd initializer
-./gradlew :start:bootRun
+curl https://start.pyahu.io/starter.zip -d name=orders -d group=com.example \
+  -d architecture=hexagonal -d database=postgres -d auth=oidc -o orders.zip
 ```
 
-In another terminal, ask it for the recommended project and start it:
+Then start it. It needs Java 25 and Docker:
 
 ```sh
-curl localhost:8080/starter.zip -d name=orders -d group=com.example \
-  -d architecture=hexagonal -d database=postgres -d auth=oidc -o orders.zip
 unzip orders.zip && cd orders
 ./gradlew bootRun
 ```

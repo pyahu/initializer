@@ -18,11 +18,11 @@ const parts = [
   },
   {
     icon: "terminal",
-    status: "Preview in the repository",
+    status: "Public preview",
     title: "A project generator",
     text: "Generate a hexagonal or DDD layered service with optional PostgreSQL, OIDC and a Next.js frontend, plus observability, Kubernetes manifests and CI. All 16 supported combinations are built and smoke-tested.",
-    href: "https://github.com/pyahu/initializer/tree/main/services/start",
-    link: "See the generator",
+    href: "https://start.pyahu.io/",
+    link: "Open the generator",
   },
 ] as const;
 
@@ -105,7 +105,7 @@ const proof = [
 ];
 
 const roadmap = [
-  { when: "Now", text: `24 guides in six parts and a generator preview in the repository, on baseline ${guideData.active}.` },
+  { when: "Now", text: `24 guides in six parts and a generator preview at start.pyahu.io, on baseline ${guideData.active}.` },
   { when: "Next", text: "Two or three teams take the recommended path with a real service. Their reports decide what we test next and what we cut." },
   { when: "Later", text: "New generator options, such as Kafka, gRPC or JPA, when teams ask for them. Each one arrives with its guide and its tests." },
 ];
@@ -120,7 +120,7 @@ const roadmap = [
         <p class="hero-copy">Pyahu Initializer is a set of guides for running Spring Boot services in production and a generator that starts a project already following them.</p>
         <div class="hero-actions">
           <a class="button primary" href="/start-here/">Start here <Icon name="arrow" size={18} /></a>
-          <a class="button quiet" href="/guides/">All guides</a>
+          <a class="button quiet" href="https://start.pyahu.io/">Generate a project</a>
         </div>
       </div>
       <div class="setup-panel" aria-label="The two parts of the Initializer">
@@ -134,8 +134,8 @@ const roadmap = [
 <span class="prompt">5</span> Ship                <span class="comment">4 guides</span>
 <span class="prompt">6</span> Grow                <span class="comment">3 guides</span></code></pre>
           <p class="setup-label panel-gap">2. Start a project that already follows them</p>
-          <pre><code><span class="prompt">$</span> curl localhost:8080/starter.zip -d name=orders
-<span class="comment">  preview, runs from the repository</span></code></pre>
+          <pre><code><span class="prompt">$</span> curl https://start.pyahu.io/starter.zip -d name=orders -o orders.zip
+<span class="comment">  or open <a href="https://start.pyahu.io/">start.pyahu.io</a></span></code></pre>
         </div>
       </div>
     </div>
