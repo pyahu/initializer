@@ -4,6 +4,9 @@ The guides are the product, published as a public preview while their test cover
 one question with the failure it prevents. A claim tested here has an evidence record naming its test; the rest
 rests on the official documentation each guide lists. `guidekit` enforces the rules below; CI runs it on every change.
 
+Before you commit, read "What else to update when you change something" in [AGENTS.md](AGENTS.md): one row per kind
+of change, with what regenerates itself, what you update by hand and which check catches a miss.
+
 ## Toolchain
 
 | Tool | Version | Where |
@@ -18,7 +21,7 @@ Site packages are pinned exactly in `guides/package.json`, lock file committed.
 
 ```sh
 go test ./cmd/... ./internal/...                 # guidekit's own tests
-go run ./cmd/guidekit check --base origin/main   # data, guides, cross-references, retired URLs
+go run ./cmd/guidekit check --base origin/main   # data, guides, cross-references, retired URLs, navigation
 go run ./cmd/guidekit generate                   # rewrite every generated file
 go run ./cmd/guidekit generate --check           # fail if a generated file is stale
 cd guides && npm ci && npm run check && npm run build

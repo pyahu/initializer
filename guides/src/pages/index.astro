@@ -6,13 +6,14 @@ import guideData from "../generated/guides.json";
 const guides = guideData.guides as Record<string, { draft: boolean }>;
 const isDraft = (href: string) => guides[href.replace(/^\/guides\/|\/$/g, "")]?.draft === true;
 const draftCount = Object.values(guides).filter((g) => g.draft).length;
+const guideCount = Object.keys(guides).length;
 
 const parts = [
   {
     icon: "layers",
     status: "Public preview",
     title: "A knowledge base",
-    text: "24 guides with the practices Pyahu follows for Java services with Spring Boot, from the first build to Kubernetes. Each step answers one question: the failure it prevents, the fix and when to choose differently.",
+    text: `${guideCount} guides with the practices Pyahu follows for Java services with Spring Boot, from the first build to Kubernetes. Each step answers one question: the failure it prevents, the fix and when to choose differently.`,
     href: "#guides",
     link: "See the guides",
   },
@@ -105,7 +106,7 @@ const proof = [
 ];
 
 const roadmap = [
-  { when: "Now", text: `24 guides in six parts and a generator preview at start.pyahu.io, on baseline ${guideData.active}.` },
+  { when: "Now", text: `${guideCount} guides in six parts and a generator preview at start.pyahu.io, on baseline ${guideData.active}.` },
   { when: "Next", text: "Two or three teams take the recommended path with a real service. Their reports decide what we test next and what we cut." },
   { when: "Later", text: "New generator options, such as Kafka, gRPC or JPA, when teams ask for them. Each one arrives with its guide and its tests." },
 ];
@@ -127,12 +128,9 @@ const roadmap = [
         <div class="panel-bar"><span></span><span></span><span></span><code>initializer</code></div>
         <div class="setup-body">
           <p class="setup-label">1. Learn why each decision is made</p>
-          <pre><code><span class="prompt">1</span> Foundations         <span class="comment">4 guides</span>
-<span class="prompt">2</span> Build the service   <span class="comment">6 guides</span>
-<span class="prompt">3</span> Events and data     <span class="comment">3 guides</span>
-<span class="prompt">4</span> Run in production   <span class="comment">4 guides</span>
-<span class="prompt">5</span> Ship                <span class="comment">4 guides</span>
-<span class="prompt">6</span> Grow                <span class="comment">3 guides</span></code></pre>
+          <pre><code>{modules.map((m, i) => (
+  <>{i > 0 && "\n"}<span class="prompt">{i + 1}</span> {m.title.replace(/^\d+\. /, "").padEnd(20)}<span class="comment">{m.guides.length} guides</span></>
+))}</code></pre>
           <p class="setup-label panel-gap">2. Start a project that already follows them</p>
           <pre><code><span class="prompt">$</span> curl https://start.pyahu.io/starter.zip -d name=orders -o orders.zip
 <span class="comment">  or open <a href="https://start.pyahu.io/">start.pyahu.io</a></span></code></pre>

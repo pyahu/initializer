@@ -47,7 +47,7 @@ func main() {
 		base := fs.String("base", "", "base commit for the history checks")
 		_ = fs.Parse(args)
 		r := mustLoad(root)
-		errs := r.Check()
+		errs := append(r.Check(), references.CheckNavigation(r)...)
 		if *base != "" {
 			errs = append(errs, r.CheckHistory(*base)...)
 		}
