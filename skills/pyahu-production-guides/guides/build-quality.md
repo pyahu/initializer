@@ -6,8 +6,6 @@ A Gradle build for a Spring Boot 4.1 service that is the same on every machine a
 
 On the web: https://initializer.pyahu.io/guides/build-quality/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**How this guide is proven.** 7 of 8 steps are tested here (7 tested claims: 7 compiled). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/build-quality.yaml).
-
 The build passes on your laptop and fails in CI. A teammate gets a different Spring version than you. A
 `NullPointerException` reaches production from a method everyone was sure never returned null. Half of every code
 review is about spaces and imports.
@@ -26,17 +24,6 @@ drift before anything ships.
 6. How do I end formatting debates in code review?
 7. How do I know which libraries the service ships?
 8. How do I keep dependencies current without breaking the build?
-
-### Tests by step
-
-- 1. How do I make sure every machine builds the same way?: 1 tested claim: 1 compiled.
-- 2. Where should dependency versions live?: 1 tested claim: 1 compiled.
-- 3. How do I use Spring Boot's versions without the extra plugin?: 1 tested claim: 1 compiled.
-- 4. How do I catch bugs before the code runs?: 1 tested claim: 1 compiled.
-- 5. How do I stop a NullPointerException at compile time?: 1 tested claim: 1 compiled.
-- 6. How do I end formatting debates in code review?: 1 tested claim: 1 compiled.
-- 7. How do I know which libraries the service ships?: 1 tested claim: 1 compiled.
-- 8. How do I keep dependencies current without breaking the build?: not tested here.
 
 ## 1. How do I make sure every machine builds the same way?
 

@@ -63,8 +63,9 @@ and recommendations are grounded in official documentation or engineering judgme
 
 A claim tested here has an evidence record that names its test, what the test observed and its limits. CI runs
 that test on every change, so the claim fails as soon as it stops holding. The other steps rest on the official
-documentation each guide lists and on our own practice. Each guide shows at the top and by step which steps are
-tested here. We test what protects you most, such as database roles, migrations, startup and failure handling,
+documentation each guide lists and on our own practice. A guide with no tested step yet carries a Draft label. The
+tested claims of every guide are in
+[`data/evidence`](https://github.com/pyahu/initializer/tree/main/data/evidence). We test what protects you most, such as database roles, migrations, startup and failure handling,
 and cite the official documentation for the rest instead of re-proving every library default.
 
 ## Why questions and steps

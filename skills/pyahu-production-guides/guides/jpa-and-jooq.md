@@ -6,7 +6,7 @@ Choose between Spring Data JDBC, JPA and jOOQ and use each one well in productio
 
 On the web: https://initializer.pyahu.io/guides/jpa-and-jooq/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Draft, not tested here yet.** None of its 8 steps is tested here yet. This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.
+**Draft:** no step of this guide is tested here yet.
 
 The orders page was fast in review. In production it takes four seconds and the database log shows why: one
 query for the orders, then one more for every order on the page. Nobody wrote those queries. The mapping did.
@@ -25,17 +25,6 @@ that Liquibase owns. For pools, timeouts and migrations, read [the database guid
 6. How do I write many rows fast?
 7. What goes wrong in long transactions and entity caches?
 8. How do I use jOOQ with my migrations?
-
-### Tests by step
-
-- 1. Spring Data JDBC, JPA or jOOQ: which one fits my service?: not tested here.
-- 2. What does JPA do behind my back?: not tested here.
-- 3. Why does one page run a hundred queries?: not tested here.
-- 4. Why do queries run after my controller returns?: not tested here.
-- 5. How do I read data without loading entities?: not tested here.
-- 6. How do I write many rows fast?: not tested here.
-- 7. What goes wrong in long transactions and entity caches?: not tested here.
-- 8. How do I use jOOQ with my migrations?: not tested here.
 
 ## 1. Spring Data JDBC, JPA or jOOQ: which one fits my service?
 

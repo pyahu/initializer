@@ -13,10 +13,9 @@ builds and tests on every change. Written for baseline v0.1-b2: Java 25, Spring 
 The same guides are on the web at https://initializer.pyahu.io/guides/. A project that already follows them can be
 generated at https://start.pyahu.io/.
 
-Public preview: each guide says at the top which of its steps are tested here. A tested claim names the
-fixture test that proves it; the other steps rest on the official documentation the guide lists. Guides
-marked **Draft** in the index have no tested step yet: say so when you rely on one, and do not present
-its advice as verified.
+Public preview. Guides marked **Draft** in the index have no tested step yet: say so when you rely on
+one, and do not present its advice as verified. The tested claims of every guide, with the test that proves
+each, are in https://github.com/pyahu/initializer/tree/main/data/evidence.
 
 ## How to use this skill
 

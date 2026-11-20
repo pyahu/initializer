@@ -82,8 +82,9 @@ These are the steps we follow, in order.
 - **Tested claims fail loudly.** Each record in
   [`data/evidence`](https://github.com/pyahu/initializer/tree/main/data/evidence) names a required test of the
   fixture. When the behaviour changes, CI fails and the guide is fixed in the same change.
-- **Untested steps say so.** Every guide shows at the top and by step which steps are tested here. The others
-  rest on the official documentation the guide lists and on Pyahu's practice.
+- **Untested guides say so.** A guide with no tested step carries a Draft label on its page, in the menu and on
+  the landing page. Steps without a tested claim rest on the official documentation the guide lists and on
+  Pyahu's practice.
 - **Steps are retired, not deleted.** A removed guide, step or checklist item gets a record in
   [`data/retired.yaml`](https://github.com/pyahu/initializer/blob/main/data/retired.yaml) and a removed step
   keeps its anchor, so links to it keep working.

@@ -1,6 +1,5 @@
 ---
-// The guide's map: the questions it answers in order and one note on what is tested here.
-import { Aside } from "@astrojs/starlight/components";
+// The guide's map: the questions it answers in order, and a Draft label when no step is tested here yet.
 import data from "../generated/guides.json";
 interface Props {
   guide: string;
@@ -8,16 +7,9 @@ interface Props {
 const { guide } = Astro.props;
 const g = (data.guides as any)[guide];
 if (!g) throw new Error(`GuideStatus: unknown guide ${guide}`);
-const evidenceURL = `https://github.com/pyahu/initializer/blob/main/data/evidence/${guide}.yaml`;
 ---
 <div class="guide-map not-content">
-  <Aside type={g.draft ? "caution" : "note"} title={g.draft ? "Draft, not tested here yet" : "How this guide is proven"}>
-    <p>Written for baseline <strong>{g.baseline}</strong>. {g.coverage}.</p>
-    <p>
-      {g.note}
-      {!g.draft && <>{" "}<a href={evidenceURL}>Read the tested claims and their limitations</a>.</>}
-    </p>
-  </Aside>
+  {g.draft && <p class="guide-label"><span class="draft-label" title="No step of this guide is tested here yet">Draft</span></p>}
   <nav class="guide-map-block" aria-labelledby={`${guide}-learn`}>
     <h2 class="guide-map-title" id={`${guide}-learn`}>What you'll learn</h2>
     <ul class="guide-contents">
@@ -27,14 +19,4 @@ const evidenceURL = `https://github.com/pyahu/initializer/blob/main/data/evidenc
       Then <a href="#put-it-all-together">put it all together</a> with examples and review a service with the <a href="#checklist">checklist</a>.
     </p>
   </nav>
-  {!g.draft && (
-    <details class="guide-evidence">
-      <summary>Tests by step</summary>
-      <ul>
-        {g.contents.map((c: any) => (
-          <li><a href={`#${c.id}`}>{c.title}</a>: {g.cards[c.id].coverage}.</li>
-        ))}
-      </ul>
-    </details>
-  )}
 </div>

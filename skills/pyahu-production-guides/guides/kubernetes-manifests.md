@@ -6,7 +6,7 @@ Package, vary per environment, validate and apply the manifests of a Spring Boot
 
 On the web: https://initializer.pyahu.io/guides/kubernetes-manifests/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Draft, not tested here yet.** None of its 8 steps is tested here yet. This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.
+**Draft:** no step of this guide is tested here yet.
 
 A label added to "every object" breaks the next deploy, because it also landed in the Deployment's selector. A
 config change sits in the cluster for a week and no pod ever reads it. Someone ran `kubectl edit` in production and
@@ -26,17 +26,6 @@ and applied. This guide covers that part. What the Deployment itself should cont
 6. How should I apply manifests to the cluster?
 7. Should a GitOps controller apply the manifests?
 8. How do I catch broken manifests before they reach a cluster?
-
-### Tests by step
-
-- 1. Plain YAML, Helm or Kustomize: which one should I use?: not tested here.
-- 2. How do I change a few values per environment without copying everything?: not tested here.
-- 3. Which labels go on every object and which go in the selector?: not tested here.
-- 4. Why did my config change not reach the pods?: not tested here.
-- 5. How do I make sure the cluster runs the image I tested?: not tested here.
-- 6. How should I apply manifests to the cluster?: not tested here.
-- 7. Should a GitOps controller apply the manifests?: not tested here.
-- 8. How do I catch broken manifests before they reach a cluster?: not tested here.
 
 ## 1. Plain YAML, Helm or Kustomize: which one should I use?
 

@@ -6,8 +6,6 @@ Typed settings that fail fast, one source per kind of value and secrets that nev
 
 On the web: https://initializer.pyahu.io/guides/configuration/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**How this guide is proven.** 2 of 8 steps are tested here (2 tested claims: 2 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/configuration.yaml).
-
 A typo in a ConfigMap key binds to nothing and the default quietly wins. A missing secret leaves the text
 `${payment-api-key}` in a request header. A property that only exists in `application-prod.yaml` was never run
 before production. None of these fail loudly. They fail at 3 a.m., on the first request that needs the value.
@@ -25,17 +23,6 @@ secrets out of manifests, logs and Actuator. Eight decisions, each with the file
 6. How do I keep secrets out of logs and Actuator?
 7. How does a running app pick up a change?
 8. When is a feature flag better than a setting?
-
-### Tests by step
-
-- 1. Where should the differences between environments live?: not tested here.
-- 2. What is the environment variable for a property?: not tested here.
-- 3. How do I catch a bad setting before the pod takes traffic?: 1 tested claim: 1 reproduced.
-- 4. Why did a missing secret not stop the app?: 1 tested claim: 1 reproduced.
-- 5. Where should secrets come from?: not tested here.
-- 6. How do I keep secrets out of logs and Actuator?: not tested here.
-- 7. How does a running app pick up a change?: not tested here.
-- 8. When is a feature flag better than a setting?: not tested here.
 
 ## 1. Where should the differences between environments live?
 

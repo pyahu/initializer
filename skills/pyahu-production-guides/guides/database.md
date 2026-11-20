@@ -6,8 +6,6 @@ Connection pools, timeouts, roles, migrations and tests for a Spring Boot servic
 
 On the web: https://initializer.pyahu.io/guides/database/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**How this guide is proven.** 3 of 9 steps are tested here (3 tested claims: 3 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/database.yaml).
-
 You deploy on a Friday afternoon. Halfway through the rollout the new pods stop getting ready and PostgreSQL
 answers `FATAL: sorry, too many clients already`. Nothing changed in the database. The deployment itself used up
 every connection.
@@ -27,18 +25,6 @@ PostgreSQL: pools, timeouts, roles, migrations, tests and the metrics that warn 
 7. How do I change the schema without downtime?
 8. How do I test against a real database?
 9. How do I know the pool is in trouble?
-
-### Tests by step
-
-- 1. How many connections can my pods open?: 1 tested claim: 1 reproduced.
-- 2. How long should a request wait for a connection?: not tested here.
-- 3. How do I stop one slow query from holding everything?: not tested here.
-- 4. Who should be allowed to change the schema?: 1 tested claim: 1 reproduced.
-- 5. When should migrations run?: not tested here.
-- 6. How do I run the migration Job safely?: not tested here.
-- 7. How do I change the schema without downtime?: not tested here.
-- 8. How do I test against a real database?: 1 tested claim: 1 reproduced.
-- 9. How do I know the pool is in trouble?: not tested here.
 
 ## 1. How many connections can my pods open?
 

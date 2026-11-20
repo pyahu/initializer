@@ -6,7 +6,7 @@ Keep several Spring Boot services in one repository without turning them into on
 
 On the web: https://initializer.pyahu.io/guides/monorepo/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Draft, not tested here yet.** None of its 8 steps is tested here yet. This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.
+**Draft:** no step of this guide is tested here yet.
 
 Your team owns five services, so you put them in one repository. A year later, a change in billing breaks the
 orders build, every pull request runs every test and nobody can release orders without a billing fix going out
@@ -25,17 +25,6 @@ each service stays separate: its own code, database, image and release.
 6. How do I build and run just one service?
 7. How should CI decide what to build?
 8. How does each service ship on its own?
-
-### Tests by step
-
-- 1. Should our services share one repository?: not tested here.
-- 2. What may services share and what must stay apart?: not tested here.
-- 3. Where do the contracts between services live?: not tested here.
-- 4. How do I keep the build the same in every service?: not tested here.
-- 5. How do I keep versions in one place?: not tested here.
-- 6. How do I build and run just one service?: not tested here.
-- 7. How should CI decide what to build?: not tested here.
-- 8. How does each service ship on its own?: not tested here.
 
 ## 1. Should our services share one repository?
 

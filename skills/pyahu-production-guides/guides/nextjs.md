@@ -6,7 +6,7 @@ A production Next.js frontend in the same repository as the Spring Boot service,
 
 On the web: https://initializer.pyahu.io/guides/nextjs/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Draft, not tested here yet.** None of its 8 steps is tested here yet. This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.
+**Draft:** no step of this guide is tested here yet.
 
 The new screen works on your laptop. In staging it calls the production API, the access token shows up in the
 browser's developer tools and a deploy drops every open request. The frontend is fine; it just runs in more places
@@ -26,17 +26,6 @@ advice is wrong for you.
 6. How do I run the frontend in Kubernetes?
 7. Which security headers does the frontend need?
 8. How do I follow a click into the service's trace?
-
-### Tests by step
-
-- 1. What runs on the server and what runs in the browser?: not tested here.
-- 2. How does the frontend call the Spring Boot service?: not tested here.
-- 3. How does the user log in and where does the token live?: not tested here.
-- 4. Why does my staging image call the production API?: not tested here.
-- 5. What does Next.js cache and how do I refresh it?: not tested here.
-- 6. How do I run the frontend in Kubernetes?: not tested here.
-- 7. Which security headers does the frontend need?: not tested here.
-- 8. How do I follow a click into the service's trace?: not tested here.
 
 ## 1. What runs on the server and what runs in the browser?
 

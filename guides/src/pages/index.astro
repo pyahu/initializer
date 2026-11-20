@@ -102,7 +102,7 @@ const proof = [
   { title: "A real service behind the code", text: "The code in the guides comes from a service that CI builds, starts and tests. The 16 project combinations of the generator are built and started too." },
   { title: "Tests where they matter", text: "Claims about roles, migrations, startup and failure handling name the test CI runs on every change. Each guide says which steps are tested here and which rest on the official documentation." },
   { title: "Kept current", text: "Renovate watches the dependencies. A version update lands only when the tests behind the claims still pass." },
-  { title: "Honest about the rest", text: `Each guide says at the top how many of its steps are tested here. ${draftCount} guides have no test yet and are marked Draft.` },
+  { title: "Honest about the rest", text: `${draftCount} guides have no tested step yet and are marked Draft. A green build proves only the checks that ran.` },
 ];
 
 const roadmap = [

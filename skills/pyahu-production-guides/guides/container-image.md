@@ -6,8 +6,6 @@ Build a small layered image for a Spring Boot service, run it without root and k
 
 On the web: https://initializer.pyahu.io/guides/container-image/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**How this guide is proven.** 3 of 8 steps are tested here (3 tested claims: 2 reproduced, 1 compiled). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/container-image.yaml).
-
 A security alert lands: a library with a known hole is out there. Which of your services ship it? Nobody knows,
 because the images are opaque boxes. Meanwhile every small commit pushes 50 MB, the app runs as root and the base
 image quietly changed its JDK last night.
@@ -26,17 +24,6 @@ no root, pinned inputs and a record of what is inside and who built it. JVM flag
 6. How do I know which libraries an image ships?
 7. How do I catch known vulnerabilities before they ship?
 8. How does the cluster know an image is really ours?
-
-### Tests by step
-
-- 1. Why does every release push the whole app again?: 1 tested claim: 1 reproduced.
-- 2. Which base image should I start from?: not tested here.
-- 3. How do I stop the base image from changing under me?: not tested here.
-- 4. How do I run the app without root on a read-only disk?: 1 tested claim: 1 reproduced.
-- 5. How do I keep secrets out of the image?: not tested here.
-- 6. How do I know which libraries an image ships?: 1 tested claim: 1 compiled.
-- 7. How do I catch known vulnerabilities before they ship?: not tested here.
-- 8. How does the cluster know an image is really ours?: not tested here.
 
 ## 1. Why does every release push the whole app again?
 

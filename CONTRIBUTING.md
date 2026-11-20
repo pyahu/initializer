@@ -159,8 +159,9 @@ Only tested claims get a record, in `data/evidence/<guide>.yaml`:
 fails when one does not pass, so a record is true for as long as `main` is green; there is nothing to record by
 hand after a run. `result` says what the test observes, `limitations` what it does not prove.
 
-A step without a record is explained from the official documentation the guide lists and from our practice. Each
-guide says at the top and by step which steps are tested here; the Agent Skill and llms exports say the same.
+A step without a record is explained from the official documentation the guide lists and from our practice. A
+guide with no record at all is a draft: it carries a Draft label on its page, in the menu, on the landing page and
+in the Agent Skill. The label goes away with its first tested claim.
 
 Test what protects a reader most: database permissions, migrations, authentication, startup and failure handling.
 For a library default, cite its official documentation instead of reproducing it.

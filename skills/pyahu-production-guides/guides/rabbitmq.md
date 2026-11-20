@@ -6,7 +6,7 @@ Work queues and commands with Spring AMQP on Spring Boot 4.1, with no message lo
 
 On the web: https://initializer.pyahu.io/guides/rabbitmq/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Draft, not tested here yet.** None of its 8 steps is tested here yet. This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.
+**Draft:** no step of this guide is tested here yet.
 
 An order is paid, the service publishes "send the receipt" and moves on. The receipt never arrives. The broker
 restarted a second after the publish, the message lived only in memory and nobody noticed. A week later the
@@ -26,17 +26,6 @@ publisher knows it is not. A message that cannot be handled ends up somewhere yo
 6. Why was the same message processed twice?
 7. How do I stop a queue from growing forever?
 8. What should I watch in production?
-
-### Tests by step
-
-- 1. When should I use RabbitMQ instead of Kafka?: not tested here.
-- 2. Which kind of queue should I declare?: not tested here.
-- 3. How do I know the broker really has my message?: not tested here.
-- 4. How many messages should a consumer take at once?: not tested here.
-- 5. What happens when a message keeps failing?: not tested here.
-- 6. Why was the same message processed twice?: not tested here.
-- 7. How do I stop a queue from growing forever?: not tested here.
-- 8. What should I watch in production?: not tested here.
 
 ## 1. When should I use RabbitMQ instead of Kafka?
 

@@ -6,8 +6,6 @@ Tokens, permissions, headers, errors, outbound calls and the pod, locked down fo
 
 On the web: https://initializer.pyahu.io/guides/security/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**How this guide is proven.** 1 of 9 steps is tested here (1 tested claim: 1 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/security.yaml).
-
 A security review lands on your desk. A token issued to another app opens your API, an error body shows a SQL
 query and the pod runs as root with a writable disk. Nobody broke in with an exotic exploit: each finding is a
 default that nobody revisited.
@@ -28,18 +26,6 @@ protections, headers, errors, outbound calls, the pod and TLS. Most take one or 
 7. How do I stop a URL fetch from reaching inside the network?
 8. How locked down should the pod be?
 9. Where should TLS end and how do I add mTLS?
-
-### Tests by step
-
-- 1. Which tokens should the service accept?: not tested here.
-- 2. How do token claims become permissions?: not tested here.
-- 3. Who may call what?: not tested here.
-- 4. Do I need CSRF protection and CORS?: not tested here.
-- 5. Which headers should every response carry?: not tested here.
-- 6. What should an error tell the client?: not tested here.
-- 7. How do I stop a URL fetch from reaching inside the network?: not tested here.
-- 8. How locked down should the pod be?: 1 tested claim: 1 reproduced.
-- 9. Where should TLS end and how do I add mTLS?: not tested here.
 
 ## 1. Which tokens should the service accept?
 

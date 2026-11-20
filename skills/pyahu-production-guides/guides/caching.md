@@ -6,7 +6,7 @@ When a cache helps a Spring Boot 4.1 service and how to run one on Valkey with T
 
 On the web: https://initializer.pyahu.io/guides/caching/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Draft, not tested here yet.** None of its 8 steps is tested here yet. This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.
+**Draft:** no step of this guide is tested here yet.
 
 The product page got slow, so someone added a cache. It was fast for a week. Then a price change took an hour to
 show up and a deploy filled the cache with values the new code could not read. The day Valkey restarted, every pod
@@ -25,17 +25,6 @@ Spring Boot 4.1 service on Valkey so that it stays a speed boost and never becom
 6. What happens when a popular entry expires?
 7. What if Valkey is slow or down?
 8. How much memory does the cache get and what should I watch?
-
-### Tests by step
-
-- 1. Do I need a cache and where should it live?: not tested here.
-- 2. Should I use @Cacheable or write the cache code myself?: not tested here.
-- 3. How long should an entry live?: not tested here.
-- 4. How should I name keys and store values?: not tested here.
-- 5. How do I keep the cache in step with the database?: not tested here.
-- 6. What happens when a popular entry expires?: not tested here.
-- 7. What if Valkey is slow or down?: not tested here.
-- 8. How much memory does the cache get and what should I watch?: not tested here.
 
 ## 1. Do I need a cache and where should it live?
 

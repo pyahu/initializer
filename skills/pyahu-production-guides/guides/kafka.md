@@ -6,7 +6,7 @@ Publish and consume events from Spring Boot 4.1 without losing them or sending t
 
 On the web: https://initializer.pyahu.io/guides/kafka/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**Draft, not tested here yet.** None of its 8 steps is tested here yet. This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.
+**Draft:** no step of this guide is tested here yet.
 
 An order is saved and the "order placed" event never reaches billing. Or it reaches billing twice and the customer
 is charged twice. Nobody sees an error: the database committed and Kafka said yes. The gap was in between.
@@ -25,17 +25,6 @@ and the Kafka 4.2.2 client, the versions Spring Boot 4.1.2 manages.
 6. When does a consumer commit and what if it crashes?
 7. What happens to a message that keeps failing?
 8. How do I spot trouble and replay events?
-
-### Tests by step
-
-- 1. Why do events get lost or sent twice?: not tested here.
-- 2. How do I run the outbox without losing events?: not tested here.
-- 3. How do producers and consumers agree on the event format?: not tested here.
-- 4. How should I choose topics and keys?: not tested here.
-- 5. Which producer settings matter?: not tested here.
-- 6. When does a consumer commit and what if it crashes?: not tested here.
-- 7. What happens to a message that keeps failing?: not tested here.
-- 8. How do I spot trouble and replay events?: not tested here.
 
 ## 1. Why do events get lost or sent twice?
 

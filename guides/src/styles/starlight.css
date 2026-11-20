@@ -150,3 +150,5 @@ body:has(.dg-dialog[open]) { overflow: hidden; }
 .path-guides .checklist-meta { font-size: 0.8rem; color: var(--sl-color-gray-2); }
 .recipe-source { font-size: 0.82rem; color: var(--sl-color-gray-2); margin-top: 0.3rem; }
 pre.fixture-file { overflow: auto; padding: 1rem; border: 1px solid var(--sl-color-hairline); border-radius: 8px; font-size: 0.82rem; line-height: 1.5; }
+.guide-label { margin: 0 0 1rem; }
+.draft-label { display: inline-block; padding: 0.1rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--sl-color-orange-high); background: var(--sl-color-orange-low); border: 1px solid var(--sl-color-orange); }

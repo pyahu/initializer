@@ -6,8 +6,6 @@ Traces, metrics and logs over OTLP with Spring Boot 4.1, correlated by one trace
 
 On the web: https://initializer.pyahu.io/guides/observability/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**How this guide is proven.** 7 of 8 steps are tested here (7 tested claims: 6 reproduced, 1 compiled). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/observability.yaml).
-
 A customer says checkout is slow. The dashboard agrees: latency is up. But which request? The logs have no request
 ID and the trace you need was never kept. Three tools and no thread to pull.
 
@@ -25,17 +23,6 @@ no Java agent.
 6. Do I need a collector in the middle?
 7. How do I go from a slow request to its logs?
 8. What should Actuator expose and where?
-
-### Tests by step
-
-- 1. Should I use Boot's starter or the OpenTelemetry agent?: 1 tested claim: 1 compiled.
-- 2. How do I tell the app where to send telemetry?: 1 tested claim: 1 reproduced.
-- 3. How do my logs get the trace ID?: 1 tested claim: 1 reproduced.
-- 4. How many traces should I keep?: 1 tested claim: 1 reproduced.
-- 5. How do I make metrics useful without a huge bill?: 1 tested claim: 1 reproduced.
-- 6. Do I need a collector in the middle?: not tested here.
-- 7. How do I go from a slow request to its logs?: 1 tested claim: 1 reproduced.
-- 8. What should Actuator expose and where?: 1 tested claim: 1 reproduced.
 
 ## 1. Should I use Boot's starter or the OpenTelemetry agent?
 

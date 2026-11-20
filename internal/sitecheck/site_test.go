@@ -9,18 +9,16 @@ import (
 	"github.com/pyahu/initializer/internal/guidedata"
 )
 
-// The compact exporter strips note asides by default. Coverage must survive in both exports.
-func TestExportsRequireEvidenceCoverage(t *testing.T) {
+// Both llms exports must carry every guide; the compact one is built with a different exporter.
+func TestExportsRequireEveryGuide(t *testing.T) {
 	r := &guidedata.Repo{
 		Guides: []*guidedata.Guide{{
 			Title: "Example guide",
 			Meta:  guidedata.GuideMeta{ID: "example"},
 			Cards: []guidedata.Card{{ID: "example-step"}},
 		}},
-		Evidence: []guidedata.EvidenceRecord{{Card: "example-step", Badge: "reproduced"}},
 	}
 	const site = "https://example.test"
-	const coverage = "1 of 1 steps is tested here (1 tested claim: 1 reproduced)"
 	for _, missing := range []string{"", "llms-full.txt", "llms-small.txt"} {
 		t.Run("missing="+missing, func(t *testing.T) {
 			dist := t.TempDir()
@@ -32,19 +30,19 @@ func TestExportsRequireEvidenceCoverage(t *testing.T) {
 			}
 			write("llms.txt", site+"/guides/ "+site+"/reference/docs/ "+site+"/guides/example/")
 			for _, name := range []string{"llms-full.txt", "llms-small.txt"} {
-				body := "# Example guide\n\n"
+				body := ""
 				if name != missing {
-					body += coverage
+					body = "# Example guide\n\nText.\n" + PageSeparator
 				}
-				write(name, body+PageSeparator+"# Reference docs\n")
+				write(name, body+"# Reference docs\n")
 			}
 			errs := checkExports(r, dist, site)
 			if missing == "" {
 				if len(errs) != 0 {
 					t.Fatalf("complete exports rejected: %v", errs)
 				}
-			} else if len(errs) != 1 || !strings.Contains(errs[0].Error(), missing+": evidence coverage missing") {
-				t.Fatalf("expected missing coverage in %s, got %v", missing, errs)
+			} else if len(errs) != 1 || !strings.Contains(errs[0].Error(), missing+": no page segment") {
+				t.Fatalf("expected the missing guide in %s, got %v", missing, errs)
 			}
 		})
 	}

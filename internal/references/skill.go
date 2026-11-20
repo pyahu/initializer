@@ -130,10 +130,9 @@ func skillIndex(r *guidedata.Repo, parts []Part, byID map[string]*guidedata.Guid
 	b.WriteString("builds and tests on every change. Written for " + baselineLine(r) + ".\n")
 	b.WriteString("The same guides are on the web at " + Site + "/guides/. A project that already follows them can be\n")
 	b.WriteString("generated at " + StarterSite + "/.\n\n")
-	b.WriteString("Public preview: each guide says at the top which of its steps are tested here. A tested claim names the\n")
-	b.WriteString("fixture test that proves it; the other steps rest on the official documentation the guide lists. Guides\n")
-	b.WriteString("marked **Draft** in the index have no tested step yet: say so when you rely on one, and do not present\n")
-	b.WriteString("its advice as verified.\n\n")
+	b.WriteString("Public preview. Guides marked **Draft** in the index have no tested step yet: say so when you rely on\n")
+	b.WriteString("one, and do not present its advice as verified. The tested claims of every guide, with the test that proves\n")
+	b.WriteString("each, are in " + guidedata.Repository + "/tree/main/data/evidence.\n\n")
 	b.WriteString("## How to use this skill\n\n")
 	b.WriteString("1. Find the question closest to the task in the index below. Open only that guide and read the step it\n")
 	b.WriteString("   points to: each step is a `## N. question` heading.\n")
@@ -230,9 +229,7 @@ func skillGuide(r *guidedata.Repo, g *guidedata.Guide) ([]byte, error) {
 	b.WriteString(Header + "\n\n")
 	fmt.Fprintf(&b, "# %s\n\n%s\n\nOn the web: %s/guides/%s/. Written for %s.\n", g.Title, g.Description, Site, g.Meta.ID, baselineLine(r))
 	if Draft(r, g) {
-		fmt.Fprintf(&b, "\n**Draft, not tested here yet.** %s. %s\n", GuideCoverage(r, g), DraftNote)
-	} else {
-		fmt.Fprintf(&b, "\n**How this guide is proven.** %s. %s Read the [tested claims and their limitations](%s/blob/main/data/evidence/%s.yaml).\n", GuideCoverage(r, g), ProofNote, guidedata.Repository, g.Meta.ID)
+		b.WriteString("\n**Draft:** no step of this guide is tested here yet.\n")
 	}
 	inFence, blank := false, false
 	emit := func(s string) {
@@ -282,12 +279,6 @@ func skillGuide(r *guidedata.Repo, g *guidedata.Guide) ([]byte, error) {
 			emit("")
 			for n, q := range g.Meta.Questions {
 				emit(fmt.Sprintf("%d. %s", n+1, q.Text))
-			}
-			emit("")
-			emit("### Tests by step")
-			emit("")
-			for _, c := range g.Cards {
-				emit(fmt.Sprintf("- %s: %s.", c.Title, Coverage(cardEvidence(r, c.ID))))
 			}
 		case name == "Recipe":
 			code, err := recipeCode(r, attrs)
