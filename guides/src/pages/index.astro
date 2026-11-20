@@ -3,12 +3,16 @@ import Icon from "../components/Icon.astro";
 import LandingLayout from "../layouts/LandingLayout.astro";
 import guideData from "../generated/guides.json";
 
+const guides = guideData.guides as Record<string, { draft: boolean }>;
+const isDraft = (href: string) => guides[href.replace(/^\/guides\/|\/$/g, "")]?.draft === true;
+const draftCount = Object.values(guides).filter((g) => g.draft).length;
+
 const parts = [
   {
     icon: "layers",
     status: "Public preview",
     title: "A knowledge base",
-    text: "24 guides with the practices Pyahu follows for Java services with Spring Boot and a Next.js frontend next to them. Each step answers one question: the failure it prevents, the fix and when to choose differently.",
+    text: "24 guides with the practices Pyahu follows for Java services with Spring Boot, from the first build to Kubernetes. Each step answers one question: the failure it prevents, the fix and when to choose differently.",
     href: "#guides",
     link: "See the guides",
   },
@@ -16,7 +20,7 @@ const parts = [
     icon: "terminal",
     status: "Preview in the repository",
     title: "A project generator",
-    text: "Generate a hexagonal or DDD layered service with optional PostgreSQL, OIDC and Next.js, plus observability, Kubernetes manifests and CI. All 16 supported combinations are built and smoke-tested.",
+    text: "Generate a hexagonal or DDD layered service with optional PostgreSQL, OIDC and a Next.js frontend, plus observability, Kubernetes manifests and CI. All 16 supported combinations are built and smoke-tested.",
     href: "https://github.com/pyahu/initializer/tree/main/services/start",
     link: "See the generator",
   },
@@ -97,7 +101,7 @@ const proof = [
   { title: "A real service behind the code", text: "The code in the guides comes from a service that CI builds, starts and tests. The 16 project combinations of the generator are built and started too." },
   { title: "Tests where they matter", text: "Claims about roles, migrations, startup and failure handling name the test CI runs on every change. Each guide says which steps are tested here and which rest on the official documentation." },
   { title: "Kept current", text: "Renovate watches the dependencies. A version update lands only when the tests behind the claims still pass." },
-  { title: "Honest about the rest", text: "Each guide says at the top how many of its steps are tested here. A green build proves only the checks that ran." },
+  { title: "Honest about the rest", text: `Each guide says at the top how many of its steps are tested here. ${draftCount} guides have no test yet and are marked Draft.` },
 ];
 
 const roadmap = [
@@ -107,13 +111,13 @@ const roadmap = [
 ];
 ---
 
-<LandingLayout title="Pyahu Initializer" description="A knowledge base for production Java with Spring Boot and Next.js and a generator for tested starter projects.">
+<LandingLayout title="Pyahu Initializer" description="Guides for running Java services with Spring Boot in production and a generator for tested starter projects.">
   <section class="hero">
     <div class="hero-grid">
       <div class="hero-content">
-        <p class="eyebrow"><span class="signal"></span>Java · Spring Boot · Next.js · Kubernetes</p>
+        <p class="eyebrow"><span class="signal"></span>Java · Spring Boot · Kubernetes</p>
         <h1>Production Java, explained. <span>Then generated.</span></h1>
-        <p class="hero-copy">Pyahu Initializer is a set of guides for running Spring Boot and Next.js in production and a generator that starts a project already following them.</p>
+        <p class="hero-copy">Pyahu Initializer is a set of guides for running Spring Boot services in production and a generator that starts a project already following them.</p>
         <div class="hero-actions">
           <a class="button primary" href="/start-here/">Start here <Icon name="arrow" size={18} /></a>
           <a class="button quiet" href="/guides/">All guides</a>
@@ -160,7 +164,7 @@ const roadmap = [
     <div class="section-heading">
       <p class="eyebrow">The guides</p>
       <h2 id="guides-title">Six parts, one service.</h2>
-      <p class="section-lead">Follow them in order to build a service from the first commit to production or jump straight to the question you have today.</p>
+      <p class="section-lead">Follow them in order to build a service from the first commit to production or jump straight to the question you have today. A guide marked Draft has no tested step yet.</p>
     </div>
     <div class="profile-grid module-grid">
       {modules.map((m) => (
@@ -169,7 +173,7 @@ const roadmap = [
           <p>{m.text}</p>
           <ul>
             {m.guides.map((g) => (
-              <li><a href={g.href}>{g.title}</a></li>
+              <li><a href={g.href}>{g.title}</a>{isDraft(g.href) && <span class="pill draft-pill">Draft</span>}</li>
             ))}
           </ul>
         </article>

@@ -60,6 +60,8 @@ type guideOut struct {
 	State      string             `json:"state"`
 	Baseline   string             `json:"baseline"`
 	Coverage   string             `json:"coverage"`
+	Draft      bool               `json:"draft"`
+	Note       string             `json:"note"`
 	Sources    []guidedata.Source `json:"sources"`
 	Questions  []questionOut      `json:"questions"`
 	Cards      map[string]cardOut `json:"cards"`
@@ -113,6 +115,35 @@ func cardEvidence(r *guidedata.Repo, card string) []guidedata.EvidenceRecord {
 	return records
 }
 
+// DraftNote is shown instead of ProofNote on a guide with no tested step.
+const DraftNote = "This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end " +
+	"and on Pyahu's practice. Use it as a starting point and check each step against your own service."
+
+// TestedSteps counts the steps of a guide that have at least one tested claim.
+func TestedSteps(r *guidedata.Repo, g *guidedata.Guide) int {
+	n := 0
+	for _, c := range g.Cards {
+		if len(cardEvidence(r, c.ID)) > 0 {
+			n++
+		}
+	}
+	return n
+}
+
+// Draft reports whether a guide gives advice to act on and has no tested step. A comparison that only
+// explains (state explanatory) has nothing to test.
+func Draft(r *guidedata.Repo, g *guidedata.Guide) bool {
+	return g.Meta.State != "explanatory" && TestedSteps(r, g) == 0
+}
+
+// Note is the paragraph under a guide's coverage line.
+func Note(r *guidedata.Repo, g *guidedata.Guide) string {
+	if Draft(r, g) {
+		return DraftNote
+	}
+	return ProofNote
+}
+
 // GuideCoverage summarises a guide's tests: "3 of 8 steps are tested here (5 tested claims: 3 reproduced, 2 compiled)".
 // The verb agrees with the tested steps: "1 of 8 steps is tested here".
 func GuideCoverage(r *guidedata.Repo, g *guidedata.Guide) string {
@@ -144,7 +175,7 @@ func GuidesJSON(r *guidedata.Repo) ([]byte, error) {
 			cardTitle[c.ID] = c.Title
 		}
 		out := guideOut{ID: g.Meta.ID, Title: g.Title, State: g.Meta.State, Baseline: r.Versions.Active,
-			Coverage: GuideCoverage(r, g), Sources: g.Meta.Sources, Cards: map[string]cardOut{},
+			Coverage: GuideCoverage(r, g), Draft: Draft(r, g), Note: Note(r, g), Sources: g.Meta.Sources, Cards: map[string]cardOut{},
 			Questions: []questionOut{}, Contents: []contentOut{}, Checklist: []checklistOut{}, References: []refOut{}}
 		if out.Sources == nil {
 			out.Sources = []guidedata.Source{}
@@ -183,7 +214,6 @@ func GuidesJSON(r *guidedata.Repo) ([]byte, error) {
 	return marshal(map[string]any{
 		"generatedBy": "guidekit generate",
 		"active":      r.Versions.Active,
-		"proofNote":   ProofNote,
 		"legend":      guidedata.LegendText,
 		"guides":      guides,
 	})

@@ -11,17 +11,25 @@ const guideLinks = readFileSync(new URL("./src/content/docs/guides.mdx", import.
   .filter((l) => /^- \[[^\]]+\]\(\/guides\/[a-z0-9-]+\/\)/.test(l))
   .map((l) => l.replace("](/", `](${site}/`));
 
+// A guide with no tested step carries a Draft badge in the menu, from the same data its page shows.
+const guideData = JSON.parse(readFileSync(new URL("./src/generated/guides.json", import.meta.url), "utf8")).guides;
+const draftBadge = (item) =>
+  item.slug?.startsWith("guides/") && guideData[item.slug.slice("guides/".length)]?.draft
+    ? { ...item, badge: { text: "Draft", variant: "caution" } }
+    : item;
+const withDrafts = (groups) => groups.map((g) => (g.items ? { ...g, items: g.items.map(draftBadge) } : g));
+
 export default defineConfig({
   site,
   integrations: [
     starlight({
       title: "Pyahu Initializer",
-      description: "Production practices for Java with Spring Boot and Next.js and a generator for production-ready projects.",
+      description: "Production practices for Java services with Spring Boot and a generator for tested starter projects.",
       logo: { src: "./src/assets/mark.svg", alt: "Pyahu Initializer", replacesTitle: false },
       favicon: "/assets/mark.svg",
       social: [{ icon: "github", label: "GitHub", href: "https://github.com/pyahu/initializer" }],
       customCss: ["./src/styles/starlight.css"],
-      sidebar: [
+      sidebar: withDrafts([
         { label: "Start here", items: [{ label: "The recommended path", slug: "start-here" }, { label: "All guides", slug: "guides" }] },
         {
           label: "1. Foundations",
@@ -85,7 +93,7 @@ export default defineConfig({
             { label: "Reference docs", slug: "reference/docs" },
           ],
         },
-      ],
+      ]),
       plugins: [
         starlightLlmsTxt({
           details: [

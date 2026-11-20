@@ -11,11 +11,11 @@ if (!g) throw new Error(`GuideStatus: unknown guide ${guide}`);
 const evidenceURL = `https://github.com/pyahu/initializer/blob/main/data/evidence/${guide}.yaml`;
 ---
 <div class="guide-map not-content">
-  <Aside type="note" title="How this guide is proven">
+  <Aside type={g.draft ? "caution" : "note"} title={g.draft ? "Draft, not tested here yet" : "How this guide is proven"}>
     <p>Written for baseline <strong>{g.baseline}</strong>. {g.coverage}.</p>
     <p>
-      {data.proofNote}
-      {" "}<a href={evidenceURL}>Read the tested claims and their limitations</a>.
+      {g.note}
+      {!g.draft && <>{" "}<a href={evidenceURL}>Read the tested claims and their limitations</a>.</>}
     </p>
   </Aside>
   <nav class="guide-map-block" aria-labelledby={`${guide}-learn`}>
@@ -27,12 +27,14 @@ const evidenceURL = `https://github.com/pyahu/initializer/blob/main/data/evidenc
       Then <a href="#put-it-all-together">put it all together</a> with examples and review a service with the <a href="#checklist">checklist</a>.
     </p>
   </nav>
-  <details class="guide-evidence">
-    <summary>Tests by step</summary>
-    <ul>
-      {g.contents.map((c: any) => (
-        <li><a href={`#${c.id}`}>{c.title}</a>: {g.cards[c.id].coverage}.</li>
-      ))}
-    </ul>
-  </details>
+  {!g.draft && (
+    <details class="guide-evidence">
+      <summary>Tests by step</summary>
+      <ul>
+        {g.contents.map((c: any) => (
+          <li><a href={`#${c.id}`}>{c.title}</a>: {g.cards[c.id].coverage}.</li>
+        ))}
+      </ul>
+    </details>
+  )}
 </div>

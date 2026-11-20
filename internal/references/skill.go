@@ -220,7 +220,11 @@ func skillGuide(r *guidedata.Repo, g *guidedata.Guide) ([]byte, error) {
 	var b strings.Builder
 	b.WriteString(Header + "\n\n")
 	fmt.Fprintf(&b, "# %s\n\n%s\n\nOn the web: %s/guides/%s/. Written for %s.\n", g.Title, g.Description, Site, g.Meta.ID, baselineLine(r))
-	fmt.Fprintf(&b, "\n**How this guide is proven.** %s. %s Read the [tested claims and their limitations](%s/blob/main/data/evidence/%s.yaml).\n", GuideCoverage(r, g), ProofNote, guidedata.Repository, g.Meta.ID)
+	if Draft(r, g) {
+		fmt.Fprintf(&b, "\n**Draft, not tested here yet.** %s. %s\n", GuideCoverage(r, g), DraftNote)
+	} else {
+		fmt.Fprintf(&b, "\n**How this guide is proven.** %s. %s Read the [tested claims and their limitations](%s/blob/main/data/evidence/%s.yaml).\n", GuideCoverage(r, g), ProofNote, guidedata.Repository, g.Meta.ID)
+	}
 	inFence, blank := false, false
 	emit := func(s string) {
 		if s == "" {

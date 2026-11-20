@@ -8,6 +8,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "4 of 8 steps are tested here (4 tested claims: 4 compiled)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [],
       "questions": [
         {
@@ -342,6 +344,8 @@
       "state": "explanatory",
       "baseline": "v0.1-b2",
       "coverage": "None of its 8 steps is tested here yet",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [],
       "questions": [
         {
@@ -611,6 +615,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "7 of 8 steps are tested here (7 tested claims: 7 compiled)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [],
       "questions": [
         {
@@ -1035,6 +1041,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "None of its 8 steps is tested here yet",
+      "draft": true,
+      "note": "This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.",
       "sources": [],
       "questions": [
         {
@@ -1303,6 +1311,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "3 of 8 steps are tested here (3 tested claims: 2 reproduced, 1 compiled)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [],
       "questions": [
         {
@@ -1670,6 +1680,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "2 of 8 steps are tested here (2 tested claims: 2 reproduced)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [
         {
           "title": "09 · Configuration and secrets",
@@ -1976,6 +1988,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "3 of 8 steps are tested here (3 tested claims: 2 reproduced, 1 compiled)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [
         {
           "title": "07 · Container image and supply chain",
@@ -2445,6 +2459,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "3 of 9 steps are tested here (3 tested claims: 3 reproduced)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [
         {
           "title": "03 · Database in production",
@@ -2894,6 +2910,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "1 of 8 steps is tested here (1 tested claim: 1 reproduced)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [],
       "questions": [
         {
@@ -3237,6 +3255,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "1 of 8 steps is tested here (1 tested claim: 1 reproduced)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [
         {
           "title": "04 · HTTP clients and resilience",
@@ -3576,6 +3596,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "None of its 8 steps is tested here yet",
+      "draft": true,
+      "note": "This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.",
       "sources": [],
       "questions": [
         {
@@ -3937,6 +3959,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "5 of 8 steps are tested here (10 tested claims: 1 measured, 9 reproduced)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [
         {
           "title": "01 · The JVM in containers: memory, CPU, GC and startup",
@@ -4509,6 +4533,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "None of its 8 steps is tested here yet",
+      "draft": true,
+      "note": "This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.",
       "sources": [],
       "questions": [
         {
@@ -4906,6 +4932,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "1 of 9 steps is tested here (1 tested claim: 1 reproduced)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [
         {
           "title": "06 · Deploying Spring Boot on Kubernetes",
@@ -5253,6 +5281,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "None of its 8 steps is tested here yet",
+      "draft": true,
+      "note": "This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.",
       "sources": [
         {
           "title": "10 · Kubernetes manifests: plain YAML, Helm and Kustomize",
@@ -5564,6 +5594,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "2 of 8 steps are tested here (2 tested claims: 2 reproduced)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [],
       "questions": [
         {
@@ -5840,6 +5872,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "None of its 8 steps is tested here yet",
+      "draft": true,
+      "note": "This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.",
       "sources": [],
       "questions": [
         {
@@ -6139,6 +6173,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "None of its 8 steps is tested here yet",
+      "draft": true,
+      "note": "This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.",
       "sources": [],
       "questions": [
         {
@@ -6587,6 +6623,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "7 of 8 steps are tested here (7 tested claims: 6 reproduced, 1 compiled)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [
         {
           "title": "05 · Observability with OpenTelemetry and the Grafana LGTM stack",
@@ -7107,6 +7145,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "None of its 8 steps is tested here yet",
+      "draft": true,
+      "note": "This guide is a draft: nothing in it has been run here yet. It rests on the official documentation listed at the end and on Pyahu's practice. Use it as a starting point and check each step against your own service.",
       "sources": [],
       "questions": [
         {
@@ -7421,6 +7461,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "1 of 8 steps is tested here (1 tested claim: 1 compiled)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [],
       "questions": [
         {
@@ -7707,6 +7749,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "1 of 9 steps is tested here (1 tested claim: 1 reproduced)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [
         {
           "title": "08 · Security hardening",
@@ -8102,6 +8146,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "3 of 8 steps are tested here (4 tested claims: 1 reproduced, 3 compiled)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [],
       "questions": [
         {
@@ -8424,6 +8470,8 @@
       "state": "draft",
       "baseline": "v0.1-b2",
       "coverage": "3 of 8 steps are tested here (4 tested claims: 3 reproduced, 1 compiled)",
+      "draft": false,
+      "note": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them.",
       "sources": [
         {
           "title": "02 · Virtual threads and concurrency in Spring Boot 4",
@@ -8732,6 +8780,5 @@
     "failure": "Failure: what breaks (red, short dash, marked ✕).",
     "optional": "Optional: an optional or later step (dashed).",
     "recommended": "Recommended: what the guide recommends, or what changed."
-  },
-  "proofNote": "A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them."
+  }
 }

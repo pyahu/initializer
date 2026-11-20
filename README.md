@@ -1,6 +1,6 @@
 # Pyahu Initializer
 
-Guides with the production practices Pyahu follows for Spring Boot, Java and Next.js, shared with the community.
+Guides with the production practices Pyahu follows for Java services with Spring Boot, shared with the community.
 A preview generator implements the supported starting projects. Each guide step answers one question with the failure it prevents.
 The guides are a public preview: each guide shows which steps are tested here and names the test of each tested
 claim. The other steps rest on the official documentation the guide lists.
