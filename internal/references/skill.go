@@ -20,6 +20,9 @@ const SkillDir = "skills/" + SkillName
 // Site is the public site the skill links back to.
 const Site = "https://initializer.pyahu.io"
 
+// StarterSite is the public project generator.
+const StarterSite = "https://start.pyahu.io"
+
 // Part is one group of the guides index page (guides/src/content/docs/guides.mdx).
 type Part struct {
 	Title  string
@@ -119,16 +122,18 @@ func baselineLine(r *guidedata.Repo) string {
 func skillIndex(r *guidedata.Repo, parts []Part, byID map[string]*guidedata.Guide) []byte {
 	var b strings.Builder
 	b.WriteString("---\nname: " + SkillName + "\n")
-	b.WriteString("description: Production practices for Spring Boot 4.1 services on Java 25, Kubernetes and a Next.js frontend, from the Pyahu Initializer guides. Use when building, configuring, reviewing or deploying a Spring Boot service, including build and architecture, tests, REST and gRPC APIs, PostgreSQL with JDBC, JPA or jOOQ, Kafka, RabbitMQ, caching, JVM sizing, configuration, observability, security, container images, CI, Kubernetes, local development, monorepos and Next.js.\n---\n\n")
+	b.WriteString("description: Production practices for Spring Boot 4.1 services on Java 25 and Kubernetes, from the Pyahu Initializer guides. Use when building, configuring, reviewing or deploying a Spring Boot service, including build and architecture, tests, REST and gRPC APIs, PostgreSQL with JDBC, JPA or jOOQ, Kafka, RabbitMQ, caching, JVM sizing, configuration, observability, security, container images, CI, Kubernetes, local development, monorepos and a Next.js frontend next to the service.\n---\n\n")
 	b.WriteString(Header + "\n\n")
 	b.WriteString("# Pyahu production guides\n\n")
 	b.WriteString("The practices Pyahu follows in every service it generates, written as guides for people and tools alike.\n")
 	b.WriteString("Each guide answers a few questions, one step per question. The code in them is cut from a service that CI\n")
 	b.WriteString("builds and tests on every change. Written for " + baselineLine(r) + ".\n")
-	b.WriteString("The same guides are on the web at " + Site + "/guides/.\n\n")
-	b.WriteString("Public preview: every guide shows its evidence coverage. Compiled means code builds, reproduced means a\n")
-	b.WriteString("named behaviour passed a test and measured means a measurement was recorded. Claims marked not exercised\n")
-	b.WriteString("have no test result here. Read their evidence records before presenting the advice as verified.\n\n")
+	b.WriteString("The same guides are on the web at " + Site + "/guides/. A project that already follows them can be\n")
+	b.WriteString("generated at " + StarterSite + "/.\n\n")
+	b.WriteString("Public preview: each guide says at the top which of its steps are tested here. A tested claim names the\n")
+	b.WriteString("fixture test that proves it; the other steps rest on the official documentation the guide lists. Guides\n")
+	b.WriteString("marked **Draft** in the index have no tested step yet: say so when you rely on one, and do not present\n")
+	b.WriteString("its advice as verified.\n\n")
 	b.WriteString("## How to use this skill\n\n")
 	b.WriteString("1. Find the question closest to the task in the index below. Open only that guide and read the step it\n")
 	b.WriteString("   points to: each step is a `## N. question` heading.\n")
@@ -145,7 +150,11 @@ func skillIndex(r *guidedata.Repo, parts []Part, byID map[string]*guidedata.Guid
 		fmt.Fprintf(&b, "\n### Part %d: %s\n\n%s\n", i+1, p.Title, p.Lead)
 		for _, id := range p.Guides {
 			g := byID[id]
-			fmt.Fprintf(&b, "\n**[%s](guides/%s.md)**: %s\n\n", g.Title, id, g.Description)
+			draft := ""
+			if Draft(r, g) {
+				draft = " (Draft)"
+			}
+			fmt.Fprintf(&b, "\n**[%s](guides/%s.md)**%s: %s\n\n", g.Title, id, draft, g.Description)
 			for n, q := range g.Meta.Questions {
 				fmt.Fprintf(&b, "%d. %s\n", n+1, q.Text)
 			}

@@ -7,6 +7,9 @@ can read it on GitHub and AI coding tools can load the one guide a task needs.
 `guidekit generate` writes it from the same sources as the site, so the two never drift. Do not edit it by
 hand: change the guide and regenerate.
 
+Each guide says which of its steps are tested here. Guides marked Draft in the index have no tested step yet.
+To start a project that already follows the guides, use the generator at https://start.pyahu.io.
+
 ## What it is good for
 
 - **Writing code:** ask your tool to configure the database pool, add an outbox or harden the pod. It reads
