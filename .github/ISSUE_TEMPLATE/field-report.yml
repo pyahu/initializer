@@ -1,0 +1,36 @@
+name: Field report
+description: You took the recommended path with a real service. Tell us how it went.
+title: "Field report: "
+labels: [field-report]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. Short answers are fine; leave out anything you cannot share.
+  - type: input
+    id: first-deploy
+    attributes:
+      label: Time to the first deploy
+      description: From generating the project to the service running in a shared environment.
+      placeholder: "2 days, of which half a day on database roles"
+    validations:
+      required: true
+  - type: textarea
+    id: stuck
+    attributes:
+      label: Where did you get stuck?
+      description: The step, the error and what got you past it.
+  - type: textarea
+    id: changed
+    attributes:
+      label: What did you change in the generated project, and why?
+  - type: textarea
+    id: skipped
+    attributes:
+      label: Which advice did you not follow?
+      description: And whether the guide's "When this is not for you" said so.
+  - type: input
+    id: context
+    attributes:
+      label: Your platform
+      description: Kubernetes flavour, database hosting, identity provider, CI.

@@ -2893,7 +2893,7 @@
       "title": "gRPC services",
       "state": "draft",
       "baseline": "v0.1-b2",
-      "coverage": "1 of 8 steps are tested here (1 tested claim: 1 reproduced)",
+      "coverage": "1 of 8 steps is tested here (1 tested claim: 1 reproduced)",
       "sources": [],
       "questions": [
         {
@@ -3236,7 +3236,7 @@
       "title": "HTTP clients and resilience",
       "state": "draft",
       "baseline": "v0.1-b2",
-      "coverage": "1 of 8 steps are tested here (1 tested claim: 1 reproduced)",
+      "coverage": "1 of 8 steps is tested here (1 tested claim: 1 reproduced)",
       "sources": [
         {
           "title": "04 · HTTP clients and resilience",
@@ -4905,7 +4905,7 @@
       "title": "Deploying to Kubernetes",
       "state": "draft",
       "baseline": "v0.1-b2",
-      "coverage": "1 of 9 steps are tested here (1 tested claim: 1 reproduced)",
+      "coverage": "1 of 9 steps is tested here (1 tested claim: 1 reproduced)",
       "sources": [
         {
           "title": "06 · Deploying Spring Boot on Kubernetes",
@@ -7420,7 +7420,7 @@
       "title": "REST APIs, contract first",
       "state": "draft",
       "baseline": "v0.1-b2",
-      "coverage": "1 of 8 steps are tested here (1 tested claim: 1 compiled)",
+      "coverage": "1 of 8 steps is tested here (1 tested claim: 1 compiled)",
       "sources": [],
       "questions": [
         {
@@ -7706,7 +7706,7 @@
       "title": "Security hardening",
       "state": "draft",
       "baseline": "v0.1-b2",
-      "coverage": "1 of 9 steps are tested here (1 tested claim: 1 reproduced)",
+      "coverage": "1 of 9 steps is tested here (1 tested claim: 1 reproduced)",
       "sources": [
         {
           "title": "08 · Security hardening",

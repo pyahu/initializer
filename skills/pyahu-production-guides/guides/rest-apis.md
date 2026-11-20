@@ -6,7 +6,7 @@ Write the OpenAPI contract first, generate the Spring interfaces from it and ser
 
 On the web: https://initializer.pyahu.io/guides/rest-apis/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**How this guide is proven.** 1 of 8 steps are tested here (1 tested claim: 1 compiled). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/rest-apis.yaml).
+**How this guide is proven.** 1 of 8 steps is tested here (1 tested claim: 1 compiled). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/rest-apis.yaml).
 
 The frontend team asks what `POST /orders` returns when the stock runs out. Nobody knows for sure: the answer is
 somewhere in a controller, a few exception handlers and a wiki page from last year. Each endpoint returns errors

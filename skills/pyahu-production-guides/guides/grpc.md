@@ -6,7 +6,7 @@ Serve and call gRPC from Spring Boot 4.1 with a safe contract, deadlines, honest
 
 On the web: https://initializer.pyahu.io/guides/grpc/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**How this guide is proven.** 1 of 8 steps are tested here (1 tested claim: 1 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/grpc.yaml).
+**How this guide is proven.** 1 of 8 steps is tested here (1 tested claim: 1 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/grpc.yaml).
 
 You moved two internal services from JSON to gRPC and the first week looks great. Then you scale the server to
 four pods and one of them runs hot while three sit idle. A slow call hangs for minutes because nothing told it to

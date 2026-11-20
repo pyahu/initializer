@@ -114,6 +114,7 @@ func cardEvidence(r *guidedata.Repo, card string) []guidedata.EvidenceRecord {
 }
 
 // GuideCoverage summarises a guide's tests: "3 of 8 steps are tested here (5 tested claims: 3 reproduced, 2 compiled)".
+// The verb agrees with the tested steps: "1 of 8 steps is tested here".
 func GuideCoverage(r *guidedata.Repo, g *guidedata.Guide) string {
 	var all []guidedata.EvidenceRecord
 	tested := 0
@@ -127,7 +128,11 @@ func GuideCoverage(r *guidedata.Repo, g *guidedata.Guide) string {
 	if tested == 0 {
 		return fmt.Sprintf("None of its %d steps is tested here yet", len(g.Cards))
 	}
-	return fmt.Sprintf("%d of %d steps are tested here (%s)", tested, len(g.Cards), claims(all))
+	verb := "are"
+	if tested == 1 {
+		verb = "is"
+	}
+	return fmt.Sprintf("%d of %d steps %s tested here (%s)", tested, len(g.Cards), verb, claims(all))
 }
 
 // GuidesJSON renders guides/src/generated/guides.json.

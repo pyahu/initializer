@@ -20,7 +20,7 @@ func TestExportsRequireEvidenceCoverage(t *testing.T) {
 		Evidence: []guidedata.EvidenceRecord{{Card: "example-step", Badge: "reproduced"}},
 	}
 	const site = "https://example.test"
-	const coverage = "1 of 1 steps are tested here (1 tested claim: 1 reproduced)"
+	const coverage = "1 of 1 steps is tested here (1 tested claim: 1 reproduced)"
 	for _, missing := range []string{"", "llms-full.txt", "llms-small.txt"} {
 		t.Run("missing="+missing, func(t *testing.T) {
 			dist := t.TempDir()

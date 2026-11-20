@@ -6,7 +6,7 @@ Call other services from Spring Boot 4.1 with timeouts, bounded retries and a li
 
 On the web: https://initializer.pyahu.io/guides/http-clients/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**How this guide is proven.** 1 of 8 steps are tested here (1 tested claim: 1 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/http-clients.yaml).
+**How this guide is proven.** 1 of 8 steps is tested here (1 tested claim: 1 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/http-clients.yaml).
 
 The payments service did not go down. It just got slow. Within a minute your own service stops answering: every
 request is stuck waiting on payments and the retries you added to be safe triple the load on a service that is

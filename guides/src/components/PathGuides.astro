@@ -1,0 +1,26 @@
+---
+// The recommended path: each guide in reading order, what it decides and, from the evidence, what is tested here.
+import data from "../generated/guides.json";
+const steps: [string, string][] = [
+  ["architecture", "Where the domain, the use cases and the adapters go."],
+  ["rest-apis", "The contract first, then the controllers that implement it."],
+  ["database", "Pool budget, timeouts, who may change the schema and when migrations run."],
+  ["security", "Which tokens the service accepts and how they become permissions."],
+  ["configuration", "Settings and secrets per environment, validated on start."],
+  ["observability", "Traces, metrics and logs that follow one request."],
+  ["jvm-in-containers", "Heap, CPUs and garbage collector inside the pod's limits."],
+  ["container-image", "A small image, not root, with the artifact that passed the tests."],
+  ["ci-pipelines", "One pipeline that builds, tests, scans and promotes that image."],
+  ["kubernetes-deployment", "Probes, rollout, migration Job and disruption budget."],
+];
+const guides = data.guides as Record<string, any>;
+for (const [id] of steps) if (!guides[id]) throw new Error(`PathGuides: unknown guide ${id}`);
+---
+<ol class="path-guides">
+  {steps.map(([id, decides]) => (
+    <li>
+      <p><a href={`/guides/${id}/`}><strong>{guides[id].title}</strong></a>. {decides}</p>
+      <p class="checklist-meta">{guides[id].coverage}.</p>
+    </li>
+  ))}
+</ol>

@@ -6,7 +6,7 @@ Probes, shutdown, resources, rollouts, disruption, scaling and placement for a S
 
 On the web: https://initializer.pyahu.io/guides/kubernetes-deployment/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-**How this guide is proven.** 1 of 9 steps are tested here (1 tested claim: 1 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/kubernetes-deployment.yaml).
+**How this guide is proven.** 1 of 9 steps is tested here (1 tested claim: 1 reproduced). A tested claim names a fixture test that CI runs on every change, so it fails as soon as the claim stops holding. Compiled means the code builds; reproduced means a test observed the behaviour; measured means a recorded measurement. The other steps rest on the official documentation listed at the end of the guide and on Pyahu's practice; no test here proves them. Read the [tested claims and their limitations](https://github.com/pyahu/initializer/blob/main/data/evidence/kubernetes-deployment.yaml).
 
 The database fails over at 3 a.m. Thirty seconds later every pod of your service restarts at once and each one
 hits the database while it is still recovering. Next day a routine deploy returns a burst of 502s. Nothing in the

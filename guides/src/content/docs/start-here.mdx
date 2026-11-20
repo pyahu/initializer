@@ -1,0 +1,59 @@
+---
+title: Start here
+description: The recommended path from an empty repository to one Spring Boot service in production, with REST, PostgreSQL, tokens, telemetry and Kubernetes.
+tableOfContents: { maxHeadingLevel: 2 }
+---
+import PathGuides from '../../components/PathGuides.astro';
+
+You have one service to take to production. This page is the shortest way through the guides: one project, ten
+guides in the order you will need them and a way to tell us where it went wrong. It is the path we test most.
+
+The path is a hexagonal Spring Boot service with a REST contract, PostgreSQL, tokens from your identity provider,
+OpenTelemetry and Kubernetes. If your service needs Kafka, gRPC or a frontend, take this path first; the other
+guides build on it.
+
+## 1. Generate the project
+
+The generator is a preview that runs from the repository. It needs Java 25 and Docker.
+
+```sh
+git clone https://github.com/pyahu/initializer && cd initializer
+./gradlew :start:bootRun
+```
+
+In another terminal, ask it for the recommended project and start it:
+
+```sh
+curl localhost:8080/starter.zip -d name=orders -d group=com.example \
+  -d architecture=hexagonal -d database=postgres -d auth=oidc -o orders.zip
+unzip orders.zip && cd orders
+./gradlew bootRun
+```
+
+The project's `README.md` shows how to get a local token and call it. `CHECKLIST.md` lists the review items of
+every guide that applies to it.
+
+## 2. Read the guides in this order
+
+Each guide explains the choices the project already makes, the failure each one prevents and when it is not for
+you. Under each guide: how much of it is tested here.
+
+<PathGuides />
+
+[Local development](/guides/local-development/) and [Testing](/guides/testing/) cover the daily work around it.
+
+## 3. Take it to your environment
+
+Before the first deploy, the project needs what only your platform has: an image registry, the database and its
+two roles, the issuer and audience of your identity provider, the Secrets and a namespace. The
+[deployment guide](/guides/kubernetes-deployment/) lists them in order; the generated `deploy/` holds the
+manifests and `deploy/apply.sh` applies them with the migration Job first.
+
+## 4. Tell us how it went
+
+We are looking for two or three teams to take this path with a real service. We want to know how long it took
+to reach the first deploy, where you got stuck and what you changed. That decides what we test next and what we
+cut.
+
+[Send a field report](https://github.com/pyahu/initializer/issues/new?template=field-report.yml). A short one helps
+as much as a long one.
