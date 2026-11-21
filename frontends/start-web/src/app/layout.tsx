@@ -20,8 +20,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <span className="brand-product">start</span>
             </span>
           </a>
-          <span className="badge" title="Until every combination runs on a real cluster">
-            Preview
+          <span className="badge" title="Usable and still changing; every combination is built and started by CI">
+            Public preview
           </span>
           <nav aria-label="Primary navigation">
             <a href="https://initializer.pyahu.io/guides/">Guides</a>
