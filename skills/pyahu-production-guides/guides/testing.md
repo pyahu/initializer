@@ -24,6 +24,7 @@ built image.
 6. How do I test calls to other services?
 7. Why is my test suite so slow?
 8. How do I know the image really works?
+9. How do I know the tests catch mistakes?
 
 ## 1. Where should most of my tests live?
 
@@ -275,6 +276,59 @@ metric and log in a real observability backend.
 
 - A library or a service that is never shipped as an image: stop at the integration tests.
 
+## 9. How do I know the tests catch mistakes?
+
+**In short:** measure coverage on the business rules, then let mutation testing change that code and check that a
+test fails.
+
+### What's going on
+
+A suite can be green and still check nothing. A test that calls a method and asserts nothing passes, and coverage
+counts every line it ran as tested. When an AI tool writes tests to reach a coverage number, this is what it tends
+to produce.
+
+Coverage, measured by JaCoCo, answers one question: which code did no test run at all? That is a useful floor. It
+says nothing about whether a test would notice a bug.
+
+Mutation testing answers that. PIT makes one small change to the compiled code at a time: it turns `>` into `>=`,
+returns `0` instead of the result or removes a call. Each change is a mutant. PIT runs the tests that cover it. If a
+test fails, the mutant is killed; if all pass, it survived, and that is a bug your tests would not see. The share of
+killed mutants is the mutation score.
+
+A test that runs a discount rule three times without an assertion shows the difference. It reaches full line
+coverage and passes a coverage gate. PIT kills none of its mutants and fails the build.
+
+Mutation testing is slow when each mutant starts Spring, so run it on the business rules with their fast tests.
+
+### Do this
+
+1. Tag tests that start the application or a container with `@Tag("integration")`. Run the others in `test` and the
+   tagged ones in a separate `integrationTest` task, so the fast feedback comes first.
+2. Measure coverage with JaCoCo over both tasks. Set the gate on `domain` and `application` only: 80% of lines and
+   70% of branches. Slice and integration tests cover the adapters; a percentage there pushes people to test
+   getters.
+3. Run PIT on the same packages, with their fast tests and a `mutationThreshold` of 70:
+
+   ```kotlin
+   pitest {
+       targetClasses = setOf("com.example.orders.*.domain.*", "com.example.orders.*.application.*")
+       targetTests = setOf("com.example.orders.*.domain.*", "com.example.orders.*.application.*")
+       excludedGroups = setOf("integration")
+       mutationThreshold = 70
+   }
+   ```
+
+4. Make `check` depend on `integrationTest`, the coverage verification and `pitest`, so `./gradlew build` fails when
+   either score drops.
+5. When a mutant survives, add the assertion that would have caught it. Never add a test only to raise a number.
+
+### When this is not for you
+
+- A service with almost no business rules, such as a thin proxy: there is little to mutate and the gates pass with
+  nothing to check. Keep them for when rules arrive.
+- A large codebase where PIT takes too long: turn on its incremental analysis (`withHistory`) and keep the history
+  between CI runs.
+
 ## Put it all together
 
 The example service has one full context test and the tests from steps 4, 5 and 8. Its build runs them on every
@@ -365,6 +419,8 @@ classes.
 - **TEST-05** The real migrations run in tests, so a changeset that does not apply fails the build. (step 5; when database: postgres)
 - **TEST-06** Outbound clients are built from Boot's RestClient.Builder and tested with @RestClientTest, error responses included. (step 6)
 - **TEST-07** Integration tests import one shared @TestConfiguration; no @DirtiesContext and no @MockitoBean in @SpringBootTest classes. (step 7)
+- **TEST-10** Tests that start the application or a container carry @Tag("integration") and run in their own task after the fast tests. (step 9)
+- **TEST-11** JaCoCo gates domain and application at 80% of lines and 70% of branches; PIT runs on them with a mutation threshold of 70; both are part of check. (step 9)
 
 ### Verified behaviour
 
@@ -385,3 +441,8 @@ classes.
 - [Postgres module](https://java.testcontainers.org/modules/databases/postgres/) (2.0.5, not version-pinned)
 - [JUnit 5 quickstart](https://java.testcontainers.org/quickstart/junit_5_quickstart/) (2.0.5, not version-pinned)
 - [Release 2.0.5](https://github.com/testcontainers/testcontainers-java/releases/tag/2.0.5) (2.0.5)
+- [The JaCoCo plugin](https://docs.gradle.org/9.8.1/userguide/jacoco_plugin.html) (9.8.1): Gradle's jacoco plugin: reports, execution data and coverage verification rules.
+- [JaCoCo coverage counters](https://www.jacoco.org/jacoco/trunk/doc/counters.html) (0.8.16, not version-pinned): What line and branch coverage count.
+- [PIT quick start](https://pitest.org/quickstart/) (1.30.2, not version-pinned): How mutation testing works and how PIT reports killed and surviving mutants.
+- [PIT mutators](https://pitest.org/quickstart/mutators/) (1.30.2, not version-pinned): The changes PIT makes to the code.
+- [Gradle plugin for PIT](https://gradle-pitest-plugin.solidsoft.info/) (1.19.0, not version-pinned): The info.solidsoft.pitest plugin: targetClasses, targetTests, excludedGroups, mutationThreshold and withHistory.

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!-- What PMD checks here (build quality guide, step 9). Formatting is Spotless's job and bugs found by the compiler
+     are Error Prone's; System.out and generic exceptions are
+     ArchitectureTest's. None is repeated here. -->
+<ruleset name="Pyahu"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+  <description>Complexity, size and a few defects the compiler checks miss.</description>
+
+  <!-- Code too complex to read, test or change safely. -->
+  <rule ref="category/java/design.xml/CognitiveComplexity"/>
+  <rule ref="category/java/design.xml/CyclomaticComplexity"/>
+  <rule ref="category/java/design.xml/NPathComplexity"/>
+  <rule ref="category/java/design.xml/GodClass"/>
+  <rule ref="category/java/design.xml/ExcessiveParameterList"/>
+
+  <!-- Errors that disappear or lose their meaning. -->
+  <rule ref="category/java/errorprone.xml/EmptyCatchBlock"/>
+  <rule ref="category/java/errorprone.xml/AvoidCatchingGenericException"/>
+
+  <!-- Code left behind. -->
+  <rule ref="category/java/bestpractices.xml/UnusedPrivateField"/>
+  <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod"/>
+  <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
+</ruleset>

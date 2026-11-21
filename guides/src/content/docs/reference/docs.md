@@ -182,6 +182,13 @@ Baseline **v0.1-b2**. The baseline version is what the examples use. The documen
 | [JUnit 5 quickstart](https://java.testcontainers.org/quickstart/junit_5_quickstart/) | 2.0.5 | not version-pinned | JUnit 5 quickstart. |
 | [Docs source at tag (pinned alternative)](https://github.com/testcontainers/testcontainers-java/tree/2.0.5/docs) | 2.0.5 | pinned to 2.0.5 | Docs source at tag (pinned alternative). |
 | [Release 2.0.5](https://github.com/testcontainers/testcontainers-java/releases/tag/2.0.5) | 2.0.5 | pinned to 2.0.5 | Release 2.0.5. |
+| [The JaCoCo plugin](https://docs.gradle.org/9.8.1/userguide/jacoco_plugin.html) | 9.8.1 | pinned to 9.8.1 | Gradle's jacoco plugin: reports, execution data and coverage verification rules. |
+| [JaCoCo coverage counters](https://www.jacoco.org/jacoco/trunk/doc/counters.html) | 0.8.16 | not version-pinned | What line and branch coverage count. |
+| [JaCoCo change history](https://www.jacoco.org/jacoco/trunk/doc/changes.html) | 0.8.16 | not version-pinned | JaCoCo releases, including Java 25 support. |
+| [PIT quick start](https://pitest.org/quickstart/) | 1.30.2 | not version-pinned | How mutation testing works and how PIT reports killed and surviving mutants. |
+| [PIT mutators](https://pitest.org/quickstart/mutators/) | 1.30.2 | not version-pinned | The changes PIT makes to the code. |
+| [PIT release 1.30.2](https://github.com/hcoles/pitest/releases/tag/1.30.2) | 1.30.2 | pinned to 1.30.2 | PIT release 1.30.2. |
+| [Gradle plugin for PIT](https://gradle-pitest-plugin.solidsoft.info/) | 1.19.0 | not version-pinned | The info.solidsoft.pitest plugin: targetClasses, targetTests, excludedGroups, mutationThreshold and withHistory. |
 
 ## OpenTelemetry and Micrometer
 
@@ -225,6 +232,7 @@ Baseline **v0.1-b2**. The baseline version is what the examples use. The documen
 | [Convention plugins](https://docs.gradle.org/9.8.1/userguide/implementing_gradle_plugins_convention.html) | 9.8.1 | pinned to 9.8.1 | Convention plugins. |
 | [Best practices for structuring builds](https://docs.gradle.org/9.8.1/userguide/best_practices_structuring_builds.html) | 9.8.1 | pinned to 9.8.1 | Best practices for structuring builds. |
 | [Composite builds (included build-logic)](https://docs.gradle.org/9.8.1/userguide/composite_builds.html) | 9.8.1 | pinned to 9.8.1 | Composite builds (included build-logic). |
+| [The PMD plugin](https://docs.gradle.org/9.8.1/userguide/pmd_plugin.html) | 9.8.1 | pinned to 9.8.1 | Gradle's pmd plugin: toolVersion, rule sets and the pmdMain task. |
 
 ## Kubernetes and Kustomize
 
@@ -325,6 +333,10 @@ Baseline **v0.1-b2**. The baseline version is what the examples use. The documen
 | [Error Prone bug patterns](https://errorprone.info/bugpatterns) | 2.50.0 | not version-pinned | Error Prone bug patterns. |
 | [Error Prone release 2.50.0](https://github.com/google/error-prone/releases/tag/v2.50.0) | 2.50.0 | pinned to 2.50.0 | Error Prone release 2.50.0. |
 | [gradle-errorprone-plugin (README)](https://github.com/tbroyer/gradle-errorprone-plugin) | 5.1.1 | not version-pinned | gradle-errorprone-plugin (README). |
+| [PMD Java design rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_design.html) | 7.29.0 | pinned to 7.29.0 | The complexity and size rules: CyclomaticComplexity, CognitiveComplexity, NPathComplexity, GodClass, ExcessiveParameterList. |
+| [PMD Java error prone rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_errorprone.html) | 7.29.0 | pinned to 7.29.0 | EmptyCatchBlock and AvoidCatchingGenericException. |
+| [PMD release 7.29.0](https://github.com/pmd/pmd/releases/tag/pmd_releases/7.29.0) | 7.29.0 | pinned to 7.29.0 | PMD release 7.29.0. |
+| [NullAway configuration](https://github.com/uber/NullAway/wiki/Configuration) | 0.14.2 | not version-pinned | NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check. |
 
 ## Messaging
 
@@ -397,6 +409,10 @@ Baseline **v0.1-b2**. The baseline version is what the examples use. The documen
 - [Error Prone installation](https://errorprone.info/docs/installation)
 - [Error Prone bug patterns](https://errorprone.info/bugpatterns)
 - [gradle-errorprone-plugin (README)](https://github.com/tbroyer/gradle-errorprone-plugin)
+- [PMD Java design rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_design.html)
+- [PMD Java error prone rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_errorprone.html)
+- [The PMD plugin](https://docs.gradle.org/9.8.1/userguide/pmd_plugin.html)
+- [NullAway configuration](https://github.com/uber/NullAway/wiki/Configuration)
 
 ### [Caching with Valkey](/guides/caching/)
 
@@ -651,6 +667,11 @@ Baseline **v0.1-b2**. The baseline version is what the examples use. The documen
 - [Postgres module](https://java.testcontainers.org/modules/databases/postgres/)
 - [JUnit 5 quickstart](https://java.testcontainers.org/quickstart/junit_5_quickstart/)
 - [Release 2.0.5](https://github.com/testcontainers/testcontainers-java/releases/tag/2.0.5)
+- [The JaCoCo plugin](https://docs.gradle.org/9.8.1/userguide/jacoco_plugin.html)
+- [JaCoCo coverage counters](https://www.jacoco.org/jacoco/trunk/doc/counters.html)
+- [PIT quick start](https://pitest.org/quickstart/)
+- [PIT mutators](https://pitest.org/quickstart/mutators/)
+- [Gradle plugin for PIT](https://gradle-pitest-plugin.solidsoft.info/)
 
 ### [Virtual threads and concurrency](/guides/virtual-threads/)
 

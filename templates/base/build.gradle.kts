@@ -3,6 +3,8 @@ import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     java
+    jacoco
+    pmd
 [[#plugins]]
     alias(libs.plugins.[[accessor]])
 [[/plugins]]
@@ -73,6 +75,9 @@ tasks.withType<JavaCompile>().configureEach {
     options.errorprone {
         disableWarningsInGeneratedCode = true
         check("NullAway", CheckSeverity.ERROR)
+        // A package without @NullMarked would be silently unchecked; this makes it a compile error (build quality
+        // guide, step 5).
+        check("RequireExplicitNullMarking", CheckSeverity.ERROR)
         option("NullAway:OnlyNullMarked", "true")
         option("NullAway:JSpecifyMode", "true")
         // The OpenAPI models are @NullMarked but leave required fields unset in their no-argument constructor.
@@ -84,8 +89,91 @@ tasks.named<JavaCompile>("compileTestJava") {
     options.errorprone.enabled = false
 }
 
+// Fast tests on every change; tests tagged "integration" start the application or a container and run after them
+// (testing guide, step 9).
 tasks.test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags("integration")
+    }
+}
+
+val integrationTest by tasks.registering(Test::class) {
+    description = "Runs the tests tagged integration."
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    useJUnitPlatform {
+        includeTags("integration")
+    }
+    shouldRunAfter(tasks.test)
+}
+
+// Complexity and a few defects the compiler checks miss, on handwritten code only (build quality guide, step 9).
+pmd {
+    toolVersion = libs.versions.pmd.get()
+    ruleSets = listOf()
+    ruleSetFiles = files("config/pmd/ruleset.xml")
+    isConsoleOutput = true
+}
+
+tasks.pmdMain {
+    source = fileTree("src/main/java")
+}
+
+tasks.pmdTest {
+    enabled = false
+}
+
+// Coverage from both test tasks; the gate applies to the business rules in domain and application (testing guide,
+// step 9).
+jacoco {
+    toolVersion = libs.versions.jacoco.get()
+}
+
+val businessRules = listOf("**/domain/**", "**/application/**")
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test, integrationTest)
+    executionData(tasks.test.get(), integrationTest.get())
+    classDirectories.setFrom(classDirectories.files.map { fileTree(it) { exclude("**/api/**") } })
+}
+
+// The report comes first, so a failed gate still leaves the HTML that shows what is not covered.
+tasks.jacocoTestCoverageVerification {
+    dependsOn(tasks.test, integrationTest, tasks.jacocoTestReport)
+    executionData(tasks.test.get(), integrationTest.get())
+    classDirectories.setFrom(classDirectories.files.map { fileTree(it) { include(businessRules) } })
+    violationRules {
+        rule {
+            limit {
+                counter = "LINE"
+                minimum = "0.80".toBigDecimal()
+            }
+            limit {
+                counter = "BRANCH"
+                minimum = "0.70".toBigDecimal()
+            }
+        }
+    }
+}
+
+// Mutation testing: the fast tests must fail when the business rules change (testing guide, step 9).
+pitest {
+    pitestVersion = libs.versions.pitest.asProvider().get()
+    junit5PluginVersion = libs.versions.pitest.junit5.get()
+    targetClasses = setOf("[[packageName]].*.domain.*", "[[packageName]].*.application.*")
+    // Only the fast tests of the same packages: no Spring context starts for each mutation.
+    targetTests = setOf("[[packageName]].*.domain.*", "[[packageName]].*.application.*")
+    excludedGroups = setOf("integration")
+    mutationThreshold = 70
+    failWhenNoMutations = false
+    threads = Runtime.getRuntime().availableProcessors()
+    outputFormats = setOf("HTML", "XML")
+    timestampedReports = false
+}
+
+tasks.check {
+    dependsOn(integrationTest, tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification, tasks.pitest)
 }
 [[#postgres]]
 

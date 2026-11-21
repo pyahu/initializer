@@ -3570,3 +3570,144 @@ entries:
       frontend:
         - nextjs
     baselines: [ v0.1-b2 ]
+  - id: static-analysis-pmd-java-design-rules
+    title: "PMD Java design rules"
+    component: "pmd"
+    docVersion: "7.29.0"
+    match: "exact"
+    kind: "reference"
+    area: "static-analysis"
+    url: "https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_design.html"
+    pinned: true
+    purpose: "The complexity and size rules: CyclomaticComplexity, CognitiveComplexity, NPathComplexity, GodClass, ExcessiveParameterList."
+    guides: [ "build-quality" ]
+    baselines: [ v0.1-b2 ]
+  - id: static-analysis-pmd-java-errorprone-rules
+    title: "PMD Java error prone rules"
+    component: "pmd"
+    docVersion: "7.29.0"
+    match: "exact"
+    kind: "reference"
+    area: "static-analysis"
+    url: "https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_errorprone.html"
+    pinned: true
+    purpose: "EmptyCatchBlock and AvoidCatchingGenericException."
+    guides: [ "build-quality" ]
+    baselines: [ v0.1-b2 ]
+  - id: static-analysis-pmd-release-7-29-0
+    title: "PMD release 7.29.0"
+    component: "pmd"
+    docVersion: "7.29.0"
+    match: "exact"
+    kind: "release"
+    area: "static-analysis"
+    url: "https://github.com/pmd/pmd/releases/tag/pmd_releases/7.29.0"
+    pinned: true
+    purpose: "PMD release 7.29.0."
+    baselines: [ v0.1-b2 ]
+  - id: build-gradle-pmd-plugin
+    title: "The PMD plugin"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.8.1/userguide/pmd_plugin.html"
+    pinned: true
+    purpose: "Gradle's pmd plugin: toolVersion, rule sets and the pmdMain task."
+    guides: [ "build-quality" ]
+    baselines: [ v0.1-b2 ]
+  - id: static-analysis-nullaway-configuration
+    title: "NullAway configuration"
+    component: "nullaway"
+    docVersion: "0.14.2"
+    match: "none"
+    kind: "reference"
+    area: "static-analysis"
+    url: "https://github.com/uber/NullAway/wiki/Configuration"
+    pinned: false
+    purpose: "NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check."
+    guides: [ "build-quality" ]
+    baselines: [ v0.1-b2 ]
+  - id: testing-gradle-jacoco-plugin
+    title: "The JaCoCo plugin"
+    component: "gradle"
+    docVersion: "9.8.1"
+    match: "exact"
+    kind: "reference"
+    area: "testing"
+    url: "https://docs.gradle.org/9.8.1/userguide/jacoco_plugin.html"
+    pinned: true
+    purpose: "Gradle's jacoco plugin: reports, execution data and coverage verification rules."
+    guides: [ "testing" ]
+    baselines: [ v0.1-b2 ]
+  - id: testing-jacoco-counters
+    title: "JaCoCo coverage counters"
+    component: "jacoco"
+    docVersion: "0.8.16"
+    match: "none"
+    kind: "reference"
+    area: "testing"
+    url: "https://www.jacoco.org/jacoco/trunk/doc/counters.html"
+    pinned: false
+    purpose: "What line and branch coverage count."
+    guides: [ "testing" ]
+    baselines: [ v0.1-b2 ]
+  - id: testing-jacoco-changes
+    title: "JaCoCo change history"
+    component: "jacoco"
+    docVersion: "0.8.16"
+    match: "none"
+    kind: "release"
+    area: "testing"
+    url: "https://www.jacoco.org/jacoco/trunk/doc/changes.html"
+    pinned: false
+    purpose: "JaCoCo releases, including Java 25 support."
+    baselines: [ v0.1-b2 ]
+  - id: testing-pitest-quickstart
+    title: "PIT quick start"
+    component: "pitest"
+    docVersion: "1.30.2"
+    match: "none"
+    kind: "reference"
+    area: "testing"
+    url: "https://pitest.org/quickstart/"
+    pinned: false
+    purpose: "How mutation testing works and how PIT reports killed and surviving mutants."
+    guides: [ "testing" ]
+    baselines: [ v0.1-b2 ]
+  - id: testing-pitest-mutators
+    title: "PIT mutators"
+    component: "pitest"
+    docVersion: "1.30.2"
+    match: "none"
+    kind: "reference"
+    area: "testing"
+    url: "https://pitest.org/quickstart/mutators/"
+    pinned: false
+    purpose: "The changes PIT makes to the code."
+    guides: [ "testing" ]
+    baselines: [ v0.1-b2 ]
+  - id: testing-pitest-release-1-30-2
+    title: "PIT release 1.30.2"
+    component: "pitest"
+    docVersion: "1.30.2"
+    match: "exact"
+    kind: "release"
+    area: "testing"
+    url: "https://github.com/hcoles/pitest/releases/tag/1.30.2"
+    pinned: true
+    purpose: "PIT release 1.30.2."
+    baselines: [ v0.1-b2 ]
+  - id: testing-gradle-pitest-plugin
+    title: "Gradle plugin for PIT"
+    component: "pitest-gradle-plugin"
+    docVersion: "1.19.0"
+    match: "none"
+    kind: "reference"
+    area: "testing"
+    url: "https://gradle-pitest-plugin.solidsoft.info/"
+    pinned: false
+    purpose: "The info.solidsoft.pitest plugin: targetClasses, targetTests, excludedGroups, mutationThreshold and withHistory."
+    guides: [ "testing" ]
+    baselines: [ v0.1-b2 ]

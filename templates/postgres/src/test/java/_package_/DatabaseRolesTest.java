@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.autoconfigure.JdbcConnectionDetails;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Import;
 /** The changelog runs as the migration role; the runtime role writes data and cannot change the schema (step 4). */
 @SpringBootTest(properties = "spring.liquibase.enabled=true")
 @Import(Postgres.class)
+@Tag("integration")
 class DatabaseRolesTest {
 
     @Autowired

@@ -102,6 +102,9 @@ rules:
     mode: adapted
     why: The form, the files it gives and the download instead of the sample page.
 
+  - path: config/pmd/ruleset.xml
+    mode: omitted
+    why: The quality gates of generated projects (PMD, coverage, mutation) are not applied to the generator's own code yet.
   - path: CHECKLIST.md
     mode: omitted
     why: The guides site holds the checklist of every guide.

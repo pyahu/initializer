@@ -12,7 +12,7 @@
       "fixture": "single-hexagonal",
       "baseline": "v0.1-b2",
       "lang": "kotlin",
-      "sha256": "50e00c6a3910852aecd0877410d263c9aba8a5d8d626894765a82503872dff0e"
+      "sha256": "c2aaf20f66af7b6eb31b8c1bb9ce44df5ef8d0ea3c0a1b2333bbe959e5be8977"
     },
     {
       "path": "fixtures/single-hexagonal/gradle/libs.versions.toml",

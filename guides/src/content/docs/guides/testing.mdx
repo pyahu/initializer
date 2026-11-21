@@ -31,6 +31,9 @@ guide:
     - id: TEST-Q8
       text: "How do I know the image really works?"
       answeredIn: test-image
+    - id: TEST-Q9
+      text: "How do I know the tests catch mistakes?"
+      answeredIn: test-strength
 ---
 import GuideStatus from '../../../components/GuideStatus.astro';
 import Recipe from '../../../components/Recipe.astro';
@@ -315,6 +318,61 @@ metric and log in a real observability backend.
 ### When this is not for you
 
 - A library or a service that is never shipped as an image: stop at the integration tests.
+
+<a id="test-strength"></a>
+
+## 9. How do I know the tests catch mistakes?
+
+**In short:** measure coverage on the business rules, then let mutation testing change that code and check that a
+test fails.
+
+### What's going on
+
+A suite can be green and still check nothing. A test that calls a method and asserts nothing passes, and coverage
+counts every line it ran as tested. When an AI tool writes tests to reach a coverage number, this is what it tends
+to produce.
+
+Coverage, measured by JaCoCo, answers one question: which code did no test run at all? That is a useful floor. It
+says nothing about whether a test would notice a bug.
+
+Mutation testing answers that. PIT makes one small change to the compiled code at a time: it turns `>` into `>=`,
+returns `0` instead of the result or removes a call. Each change is a mutant. PIT runs the tests that cover it. If a
+test fails, the mutant is killed; if all pass, it survived, and that is a bug your tests would not see. The share of
+killed mutants is the mutation score.
+
+A test that runs a discount rule three times without an assertion shows the difference. It reaches full line
+coverage and passes a coverage gate. PIT kills none of its mutants and fails the build.
+
+Mutation testing is slow when each mutant starts Spring, so run it on the business rules with their fast tests.
+
+### Do this
+
+1. Tag tests that start the application or a container with `@Tag("integration")`. Run the others in `test` and the
+   tagged ones in a separate `integrationTest` task, so the fast feedback comes first.
+2. Measure coverage with JaCoCo over both tasks. Set the gate on `domain` and `application` only: 80% of lines and
+   70% of branches. Slice and integration tests cover the adapters; a percentage there pushes people to test
+   getters.
+3. Run PIT on the same packages, with their fast tests and a `mutationThreshold` of 70:
+
+   ```kotlin
+   pitest {
+       targetClasses = setOf("com.example.orders.*.domain.*", "com.example.orders.*.application.*")
+       targetTests = setOf("com.example.orders.*.domain.*", "com.example.orders.*.application.*")
+       excludedGroups = setOf("integration")
+       mutationThreshold = 70
+   }
+   ```
+
+4. Make `check` depend on `integrationTest`, the coverage verification and `pitest`, so `./gradlew build` fails when
+   either score drops.
+5. When a mutant survives, add the assertion that would have caught it. Never add a test only to raise a number.
+
+### When this is not for you
+
+- A service with almost no business rules, such as a thin proxy: there is little to mutate and the gates pass with
+  nothing to check. Keep them for when rules arrive.
+- A large codebase where PIT takes too long: turn on its incremental analysis (`withHistory`) and keep the history
+  between CI runs.
 
 ## Put it all together
 

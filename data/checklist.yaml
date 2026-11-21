@@ -785,6 +785,12 @@
   type: operator-task
   text: "Module boundaries reviewed with the people who know the business whenever a capability is added."
   appliesWhen: {}
+- id: ARCH-11
+  guide: architecture
+  card: arch-rules-tested
+  type: generated-config
+  text: ArchitectureTest keeps controllers in the web layer and @Transactional in the application, and forbids field injection, System.out and generic exceptions.
+  appliesWhen: {}
 - id: STYLE-01
   guide: architecture-styles
   card: style-scenario
@@ -843,7 +849,7 @@
   guide: build-quality
   card: bld-nullaway
   type: generated-config
-  text: NullAway as an error with OnlyNullMarked and JSpecifyMode; every package has a package-info.java with @NullMarked.
+  text: NullAway as an error with OnlyNullMarked and JSpecifyMode; RequireExplicitNullMarking fails a package without a package-info.java with @NullMarked.
   appliesWhen: {}
 - id: BLD-08
   guide: build-quality
@@ -868,6 +874,12 @@
   card: bld-updates
   type: operator-task
   text: Dependency update pull requests are reviewed and merged on a green build every week.
+  appliesWhen: {}
+- id: BLD-12
+  guide: build-quality
+  card: bld-complexity
+  type: generated-config
+  text: PMD runs in check on handwritten code with a short ruleset for complexity, size and swallowed errors.
   appliesWhen: {}
 - id: CACHE-01
   guide: caching
@@ -1654,4 +1666,16 @@
   card: test-real-database
   type: deployment-prerequisite
   text: CI runners have Docker for the Testcontainers and image tests.
+  appliesWhen: {}
+- id: TEST-10
+  guide: testing
+  card: test-strength
+  type: generated-config
+  text: "Tests that start the application or a container carry @Tag(\"integration\") and run in their own task after the fast tests."
+  appliesWhen: {}
+- id: TEST-11
+  guide: testing
+  card: test-strength
+  type: generated-config
+  text: JaCoCo gates domain and application at 80% of lines and 70% of branches; PIT runs on them with a mutation threshold of 70; both are part of check.
   appliesWhen: {}

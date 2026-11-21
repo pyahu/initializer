@@ -213,7 +213,9 @@ builds the image and Go acceptance tests start that exact image and check it fro
 
 ### Do this
 
-1. Run the Gradle build: compile, unit and architecture tests (see [Testing](/guides/testing/)).
+1. Run the Gradle build in named steps, cheapest first: format, compile, unit and architecture tests, integration
+   tests, then static analysis, coverage and mutation (see [Testing](/guides/testing/), step 9). A failure then
+   names what is wrong. A generated project's workflow runs them that way.
 2. Build the image from the same Dockerfile production uses and load it locally. To avoid compiling twice, hand
    Docker the jar the Gradle build made with `--build-context build=<folder with the jar>`. It replaces the
    Dockerfile's `build` stage; the other stages run as usual, so the image holds the jar that passed the tests.

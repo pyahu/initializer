@@ -1,0 +1,73 @@
+---
+title: Quality assurance
+description: The checks every generated project runs on each build, what each one catches and which guide explains it.
+tableOfContents: { maxHeadingLevel: 2 }
+---
+
+Code written by a person and code written by an AI tool go through the same checks. Every project the
+[generator](https://start.pyahu.io) creates has them in its Gradle build and in its CI workflow. A failed check
+fails the build or the workflow, before anyone reviews the change.
+
+The checks do not replace review. They take the mechanical part out of it, so the reviewer can spend the time on
+the design and the business rules.
+
+## The checks
+
+| What is checked | Tool | What it catches | Guide |
+| --- | --- | --- | --- |
+| The same build everywhere | Gradle wrapper, pinned JDK | A build that passes on one machine and fails on another | [Build quality](/guides/build-quality/), step 1 |
+| Formatting | Spotless with palantir-java-format | Style debates in review and noisy diffs | [Build quality](/guides/build-quality/), step 6 |
+| Bugs at compile time | Error Prone | Known bug patterns, such as an ignored result or a `switch` that misses an enum value | [Build quality](/guides/build-quality/), step 4 |
+| Nulls | NullAway with JSpecify | A `NullPointerException` waiting to happen, and a new package left unchecked | [Build quality](/guides/build-quality/), step 5 |
+| Complexity | PMD | Methods too complex to follow, classes that do too much, errors caught and lost | [Build quality](/guides/build-quality/), step 9 |
+| Architecture | ArchUnit, jMolecules, Spring Modulith | Code in the wrong layer, cycles between modules, field injection, `System.out` | [Architecture](/guides/architecture/), step 7 |
+| Business rules | JUnit | A rule that stopped working, found in seconds without Spring | [Testing](/guides/testing/), step 2 |
+| The database (with PostgreSQL) | Testcontainers | Wrong SQL, a broken migration, a role with too many rights | [Testing](/guides/testing/), step 5 |
+| Coverage | JaCoCo | Business rules no test runs | [Testing](/guides/testing/), step 9 |
+| Test strength | PIT (mutation testing) | Tests that run the code but would not notice a bug | [Testing](/guides/testing/), step 9 |
+| Dependencies | CycloneDX on each build, Renovate on its own schedule | Not knowing what ships, versions left behind | [Build quality](/guides/build-quality/), steps 7 and 8 |
+| The image (CI) | Trivy and a smoke test | Known vulnerabilities, an image that does not start the way production runs it | [CI pipelines](/guides/ci-pipelines/), step 5 |
+| The manifests (CI) | kubeconform, kube-linter, Trivy, Pluto | Invalid or insecure Kubernetes manifests and APIs about to be removed | [Kubernetes manifests](/guides/kubernetes-manifests/), step 8 |
+
+## Why it matters with AI tools
+
+An AI tool writes code that compiles and looks right, fast. The checks that catch what it tends to get wrong:
+
+- **Mutation testing.** A test written to reach a coverage number often runs the code and asserts nothing.
+  Coverage counts it. PIT changes the code and checks that a test fails; the build fails when fewer than 70% of
+  those changes are caught.
+- **Architecture rules.** The tool puts code where it compiles, not where it belongs. ArchUnit fails the build when
+  a controller, a transaction or a dependency is in the wrong place.
+- **Complexity rules.** One more `if` is always the shortest way to pass the next test. PMD stops the method that
+  nobody will be able to change later.
+- **Explicit null marking.** A new package without `@NullMarked` would escape NullAway. With
+  `RequireExplicitNullMarking` it does not compile.
+
+The [Agent Skill](https://github.com/pyahu/initializer/tree/main/skills) tells the tool which guide step to follow.
+The checks show whether it did.
+
+## Run them
+
+In a generated project:
+
+```sh
+./gradlew check   # every check above that runs in Gradle
+./gradlew build   # check, then the jar and the SBOM
+```
+
+The reports land in `build/reports/`: tests, `pmd`, `jacoco` and `pitest`. CI runs the same tasks as named steps,
+cheapest first: format, compile, unit and architecture tests, integration tests, then static analysis, coverage and
+mutation. A red step names the kind of problem, and CI keeps the reports of every run.
+
+## The limits
+
+- **The checks do not know your business.** A wrong rule can be fully tested. Review the rules with the people who
+  know the business.
+- **The thresholds are floors.** 80% of lines, 70% of branches and 70% of mutants killed, on the `domain` and
+  `application` packages only. Do not write a test only to reach them.
+- **Security goes further.** Dependency and image scans are one part; the [Security hardening](/guides/security/)
+  guide covers tokens, permissions and the pod.
+- **Mutation testing starts with your rules.** The sample in a new project has no logic for PIT to change, so it
+  finds nothing to mutate and passes. It starts measuring when you add business rules.
+- **Where they run.** The generated projects run all of them, and CI builds every generator combination with
+  them. The example service behind the guides does not run PMD, JaCoCo or PIT yet.

@@ -99,6 +99,9 @@ func runStep(dir string, s step, env map[string]string) error {
 	case strings.HasPrefix(s.Uses, "actions/cache@"):
 		fmt.Println("skipped: GitHub dependency cache; every build step still runs")
 		return nil
+	case strings.HasPrefix(s.Uses, "actions/upload-artifact@"):
+		fmt.Println("skipped: GitHub artifact upload; the reports stay in build/reports")
+		return nil
 	case strings.HasPrefix(s.Uses, "docker://"):
 		for k := range s.With {
 			if k != "args" {

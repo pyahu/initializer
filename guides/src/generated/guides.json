@@ -242,6 +242,13 @@
           "card": "arch-limits",
           "text": "Module boundaries reviewed with the people who know the business whenever a capability is added.",
           "tags": []
+        },
+        {
+          "id": "ARCH-11",
+          "type": "generated-config",
+          "card": "arch-rules-tested",
+          "text": "ArchitectureTest keeps controllers in the web layer and @Transactional in the application, and forbids field injection, System.out and generic exceptions.",
+          "tags": []
         }
       ],
       "references": [
@@ -612,7 +619,7 @@
       "title": "Build and code quality",
       "state": "draft",
       "baseline": "v0.1-b2",
-      "coverage": "7 of 8 steps are tested here (7 tested claims: 7 compiled)",
+      "coverage": "7 of 9 steps are tested here (7 tested claims: 7 compiled)",
       "draft": false,
       "sources": [],
       "questions": [
@@ -663,6 +670,12 @@
           "text": "How do I keep dependencies current without breaking the build?",
           "answeredIn": "bld-updates",
           "cardTitle": "8. How do I keep dependencies current without breaking the build?"
+        },
+        {
+          "id": "BLD-Q9",
+          "text": "How do I keep code from getting too complex to change?",
+          "answeredIn": "bld-complexity",
+          "cardTitle": "9. How do I keep code from getting too complex to change?"
         }
       ],
       "cards": {
@@ -677,6 +690,11 @@
               "test": "gradle/single-hexagonal::ApplicationTest"
             }
           ]
+        },
+        "bld-complexity": {
+          "title": "9. How do I keep code from getting too complex to change?",
+          "coverage": "not tested here",
+          "records": []
         },
         "bld-error-prone": {
           "title": "4. How do I catch bugs before the code runs?",
@@ -788,6 +806,10 @@
         {
           "id": "bld-updates",
           "title": "8. How do I keep dependencies current without breaking the build?"
+        },
+        {
+          "id": "bld-complexity",
+          "title": "9. How do I keep code from getting too complex to change?"
         }
       ],
       "checklist": [
@@ -837,7 +859,7 @@
           "id": "BLD-07",
           "type": "generated-config",
           "card": "bld-nullaway",
-          "text": "NullAway as an error with OnlyNullMarked and JSpecifyMode; every package has a package-info.java with @NullMarked.",
+          "text": "NullAway as an error with OnlyNullMarked and JSpecifyMode; RequireExplicitNullMarking fails a package without a package-info.java with @NullMarked.",
           "tags": []
         },
         {
@@ -866,6 +888,13 @@
           "type": "operator-task",
           "card": "bld-updates",
           "text": "Dependency update pull requests are reviewed and merged on a green build every week.",
+          "tags": []
+        },
+        {
+          "id": "BLD-12",
+          "type": "generated-config",
+          "card": "bld-complexity",
+          "text": "PMD runs in check on handwritten code with a short ruleset for complexity, size and swallowed errors.",
           "tags": []
         }
       ],
@@ -1028,6 +1057,46 @@
           "docVersion": "5.1.1",
           "pinned": false,
           "purpose": "gradle-errorprone-plugin (README).",
+          "later": false
+        },
+        {
+          "id": "static-analysis-pmd-java-design-rules",
+          "title": "PMD Java design rules",
+          "url": "https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_design.html",
+          "version": "7.29.0",
+          "docVersion": "7.29.0",
+          "pinned": true,
+          "purpose": "The complexity and size rules: CyclomaticComplexity, CognitiveComplexity, NPathComplexity, GodClass, ExcessiveParameterList.",
+          "later": false
+        },
+        {
+          "id": "static-analysis-pmd-java-errorprone-rules",
+          "title": "PMD Java error prone rules",
+          "url": "https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_errorprone.html",
+          "version": "7.29.0",
+          "docVersion": "7.29.0",
+          "pinned": true,
+          "purpose": "EmptyCatchBlock and AvoidCatchingGenericException.",
+          "later": false
+        },
+        {
+          "id": "build-gradle-pmd-plugin",
+          "title": "The PMD plugin",
+          "url": "https://docs.gradle.org/9.8.1/userguide/pmd_plugin.html",
+          "version": "9.8.1",
+          "docVersion": "9.8.1",
+          "pinned": true,
+          "purpose": "Gradle's pmd plugin: toolVersion, rule sets and the pmdMain task.",
+          "later": false
+        },
+        {
+          "id": "static-analysis-nullaway-configuration",
+          "title": "NullAway configuration",
+          "url": "https://github.com/uber/NullAway/wiki/Configuration",
+          "version": "0.14.2",
+          "docVersion": "0.14.2",
+          "pinned": false,
+          "purpose": "NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check.",
           "later": false
         }
       ]
@@ -8123,7 +8192,7 @@
       "title": "Testing a Spring Boot service",
       "state": "draft",
       "baseline": "v0.1-b2",
-      "coverage": "3 of 8 steps are tested here (4 tested claims: 1 reproduced, 3 compiled)",
+      "coverage": "3 of 9 steps are tested here (4 tested claims: 1 reproduced, 3 compiled)",
       "draft": false,
       "sources": [],
       "questions": [
@@ -8174,6 +8243,12 @@
           "text": "How do I know the image really works?",
           "answeredIn": "test-image",
           "cardTitle": "8. How do I know the image really works?"
+        },
+        {
+          "id": "TEST-Q9",
+          "text": "How do I know the tests catch mistakes?",
+          "answeredIn": "test-strength",
+          "cardTitle": "9. How do I know the tests catch mistakes?"
         }
       ],
       "cards": {
@@ -8243,6 +8318,11 @@
               "test": "gradle/single-hexagonal::ApplicationTest"
             }
           ]
+        },
+        "test-strength": {
+          "title": "9. How do I know the tests catch mistakes?",
+          "coverage": "not tested here",
+          "records": []
         }
       },
       "contents": [
@@ -8277,6 +8357,10 @@
         {
           "id": "test-image",
           "title": "8. How do I know the image really works?"
+        },
+        {
+          "id": "test-strength",
+          "title": "9. How do I know the tests catch mistakes?"
         }
       ],
       "checklist": [
@@ -8345,6 +8429,20 @@
           "type": "deployment-prerequisite",
           "card": "test-real-database",
           "text": "CI runners have Docker for the Testcontainers and image tests.",
+          "tags": []
+        },
+        {
+          "id": "TEST-10",
+          "type": "generated-config",
+          "card": "test-strength",
+          "text": "Tests that start the application or a container carry @Tag(\"integration\") and run in their own task after the fast tests.",
+          "tags": []
+        },
+        {
+          "id": "TEST-11",
+          "type": "generated-config",
+          "card": "test-strength",
+          "text": "JaCoCo gates domain and application at 80% of lines and 70% of branches; PIT runs on them with a mutation threshold of 70; both are part of check.",
           "tags": []
         }
       ],
@@ -8437,6 +8535,56 @@
           "docVersion": "2.0.5",
           "pinned": true,
           "purpose": "Release 2.0.5.",
+          "later": false
+        },
+        {
+          "id": "testing-gradle-jacoco-plugin",
+          "title": "The JaCoCo plugin",
+          "url": "https://docs.gradle.org/9.8.1/userguide/jacoco_plugin.html",
+          "version": "9.8.1",
+          "docVersion": "9.8.1",
+          "pinned": true,
+          "purpose": "Gradle's jacoco plugin: reports, execution data and coverage verification rules.",
+          "later": false
+        },
+        {
+          "id": "testing-jacoco-counters",
+          "title": "JaCoCo coverage counters",
+          "url": "https://www.jacoco.org/jacoco/trunk/doc/counters.html",
+          "version": "0.8.16",
+          "docVersion": "0.8.16",
+          "pinned": false,
+          "purpose": "What line and branch coverage count.",
+          "later": false
+        },
+        {
+          "id": "testing-pitest-quickstart",
+          "title": "PIT quick start",
+          "url": "https://pitest.org/quickstart/",
+          "version": "1.30.2",
+          "docVersion": "1.30.2",
+          "pinned": false,
+          "purpose": "How mutation testing works and how PIT reports killed and surviving mutants.",
+          "later": false
+        },
+        {
+          "id": "testing-pitest-mutators",
+          "title": "PIT mutators",
+          "url": "https://pitest.org/quickstart/mutators/",
+          "version": "1.30.2",
+          "docVersion": "1.30.2",
+          "pinned": false,
+          "purpose": "The changes PIT makes to the code.",
+          "later": false
+        },
+        {
+          "id": "testing-gradle-pitest-plugin",
+          "title": "Gradle plugin for PIT",
+          "url": "https://gradle-pitest-plugin.solidsoft.info/",
+          "version": "1.19.0",
+          "docVersion": "1.19.0",
+          "pinned": false,
+          "purpose": "The info.solidsoft.pitest plugin: targetClasses, targetTests, excludedGroups, mutationThreshold and withHistory.",
           "later": false
         }
       ]

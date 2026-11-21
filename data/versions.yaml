@@ -162,6 +162,36 @@ revisions:
         coordinates: "com.palantir.javaformat:palantir-java-format"
         managedBy: null
         verifiedAt: "Maven Central, 2026-10-17"
+      pmd:
+        version: "7.29.0"
+        kind: maven
+        coordinates: "net.sourceforge.pmd:pmd-java"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-21"
+      jacoco:
+        version: "0.8.16"
+        kind: maven
+        coordinates: "org.jacoco:org.jacoco.agent"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-21"
+      pitest:
+        version: "1.30.2"
+        kind: maven
+        coordinates: "org.pitest:pitest"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-21"
+      pitest-junit5-plugin:
+        version: "1.2.3"
+        kind: maven
+        coordinates: "org.pitest:pitest-junit5-plugin"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-21"
+      pitest-gradle-plugin:
+        version: "1.19.0"
+        kind: gradle-plugin
+        pluginId: "info.solidsoft.pitest"
+        managedBy: null
+        verifiedAt: "Gradle plugin portal, 2026-11-21"
       cyclonedx-gradle-plugin:
         version: "3.5.1"
         kind: gradle-plugin

@@ -30,7 +30,7 @@ export default defineConfig({
       social: [{ icon: "github", label: "GitHub", href: "https://github.com/pyahu/initializer" }],
       customCss: ["./src/styles/starlight.css"],
       sidebar: withDrafts([
-        { label: "Start here", items: [{ label: "The recommended path", slug: "start-here" }, { label: "All guides", slug: "guides" }] },
+        { label: "Start here", items: [{ label: "The recommended path", slug: "start-here" }, { label: "All guides", slug: "guides" }, { label: "Quality assurance", slug: "quality" }] },
         {
           label: "1. Foundations",
           items: [

@@ -47,21 +47,54 @@ jobs:
       # Keep the output parent owned by the runner before the container writes Gradle output as root.
       - name: Manifest output directory
         run: mkdir -p build/manifests
-      - name: Gradle build in the pinned JDK
+      # The Gradle steps run in the pinned JDK, cheapest first, so a failure names what is wrong (testing guide,
+      # step 9). Each step reuses what the one before built.
+      - name: Format
+        run: >-
+          bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
+          -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          "$JDK_IMAGE" ./gradlew --no-daemon spotlessCheck
+      - name: Compile with Error Prone and NullAway
+        run: >-
+          bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
+          -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          "$JDK_IMAGE" ./gradlew --no-daemon compileJava compileTestJava
+      - name: Unit and architecture tests
+        run: >-
+          bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
+          -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          "$JDK_IMAGE" ./gradlew --no-daemon test
+      - name: Integration tests
 [[#postgres]]
         # Testcontainers starts PostgreSQL next to this container, through the runner's Docker.
+[[/postgres]]
         run: >-
           bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
           -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+[[#postgres]]
           -v /var/run/docker.sock:/var/run/docker.sock
-          "$JDK_IMAGE" ./gradlew --no-daemon build
 [[/postgres]]
-[[^postgres]]
+          "$JDK_IMAGE" ./gradlew --no-daemon integrationTest
+      - name: Static analysis, coverage and mutation
         run: >-
           bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
           -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
-          "$JDK_IMAGE" ./gradlew --no-daemon build
+          "$JDK_IMAGE" ./gradlew --no-daemon pmdMain jacocoTestCoverageVerification pitest
+      - name: Package and SBOM
+        run: >-
+          bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
+          -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+[[#postgres]]
+          -v /var/run/docker.sock:/var/run/docker.sock
 [[/postgres]]
+          "$JDK_IMAGE" ./gradlew --no-daemon build
+      - name: Keep the test and analysis reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reports
+          path: build/reports/
+          if-no-files-found: ignore
       - name: Render the dev overlay
         uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
         with:

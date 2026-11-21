@@ -47,6 +47,7 @@ Set up a service you can change safely for years.
 6. How do I end formatting debates in code review?
 7. How do I know which libraries the service ships?
 8. How do I keep dependencies current without breaking the build?
+9. How do I keep code from getting too complex to change?
 
 **[Architecture: hexagonal and DDD layered](guides/architecture.md)**: How a Spring Boot service is split into capabilities, what goes inside each one and how tests keep the rules true.
 
@@ -80,6 +81,7 @@ Set up a service you can change safely for years.
 6. How do I test calls to other services?
 7. Why is my test suite so slow?
 8. How do I know the image really works?
+9. How do I know the tests catch mistakes?
 
 ### Part 2: Build the service
 

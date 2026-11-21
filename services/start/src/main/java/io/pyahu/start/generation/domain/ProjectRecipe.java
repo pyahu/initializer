@@ -102,12 +102,18 @@ public final class ProjectRecipe {
         version(d, "palantir-java-format", "palantir-java-format");
         version(d, "errorprone-gradle-plugin", "errorprone-gradle-plugin");
         version(d, "spotless", "spotless-gradle-plugin");
+        version(d, "pmd", "pmd");
+        version(d, "jacoco", "jacoco");
+        version(d, "pitest", "pitest");
+        version(d, "pitest-junit5", "pitest-junit5-plugin");
+        version(d, "pitest-gradle-plugin", "pitest-gradle-plugin");
         version(d, "cyclonedx", "cyclonedx-gradle-plugin");
         version(d, "openapi-generator", "openapi-generator-gradle-plugin");
 
         d.add(new CatalogPlugin("spring-boot", "org.springframework.boot", "spring-boot"))
                 .add(new CatalogPlugin("errorprone", "net.ltgt.errorprone", "errorprone-gradle-plugin"))
                 .add(new CatalogPlugin("spotless", "com.diffplug.spotless", "spotless"))
+                .add(new CatalogPlugin("pitest", "info.solidsoft.pitest", "pitest-gradle-plugin"))
                 .add(new CatalogPlugin("cyclonedx", "org.cyclonedx.bom", "cyclonedx"))
                 .add(new CatalogPlugin("openapi-generator", "org.openapi.generator", "openapi-generator"));
 

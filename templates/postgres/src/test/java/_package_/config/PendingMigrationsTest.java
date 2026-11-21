@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import liquibase.integration.spring.SpringLiquibase;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.health.contributor.Status;
 import org.springframework.boot.liquibase.autoconfigure.LiquibaseProperties;
@@ -14,6 +15,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 /** Compare readiness to real Liquibase runs, including duplicate ids in separate files and filtered changesets. */
+@Tag("integration")
 class PendingMigrationsTest {
 
     @Test

@@ -30,6 +30,20 @@ func TestDependencyCacheNeverSkipsTheBuildOrHidesItsFailure(t *testing.T) {
 	}
 }
 
+func TestReportUploadIsSkippedAndLaterStepsStillRun(t *testing.T) {
+	dir := t.TempDir()
+	workflow := "jobs:\n  build:\n    steps:\n      - uses: actions/upload-artifact@pinned\n        with:\n          name: reports\n          path: build/reports/\n      - run: printf built > build-marker\n"
+	if err := os.WriteFile(filepath.Join(dir, "ci.yml"), []byte(workflow), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := run(dir, "ci.yml", "build"); err != nil {
+		t.Fatal(err)
+	}
+	if content, err := os.ReadFile(filepath.Join(dir, "build-marker")); err != nil || string(content) != "built" {
+		t.Fatalf("the step after the upload did not run: %v %q", err, content)
+	}
+}
+
 func TestGradleNetworkRetriesAreBoundedAndNeverRetryTestFailures(t *testing.T) {
 	script, err := filepath.Abs("../../.github/scripts/gradle-ci.sh")
 	if err != nil {

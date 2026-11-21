@@ -56,6 +56,7 @@ tasks.withType<JavaCompile>().configureEach {
     options.errorprone {
         disableWarningsInGeneratedCode = true
         check("NullAway", CheckSeverity.ERROR)
+        check("RequireExplicitNullMarking", CheckSeverity.ERROR)
         option("NullAway:OnlyNullMarked", "true")
         option("NullAway:JSpecifyMode", "true")
     }

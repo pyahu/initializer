@@ -273,7 +273,7 @@ lives in the adapters or infrastructure, which translate between database rows a
 ## 7. How do tests keep the rules true?
 
 **In short:** three checks run with every build: Modulith's `verify()`, jMolecules' `ensureHexagonal(STRICT)` and
-two rules of your own.
+rules of your own.
 
 ### What's going on
 
@@ -287,6 +287,9 @@ when a class reaches across a boundary keeps it.
   directly.
 - Two rules close the gaps the library leaves: the domain depends on nothing else and nothing outside the
   adapters depends on them.
+- Rules for habits keep the code where the architecture says it goes. A generated project checks that controllers
+  live only in the web adapter, `@Transactional` appears only in the application, dependencies come through the
+  constructor and no class writes to `System.out` or throws a bare `Exception` or `RuntimeException`.
 
 There is a trap in `STRICT`. A port may mention only other ports and classes that carry no hexagonal annotation.
 Ports mention domain types all the time, so the domain must carry none: annotate it and every such port breaks
@@ -299,6 +302,8 @@ rule of its own.
 2. Add an `ArchitectureTest` with `ensureHexagonal(VerificationDepth.STRICT)`.
 3. Leave the `domain` package without a jMolecules hexagonal annotation and constrain it with your own rule.
 4. Add a rule that nothing outside `..adapter..` depends on `..adapter..`.
+5. Turn the comments a review keeps repeating into rules. ArchUnit's `GeneralCodingRules` covers field injection,
+   standard streams, `java.util.logging` and generic exceptions; leave the code generated from the contract out.
 
 ### When this is not for you
 

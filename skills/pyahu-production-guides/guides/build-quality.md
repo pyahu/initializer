@@ -24,6 +24,7 @@ drift before anything ships.
 6. How do I end formatting debates in code review?
 7. How do I know which libraries the service ships?
 8. How do I keep dependencies current without breaking the build?
+9. How do I keep code from getting too complex to change?
 
 ## 1. How do I make sure every machine builds the same way?
 
@@ -171,6 +172,7 @@ allowed.
 
 There is one trap. `@NullMarked` on a package does not cover its subpackages and with `OnlyNullMarked` NullAway
 checks nothing outside marked code. A new package without its own `package-info.java` is silently unchecked.
+NullAway's `RequireExplicitNullMarking` check closes the trap: that package then fails to compile.
 
 ### Do this
 
@@ -178,12 +180,12 @@ checks nothing outside marked code. A new package without its own `package-info.
 2. Configure NullAway as an error, with `NullAway:OnlyNullMarked=true` and `NullAway:JSpecifyMode=true`.
 3. Give every package a `package-info.java` with `@NullMarked`.
 4. Write `@Nullable` only where a null is a real answer, such as "not found".
+5. Turn on `RequireExplicitNullMarking` as an error, so a package without `@NullMarked` fails the build.
 
 ### When this is not for you
 
 - JSpecify mode is still being developed and can report false positives, mostly with generics. Suppress them one
   by one, never for a whole class.
-- To catch packages without the annotation, NullAway ships a `RequireExplicitNullMarking` check, off by default.
 
 ## 6. How do I end formatting debates in code review?
 
@@ -276,9 +278,59 @@ before it reaches you.
   Spring Boot manages ([Observability](observability.md), step 3). Group them or Renovate proposes a version
   that does not fit.
 
+## 9. How do I keep code from getting too complex to change?
+
+**In short:** run PMD on every build with a short list of rules for complexity, size and swallowed errors, and let
+a broken rule fail the build.
+
+### What's going on
+
+The compiler checks and the formatter say nothing about a method with fifteen branches or a class that does
+everything. That code works on the day it is written and is the code nobody dares to change a year later. It grows
+fastest when an AI tool writes it, because one more `if` is always the shortest way to pass the next test.
+
+PMD reads the source and measures it. Cyclomatic complexity counts the paths through a method, cognitive complexity
+counts how hard those paths are to follow and NPath counts the combinations a test would need. Size rules flag a
+class that does too much and a method with a long parameter list. A few more rules catch errors that disappear: an
+empty `catch`, or a `catch (Exception e)` that hides what went wrong.
+
+Most of PMD's rules are about style or overlap Error Prone. Turning them all on buries the useful findings in noise,
+so pick a short list.
+
+### Do this
+
+1. Apply Gradle's `pmd` plugin and pin the PMD version in the catalog.
+2. Write a ruleset file with only the rules you enforce, clear the default rule sets and point PMD at handwritten
+   code. The sources generated from the OpenAPI contract are not yours to simplify.
+
+   ```kotlin
+   pmd {
+       toolVersion = libs.versions.pmd.get()
+       ruleSets = listOf()
+       ruleSetFiles = files("config/pmd/ruleset.xml")
+   }
+
+   tasks.pmdMain {
+       source = fileTree("src/main/java")
+   }
+   ```
+
+3. Start with complexity (`CyclomaticComplexity`, `CognitiveComplexity`, `NPathComplexity`), size (`GodClass`,
+   `ExcessiveParameterList`), `EmptyCatchBlock`, `AvoidCatchingGenericException` and unused private code. Keep the
+   default limits.
+4. Fix a finding by splitting the code. When a rule is wrong for one method, suppress it there with
+   `@SuppressWarnings("PMD.<RuleName>")` and a comment that says why.
+
+### When this is not for you
+
+- A team that already enforces these rules in SonarQube as a quality gate: keep one tool, not two.
+- An existing codebase with many findings: start with the complexity rules and add the others as the findings go
+  down.
+
 ## Put it all together
 
-Every step above lives in five files of the example service and `./gradlew build` runs all the gates.
+Steps 1 to 8 live in five files of the example service and `./gradlew build` runs all their gates. Generated
+projects also have the PMD gate of step 9.
 
 ### The wrapper
 
@@ -352,7 +404,8 @@ file.
 
 ### The compile gates
 
-Error Prone with NullAway in JSpecify mode on main code and a `package-info.java` in every package (steps 4 and 5).
+Error Prone with NullAway in JSpecify mode on main code, `RequireExplicitNullMarking` and a `package-info.java` in
+every package (steps 4 and 5).
 
 From [`build.gradle.kts`](https://github.com/pyahu/initializer/blob/main/fixtures/single-hexagonal/build.gradle.kts):
 
@@ -362,6 +415,7 @@ tasks.withType<JavaCompile>().configureEach {
     options.errorprone {
         disableWarningsInGeneratedCode = true
         check("NullAway", CheckSeverity.ERROR)
+        check("RequireExplicitNullMarking", CheckSeverity.ERROR)
         option("NullAway:OnlyNullMarked", "true")
         option("NullAway:JSpecifyMode", "true")
     }
@@ -381,7 +435,7 @@ import org.jspecify.annotations.NullMarked;
 ```
 
 **Check it:** make a method in a marked package return `null` without `@Nullable`. `./gradlew build` fails with a
-NullAway error.
+NullAway error. Add a package without a `package-info.java` and it fails with `RequireExplicitNullMarking`.
 
 ### Formatting and the SBOM
 
@@ -416,6 +470,8 @@ tasks.named("build") {
   together (step 8).
 - CI that runs `./gradlew build` inside the pinned JDK image (step 1).
 - A rule that update pull requests merge only on a green build (step 8).
+- In a generated project, PMD with the ruleset in `config/pmd/ruleset.xml` as part of `check` (step 9). The example
+  service does not run it yet.
 
 ## Checklist
 
@@ -427,10 +483,11 @@ tasks.named("build") {
 - **BLD-04** Repositories declared only in settings.gradle.kts with repositoriesMode FAIL_ON_PROJECT_REPOS. (step 2)
 - **BLD-05** BOMs imported with platform() in every configuration that needs them; no io.spring.dependency-management plugin. (step 3)
 - **BLD-06** Error Prone runs on main code with warnings in generated code disabled. (step 4)
-- **BLD-07** NullAway as an error with OnlyNullMarked and JSpecifyMode; every package has a package-info.java with @NullMarked. (step 5)
+- **BLD-07** NullAway as an error with OnlyNullMarked and JSpecifyMode; RequireExplicitNullMarking fails a package without a package-info.java with @NullMarked. (step 5)
 - **BLD-08** Spotless with a pinned palantir-java-format; spotlessCheck runs as part of check. (step 6)
 - **BLD-09** build depends on cyclonedxBom and writes the SBOM to a fixed path. (step 7)
 - **BLD-10** renovate.json extends config:recommended, sets minimumReleaseAge and groups libraries that must move together. (step 8)
+- **BLD-12** PMD runs in check on handwritten code with a short ruleset for complexity, size and swallowed errors. (step 9)
 
 ### Recurring operator tasks
 
@@ -454,3 +511,7 @@ tasks.named("build") {
 - [Error Prone installation](https://errorprone.info/docs/installation) (2.50.0, not version-pinned)
 - [Error Prone bug patterns](https://errorprone.info/bugpatterns) (2.50.0, not version-pinned)
 - [gradle-errorprone-plugin (README)](https://github.com/tbroyer/gradle-errorprone-plugin) (5.1.1, not version-pinned)
+- [PMD Java design rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_design.html) (7.29.0): The complexity and size rules: CyclomaticComplexity, CognitiveComplexity, NPathComplexity, GodClass, ExcessiveParameterList.
+- [PMD Java error prone rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_errorprone.html) (7.29.0): EmptyCatchBlock and AvoidCatchingGenericException.
+- [The PMD plugin](https://docs.gradle.org/9.8.1/userguide/pmd_plugin.html) (9.8.1): Gradle's pmd plugin: toolVersion, rule sets and the pmdMain task.
+- [NullAway configuration](https://github.com/uber/NullAway/wiki/Configuration) (0.14.2, not version-pinned): NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check.

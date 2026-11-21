@@ -16,11 +16,12 @@ explains why it matters. Items with a "when" apply only to services that use tha
 - [ ] **BLD-04** Repositories declared only in settings.gradle.kts with repositoriesMode FAIL_ON_PROJECT_REPOS. (step 2)
 - [ ] **BLD-05** BOMs imported with platform() in every configuration that needs them; no io.spring.dependency-management plugin. (step 3)
 - [ ] **BLD-06** Error Prone runs on main code with warnings in generated code disabled. (step 4)
-- [ ] **BLD-07** NullAway as an error with OnlyNullMarked and JSpecifyMode; every package has a package-info.java with @NullMarked. (step 5)
+- [ ] **BLD-07** NullAway as an error with OnlyNullMarked and JSpecifyMode; RequireExplicitNullMarking fails a package without a package-info.java with @NullMarked. (step 5)
 - [ ] **BLD-08** Spotless with a pinned palantir-java-format; spotlessCheck runs as part of check. (step 6)
 - [ ] **BLD-09** build depends on cyclonedxBom and writes the SBOM to a fixed path. (step 7)
 - [ ] **BLD-10** renovate.json extends config:recommended, sets minimumReleaseAge and groups libraries that must move together. (step 8)
 - [ ] **BLD-11** Dependency update pull requests are reviewed and merged on a green build every week. (step 8)
+- [ ] **BLD-12** PMD runs in check on handwritten code with a short ruleset for complexity, size and swallowed errors. (step 9)
 
 ### [Architecture: hexagonal and DDD layered](guides/architecture.md)
 
@@ -34,6 +35,7 @@ explains why it matters. Items with a "when" apply only to services that use tha
 - [ ] **ARCH-08** An ArchUnit rule keeps the domain package to the JDK, JSpecify and itself. (step 6)
 - [ ] **ARCH-09** @Transactional only on application service methods, one per use case. (step 5)
 - [ ] **ARCH-10** Module boundaries reviewed with the people who know the business whenever a capability is added. (step 8)
+- [ ] **ARCH-11** ArchitectureTest keeps controllers in the web layer and @Transactional in the application, and forbids field injection, System.out and generic exceptions. (step 7)
 
 ### [Architecture styles compared](guides/architecture-styles.md)
 
@@ -52,6 +54,8 @@ explains why it matters. Items with a "when" apply only to services that use tha
 - [ ] **TEST-07** Integration tests import one shared @TestConfiguration; no @DirtiesContext and no @MockitoBean in @SpringBootTest classes. (step 7)
 - [ ] **TEST-08** A suite starts the built image with a read-only root filesystem as a user other than root and asserts that /readyz answers 200. (step 8)
 - [ ] **TEST-09** CI runners have Docker for the Testcontainers and image tests. (step 5)
+- [ ] **TEST-10** Tests that start the application or a container carry @Tag("integration") and run in their own task after the fast tests. (step 9)
+- [ ] **TEST-11** JaCoCo gates domain and application at 80% of lines and 70% of branches; PIT runs on them with a mutation threshold of 70; both are part of check. (step 9)
 
 ## Part 2: Build the service
 

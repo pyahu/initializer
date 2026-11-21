@@ -3,6 +3,7 @@ package [[packageName]];
 import static org.assertj.core.api.Assertions.assertThat;
 
 import [[packageName]].ping.application.port.in.Ping;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 [[#postgres]]
@@ -25,6 +26,7 @@ import org.springframework.context.annotation.Import;
 @SpringBootTest(properties = "spring.liquibase.enabled=true")
 @Import(Postgres.class)
 [[/postgres]]
+@Tag("integration")
 class ApplicationTest {
 
     @Autowired
