@@ -85,8 +85,8 @@ implementation with `@GrpcService`. It listens on port 9090, next to the web ser
 
 ### What's going on
 
-Spring Boot 4.1 has gRPC support built in, based on the Spring gRPC project. The BOM manages the versions: Spring
-gRPC 1.1.1, gRPC Java 1.83.1 and Protocol Buffers 4.35.1.
+Spring Boot 4.1 has gRPC support built in, based on the Spring gRPC project. Spring Boot's BOM (bill of materials, its list
+of managed dependency versions) sets Spring gRPC 1.1.1, gRPC Java 1.83.1 and Protocol Buffers 4.35.1.
 
 By default the gRPC server runs on its own Netty server, on port 9090, separate from Tomcat on 8080. So one service
 can serve REST and gRPC side by side without either getting in the other's way.
@@ -104,7 +104,8 @@ can serve REST and gRPC side by side without either getting in the other's way.
    }
    ```
 
-4. To call another service, name a channel and import its stub:
+4. To call another service, name a channel (the connection settings for that server) and import its stub (the
+   generated client class):
 
    ```java
    @ImportGrpcClients(target = "payments", types = PaymentsGrpc.PaymentsBlockingStub.class)
@@ -180,6 +181,8 @@ gRPC Java has retries switched on but with no retry policy, so nothing is retrie
 health as liveness.
 
 ### What's going on
+
+Kubernetes asks two questions. Liveness: should it restart the pod? Readiness: should it send the pod traffic?
 
 gRPC has a standard health check protocol. Boot 4.1 starts its health service as soon as the app has a gRPC
 service and updates it from the app's own health every 5 seconds. The overall check, whose service name is empty,
@@ -274,8 +277,8 @@ spring.grpc.server.ssl.bundle: grpc-server
 Boot instruments gRPC servers and clients with Micrometer observations, on by default. Each call becomes a span
 and a timer, so the pipeline from [Observability](observability.md) covers gRPC with no extra work.
 
-For security, gRPC uses the same TLS as HTTPS. Boot reads certificates from an SSL bundle, on the server and on
-each client channel. With mutual TLS, the server also checks the client's certificate.
+For security, gRPC uses the same TLS as HTTPS. Boot reads certificates from an SSL bundle, a named set of
+certificates and keys ([security guide, step 9](https://initializer.pyahu.io/guides/security/#sec-tls)), on the server and on each client channel. With mutual TLS, the server also checks the client's certificate.
 
 ### Do this
 

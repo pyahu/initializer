@@ -142,8 +142,8 @@ something your code can see and act on.
 
 1. Set the three properties above. `correlated` lets you match each confirm to the message you sent.
 2. Send with a `CorrelationData` and wait on its future, `correlationData.getFuture()`, with a timeout.
-3. If the confirm is a nack or the message came back as returned, treat the send as failed: retry it or fail the
-   request.
+3. If the confirm is negative (a nack) or the message came back as returned, treat the send as failed: retry it or
+   fail the request.
 4. Use one connection per application and let Spring cache channels on it. The default cache mode is `channel`;
    raise `spring.rabbitmq.cache.channel.size` only if you see channels being opened and closed under load.
 
@@ -235,8 +235,8 @@ is dropped when the queue has none.
 
 - Failures caused by a downstream outage: a few quick retries will not help. Let the message go back later or
   pause the consumer instead of burning through the retries.
-- Retries block the consumer thread while they wait. For long backoffs, use a delay queue with a TTL that dead
-  letters back to the work queue.
+- Retries block the consumer thread while they wait. For long backoffs, use a delay queue whose messages expire
+  after a time to live (TTL) and are dead lettered back to the work queue.
 
 <a id="rmq-idempotent"></a>
 

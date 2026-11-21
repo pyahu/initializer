@@ -110,8 +110,8 @@ the user.
 
 ### What's going on
 
-Spring Security turns claims in the token into authorities, the strings your rules check. By default it reads
-`scope` or `scp` and adds the `SCOPE_` prefix.
+Spring Security turns claims, the named values in the token, into authorities, the strings your rules check. By
+default it reads `scope` or `scp` and adds the `SCOPE_` prefix.
 
 Microsoft Entra ID uses two claims. A token for a user who signed in carries `scp`, a string of delegated permissions
 separated by spaces. A token an app gets for itself (client credentials) carries `roles` (an array) and no `scp`.
@@ -195,7 +195,8 @@ A CSRF attack tricks a browser into sending a request with a cookie it already h
 attached by the browser on its own, so there is nothing to forge. Disabling CSRF is the documented choice for
 such APIs.
 
-CORS answers a different question: may a page from another origin call this API from the browser? With a
+CORS answers a different question: may a page from another origin call this API from the browser? An origin is
+the protocol, host and port together. With a
 backend for the frontend or a gateway on the same origin, the browser never calls the API directly. Then you need
 no CORS at all.
 
@@ -228,8 +229,8 @@ Referrer-Policy: no-referrer
 ### What's going on
 
 Spring Security already sends `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, cache control headers and
-HSTS. But it sends HSTS only when the request arrived over HTTPS. Behind an ingress that ends TLS, the app sees
-plain HTTP, unless it trusts the forwarded headers.
+HSTS, which tells browsers to use only HTTPS for the site. But it sends HSTS only when the request arrived over
+HTTPS. Behind an ingress that ends TLS, the app sees plain HTTP, unless it trusts the forwarded headers.
 
 On Kubernetes, Boot reads those headers by default and Tomcat trusts every private address range. In a cluster
 that means every pod: any of them can fake `X-Forwarded-For` and `X-Forwarded-Proto`, which also corrupts client
@@ -278,8 +279,9 @@ finds the whole story.
 3. Add a handler for every other exception that logs the exception and returns a fixed text.
 4. For validation errors, return an `errors` list with the field name and the message, never the rejected value,
    which can be personal data. Keep `${validatedValue}` out of custom messages.
-5. Validate every request body with Bean Validation and bound string and list sizes. The header limit is 8 KB;
-   large Entra tokens come close, so raise it on purpose, never to unlimited.
+5. Validate every request body with Bean Validation and bound string and list sizes.
+6. Keep in mind the 8 KB request header limit. Large Entra tokens come close, so raise it on purpose, never to
+   unlimited.
 
 ### When this is not for you
 

@@ -126,8 +126,10 @@ the tag, you stay on 24.04 until you choose to move.
 
 1. Start from `eclipse-temurin:25.0.5_8-jre-noble` for the runtime stage and the matching `-jdk-noble` image for the
    build stages.
-2. If the service calls hosts signed by a company CA, add its certificate in the runtime stage with
-   `keytool -importcert -cacerts -noprompt -alias company-ca -file company-ca.crt`, or mount a truststore and
+2. If the service calls hosts whose certificates are signed by your company's certificate authority (CA), add the
+   CA certificate in the runtime stage with
+   `keytool -importcert -cacerts -noprompt -alias company-ca -file company-ca.crt`, or mount a truststore, a file
+   of trusted certificates, and
    point `javax.net.ssl.trustStore` at it. The Temurin image can import certificates when it starts, but only
    through its own entrypoint script, which your `ENTRYPOINT` replaces.
 

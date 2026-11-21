@@ -60,7 +60,7 @@ test cannot see a broken image; only a test against the image can. Upside down, 
 ### What's going on
 
 A rule such as "an order over the credit limit is rejected" does not need a web server, a database or a Spring
-context. If the domain classes are plain Java, a test creates them with `new`, calls a method and checks the result.
+context, the set of objects Spring creates and wires at startup. If the domain classes are plain Java, a test creates them with `new`, calls a method and checks the result.
 It runs in milliseconds, so you can have hundreds.
 
 This only works if the domain does not reach for Spring. The [architecture guide](architecture.md) shows how
@@ -142,8 +142,9 @@ The jMolecules rule fails when a port depends on an adapter. Your own ArchUnit r
 
 1. Add `spring-modulith-starter-test`, `archunit-junit5` and `jmolecules-archunit`.
 2. Write one test that calls `ApplicationModules.of(Application.class).verify()`.
-3. Add an ArchUnit test class with the jMolecules rule for your style and a rule for anything it misses, such as
-   what the domain may depend on.
+3. Add an ArchUnit test class. For hexagonal, use the jMolecules rule; for DDD layered, write the layer rules
+   yourself, as in [step 4 of the architecture guide](https://initializer.pyahu.io/guides/architecture/#arch-ddd-layered). Add a rule for
+   anything else the checks miss, such as what the domain may depend on.
 4. Run both in the normal build. The [architecture guide](architecture.md) explains the rules themselves.
 
 ### When this is not for you

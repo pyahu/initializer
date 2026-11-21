@@ -121,7 +121,8 @@ Virtual threads remove the thread limit. They do not add database connections or
    Keep the pool fixed: `minimum-idle` equal to the maximum.
 2. Set `connection-timeout` to 3 seconds, so a request that cannot get a connection fails fast instead of piling up.
 3. Watch `hikaricp.connections.pending`. It rises when requests wait for the pool.
-4. Load test before and after with the same pool size and compare p95 and p99, not only throughput.
+4. Load test before and after with the same pool size and compare p95 and p99 response
+   times (the times within which 95% and 99% of requests finish), not only throughput.
 
 ### When this is not for you
 
@@ -158,7 +159,9 @@ deadline for admission. Connect and read timeouts start after admission, so they
 2. Put a class-level `@ConcurrencyLimit` on each downstream gateway, with an explicit `limit` and `policy = REJECT`.
    Agree on the total across replicas with the service owner.
 3. Give every outbound call a connect timeout and a read timeout. The limit stops the flood; the timeouts stop one
-   slow call from holding a slot forever.
+   slow call from holding a slot forever, if the read timeout is a deadline. With Apache HttpClient it only
+   measures silence between packets, so a server that answers slowly can still hold the slot: see
+   [HTTP clients, step 4](/guides/http-clients/#http-deadline) for a hard deadline.
 4. Limit retries and add jitter: retries times replicas times layers multiply the load on a service that is
    already struggling.
 5. Map `InvocationRejectedException` to 503 or 429. Do not retry it locally: that would add work back to a
@@ -244,12 +247,13 @@ The old `spring.task.execution.pool.*` settings are ignored with virtual threads
 
 ## 6. Why do my logs lose the trace ID in async work?
 
-**In short:** the logging context, the security context and the transaction belong to one thread. Carry them over
-explicitly when work moves to another thread.
+**In short:** the logging context, the security context and the transaction belong to one thread. Carry the
+logging and security contexts over explicitly when work moves to another thread; the transaction never moves.
 
 ### What's going on
 
-MDC, Spring Security's `SecurityContextHolder` and transaction state are stored per thread, virtual or not. When
+MDC (the logging context that adds fields such as the trace ID to each log line), Spring Security's
+`SecurityContextHolder` and transaction state are stored per thread, virtual or not. When
 you hand work to another thread with `@Async`, `CompletableFuture.supplyAsync` or your own executor, the new thread
 starts empty: log lines lose the trace ID and the user. The call starts a new trace.
 

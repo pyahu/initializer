@@ -33,9 +33,10 @@ no Java agent.
 There are two ways to instrument a Spring Boot app. The OpenTelemetry Java agent rewrites classes while the app
 runs. Boot's starter uses Micrometer, which Spring already calls on every request.
 
-Use both and every request is recorded twice: two server spans, sometimes in two different traces and two sets of
-HTTP metrics with different names. With the starter alone, one Micrometer observation produces a span and a timer
-with the same tags and the versions come from the Boot BOM.
+A span is one timed operation inside a trace. Use both and every request is recorded twice: two server spans,
+sometimes in two different traces and two sets of HTTP metrics with different names. With the starter alone, one
+Micrometer observation, Spring's record of an operation, produces a span and a timer with the same tags (key-value
+labels). The versions come from the Boot BOM, Spring Boot's list of library versions that work together.
 
 > **Diagram:** One request, three signals, one trace ID: from Spring Boot over OTLP to the backends. Five numbered stages from left to right. 1, request: a client calls the service and may send a W3C traceparent header. 2, app: Spring Boot with spring-boot-starter-opentelemetry and no Java agent; Micrometer Observation turns the request into a server span, the OTLP meter registry exports metrics in seconds with histogram buckets and exemplars and the OpenTelemetry Logback appender sends log records that carry the trace ID. 3, collector: the app sends all three signals over OTLP/HTTP on port 4318 to a collector, recommended in production as a gateway that enriches, scrubs, samples and retries; locally the otel-lgtm image includes one. 4, backends: traces go to Tempo, metrics to a Prometheus-compatible store, logs to Loki. 5, correlate in Grafana, dashed: a latency bucket's exemplar links to the trace and the trace links to its log lines by trace_id.
 
@@ -64,6 +65,7 @@ env:
 
 ### What's going on
 
+OTLP, the OpenTelemetry Protocol, carries traces, metrics and logs from the app to a collector or backend.
 Boot 4 renamed its OTLP properties. Advice written for Boot 3 uses names that no longer work and the app quietly
 exports nothing.
 
@@ -84,8 +86,8 @@ Metrics keep the `management.otlp.metrics.export.*` prefix.
 
 1. Set `OTEL_EXPORTER_OTLP_ENDPOINT` per environment.
 2. Name the service with `spring.application.name`.
-3. Add `service.version` and `deployment.environment.name` as resource attributes, so you can filter by release
-   and environment.
+3. Add `service.version` and `deployment.environment.name` under `management.opentelemetry.resource-attributes`,
+   as in [the settings](#the-settings), so you can filter by release and environment.
 
 ### When this is not for you
 
@@ -157,15 +159,16 @@ too, so a trace is never cut in half.
 
 ## 5. How do I make metrics useful without a huge bill?
 
-**In short:** export in seconds, turn on histogram buckets, add buckets for your SLOs and keep tag values bounded.
+**In short:** export in seconds, turn on histogram buckets, add buckets for your service level objectives
+(SLOs) and keep tag values bounded.
 
 ### What's going on
 
 Three small mistakes make metrics wrong or expensive.
 
 - **Milliseconds** break Prometheus conventions and dashboards show the wrong unit.
-- **Percentiles computed in each pod** cannot be combined, so the p99 of three replicas is wrong. Histogram buckets
-  can be combined.
+- **Percentiles computed in each pod** cannot be combined, so the p99 of three replicas is wrong. Histogram buckets,
+  counts of requests grouped by duration, can be combined.
 - **A tag with unbounded values**, like a raw URL with IDs in it, creates a new series per value and the bill
   follows.
 
@@ -268,7 +271,8 @@ Boot solves both: it serves `/livez` and `/readyz` on the main port as well, whe
 2. Expose `health,info`, plus `prometheus` only when something scrapes it.
 3. Hide health details in production.
 4. Turn on `add-additional-paths` and point the probes at `/livez` and `/readyz` on the main port.
-5. Metrics leave over OTLP, so nothing outside the pod needs 8081: no NetworkPolicy rule should allow it.
+5. Metrics leave over OTLP, so nothing outside the pod needs 8081: no NetworkPolicy rule should allow it, except
+   for the scraper when you expose `prometheus`.
 
 ### When this is not for you
 

@@ -336,13 +336,15 @@ Caching touches three places: the build, the application and the Valkey server.
 ### In the build
 
 - `spring-boot-starter-cache` and `spring-boot-starter-data-redis`; versions come from the Spring Boot BOM (step 2).
-- `com.github.ben-manes.caffeine:caffeine` only if you add a local layer for hot keys (step 6).
+- `com.github.ben-manes.caffeine:caffeine` only if you use Caffeine, as the local cache of step 1 or as a local layer
+  for hot keys (step 6).
 
 ### In the application
 
 - `@EnableCaching` on its own configuration class (step 2).
-- `spring.cache.cache-names` and `spring.cache.redis.time-to-live` for every cache (steps 2 and 3).
-- A `RedisCacheConfiguration` bean with a JSON serialiser and a versioned prefix (step 4).
+- `spring.cache.cache-names` for every cache (step 2).
+- A `RedisCacheConfiguration` bean with a JSON serialiser, a versioned prefix and the default time to live in
+  `entryTtl(...)`, which replaces `spring.cache.redis.time-to-live` (steps 3 and 4).
 - A transaction aware cache manager and evictions after writes (step 5).
 - `spring.data.redis.connect-timeout`, `spring.data.redis.timeout` and a `CacheErrorHandler` that treats errors as
   misses (step 7).

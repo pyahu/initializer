@@ -56,13 +56,13 @@ different teams own them or they release on unrelated schedules.
 
 ### What's going on
 
-A shared repository is like a shared office. Working side by side makes small cross changes easy: rename a field
-in a contract and fix its consumer in one pull request. But a shared office only works if everyone keeps their
+A shared repository is like a shared office. Working side by side lets you make small changes across services:
+rename a field in a contract and fix its consumer in one pull request. But a shared office only works if everyone keeps their
 own desk. When services start reading each other's code, the office turns into one big room where nobody can move
 anything alone.
 
-The repository is not the problem. Coupling is. One repository makes coupling easy to add and hard to see, so it
-needs rules that a separate repository gets for free.
+The repository is not the problem. Coupling is: dependencies that force services to change together. One
+repository lets you add them without noticing, so it needs rules that a separate repository gets for free.
 
 ### Do this
 
@@ -85,8 +85,9 @@ each other's projects.
 
 ### What's going on
 
-The fastest way to build a distributed monolith is a shared module: "common" entities, a shared client, a shared
-utility package that grows every week. Once billing compiles against orders' classes, a change in orders can break
+The fastest way to build a distributed monolith, services that can only change and release together, is a shared
+module of internals: "common" entities, a client tied to another service's classes, a shared utility package that
+grows every week. Once billing compiles against orders' classes, a change in orders can break
 billing and the two must release together.
 
 Services that only talk through contracts (an HTTP API, a gRPC service, an event) can change their insides freely.
@@ -186,8 +187,8 @@ pull requests. A version catalog lists each library once under a name. Every bui
 `build-logic` is a separate build, so it does not see the catalog by itself. You import it in `build-logic`'s
 settings file. Convention plugins read it through `VersionCatalogsExtension`.
 
-A catalog states the versions you ask for. It does not force what Gradle finally resolves, so the Spring Boot BOM
-keeps aligning the libraries it manages.
+A catalog states the versions you ask for. It does not force what Gradle finally resolves, so the Spring Boot bill of
+materials (BOM), its list of compatible dependency versions, keeps aligning the libraries it manages.
 
 ### Do this
 

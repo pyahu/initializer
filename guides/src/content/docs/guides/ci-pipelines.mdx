@@ -239,9 +239,10 @@ and a signature to its registry digest.
 A tag such as `:1.4` can be moved, so deploy and verify by digest, which names the exact content. Then answer the
 question others will ask: who built this, from which commit, with which workflow?
 
-GitHub artifact attestations answer it. The `actions/attest` action writes signed provenance for the digest, using
-Sigstore behind the scenes. GitHub documents that this alone gives SLSA Build Level 2; moving the build into a
-reusable workflow shared across repositories is how it reaches Build Level 3. The same action can attach an SBOM.
+GitHub artifact attestations answer it. The `actions/attest` action writes provenance, a signed record of that
+build, for the digest, using Sigstore behind the scenes. GitHub documents that this alone gives SLSA Build Level 2;
+moving the build into a reusable workflow shared across repositories is how it reaches Build Level 3. The same
+action can attach an SBOM, the list of every library inside the image.
 Cosign can also sign the image directly, without keys to store, using the workflow's OpenID Connect identity.
 
 The publishing job is a different machine. Running `docker buildx build --push` there makes a second image and

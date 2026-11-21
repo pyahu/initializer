@@ -39,8 +39,8 @@ import DiagramLegend from '../../../components/DiagramLegend.astro';
 import NextRuntimeSplitDiagram from '../../../components/diagrams/NextRuntimeSplitDiagram.astro';
 
 The new screen works on your laptop. In staging it calls the production API, the access token shows up in the
-browser's developer tools and a deploy drops every open request. The frontend is fine; it just runs in more places
-than you thought and each place sees different things.
+browser's developer tools and a deploy drops every open request. The frontend is fine. It runs in more places than you
+thought, and each place sees different things.
 
 This guide puts a Next.js frontend next to the Spring Boot service: same repository, same CI and the same local setup.
 It keeps its own build, image and Deployment. It is written for Next.js 16 with the App Router. Each step says when its
@@ -99,8 +99,8 @@ compiling instead of failing at run time. `openapi-typescript` turns OpenAPI 3.0
 
 ### Do this
 
-1. Keep the frontend under `frontends/web` and point the generator at the service's contract in the same
-   repository:
+1. Keep the frontend under `frontends/web`. From that directory, point the generator at the service's contract
+   in the same repository:
 
    ```sh
    npx openapi-typescript ../../src/main/openapi/api.yaml -o src/api/schema.d.ts
@@ -133,13 +133,15 @@ compiling instead of failing at run time. `openapi-typescript` turns OpenAPI 3.0
 
 ## 3. How does the user log in and where does the token live?
 
-**In short:** run the OIDC code flow on the Next.js server and keep the session and the tokens where scripts in
-the browser cannot read them: in a server side store or in an encrypted httpOnly cookie.
+**In short:** run the OpenID Connect (OIDC) code flow, where a one-time login code is traded for tokens, on the
+Next.js server and keep the session and the tokens where scripts in the browser cannot read them: in a server side
+store or in an encrypted httpOnly cookie.
 
 ### What's going on
 
-Your identity provider speaks OpenID Connect. After login it hands out an access token that the service accepts.
-If that token reaches the browser, any script on the page can read it and send it anywhere.
+Your identity provider, the service that logs users in, speaks OpenID Connect. After login it hands out an access
+token that the service accepts. If that token sits where scripts on the page can read it, any of them can send it
+anywhere.
 
 The safer shape: the Next.js server runs the login, stores the session in a cookie the browser cannot read from
 JavaScript and adds the token itself when it calls the service. The Next.js docs recommend an authentication library
@@ -155,8 +157,8 @@ OIDC discovery URL.
    script in the page can read them.
 3. Check the session again where the data is read: in the functions that fetch data for a page, not only in
    `proxy.ts`, the file where Next.js runs code before every request.
-4. Treat every Server Action as a public endpoint: Next.js says they are reachable by direct POST. Check the
-   user inside each one.
+4. Treat every Server Action, a server function the browser can call, as a public endpoint: Next.js says they
+   are reachable by direct POST. Check the user inside each one.
 5. The service still validates every token ([Security hardening](/guides/security/)). The frontend is one more
    client.
 
@@ -248,7 +250,7 @@ export default { output: 'standalone' };
 ### What's going on
 
 A normal build needs all of `node_modules` at run time. With `output: "standalone"` the build traces which files
-each page needs and copies just those, plus a small `server.js`, into `.next/standalone`. The image gets much
+each page needs and copies only those, plus a small `server.js`, into `.next/standalone`. The image gets much
 smaller and holds less to patch.
 
 The standalone server does not copy `public` and `.next/static` on its own. The official Docker example copies
@@ -291,8 +293,8 @@ The frontend is what the browser runs, so it is where most browser attacks land:
 leaking URLs to other sites. Response headers tell the browser to refuse those.
 
 Next.js lets you set headers per path in `next.config.ts`. It adds `x-powered-by` unless you turn it off. A
-Content Security Policy with a nonce is stronger. The nonce must be new for each request, so pages that use it
-render per request.
+Content Security Policy with a nonce is stronger. A nonce is a random value that marks the scripts the policy
+allows. It must be new for each request, so pages that use it render per request.
 
 ### Do this
 
@@ -316,9 +318,9 @@ render per request.
 
 ### What's going on
 
-Next.js is already instrumented: rendering, routes and each `fetch` become spans once you register OpenTelemetry
-in `instrumentation.ts`. The `@vercel/otel` package does that in a few lines and exports over OTLP when the
-standard `OTEL_EXPORTER_OTLP_*` variables are set.
+Next.js is already instrumented: rendering, routes and each `fetch` become spans, the timed steps that make up a
+trace, once you register OpenTelemetry in `instrumentation.ts`. The `@vercel/otel` package does that in a few lines
+and exports over OTLP, the OpenTelemetry protocol, when the standard `OTEL_EXPORTER_OTLP_*` variables are set.
 
 The trap: by default `@vercel/otel` sends the `traceparent` header only to Vercel deployment URLs. Calls to your
 Spring Boot service start a new trace. The frontend and the backend never connect.

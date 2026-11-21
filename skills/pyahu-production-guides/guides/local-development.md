@@ -141,8 +141,8 @@ test suite and for the app you click through.
 
 ## 4. How do I see traces, metrics and logs on my laptop?
 
-**In short:** run the `grafana/otel-lgtm` image. One container gives you a collector, Tempo, Loki, Prometheus and
-Grafana.
+**In short:** run the `grafana/otel-lgtm` image. One container gives you a collector that receives the telemetry,
+Tempo for traces, Loki for logs, Prometheus for metrics and Grafana to look at them.
 
 ```text
 grafana/otel-lgtm:0.37.0

@@ -65,7 +65,7 @@ disruptions, scaling, placement, scheduled work and troubleshooting. How the man
 ## 1. What should each probe check?
 
 **In short:** liveness asks "is this process broken?", readiness asks "should this pod get traffic now?". Neither
-checks the database.
+checks whether the database is healthy.
 
 ```yaml
 management.endpoint.health.probes.add-additional-paths: true
@@ -328,12 +328,14 @@ gives it its own pod, retries and a hard timeout.
 ### Do this
 
 1. For short frequent tasks, use `@Scheduled` with ShedLock, a library that takes a lock in the database so only
-   one pod runs the task. Let it use the database clock, because pod clocks differ. Its `lockAtMostFor` releases
-   the lock of a pod that died: set it longer than the slowest run and shorter than the interval, such as
-   `@SchedulerLock(name = "expire-orders", lockAtMostFor = "4m")` for a task that runs every five minutes.
-2. For batch work, use a `CronJob` with `concurrencyPolicy: Forbid` and an explicit `timeZone`, reusing the
+   one pod runs the task.
+2. Let ShedLock use the database clock, because pod clocks differ.
+3. Set `lockAtMostFor`, which releases the lock of a pod that died, longer than the slowest run and shorter than
+   the interval, such as `@SchedulerLock(name = "expire-orders", lockAtMostFor = "4m")` for a task that runs every
+   five minutes.
+4. For batch work, use a `CronJob` with `concurrencyPolicy: Forbid` and an explicit `timeZone`, reusing the
    service's image and configuration.
-3. Make jobs idempotent either way: a job can run more than once.
+5. Make jobs idempotent either way, so running one again does no harm: a job can run more than once.
 
 ### When this is not for you
 

@@ -34,7 +34,8 @@ cp -R /tmp/pyahu-initializer/skills/pyahu-production-guides .claude/skills/
 - **Other tools:** keep the folder anywhere in the repository and point your rules file (`AGENTS.md`,
   `.cursor/rules` or `.github/copilot-instructions.md`) to `pyahu-production-guides/SKILL.md`.
 
-To update, copy the folder again. The changes show up in your diff like any other code review.
+To update, remove `/tmp/pyahu-initializer`, run the same commands again and replace the installed folder. The
+changes show up in your diff like any other code review.
 
 ## Without installing anything
 

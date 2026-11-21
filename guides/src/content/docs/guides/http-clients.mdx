@@ -199,7 +199,9 @@ starting but never interrupts the one in flight. So the worst case is the retry 
 
 ### Do this
 
-1. Budget it: retry `timeout` plus connect plus read timeout must stay under your caller's own timeout.
+1. Budget it: the retry `timeout` plus one full attempt must stay under your caller's own timeout. One attempt is
+   the wait for a pooled connection, plus connect, plus reading the answer. Where the read timeout only measures
+   silence, it does not bound the reading: give that call a hard deadline (item 2).
 2. Where one call needs a hard deadline, use the JDK client for it or run the call on a virtual thread and cancel it
    at the deadline.
 3. Test with a stub that sends the body slowly, such as Toxiproxy and see what your client really does.
@@ -227,8 +229,9 @@ layer.
 ### What's going on
 
 Retries multiply. If the gateway, your service and the payments service each retry 3 times, one click becomes
-4 × 4 × 4 = 64 calls against a service that is already in trouble. Without jitter, every replica retries at the
-same moment, in waves. And a 400 or a 404 will not change on the next try.
+4 × 4 × 4 = 64 calls against a service that is already in trouble. Backoff makes each wait before a retry longer
+than the last. Without jitter, a random part added to each wait, every replica retries at the same moment, in
+waves. And a 400 or a 404 will not change on the next try.
 
 Spring Framework 7 has `@Retryable` built in but a bare one retries every exception 3 times with a fixed 1 second
 delay. It also does nothing until you add `@EnableResilientMethods`: Boot 4.1 does not turn it on for you. Like

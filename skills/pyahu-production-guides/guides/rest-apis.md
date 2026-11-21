@@ -10,8 +10,9 @@ The frontend team asks what `POST /orders` returns when the stock runs out. Nobo
 somewhere in a controller, a few exception handlers and a wiki page from last year. Each endpoint returns errors
 in its own shape and a renamed field breaks the mobile app on a Friday.
 
-This guide makes the contract the single source of truth: an OpenAPI document that both sides read, Spring
-interfaces generated from it and one way to validate, fail, page and version across every endpoint.
+This guide makes the contract the single source of truth: an OpenAPI document, a machine-readable description of
+the API's requests and responses, that both sides read. Spring interfaces are generated from it, and every endpoint
+handles validation, errors, pagination and versioning the same way.
 
 ## What you'll learn
 
@@ -54,7 +55,7 @@ against it, reviewers see every change to the promise in one file and the server
 
 ## 2. How do I turn the contract into code?
 
-**In short:** generate only the Java interfaces and models with the openapi-generator Gradle plugin and implement
+**In short:** generate only the Java interfaces and models with OpenAPI Generator's Gradle plugin and implement
 them in your web adapter.
 
 ```kotlin
@@ -68,7 +69,7 @@ with generated code. With `interfaceOnly` it writes just the interface: every pa
 from the contract, with the Spring annotations already on it.
 
 Your controller implements that interface. If the contract changes and the code does not follow, the build fails
-instead of the client. In a hexagonal service the controller stays a thin adapter: it maps the request, calls the
+instead of the client. In a [hexagonal service](https://initializer.pyahu.io/guides/architecture/#arch-hexagonal) the controller stays a thin adapter: it maps the request, calls the
 application through a port and maps the answer back.
 
 > **Diagram:** Contract first: one OpenAPI file, a generated interface, a thin web adapter and a domain that never sees the contract. Five numbered stages from left to right. 1, contract: api.yaml in OpenAPI 3.1, kept in the repository and reviewed in pull requests, highlighted. 2, build: the openApiGenerate Gradle task with interfaceOnly writes the API interface and the request and response models, no controllers, highlighted. 3, web adapter: your controller implements the generated interface and maps the generated models to your own types, highlighted. 4, application: a port, the use case, with your own types. 5, domain: the business rules, with no web or contract types. Below the contract, clients such as the frontend and partners read the same file. A note says the build fails when the controller no longer matches the contract.
@@ -198,9 +199,9 @@ the client tries again. HTTP calls `PUT` and `DELETE` idempotent: sending them t
 2. When the client can pick the ID, prefer `PUT` to that ID; a repeat then updates the same resource.
 3. For `POST`, accept an `Idempotency-Key` header. Store the key and the response in the same transaction as the
    write, with a unique constraint on the key, and keep them for as long as clients may retry, such as 24 hours.
-   When the key comes back, return the stored response. The constraint makes a retry that arrives at the same
+4. When the key comes back, return the stored response. The constraint makes a retry that arrives at the same
    time fail instead of creating a second order.
-4. Document the error responses too: `400`, `404`, `409` and `422` where they apply.
+5. Document the error responses too: `400`, `404`, `409` and `422` where they apply.
 
 ### When this is not for you
 

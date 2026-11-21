@@ -83,7 +83,7 @@ in a project a build error.
 ### Do this
 
 1. Put every version and plugin version in `[versions]` and refer to them with `version.ref`.
-2. Write libraries without a version when a BOM manages them (step 3).
+2. Write libraries without a version when a BOM, a published list of versions, manages them (step 3).
 3. Declare `mavenCentral()` and the plugin portal in `settings.gradle.kts` only, with `FAIL_ON_PROJECT_REPOS`.
 4. Apply plugins with `alias(libs.plugins.x)`.
 
@@ -265,7 +265,7 @@ before it reaches you.
    }
    ```
 
-2. Keep `minimumReleaseAge`, so a release that gets pulled never reaches you.
+2. Keep `minimumReleaseAge`, so a broken or withdrawn release is usually gone before Renovate proposes it.
 3. Group libraries that must move together into one pull request, with a `groupName` in a package rule, as above.
 4. Require the full build, gates included, to pass before merge: make it a required check in the branch
    protection of the default branch.

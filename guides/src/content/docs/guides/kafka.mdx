@@ -85,7 +85,8 @@ Nothing in your code talks to Kafka on the write path.
 ## 2. How do I run the outbox without losing events?
 
 **In short:** keep outbox rows after they are published, delete only rows older than a retention window and below a
-published watermark. Create the replication slot before the app accepts writes.
+published watermark, the point up to which publication is confirmed. Create the replication slot, PostgreSQL's record
+of how far Debezium has read the log, before the app accepts writes.
 
 ```text
 id, aggregatetype, aggregateid, type, payload
@@ -161,7 +162,8 @@ same; review semantic changes and test readers too.
 ### Do this
 
 1. Keep `.avsc` files in the repository next to the code that owns the event.
-2. Set and verify the compatibility policy for each subject. Do not rely on the registry's default:
+2. Set and verify the compatibility policy for each subject, the name under which the registry stores an event's
+   schema versions. Do not rely on the registry's default:
 
    ```sh
    curl -fsS -X PUT "$SCHEMA_REGISTRY_URL/config/$EVENT_SUBJECT" \
@@ -187,7 +189,8 @@ same; review semantic changes and test readers too.
    ```
 
    The delegate handles non-binary connector records such as heartbeats. Apply the outbox transformation only to
-   outbox records, using an SMT predicate. An Avro converter applied to a JSON string does not enforce your
+   outbox records, using an SMT (single message transformation) predicate, a condition that picks the records a
+   transformation applies to. An Avro converter applied to a JSON string does not enforce your
    business `.avsc`. Verify an end-to-end event with the actual consumer before releasing this integration.
 
 ### When this is not for you
@@ -210,7 +213,8 @@ outbox.event.order   key = order id
 
 ### What's going on
 
-Kafka keeps order only inside a partition. The key decides the partition. Use the aggregate id as the key and
+Each Kafka topic is split into partitions, and each partition is an ordered log. Kafka keeps order only inside a
+partition. The key decides the partition. Use the aggregate id as the key and
 every event about one order lands in the same partition, in the order it was written. Use no key or a random one and
 "order shipped" can overtake "order placed".
 
@@ -277,9 +281,9 @@ spring.kafka.listener.observation-enabled: true
 ### What's going on
 
 Spring Kafka sets `enable.auto.commit` to `false` unless you set it. The listener container commits offsets
-itself. The default `AckMode` is `BATCH`: it commits once every record from a poll is processed. If the pod dies
-before that commit, the next consumer gets those records again. That is "at least once". Kafka cannot do better
-across your database.
+itself. An offset records how far a consumer group has read in a partition. The default `AckMode` is `BATCH`: it
+commits once every record from a poll is processed. If the pod dies before that commit, the next consumer gets
+those records again. That is "at least once". Kafka cannot do better across your database.
 
 So the handler must survive a second delivery. Record the event id in a processed events table in the same
 transaction as the work. Skip ids you have seen. It is like stamping a delivery note: a second copy of the same

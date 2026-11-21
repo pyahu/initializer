@@ -21,7 +21,8 @@ The product is the guides: `guides/src/content/docs/guides/*.mdx`. Everything el
    on the official documentation the guide lists. Test what protects readers most (roles, migrations, auth,
    startup, failure handling); cite the documentation for library defaults.
 2. **Generated files are never edited by hand.** Run `go run ./cmd/guidekit generate`. They are the reference page,
-   `guides/src/generated/`, `fixtures/*/docs/references.md`, `templates/checklist.json` and `skills/`.
+   `guides/src/generated/`, `fixtures/*/docs/references.md`, `templates/checklist.json` and
+   `skills/pyahu-production-guides/`. `skills/README.md` is edited by hand.
 3. **One baseline.** `data/versions.yaml` holds the versions the guides, the fixture and the generator use. Change
    a pin there and in the fixture together; the fixture's CI fails when they differ.
 4. **Guides, steps and checklist items are public URLs.** Rename or remove one only with a record in
@@ -33,8 +34,9 @@ The product is the guides: `guides/src/content/docs/guides/*.mdx`. Everything el
 ## What else to update when you change something
 
 Nothing here may go stale. Find the row for what you changed and go through the whole row before you commit. In
-each row, **Updates itself** is regenerated or recomputed (run `go run ./cmd/guidekit generate` and commit the
-result), **Update by hand** is on you, and **Caught by** is the check that fails if you forget.
+each row, **Updates itself** is what `go run ./cmd/guidekit generate` writes (commit the result) or what the site
+build produces, such as the llms exports. **Update by hand** is on you, and **Caught by** is the check that fails if
+you forget.
 
 | You changed | Updates itself | Update by hand | Caught by |
 | ----------- | -------------- | -------------- | --------- |
@@ -59,7 +61,7 @@ with `curl https://start.pyahu.io/metadata`: the baseline must be the one in `da
 
 | You changed | Run |
 | ----------- | --- |
-| guides, data, Go tooling | `go test ./cmd/... ./internal/...`, `go run ./cmd/guidekit check`, `go run ./cmd/guidekit generate --check`, then `cd guides && npm ci && npm test && npm run check && npm run build` and `go run ./cmd/guidekit site` |
+| guides, data, Go tooling | `go test ./cmd/... ./internal/...`, `go run ./cmd/guidekit check`, `go run ./cmd/guidekit generate --check`, then `(cd guides && npm ci && npm test && npm run check && npm run build)` and `go run ./cmd/guidekit site`, all from the repository root |
 | the fixture or `acceptance/` | the fixture commands in CONTRIBUTING.md, "Commands" (Docker) |
 | the generator or templates | `./gradlew :start:build` |
 

@@ -133,7 +133,7 @@ still work and print a warning but they will not exist in the next API version.
        digest: sha256:<digest CI pushed>
    ```
 2. Put each optional feature in a component and list it in the overlays that need it.
-3. Use `labels`, `patches` and `replacements` only. `replacements` copies a value from one object into others
+3. Use `labels`, `patches` and `replacements` instead of the deprecated fields. `replacements` copies a value from one object into others
    without string templating.
 4. Run `kustomize edit fix` to move old files off the deprecated fields, then review the diff.
 
@@ -213,7 +213,7 @@ pod template for the same effect. Plain YAML has neither.
 
 ### When this is not for you
 
-- The old generated ConfigMaps pile up. A GitOps controller prunes them; plain `kubectl apply` does not.
+- The old generated ConfigMaps pile up. A GitOps controller with pruning on deletes them (step 7); plain `kubectl apply` does not.
 
 <a id="man-image-digest"></a>
 
@@ -249,8 +249,8 @@ digest, you get `repo:tag@sha256:…` and the digest wins when the image is pull
 
 ## 6. How should I apply manifests to the cluster?
 
-**In short:** with server-side apply and a named field manager. Never set `spec.replicas` when an HPA scales
-the Deployment.
+**In short:** with server-side apply and a named field manager. Never set `spec.replicas` when a
+HorizontalPodAutoscaler (HPA) scales the Deployment.
 
 ```sh
 kustomize build deploy/overlays/prod | kubectl apply --server-side --field-manager=orders-ci -f -

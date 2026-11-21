@@ -35,8 +35,9 @@ SQL itself is the clearest model.
 
 All three talk to the same PostgreSQL. They differ in how much they hide.
 
-Spring Data JDBC loads and saves a whole aggregate, with no lazy loading and no session in between: what you call
-is what runs. JPA, here Hibernate 7.4 (the version Spring Boot 4.1.2 manages), tracks the objects you load and
+Spring Data JDBC loads and saves a whole aggregate, a root object with the objects that belong to it, such as an
+order and its lines. Nothing loads later on first access (no lazy loading) and no session tracks your objects
+between calls: what you call is what runs. JPA, here Hibernate 7.4 (the version Spring Boot 4.1.2 manages), tracks the objects you load and
 writes your changes for you. That saves code and costs predictability. jOOQ (3.21 in the Boot BOM) hides nothing:
 you write SQL in Java, checked by the compiler against your real schema.
 
@@ -61,7 +62,7 @@ is driving on a map you drew yourself.
 
 ## 2. What does JPA do behind my back?
 
-**In short:** it keeps every entity you load in memory and writes your changes when the transaction commits.
+**In short:** it keeps every entity you load (a Java object mapped to a table row) in memory and writes your changes when the transaction commits.
 Know when that happens and never let it touch the schema.
 
 ```yaml

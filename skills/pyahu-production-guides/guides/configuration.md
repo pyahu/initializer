@@ -6,7 +6,7 @@ Typed settings that fail fast, one source per kind of value and secrets that nev
 
 On the web: https://initializer.pyahu.io/guides/configuration/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
 
-A typo in a ConfigMap key binds to nothing and the default quietly wins. A missing secret leaves the text
+A typo in a ConfigMap key matches no property, so the default quietly wins. A missing secret leaves the text
 `${payment-api-key}` in a request header. A property that only exists in `application-prod.yaml` was never run
 before production. None of these fail loudly. They fail at 3 a.m., on the first request that needs the value.
 
@@ -111,7 +111,7 @@ startup instead of a request.
 With `@Value` spread across the code, a wrong value surfaces the first time some request reads it. A validated
 record is checked once, while the app starts, like a preflight checklist before takeoff. If a value is wrong, the
 app exits with a clear message and the pod never turns Ready. With `maxUnavailable: 0` the old pods keep serving and
-the rollout simply stalls.
+the rollout stalls.
 
 ```java
 @ConfigurationProperties("orders")
@@ -128,8 +128,8 @@ public record OrdersProperties(
 
 ### Do this
 
-1. Add `spring-boot-starter-validation` and `spring-boot-configuration-processor` on the annotation processor path
-   for IDE hints.
+1. Add `spring-boot-starter-validation` as an application dependency. Add `spring-boot-configuration-processor` to
+   the annotation processor path for IDE hints.
 2. Write one record per group of settings with `@ConfigurationProperties` and `@Validated`. Put `@Valid` on nested
    records or their constraints are not checked.
 3. Give defaults with `@DefaultValue`. It is the only way for record components.
@@ -259,7 +259,7 @@ If the vault refuses or is down, the volume never mounts and the pod waits in `C
 3. Import them with the `configtree:` line above. Keep `optional:` so local runs work; the guard from step 4 catches
    a missing file in production.
 4. Do not add `secretObjects` to the `SecretProviderClass` unless something else needs a Kubernetes Secret. Syncing
-   copies the secret into etcd, readable by anyone allowed to `get secrets`.
+   copies the secret into etcd, the store behind the Kubernetes API, readable by anyone allowed to `get secrets`.
 5. Better than any secret is none: with workload identity the app can log in to PostgreSQL, Service Bus or Storage
    with a token (Microsoft Entra on Azure), with no password to store.
 

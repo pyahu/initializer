@@ -24,26 +24,29 @@ go test ./cmd/... ./internal/...                 # guidekit's own tests
 go run ./cmd/guidekit check --base origin/main   # data, guides, cross-references, retired URLs, navigation
 go run ./cmd/guidekit generate                   # rewrite every generated file
 go run ./cmd/guidekit generate --check           # fail if a generated file is stale
-cd guides && npm ci && npm run check && npm run build
+(cd guides && npm ci && npm run check && npm run build)   # in a subshell, so you stay at the root
 go run ./cmd/guidekit site --dist guides/dist    # built HTML and llms exports
 go run ./cmd/guidekit links --dist guides/dist   # external links (online)
 go run ./cmd/guidekit boms                       # BOM-managed pins against Maven Central
 ```
 
-Fixture and acceptance tests:
+Fixture and acceptance tests. The fixture build reads `templates/postgres/` and starts PostgreSQL with
+Testcontainers, so it mounts the whole repository and the Docker socket, as its workflow does:
 
 ```sh
-docker run --rm -v "$PWD/fixtures/single-hexagonal:/w" -w /w \
+docker run --rm -v "$PWD:/repo" -w /repo/fixtures/single-hexagonal \
+  -v /var/run/docker.sock:/var/run/docker.sock \
   eclipse-temurin@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f ./gradlew --no-daemon build
 docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal
 go test -tags acceptance -count=1 -p 1 ./acceptance/...
 ```
 
-The Initializer service and a project it generates:
+The Initializer service and a project it generates. `bootRun` keeps running, so start it in its own terminal
+and run the rest from a second one at the repository root:
 
 ```sh
 ./gradlew :start:build                           # engine tests, templates included
-./gradlew :start:bootRun
+./gradlew :start:bootRun                         # first terminal
 curl localhost:8080/starter.zip -d name=orders -d database=postgres -o orders.zip && unzip orders.zip
 go run ./cmd/runworkflow -dir orders             # the generated project's own CI, on this machine
 ```
@@ -233,10 +236,10 @@ becomes the package directory; `gitignore`, `gitattributes` and `dockerignore` g
 sets writing the same file is an error, never a merge.
 
 Every file is a JMustache template with `[[ ]]` as delimiters, so `${{ }}` in workflows passes through. The
-wrapper scripts and the wrapper jar are copied from this repository at build time and never rendered. Templates
-hold no logic beyond a section per option flag (`[[#postgres]]`, `[[#oidc]]`, `[[#nextjs]]`) where one file differs
-by option: what a project contains (dependencies, catalog entries, `application.yaml` keys, checklist items) is
-decided in `ProjectRecipe` and only written by the templates. Imports of rendered Java files are sorted after
+wrapper scripts and the wrapper jar are copied from this repository at build time and never rendered. `ProjectRecipe`
+decides what a project contains: dependencies, catalog entries, `application.yaml` keys and checklist items. The
+templates only write those decisions. Where one file differs by option, a template uses a section per option flag
+(`[[#postgres]]`, `[[#oidc]]`, `[[#nextjs]]`) and holds no other logic. Imports of rendered Java files are sorted after
 rendering, so `spotlessCheck` passes for any package. `frontends/web/src/api/schema.d.ts` must be what
 `openapi-typescript` writes for each variant of the contract; the generated workflow checks it.
 
@@ -257,10 +260,13 @@ between them, adapted for a reason it gives or left out for one. `DriftTest` fai
 template file has no rule. After changing a template, `./gradlew :start:regenerate` writes the files marked same
 again; review the diff like any other change.
 
-`frontends/start-web` is the page: the form comes from `/metadata`, the files from `/preview` through a Server Action
-on every change and the zip from its own `/starter.zip`, which passes requests on to the service, so a terminal and the browser use
-the same address. Its Playwright tests run in CI against both images; locally, start the service and
-`npm run dev`, then `npx playwright install chromium` once and `npm run test:e2e`.
+`frontends/start-web` is the generator page. It loads the form from `/metadata`; on every change a Server Action
+fetches the files from `/preview`. Its own `/starter.zip` passes download requests on to the service, so a terminal
+and the browser use the same address.
+
+Its Playwright tests run in CI against both images. To run them locally, start the service in one terminal; in a
+second, run `npm ci` and `npm run dev` in `frontends/start-web/`; in a third, in the same directory, run
+`npx playwright install chromium` once, then `npm run test:e2e`.
 
 ## Exceptions
 

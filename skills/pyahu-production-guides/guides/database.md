@@ -38,7 +38,7 @@ all services + migrations + admin ≤ connections the database gives to applicat
 
 ### What's going on
 
-Every pod has its own HikariCP pool. PostgreSQL does not see your service; it sees the sum of all those pools.
+Every pod has its own HikariCP pool: a set of database connections it keeps open and reuses. PostgreSQL does not see your service; it sees the sum of all those pools.
 
 The pods people forget are the ones in motion. During a rolling update a new pod opens its pool before an old one
 is gone and the old pod keeps its whole pool while it drains. So at full scale there can be one extra pool per
@@ -54,8 +54,8 @@ see it nor shed it. A small pool makes the queue form in HikariCP instead, where
 
 1. Keep pools small and fixed: `maximum-pool-size` equal to `minimum-idle`, 10 or less unless you measured
    otherwise.
-2. Compute the budget for every service that uses the same server, with the HPA maximum, the surge and the
-   draining pods.
+2. Compute the budget for every service that uses the same server, with the HPA (Horizontal Pod Autoscaler)
+   maximum replicas, the surge and the draining pods.
 3. Leave room for migrations, monitoring and a human with `psql`.
 4. Cap the runtime role in the database, so an overrun fails fast with a clear error:
    `ALTER ROLE orders_app CONNECTION LIMIT <n>`. Here `<n>` is this service's whole budget from item 2: the pool
@@ -262,14 +262,18 @@ things decide whether it is safe.
 2. Set a low `backoffLimit`, such as 1 or 2 (the default is 6) and an `activeDeadlineSeconds` so a stuck
    migration fails instead of hanging.
 3. Apply the prerequisites first: Namespace, ServiceAccount, generated ConfigMaps, NetworkPolicies and externally
-   managed Secrets and database roles. Then apply the Job and `kubectl wait --for=condition=complete` before the
-   Deployment. The generated `deploy/apply.sh` implements these phases with an explicit context and environment.
-   With Argo CD, use ordered sync waves with prerequisites before the migration and the application after it;
-   a `PreSync` hook cannot depend on resources first created in the later Sync phase. With Helm, ensure any
-   `pre-upgrade` hook has its prerequisites too. With Flux, use separate `Kustomization` dependencies.
-4. If a killed Job left the lock behind, run `liquibase release-locks` once, after making sure no migration is
+   managed Secrets and database roles.
+4. Apply the Job and run `kubectl wait --for=condition=complete`. Apply the Deployment only after the Job
+   completes. The generated `deploy/apply.sh` implements these phases with an explicit context and environment.
+
+   With a deployment tool, keep the same order:
+   - Argo CD: use ordered sync waves with prerequisites before the migration and the application after it. A
+     `PreSync` hook cannot depend on resources first created in the later Sync phase.
+   - Helm: ensure any `pre-upgrade` hook has its prerequisites too.
+   - Flux: use separate `Kustomization` dependencies.
+5. If a killed Job left the lock behind, run `liquibase release-locks` once, after making sure no migration is
    running.
-5. Set `ttlSecondsAfterFinished` so finished Jobs and their pods are cleaned up.
+6. Set `ttlSecondsAfterFinished` so finished Jobs and their pods are cleaned up.
 
 ### When this is not for you
 

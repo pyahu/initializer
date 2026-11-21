@@ -35,10 +35,10 @@ Each one takes a few minutes and the last section gives you the files to copy.
 
 Your pod restarts with `OOMKilled`, yet the heap graph never passed 60%. How?
 
-Think of the memory limit as a suitcase. The heap is the biggest thing you pack but not the only one: the JVM
-also carries compiled code, class metadata, one stack per thread and network buffers. Kubernetes weighs the whole
-suitcase. If the heap takes almost all the space, the rest does not fit and the kernel kills the pod. No error, no
-heap dump, just a restart.
+Think of the memory limit as a suitcase. The heap, where Java keeps your objects, is the biggest thing you pack but
+not the only one: the JVM also carries compiled code, class metadata, one stack per thread and network buffers.
+Kubernetes weighs the whole suitcase. If the heap takes almost all the space, the rest does not fit and the kernel
+kills the pod. No error, no heap dump, only a restart.
 
 > **Diagram:** Why a pod is killed while the heap graph looks fine and how the limit is split instead. Two containers with a 1 GiB memory limit, drawn as bars with the limit as a dashed line at the top. Left, the failure, marked with a cross: MaxRAMPercentage=90 lets the heap reach 922 MiB, leaving 102 MiB for everything else; metaspace, code cache, thread stacks, direct buffers, GC structures and malloc need more, so resident memory crosses the limit and the kernel kills the container with exit code 137, even though the heap graph shows 60% used. Right, the recommendation: MaxRAMPercentage=75 with InitialRAMPercentage equal to it and memory request equal to limit; the heap gets 768 MiB and 256 MiB stay for non-heap memory, which you confirm with Native Memory Tracking under load.
 
@@ -235,7 +235,9 @@ exactly like no cache, so you have to test for it.
 
 ### What's going on
 
-Every option here promises faster startup. They differ in what you pay: build time and rules your app must
+Every option here promises faster startup. Spring AOT prepares the application context at build time. GraalVM native
+image compiles the app into a standalone executable. CRaC saves a running JVM as a snapshot and restores it at
+startup. They differ in what you pay: build time and rules your app must
 follow at runtime. Teams often pick the most impressive number and pay for it for years.
 
 | Option | What you pay | Use it for |

@@ -70,10 +70,10 @@ Each one takes a few minutes and the last section gives you the files to copy.
 
 Your pod restarts with `OOMKilled`, yet the heap graph never passed 60%. How?
 
-Think of the memory limit as a suitcase. The heap is the biggest thing you pack but not the only one: the JVM
-also carries compiled code, class metadata, one stack per thread and network buffers. Kubernetes weighs the whole
-suitcase. If the heap takes almost all the space, the rest does not fit and the kernel kills the pod. No error, no
-heap dump, just a restart.
+Think of the memory limit as a suitcase. The heap, where Java keeps your objects, is the biggest thing you pack but
+not the only one: the JVM also carries compiled code, class metadata, one stack per thread and network buffers.
+Kubernetes weighs the whole suitcase. If the heap takes almost all the space, the rest does not fit and the kernel
+kills the pod. No error, no heap dump, only a restart.
 
 <ContainerMemoryDiagram />
 <DiagramLegend items={['recommended', 'context', 'failure']} />
@@ -284,7 +284,9 @@ exactly like no cache, so you have to test for it.
 
 ### What's going on
 
-Every option here promises faster startup. They differ in what you pay: build time and rules your app must
+Every option here promises faster startup. Spring AOT prepares the application context at build time. GraalVM native
+image compiles the app into a standalone executable. CRaC saves a running JVM as a snapshot and restores it at
+startup. They differ in what you pay: build time and rules your app must
 follow at runtime. Teams often pick the most impressive number and pay for it for years.
 
 | Option | What you pay | Use it for |
