@@ -79,6 +79,11 @@ rules:
   - path: README.md
     mode: adapted
     why: The repository's.
+  - path: AGENTS.md
+    mode: adapted
+    why: The repository's, whose product is the guides and not one service.
+  - path: CLAUDE.md
+    mode: same
   - path: src/main/openapi/api.yaml
     mode: adapted
     to: services/start/src/main/openapi/start.yaml

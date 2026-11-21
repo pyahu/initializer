@@ -79,7 +79,9 @@ class GenerationTest {
                         "src/main/resources/application.yaml",
                         "src/main/java/io/acme/orders/Application.java",
                         "src/test/java/io/acme/orders/ArchitectureTest.java",
-                        "CHECKLIST.md");
+                        "CHECKLIST.md",
+                        "AGENTS.md",
+                        "CLAUDE.md");
         files.forEach((path, content) -> {
             if (!path.startsWith("gradlew") && !path.endsWith(".jar")) {
                 assertThat(content)

@@ -90,6 +90,7 @@ actions, give both the same key as described in the
 | `deploy/` | Kustomize: a base, a `dev` and a `prod` overlay. |
 | `compose.yml` | The local loop: Grafana with OpenTelemetry[[#postgres]], PostgreSQL[[/postgres]][[#oidc]], a mock identity provider[[/oidc]]. |
 | `CHECKLIST.md` | What to review before production, with the step that explains each item. |
+| `AGENTS.md` | What a person or an AI coding tool should know before changing the project. `CLAUDE.md` points to it. |
 
 The architecture is [[architectureTitle]]: [guide]([[architectureGuide]]).
 
