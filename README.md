@@ -12,7 +12,7 @@ claim. The other steps rest on the official documentation the guide lists.
 - [Agent Skill](skills/): the same guides as plain Markdown for AI coding tools and team reviews
 - How to contribute: [CONTRIBUTING.md](CONTRIBUTING.md), or [AGENTS.md](AGENTS.md) for the short version
 - Why the scope is what it is: [ADR 0002](docs/adr/0002-a-smaller-scope.md)
-- Part of the Pyahu Community, with the [toolchain](https://toolchain.pyahu.io) for your machine, the
+- Part of the Pyahu Community, with [Pyahu Toolchain](https://toolchain.pyahu.io) for your machine, the
   [Pyahu CLI](https://cli.pyahu.io) for local services and the
   [Open Cluster Foundation](https://ocf.pyahu.io) for the cluster; the
   [Pyahu Community guides](https://pyahu.io/guides) list the problems each one solves

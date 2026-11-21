@@ -64,8 +64,9 @@ on a schedule remains an operational prerequisite for each adopting team.
 These are the steps we follow, in order.
 
 1. **Pick the updates** from the Dependency Dashboard. Read the release notes of each one.
-2. **Change the pins** in `data/versions.yaml`, with updated versions and image digests, and give the baseline a
-   new `id` (`v0.1-b3` after `v0.1-b2`) so pages and generated projects say which list they follow.
+2. **Change the pins** in `data/versions.yaml`, with updated versions and image digests. Give the baseline a
+   new `id` (`v0.1-b3` after `v0.1-b2`) and set `active` to the same value, so pages and generated projects say
+   which list they follow.
 3. **Update the services** to the same versions: the fixtures in `fixtures/` and the Initializer's own build
    (`gradle/libs.versions.toml`, the Gradle wrapper and each Dockerfile).
 4. **Run both test tracks.** The fixture workflow runs every required test and checks every resolved pin. The
@@ -74,8 +75,11 @@ These are the steps we follow, in order.
    keeps the run it was measured in; measure it again if the change could move the numbers.
 6. **Check the references.** `guidekit check` fails for every entry whose documentation version no longer
    matches; point those at the new documentation.
-7. **Commit.** The site, the [Agent Skill](https://github.com/pyahu/initializer/tree/main/skills) and
-   `llms.txt` are generated from the same data, so all of them change together.
+7. **Regenerate and commit.** Run `go run ./cmd/guidekit generate` and commit the changes with the regenerated
+   files: the site, the [Agent Skill](https://github.com/pyahu/initializer/tree/main/skills) and `llms.txt` come
+   from the same data, so all of them change together.
+8. **Update the running generator.** Rebuild and redeploy both images, `start` and `start-web`, so
+   [start.pyahu.io](https://start.pyahu.io) generates projects on the new baseline.
 
 ## Keeping the advice right
 

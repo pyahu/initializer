@@ -5,7 +5,7 @@ tableOfContents: { maxHeadingLevel: 2 }
 ---
 import guideData from '../../generated/guides.json';
 
-Starting a Spring Boot service takes a minute. Getting it ready for production takes months. Most of what that
+Starting a Spring Boot service takes a minute. Getting it ready for production takes much longer. Most of what that
 takes is learned in incidents: a pod killed for memory, a rollout that drops requests, a pool that runs
 out of connections, a trace that stops at the first hop.
 
@@ -42,8 +42,9 @@ Code you do not understand is code you cannot run at three in the morning. A gen
 finished project without the reasons behind it saves a day and costs you the first incident.
 
 The guides explain the choices a generated project makes. Every supported combination is generated, built and
-smoke-tested by its own workflow. The fixture tests prove named claims about the baseline. A guide can also
-discuss a pattern that the generator does not offer; it says so.
+smoke-tested by its own workflow. A separate sample service, the fixture, has tests that prove named claims on
+the baseline, the exact versions the guides are written for. A guide can also discuss a pattern that the
+generator does not offer; it says so.
 
 ## Why every version is pinned
 
@@ -51,15 +52,16 @@ Advice is only true for a version. "Set this timeout" depends on the default it 
 "Use the latest" cannot be tested, because the latest changes while the test runs.
 
 Every guide names a **baseline**, a list of exact versions. The active baseline is **{guideData.active}**.
-A claim can then point to the test that checked it on those versions. The cost is that we trail
-the newest release by days or weeks. Security fixes do not wait; [How we keep it current](/maintenance/)
+A claim can then point to the test that checked it on those versions. The cost is that the baseline trails
+the newest release while updates are tested. Security fixes do not wait; [How we keep it current](/maintenance/)
 explains how a new baseline is cut.
 
 ## Why a real service and tests
 
-Executable recipe excerpts come from fixture files whose anchors are checked. CI builds the fixture image and
-runs its required behaviour tests. The generator matrix checks the supported project combinations. Other examples
-and recommendations are grounded in official documentation or engineering judgment and retain their stated gaps.
+Code excerpts in the guides are cut from the fixture's files, and a check fails if an excerpt no longer
+matches. CI builds the fixture image and runs its required behaviour tests. A separate workflow builds every
+project combination the generator supports. Other examples and recommendations rely on official documentation
+or engineering judgment, and say where their limits are.
 
 A claim tested here has an evidence record that names its test, what the test observed and its limits. CI runs
 that test on every change, so the claim fails as soon as it stops holding. The other steps rest on the official

@@ -17,7 +17,7 @@ const LABELS: Record<string, string> = {
   description: 'Description',
   architecture: 'Architecture',
   database: 'Database',
-  auth: 'Login',
+  auth: 'Authentication',
   frontend: 'Frontend',
 };
 

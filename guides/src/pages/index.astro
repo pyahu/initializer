@@ -21,7 +21,7 @@ const parts = [
     icon: "terminal",
     status: "Public preview",
     title: "A project generator",
-    text: "Generate a hexagonal or DDD layered service with optional PostgreSQL, OIDC and a Next.js frontend, plus observability, Kubernetes manifests and CI. All 16 supported combinations are built and smoke-tested.",
+    text: "Generate a hexagonal or DDD layered service with optional PostgreSQL, OIDC login and a Next.js frontend, plus observability, Kubernetes manifests and CI. All 16 supported combinations are built and smoke-tested.",
     href: "https://start.pyahu.io/",
     link: "Open the generator",
   },
@@ -93,14 +93,14 @@ const modules = [
 const anatomy = [
   { title: "Questions first", text: "The top of each guide lists the questions it answers. Click one and you land on the answer." },
   { title: "One step per question", text: "Each step starts with the answer in short, then what goes wrong, what to do and when the advice is not for you." },
-  { title: "Put it all together", text: "Files to copy, each with a short explanation and one way to check it works. They come from a service that CI builds and tests." },
+  { title: "Put it all together", text: "Files to copy, each with a short explanation and one way to check it works. Most come from a service that CI builds and tests; the rest rely on the official documentation." },
   { title: "Checklist", text: "Short items with stable IDs, to review a service against the guide." },
 ];
 
 const proof = [
   { title: "Exact versions", text: "Every guide is written for one list of exact versions, the baseline. The reference page lists it with the official documentation for each version." },
-  { title: "A real service behind the code", text: "The code in the guides comes from a service that CI builds, starts and tests. The 16 project combinations of the generator are built and started too." },
-  { title: "Tests where they matter", text: "Claims about roles, migrations, startup and failure handling name the test CI runs on every change. Each guide says which steps are tested here and which rest on the official documentation." },
+  { title: "A real service behind the code", text: "The code excerpts in the guides come from a service that CI builds, starts and tests. The 16 project combinations of the generator are built and started too." },
+  { title: "Tests where they matter", text: "Claims about roles, migrations, startup and failure handling name the test CI runs on every change. A guide with no tested step yet is marked Draft." },
   { title: "Kept current", text: "Renovate watches the dependencies. A version update lands only when the tests behind the claims still pass." },
   { title: "Honest about the rest", text: `${draftCount} guides have no tested step yet and are marked Draft. A green build proves only the checks that ran.` },
 ];
