@@ -2207,6 +2207,14 @@
               "type": "operator-task",
               "text": "Renovate pull requests for actions, images and libraries are reviewed and merged when CI passes, after the minimum release age.",
               "appliesWhen": {}
+            },
+            {
+              "id": "CI-15",
+              "card": "ci-quality-report",
+              "step": 9,
+              "type": "generated-config",
+              "text": "Every build writes build/reports/pyahu/quality.html and quality.json, also when it fails; CI keeps them and shows the summary on the run's page.",
+              "appliesWhen": {}
             }
           ]
         },

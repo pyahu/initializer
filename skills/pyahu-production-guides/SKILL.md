@@ -265,6 +265,7 @@ Turn a commit into a running pod you can trust.
 6. How do I publish an image others can verify?
 7. How do I keep the pipeline fast?
 8. Who keeps the pipeline itself up to date?
+9. Why did the build fail, and why only in CI?
 
 **[Deploying to Kubernetes](guides/kubernetes-deployment.md)**: Probes, shutdown, resources, rollouts, disruption, scaling and placement for a Spring Boot 4.1 service in a pod.
 

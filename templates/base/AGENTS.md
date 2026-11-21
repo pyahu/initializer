@@ -48,6 +48,13 @@ or leave code out of one to get to green.
   `DatabaseRolesTest` checks what each may do.
 [[/postgres]]
 
+## When the build fails
+
+Every build writes `build/reports/pyahu/quality.json`, also when a task fails. `firstFailure` names the gate, the
+reason, the command that reproduces it and the guide step that explains the fix; each gate lists its findings
+with file and line. Read it before the console output, fix the cause, run that command, then `./gradlew build`.
+People read the same report in `quality.html`.
+
 ## Rules nothing enforces, so follow them
 
 - **A business rule gets a fast test**, without Spring and without a container.
@@ -65,6 +72,7 @@ or leave code out of one to get to green.
 ./gradlew check            # both, plus Spotless, PMD, coverage and mutation testing
 ./gradlew build            # check, then the jar and the SBOM
 ./gradlew spotlessApply    # format
+open build/reports/pyahu/quality.html   # the quality report of the last build
 [[#nextjs]]
 
 cd frontends/web
@@ -107,5 +115,6 @@ so when you rely on one.
 
 ## Leave these to a person
 
-`gradle/wrapper/`, `gradlew`, `renovate.json`, `config/pmd/`, `.github/`, `CHECKLIST.md` and this file hold the
-rules a change is judged by. A change to one of them is its own pull request, with its reason.
+`gradle/wrapper/`, `gradle/quality-report/`, `gradlew`, `renovate.json`, `config/pmd/`, `.github/`,
+`CHECKLIST.md` and this file hold the rules a change is judged by. A change to one of them is its own pull request,
+with its reason.

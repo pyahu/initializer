@@ -260,3 +260,8 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-
       - name: The generated project's own workflow
         run: go run ./cmd/runworkflow -dir "out/${{ matrix.name }}"
+      - name: The quality report says every gate passed
+        run: |
+          report="out/${{ matrix.name }}/build/reports/pyahu"
+          test -s "$report/quality.html"
+          jq -e '.status == "passed" and (.gates | length == 9)' "$report/quality.json"

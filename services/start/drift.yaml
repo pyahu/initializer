@@ -107,6 +107,9 @@ rules:
     mode: adapted
     why: The form, the files it gives and the download instead of the sample page.
 
+  - path: gradle/quality-report/**
+    mode: omitted
+    why: The quality report of generated projects reads the gates the generator's own build does not run yet.
   - path: config/pmd/ruleset.xml
     mode: omitted
     why: The quality gates of generated projects (PMD, coverage, mutation) are not applied to the generator's own code yet.

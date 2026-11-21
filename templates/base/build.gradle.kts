@@ -5,6 +5,7 @@ plugins {
     java
     jacoco
     pmd
+    id("io.pyahu.quality-report")
 [[#plugins]]
     alias(libs.plugins.[[accessor]])
 [[/plugins]]
@@ -135,6 +136,10 @@ val businessRules = listOf("**/domain/**", "**/application/**")
 tasks.jacocoTestReport {
     dependsOn(tasks.test, integrationTest)
     executionData(tasks.test.get(), integrationTest.get())
+    // XML for the quality report, HTML for people.
+    reports {
+        xml.required = true
+    }
     classDirectories.setFrom(classDirectories.files.map { fileTree(it) { exclude("**/api/**") } })
 }
 

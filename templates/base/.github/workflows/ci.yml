@@ -53,16 +53,22 @@ jobs:
         run: >-
           bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
           -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          -e CI -e GITHUB_ACTIONS -e GITHUB_SERVER_URL -e GITHUB_REPOSITORY -e GITHUB_RUN_ID
+          -e GITHUB_RUN_ATTEMPT -e GITHUB_SHA
           "$JDK_IMAGE" ./gradlew --no-daemon spotlessCheck
       - name: Compile with Error Prone and NullAway
         run: >-
           bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
           -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          -e CI -e GITHUB_ACTIONS -e GITHUB_SERVER_URL -e GITHUB_REPOSITORY -e GITHUB_RUN_ID
+          -e GITHUB_RUN_ATTEMPT -e GITHUB_SHA
           "$JDK_IMAGE" ./gradlew --no-daemon compileJava compileTestJava
       - name: Unit and architecture tests
         run: >-
           bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
           -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          -e CI -e GITHUB_ACTIONS -e GITHUB_SERVER_URL -e GITHUB_REPOSITORY -e GITHUB_RUN_ID
+          -e GITHUB_RUN_ATTEMPT -e GITHUB_SHA
           "$JDK_IMAGE" ./gradlew --no-daemon test
       - name: Integration tests
 [[#postgres]]
@@ -71,6 +77,8 @@ jobs:
         run: >-
           bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
           -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          -e CI -e GITHUB_ACTIONS -e GITHUB_SERVER_URL -e GITHUB_REPOSITORY -e GITHUB_RUN_ID
+          -e GITHUB_RUN_ATTEMPT -e GITHUB_SHA
 [[#postgres]]
           -v /var/run/docker.sock:/var/run/docker.sock
 [[/postgres]]
@@ -79,15 +87,27 @@ jobs:
         run: >-
           bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
           -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          -e CI -e GITHUB_ACTIONS -e GITHUB_SERVER_URL -e GITHUB_REPOSITORY -e GITHUB_RUN_ID
+          -e GITHUB_RUN_ATTEMPT -e GITHUB_SHA
           "$JDK_IMAGE" ./gradlew --no-daemon pmdMain jacocoTestCoverageVerification pitest
       - name: Package and SBOM
         run: >-
           bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
           -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          -e CI -e GITHUB_ACTIONS -e GITHUB_SERVER_URL -e GITHUB_REPOSITORY -e GITHUB_RUN_ID
+          -e GITHUB_RUN_ATTEMPT -e GITHUB_SHA
 [[#postgres]]
           -v /var/run/docker.sock:/var/run/docker.sock
 [[/postgres]]
           "$JDK_IMAGE" ./gradlew --no-daemon build
+      - name: Quality report
+        # The build writes build/reports/pyahu even when it fails; its summary goes on this run's page (CI
+        # pipelines guide, step 9).
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -f build/reports/pyahu/job-summary.md ] && [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+            cat build/reports/pyahu/job-summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Keep the test and analysis reports
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

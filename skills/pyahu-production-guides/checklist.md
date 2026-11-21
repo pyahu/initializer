@@ -291,6 +291,7 @@ explains why it matters. Items with a "when" apply only to services that use tha
 - [ ] **CI-12** Every workflow has paths filters that include the workflow file, a concurrency group per ref and timeout-minutes on every job. (step 7)
 - [ ] **CI-13** No path filtered workflow is a required status check. (step 7)
 - [ ] **CI-14** Renovate pull requests for actions, images and libraries are reviewed and merged when CI passes, after the minimum release age. (step 8)
+- [ ] **CI-15** Every build writes build/reports/pyahu/quality.html and quality.json, also when it fails; CI keeps them and shows the summary on the run's page. (step 9)
 
 ### [Deploying to Kubernetes](guides/kubernetes-deployment.md)
 

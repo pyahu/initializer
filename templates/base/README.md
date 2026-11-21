@@ -58,6 +58,10 @@ docker build --build-arg DEPLOYMENT_ID=0.1.0 -t [[name]]-web frontends/web
 kustomize build deploy/overlays/dev
 ```
 
+Every build writes a quality report, also when a task fails: `build/reports/pyahu/quality.html` shows each gate, why
+one failed and the guide step that explains the fix, and `quality.json` has the same for tools and AI agents. CI
+puts its summary on the run's page and keeps the report with the other reports.
+
 `./gradlew spotlessApply` formats the code. CI does all of the above on every push
 (`.github/workflows/ci.yml`), then checks the rendered dev and prod manifests with strict Kubernetes 1.36 and 1.37
 schemas, kube-linter, Trivy (HIGH/CRITICAL misconfigurations) and Pluto for deprecated or removed APIs.

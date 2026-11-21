@@ -1375,7 +1375,7 @@
       "title": "CI pipelines",
       "state": "draft",
       "baseline": "v0.1-b2",
-      "coverage": "3 of 8 steps are tested here (3 tested claims: 2 reproduced, 1 compiled)",
+      "coverage": "3 of 9 steps are tested here (3 tested claims: 2 reproduced, 1 compiled)",
       "draft": false,
       "sources": [],
       "questions": [
@@ -1426,6 +1426,12 @@
           "text": "Who keeps the pipeline itself up to date?",
           "answeredIn": "ci-renovate",
           "cardTitle": "8. Who keeps the pipeline itself up to date?"
+        },
+        {
+          "id": "CI-Q9",
+          "text": "Why did the build fail, and why only in CI?",
+          "answeredIn": "ci-quality-report",
+          "cardTitle": "9. Why did the build fail, and why only in CI?"
         }
       ],
       "cards": {
@@ -1472,6 +1478,11 @@
               "test": "acceptance/promotion::TestSaveLoadPreservesTheTestedImage"
             }
           ]
+        },
+        "ci-quality-report": {
+          "title": "9. Why did the build fail, and why only in CI?",
+          "coverage": "not tested here",
+          "records": []
         },
         "ci-renovate": {
           "title": "8. Who keeps the pipeline itself up to date?",
@@ -1523,6 +1534,10 @@
         {
           "id": "ci-renovate",
           "title": "8. Who keeps the pipeline itself up to date?"
+        },
+        {
+          "id": "ci-quality-report",
+          "title": "9. Why did the build fail, and why only in CI?"
         }
       ],
       "checklist": [
@@ -1622,6 +1637,13 @@
           "type": "operator-task",
           "card": "ci-renovate",
           "text": "Renovate pull requests for actions, images and libraries are reviewed and merged when CI passes, after the minimum release age.",
+          "tags": []
+        },
+        {
+          "id": "CI-15",
+          "type": "generated-config",
+          "card": "ci-quality-report",
+          "text": "Every build writes build/reports/pyahu/quality.html and quality.json, also when it fails; CI keeps them and shows the summary on the run's page.",
           "tags": []
         }
       ],

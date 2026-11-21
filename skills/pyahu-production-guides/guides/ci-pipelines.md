@@ -23,6 +23,7 @@ the image, the image running and finally where it came from. It stays fast and k
 6. How do I publish an image others can verify?
 7. How do I keep the pipeline fast?
 8. Who keeps the pipeline itself up to date?
+9. Why did the build fail, and why only in CI?
 
 ## 1. Can an action I use change under me?
 
@@ -313,6 +314,50 @@ new release, which gives a broken or malicious release time to be pulled.
 - You prefer Dependabot, GitHub's built in alternative. It also updates actions and the lockfile from step 1 supports
   it.
 
+## 9. Why did the build fail, and why only in CI?
+
+**In short:** have the build write one report of every gate, also when it fails, with the reason on top and the
+environment it ran in. Keep it with the other reports and put its summary on the run's page.
+
+### What's going on
+
+A red run says which step failed, then leaves you to dig through a log of thousands of lines. Each tool writes its
+own report in its own place, and the compiler writes none at all: its errors only reach the console. An AI agent
+asked to fix the build has the same problem with less patience.
+
+When a build passes on a laptop and fails in CI, compare the environments first: the Java version, the time zone,
+the locale and whether Docker is there for Testcontainers. Nobody writes those down, so nobody compares them.
+
+A generated project has a small Gradle plugin in `gradle/quality-report/` for this. It records how each task
+ended, reads what PMD, JaCoCo, PIT and the tests wrote, keeps a copy of the compiler's errors and, when the build
+finishes, writes `build/reports/pyahu/`:
+
+| File | For |
+| --- | --- |
+| `quality.html` | People: each gate in the order it runs, why the first one failed, the command that reproduces it and the guide step behind it |
+| `quality.json` | Tools and AI agents: the same data, with each finding's file and line |
+| `job-summary.md` | The GitHub job summary, the only format GitHub renders there |
+
+### Do this
+
+1. Write the report when the build ends, also when a task fails. A Gradle build service that listens to task
+   results does it without a task of its own: nothing to remember to run. A broken build script stops Gradle
+   before any task runs; then the console is the only report.
+2. Count results across the Gradle invocations of one CI run, which runs the gates as separate steps, and start
+   fresh for every build on a laptop.
+3. Put the reason first: the gate, the file and line, the message, the command that reproduces it.
+4. Link each gate to the guide step that explains it, so the fix starts from the reason.
+5. Record the environment: Java toolchain, Gradle and its JVM, system, Docker, time zone, locale, encoding. Compare
+   the laptop's report with the CI run's when only one of them fails.
+6. In CI, keep `build/reports/` as an artifact with `if: ${{ !cancelled() }}` and append the summary to
+   `$GITHUB_STEP_SUMMARY`.
+7. Tell your AI tools to read `quality.json` first. A generated project's `AGENTS.md` does.
+
+### When this is not for you
+
+- A team that already sends every report to SonarQube or a similar service: keep the reason and the environment
+  there, and skip the plugin.
+
 ## Put it all together
 
 This repository's fixture workflow does steps 1 to 5 on every push; publishing (step 6) is the part it does not do yet.
@@ -389,6 +434,7 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-9.8.1-bin.zip
 - **CI-09** Test reports upload with if always and the publishing job needs the test job. (step 5)
 - **CI-10** Images are pushed and deployed by digest, with a provenance attestation and an SBOM attached to that digest. (step 6)
 - **CI-12** Every workflow has paths filters that include the workflow file, a concurrency group per ref and timeout-minutes on every job. (step 7)
+- **CI-15** Every build writes build/reports/pyahu/quality.html and quality.json, also when it fails; CI keeps them and shows the summary on the run's page. (step 9)
 
 ### Verified behaviour
 
