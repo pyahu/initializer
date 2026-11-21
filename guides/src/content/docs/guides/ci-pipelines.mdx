@@ -396,7 +396,9 @@ finishes, writes `build/reports/pyahu/`:
    the laptop's report with the CI run's when only one of them fails.
 6. In CI, keep `build/reports/` as an artifact with `if: ${{ !cancelled() }}` and append the summary to
    `$GITHUB_STEP_SUMMARY`.
-7. Tell your AI tools to read `quality.json` first. A generated project's `AGENTS.md` does.
+7. Fail the job unless the report says every gate passed, before the image is built. A gate that someone switched
+   off or left out of `check` does not fail: it does not run, and only the report notices.
+8. Tell your AI tools to read `quality.json` first. A generated project's `AGENTS.md` does.
 
 ### When this is not for you
 

@@ -101,12 +101,19 @@ jobs:
 [[/postgres]]
           "$JDK_IMAGE" ./gradlew --no-daemon build
       - name: Quality report
-        # The build writes build/reports/pyahu even when it fails; its summary goes on this run's page (CI
-        # pipelines guide, step 9).
+        # The build writes build/reports/pyahu even when it fails; its summary goes on this run's page. A gate
+        # switched off or left out of check does not fail, it does not run: the job fails unless every gate passed
+        # (CI pipelines guide, step 9).
         if: ${{ !cancelled() }}
         run: |
-          if [ -f build/reports/pyahu/job-summary.md ] && [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
-            cat build/reports/pyahu/job-summary.md >> "$GITHUB_STEP_SUMMARY"
+          report=build/reports/pyahu
+          if [ -f "$report/job-summary.md" ] && [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+            cat "$report/job-summary.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if ! jq -e '.status == "passed"' "$report/quality.json" > /dev/null 2>&1; then
+            echo "The quality report does not say passed: open $report/quality.html in the reports artifact."
+            jq -r '.gates[] | select(.status != "passed") | "  \(.title): \(.summary)"' "$report/quality.json" 2>/dev/null || true
+            exit 1
           fi
       - name: Keep the test and analysis reports
         if: ${{ !cancelled() }}
