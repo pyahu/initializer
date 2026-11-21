@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('the form shows the options the service supports and its baseline', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Generate a service' })).toBeVisible();
-  await expect(page.getByText('Preview', { exact: true })).toBeVisible();
+  await expect(page.getByText('Public preview', { exact: true })).toBeVisible();
   await expect(page.getByRole('radiogroup', { name: 'Architecture' }).getByRole('radio')).toHaveCount(2);
   await expect(page.getByRole('radio', { name: 'PostgreSQL' })).toBeVisible();
   await expect(page.getByText(/Baseline v\d+\.\d+-b\d+/)).toBeVisible();
