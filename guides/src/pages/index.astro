@@ -105,18 +105,6 @@ const proof = [
   { title: "Honest about the rest", text: `${draftCount} guides have no tested step yet and are marked Draft. A green build proves only the checks that ran.` },
 ];
 
-// The Pyahu Community projects, in the order a service meets them.
-const community = [
-  { step: "1. Your machine", name: "Toolchain", icon: "terminal", href: "https://toolchain.pyahu.io/", repo: "https://github.com/pyahu/toolchain",
-    text: "The same command-line tools at the same versions for the whole team: Java, Go, Node, Python, cloud and AI tools in profiles you pick, installed with mise." },
-  { step: "2. Local services", name: "Pyahu CLI", icon: "code", href: "https://cli.pyahu.io/", repo: "https://github.com/pyahu/cli",
-    text: "PostgreSQL, ZITADEL, RabbitMQ, Kafka and more on a local k3d cluster from one project file, for when a compose file per service stops being enough." },
-  { step: "3. The service", name: "Initializer", icon: "layers", href: "https://start.pyahu.io/", repo: "https://github.com/pyahu/initializer",
-    text: "These guides and a generator that starts a Spring Boot service already following them." },
-  { step: "4. The cluster", name: "Open Cluster Foundation", icon: "shield", href: "https://ocf.pyahu.io/", repo: "https://github.com/pyahu/open-cluster-foundation",
-    text: "Readable Terraform and Helmfile to create and run a Kubernetes foundation on OCI OKE: network, ingress, TLS, GitOps, metrics, logs, traces and alerts." },
-] as const;
-
 const roadmap = [
   { when: "Now", text: `${guideCount} guides in six parts and a generator preview at start.pyahu.io, on baseline ${guideData.active}.` },
   { when: "Next", text: "Two or three teams take the recommended path with a real service. Their reports decide what we test next and what we cut." },
@@ -223,21 +211,9 @@ const roadmap = [
     <div class="section-heading">
       <p class="eyebrow">Pyahu Community</p>
       <h2 id="community-title">From the laptop to the cluster.</h2>
-      <p class="section-lead">Open source tools that follow the same practices at each stage of the way. Each one works on its own.</p>
+      <p class="section-lead">These guides cover the service. The Pyahu Community guides index lists the problems the other open source projects solve too, from the developer's machine to the cluster, each linked to its answer.</p>
     </div>
-    <div class="part-grid">
-      {community.map((c) => (
-        <article class="benefit-card part-card">
-          <div class="part-head"><Icon name={c.icon} size={25} /><span class="pill">{c.step}</span></div>
-          <h3>{c.name}</h3>
-          <p>{c.text}</p>
-          <p class="community-links">
-            <a class="text-link" href={c.href}>Open <Icon name="arrow" size={15} /></a>
-            <a class="text-link" href={c.repo}>Source <Icon name="arrow" size={15} /></a>
-          </p>
-        </article>
-      ))}
-    </div>
+    <a class="text-link" href="https://pyahu.io/guides">Pyahu Community guides <Icon name="arrow" size={15} /></a>
   </section>
 
   <section class="section proof-section" id="roadmap" aria-labelledby="roadmap-title">

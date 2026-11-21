@@ -100,8 +100,6 @@ pre { overflow-x: auto; font-size: .82rem; line-height: 1.85; }
 .part-card { display: flex; flex-direction: column; min-height: 0; }
 .part-card p { flex: 1; }
 .part-card .text-link { margin-top: 1.2rem; }
-.part-card .community-links { flex: 0; display: flex; gap: 1.5rem; }
-.part-card .community-links .text-link { margin-top: 1.2rem; }
 .part-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.6rem; }
 .part-head .icon { margin: 0; }
 .part-card .text-link .icon { margin: 0; }
