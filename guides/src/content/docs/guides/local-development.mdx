@@ -133,6 +133,9 @@ If the containers are already running, Boot only connects to them. It needs the 
 ### When this is not for you
 
 - You prefer to keep container setup in Java: see step 3. Pick one of the two, not both.
+- Several services share the same dependencies, or you need Kafka, a real identity provider or Kubernetes
+  behaviour on the laptop: use the [Pyahu CLI](https://cli.pyahu.io) instead (step 8). One `pyahu.yaml` per
+  team replaces a `compose.yml` per service. For one service with a database, Compose is simpler.
 - Tests skip Docker Compose by default (`spring.docker.compose.skip.in-tests`). Tests use Testcontainers.
 
 <a id="local-testcontainers"></a>
@@ -318,6 +321,7 @@ dependencies.
 
 1. Code and test against containers from steps 2 to 4.
 2. Before you change manifests, run the service in a local cluster once and check probes, mounts and policies.
+   With the Pyahu CLI, `pyahu up` creates the cluster and its services; `pyahu services` lists their endpoints.
 3. Keep the manifests the same as the real ones; see [Kubernetes manifests](/guides/kubernetes-manifests/).
 
 ### When this is not for you
