@@ -14,7 +14,7 @@ if ! git cat-file -e "$base:${prefix}services" 2> /dev/null; then
   echo "No services at $base: nothing to compare with."
   exit 0
 fi
-git archive "$base" "${prefix}services" | tar -x -C "$work"
+git -C "$(git rev-parse --show-toplevel)" archive "$base" "${prefix}services" | tar -x -C "$work"
 work="$work/$prefix"
 failed=0
 for contract in services/*/api/src/main/openapi/*.yaml; do
