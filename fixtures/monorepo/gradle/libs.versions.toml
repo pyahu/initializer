@@ -1,0 +1,64 @@
+# Every version of the build, from baseline v0.1-b3 of the Pyahu Initializer.
+[versions]
+spring-boot = "4.2.0"
+spring-modulith = "2.2.0"
+opentelemetry-logback-appender = "2.34.0-alpha"
+archunit = "1.5.1"
+error-prone = "2.53.0"
+nullaway = "0.14.4"
+palantir-java-format = "2.103.0"
+errorprone-gradle-plugin = "5.2.0"
+spotless = "8.12.0"
+pmd = "7.29.0"
+jacoco = "0.8.16"
+pitest = "1.30.2"
+pitest-junit5 = "1.2.3"
+pitest-gradle-plugin = "1.19.0"
+cyclonedx = "3.6.1"
+openapi-generator = "7.27.0"
+jmolecules = "2025.0.2"
+datasource-micrometer = "2.3.1"
+
+[libraries]
+spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
+spring-modulith-bom = { module = "org.springframework.modulith:spring-modulith-bom", version.ref = "spring-modulith" }
+spring-boot-starter-webmvc = { module = "org.springframework.boot:spring-boot-starter-webmvc" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-boot-starter-opentelemetry = { module = "org.springframework.boot:spring-boot-starter-opentelemetry" }
+opentelemetry-logback-appender = { module = "io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0", version.ref = "opentelemetry-logback-appender" }
+jspecify = { module = "org.jspecify:jspecify" }
+spring-web = { module = "org.springframework:spring-web" }
+spring-context = { module = "org.springframework:spring-context" }
+jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api" }
+jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations" }
+jakarta-annotation-api = { module = "jakarta.annotation:jakarta.annotation-api" }
+spring-boot-docker-compose = { module = "org.springframework.boot:spring-boot-docker-compose" }
+spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
+error-prone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "error-prone" }
+nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "nullaway" }
+spring-boot-starter-webmvc-test = { module = "org.springframework.boot:spring-boot-starter-webmvc-test" }
+spring-modulith-starter-test = { module = "org.springframework.modulith:spring-modulith-starter-test" }
+archunit-junit5 = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunit" }
+jmolecules-bom = { module = "org.jmolecules:jmolecules-bom", version.ref = "jmolecules" }
+jmolecules-hexagonal-architecture = { module = "org.jmolecules:jmolecules-hexagonal-architecture" }
+jmolecules-archunit = { module = "org.jmolecules.integrations:jmolecules-archunit" }
+spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc" }
+spring-boot-starter-liquibase = { module = "org.springframework.boot:spring-boot-starter-liquibase" }
+datasource-micrometer-spring-boot = { module = "net.ttddyy.observation:datasource-micrometer-spring-boot", version.ref = "datasource-micrometer" }
+postgresql = { module = "org.postgresql:postgresql" }
+spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-junit-jupiter" }
+testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql" }
+spring-boot-starter-security-oauth2-resource-server = { module = "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server" }
+spring-boot-starter-security-oauth2-resource-server-test = { module = "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+errorprone = { id = "net.ltgt.errorprone", version.ref = "errorprone-gradle-plugin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+pitest = { id = "info.solidsoft.pitest", version.ref = "pitest-gradle-plugin" }
+cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
+openapi-generator = { id = "org.openapi.generator", version.ref = "openapi-generator" }

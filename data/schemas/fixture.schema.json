@@ -9,6 +9,7 @@
     "schema": {"const": "initializer.pyahu.io/fixture/v1"},
     "name": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
     "options": {"$ref": "options.schema.json"},
+    "dockerfile": {"type": "string", "pattern": "^[a-z0-9._/-]+Dockerfile$"},
     "exercises": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/componentKey"}, "uniqueItems": true},
     "requiredTests": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/testRef"}, "uniqueItems": true}
   }

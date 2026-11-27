@@ -1,0 +1,60 @@
+# One file for every environment: values that change per environment are placeholders with a local
+# default, overridden by environment variables from the Deployment (configuration guide, step 1).
+spring:
+  application:
+    name: billing
+  threads:
+    virtual:
+      enabled: true
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+  mvc:
+    problemdetails:
+      enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OIDC_ISSUER_URI:http://localhost:8090/default}
+          audiences: ${OIDC_AUDIENCE:monorepo}
+          jws-algorithms: RS256
+
+server:
+  request:
+    header:
+      forwarded:
+        strategy: web-server
+
+logging:
+  structured:
+    format:
+      console: ecs
+
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        add-additional-paths: true
+  opentelemetry:
+    resource-attributes:
+      service.version: ${APP_VERSION:dev}
+      deployment.environment.name: ${DEPLOYMENT_ENVIRONMENT:local}
+  otlp:
+    metrics:
+      export:
+        base-time-unit: seconds
+        step: 30s
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLING_PROBABILITY:0.1}
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+

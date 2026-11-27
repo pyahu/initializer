@@ -1,0 +1,36 @@
+# Prod: its namespace, its values and the image by digest, written by CI after it pushes the image
+# with `kustomize edit set image` (Kubernetes manifests guide, step 5).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: orders
+
+resources:
+  - namespace.yaml
+  - ../../base
+
+configMapGenerator:
+  - name: orders-config
+    behavior: merge
+    literals:
+      - DEPLOYMENT_ENVIRONMENT=prod
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.observability:4318
+      # Credentials come from the Secrets orders-db-app and orders-db-migrator, created out of band.
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres.example.internal:5432/orders
+      - OIDC_ISSUER_URI=https://login.example.com/your-tenant
+      - OIDC_AUDIENCE=monorepo
+
+images:
+  - name: orders
+    newName: ghcr.io/your-org/orders
+    digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+
+patches:
+  # At least 3 replicas in production (Kubernetes deployment guide, steps 5 and 6).
+  - target:
+      kind: HorizontalPodAutoscaler
+      name: orders
+    patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 3

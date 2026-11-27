@@ -1,6 +1,7 @@
 # 2. Prove what protects readers, freeze the generator, learn from real teams
 
-Date: 2026-11-20. Status: accepted. Owner: Pyahu (Terson Rigaud).
+Date: 2026-11-20. Status: accepted; ADR 0004 lifts the generator freeze for the monorepo option. Owner: Pyahu
+(Terson Rigaud).
 
 ## Context
 

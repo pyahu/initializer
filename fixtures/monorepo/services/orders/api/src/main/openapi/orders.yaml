@@ -1,0 +1,63 @@
+openapi: 3.1.0
+info:
+  title: orders
+  version: 0.1.0
+  description: "Orders"
+tags:
+  - name: ping
+paths:
+  /ping:
+    get:
+      tags: [ping]
+      operationId: ping
+      summary: Answers with pong. Replace it with your first real endpoint.
+      security:
+        - bearer: []
+      responses:
+        "200":
+          description: The answer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PingResponse"
+        "401":
+          description: No valid token for this API.
+        default:
+          description: Any error, as an RFC 9457 problem detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    PingResponse:
+      type: object
+      required: [message, count]
+      properties:
+        message:
+          type: string
+          examples: [pong]
+        count:
+          type: integer
+          format: int64
+          description: Pings answered so far, counted in the database.
+          examples: [1]
+    Problem:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string

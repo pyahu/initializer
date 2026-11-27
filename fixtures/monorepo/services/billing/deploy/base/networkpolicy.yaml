@@ -1,0 +1,53 @@
+# Deny everything for every pod of the application, then allow each path on purpose (security guide, step 8).
+# Port 8081 (Actuator) has no rule.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: billing-default-deny
+  labels:
+    initializer.pyahu.io/deploy-phase: prerequisites
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: billing
+      app.kubernetes.io/instance: billing
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: billing-api
+  labels:
+    initializer.pyahu.io/deploy-phase: prerequisites
+    app.kubernetes.io/component: api
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: billing
+      app.kubernetes.io/instance: billing
+      app.kubernetes.io/component: api
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - ports:
+        - port: 8080
+          protocol: TCP
+  egress:
+    # DNS.
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    # The OpenTelemetry collector, over OTLP/HTTP. Narrow the peer to where your collector runs.
+    - ports:
+        - port: 4318
+          protocol: TCP
+    # The identity provider's signing keys, over HTTPS (security guide, step 1).
+    - ports:
+        - port: 443
+          protocol: TCP

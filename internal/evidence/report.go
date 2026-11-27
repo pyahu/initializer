@@ -105,7 +105,9 @@ type junitSuite struct {
 	Skipped  int    `xml:"skipped,attr"`
 }
 
-// ReadJUnit parses Gradle's TEST-*.xml reports into results keyed by gradle/<fixture>::<Class>.
+// ReadJUnit parses Gradle's TEST-*.xml reports into results keyed by gradle/<fixture>::<Class>. A fixture of
+// several projects can have one class name in each (every vertical has its ArchitectureTest): their results add
+// up, and one failure fails them all.
 func ReadJUnit(dir, fixture string) (map[string]TestResult, error) {
 	files, _ := filepath.Glob(filepath.Join(dir, "*", "TEST-*.xml"))
 	more, _ := filepath.Glob(filepath.Join(dir, "TEST-*.xml"))
@@ -129,9 +131,25 @@ func ReadJUnit(dir, fixture string) (map[string]TestResult, error) {
 		case s.Skipped > 0 || s.Tests == 0:
 			status = "skip"
 		}
-		res[key] = TestResult{Test: key, Status: status, Runs: s.Tests, Output: fmt.Sprintf("%s: %d tests, %d failures, %d errors, %d skipped", s.Name, s.Tests, s.Failures, s.Errors, s.Skipped)}
+		r := TestResult{Test: key, Status: status, Runs: s.Tests, Output: fmt.Sprintf("%s: %d tests, %d failures, %d errors, %d skipped", s.Name, s.Tests, s.Failures, s.Errors, s.Skipped)}
+		if prev, ok := res[key]; ok {
+			r = combine(prev, r)
+		}
+		res[key] = r
 	}
 	return res, nil
+}
+
+// combine adds up two results of one class name: fail beats skip, skip beats pass.
+func combine(a, b TestResult) TestResult {
+	rank := map[string]int{"pass": 0, "skip": 1, "fail": 2}
+	status := a.Status
+	if rank[b.Status] > rank[status] {
+		status = b.Status
+	}
+	outputs := []string{a.Output, b.Output}
+	sort.Strings(outputs)
+	return TestResult{Test: a.Test, Status: status, Runs: a.Runs + b.Runs, Output: strings.Join(outputs, "; ")}
 }
 
 func truncate(s string, n int) string {

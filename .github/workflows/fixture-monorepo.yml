@@ -1,0 +1,139 @@
+# The monorepo fixture (ADR 0004): every project's build and gates in the pinned JDK, the conventions' own tests,
+# the contract check, each vertical's manifests, image, scan and smoke test, then fail unless every required test
+# passed and every pin matched the baseline. The fixture's own .github/workflows are what a generated monorepo
+# runs; this workflow runs the same steps from the Initializer repository.
+name: Fixture monorepo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - fixtures/monorepo/**
+      - data/versions.yaml
+      - data/schemas/**
+      - cmd/guidekit/**
+      - internal/evidence/**
+      - internal/guidedata/**
+      - go.mod
+      - go.sum
+      - .github/workflows/fixture-monorepo.yml
+  pull_request:
+    paths:
+      - fixtures/monorepo/**
+      - data/versions.yaml
+      - data/schemas/**
+      - cmd/guidekit/**
+      - internal/evidence/**
+      - internal/guidedata/**
+      - go.mod
+      - go.sum
+      - .github/workflows/fixture-monorepo.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fixture-monorepo-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GOTOOLCHAIN: go1.27.2
+  # temurin-jdk-image of baseline v0.1-b3.
+  JDK_IMAGE: eclipse-temurin@sha256:c7eef3dfeb81468533ea48c67bddaa8c7ca916454259e4d0d734d12bcff8e125
+  POSTGRES_IMAGE: postgres:18.7@sha256:64c8b0d31e4ab6ea665e8426ea406a94bf52de3c05b3a4a8bf713704eefa9328
+  OIDC_IMAGE: ghcr.io/navikt/mock-oauth2-server:6.0.5@sha256:5ed2f078c6503147860a5114f06414257bb7eeccc68b0e806bdf0869f2602509
+  OASDIFF_IMAGE: tufin/oasdiff:v1.39.0@sha256:004bef22058ace818b61f0eb2f05efb89fc6a3882f68bf4db0b6a86f40723fe0
+  KUSTOMIZE_IMAGE: registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
+  KUBECONFORM_IMAGE: ghcr.io/yannh/kubeconform:v0.8.0@sha256:faffaf43f95aa6425306e1ab8d6fcad72acb9049158f38e574c085ea1ec0f64e
+
+jobs:
+  fixture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    defaults:
+      run:
+        working-directory: fixtures/monorepo
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: 1.27.2
+          cache: true
+      - name: Gradle dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cache/pyahu-gradle/caches/modules-2
+            ~/.cache/pyahu-gradle/wrapper/dists
+          key: ${{ runner.os }}-${{ runner.arch }}-gradle-monorepo-v1-${{ hashFiles('fixtures/monorepo/gradle/libs.versions.toml', 'fixtures/monorepo/gradle/wrapper/gradle-wrapper.properties', 'fixtures/monorepo/build-logic/build.gradle.kts') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-gradle-monorepo-v1-
+      - name: Build and test every project in the pinned JDK
+        id: gradle
+        run: >-
+          bash .github/scripts/gradle-ci.sh docker run --rm -v "$GITHUB_WORKSPACE:/repo" -w /repo/fixtures/monorepo
+          -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          -v /var/run/docker.sock:/var/run/docker.sock "$JDK_IMAGE" ./gradlew --no-daemon build :build-logic:check
+      - name: Quality reports
+        if: ${{ !cancelled() }}
+        run: |
+          failed=0
+          for report in services/*/build/reports/pyahu/quality.json; do
+            jq -e '.status == "passed"' "$report" > /dev/null || { echo "$report: not passed"; failed=1; }
+          done
+          exit "$failed"
+      - name: Contracts against the base of the change
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE" ] || [ "$BASE" = 0000000000000000000000000000000000000000 ]; then exit 0; fi
+          git fetch --no-tags --depth=1 origin "$BASE"
+          bash .github/scripts/contracts.sh "$BASE"
+      - name: Manifests of every vertical
+        run: |
+          for deploy in services/*/deploy; do
+            for overlay in dev prod; do
+              docker run --rm -v "$PWD:/w" -w /w "$KUSTOMIZE_IMAGE" build "$deploy/overlays/$overlay" > "/tmp/manifests.yaml"
+              for k8s in 1.36.0 1.37.0; do
+                docker run --rm -i "$KUBECONFORM_IMAGE" -strict -summary -kubernetes-version "$k8s" < /tmp/manifests.yaml
+              done
+            done
+          done
+      - name: Images and smoke tests of every vertical
+        run: |
+          for dir in services/*/; do
+            vertical=$(basename "$dir")
+            context=$(mktemp -d)
+            mkdir -p "$context/workspace"
+            cp "services/$vertical/build/libs/$vertical-0.1.0.jar" "$context/workspace/application.jar"
+            docker buildx build --load --build-context "build=$context" -f "services/$vertical/Dockerfile" -t "$vertical:ci" .
+            IMAGE="$vertical:ci" bash "services/$vertical/ci/smoke.sh"
+          done
+      - name: Export the images for scanning
+        run: |
+          mkdir -p out
+          for dir in services/*/; do docker save "$(basename "$dir"):ci" -o "out/$(basename "$dir").tar"; done
+      - name: Image vulnerabilities
+        run: |
+          for image in out/*.tar; do
+            docker run --rm -v "$PWD/out:/out" aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb \
+              image --input "/out/$(basename "$image")" --scanners vuln --ignore-unfixed --severity HIGH,CRITICAL --exit-code 1 --cache-dir /out/trivy-cache
+          done
+      - name: Evidence
+        if: always()
+        working-directory: .
+        run: |
+          mkdir -p out fixtures/monorepo/build/junit
+          cp fixtures/monorepo/services/*/build/test-results/*/TEST-*.xml fixtures/monorepo/build-logic/build/test-results/test/TEST-*.xml fixtures/monorepo/build/junit/ || true
+          go run ./cmd/guidekit evidence verify --fixture monorepo \
+            --gradle-outcome "${{ steps.gradle.outcome }}" \
+            --junit fixtures/monorepo/build/junit \
+            --sbom fixtures/monorepo/services/orders/build/sbom/bom.json \
+            --image orders:ci \
+            --out out/evidence-report-monorepo.json
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: evidence-report-monorepo
+          path: out/evidence-report-monorepo.json
+          if-no-files-found: error

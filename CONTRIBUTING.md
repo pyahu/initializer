@@ -260,6 +260,13 @@ telemetry acceptance tests still has no data source. The fixture workflow watche
 Spring Boot database integration runs in the separate `databaseTest` suite, also required by `build`. This keeps
 JDBC auto-configuration out of the ordinary fixture tests. Both suites' JUnit reports feed the evidence report.
 
+The monorepo fixture (ADR 0004) is a platform of two verticals in one Gradle build: its options have
+`kind: Monorepo` and a list of `verticals`, and `dockerfile` names the Dockerfile whose base images are checked. It
+is what the generator will produce for those options. `fixture-monorepo.yml` runs its build and the conventions'
+TestKit tests, the contract check, each vertical's manifests, image, scan and smoke test, then `evidence verify`.
+Test classes with one name in several verticals (every vertical has an `ArchitectureTest`) count as one required
+test, which fails when any of them fails.
+
 ## Templates
 
 `templates/base/` goes into every project, `templates/<architecture>/` adds the files of one architecture and each
@@ -316,6 +323,7 @@ same ref.
 | -------- | ---- | ------------------ |
 | `guides.yml` | clean checkout, `go test`, `check`, `generate --check`, site build, `site` | yes |
 | `fixture-single-hexagonal.yml` | fixture build, image, acceptance tests, `evidence verify` | yes |
+| `fixture-monorepo.yml` | monorepo fixture build, contracts, images, smoke tests, `evidence verify` | yes |
 | `start.yml` | the Initializer: build, image, smoke, then all 16 generated combinations through their own CI | no |
 | `links.yml` | online: external links, BOM pins, `npm audit` of the site; also every Monday | no |
 

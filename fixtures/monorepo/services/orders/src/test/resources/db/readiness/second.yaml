@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: shared-id
+      author: readiness-test
+      changes:
+        - sql:
+            sql: CREATE TABLE readiness_second (id int)

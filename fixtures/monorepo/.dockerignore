@@ -1,0 +1,3 @@
+# Each image has its own allow list next to its Dockerfile (services/<vertical>/Dockerfile.dockerignore). Anything
+# else built from the root gets nothing.
+*

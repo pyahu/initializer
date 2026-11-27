@@ -1,0 +1,38 @@
+# Fixture manifest. See CONTRIBUTING.md, "Fixtures". The monorepo the generator produces for these options
+# (ADR 0004): two verticals in different styles, one with PostgreSQL, sharing one identity provider.
+schema: initializer.pyahu.io/fixture/v1
+name: monorepo
+options:
+  apiVersion: initializer.pyahu.io/v1alpha1
+  kind: Monorepo
+  name: monorepo
+  group: io.pyahu.fixture
+  description: Monorepo fixture
+  auth: true
+  verticals:
+    - {name: billing, architecture: ddd-layered, database: none, frontend: none}
+    - {name: orders, architecture: hexagonal, database: postgres, persistence: jdbc, frontend: none}
+# The image whose base images are checked against the baseline; every vertical's Dockerfile uses the same ones.
+dockerfile: services/orders/Dockerfile
+exercises:
+  - java
+  - temurin-jdk-image
+  - temurin-jre-image
+  - gradle
+  - spring-boot
+  - spring-modulith
+  - archunit
+  - error-prone
+  - errorprone-gradle-plugin
+  - nullaway
+  - spotless-gradle-plugin
+  - palantir-java-format
+  - cyclonedx-gradle-plugin
+  - openapi-generator-gradle-plugin
+requiredTests:
+  - gradle/monorepo::ConventionsTest
+  - gradle/monorepo::VerticalBoundaryTest
+  - gradle/monorepo::ArchitectureTest
+  - gradle/monorepo::ModulithTest
+  - gradle/monorepo::ApplicationTest
+  - gradle/monorepo::DatabaseRolesTest

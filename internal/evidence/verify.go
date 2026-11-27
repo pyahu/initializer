@@ -82,7 +82,11 @@ func Verify(r *guidedata.Repo, in VerifyInput) (*Report, []error) {
 	if err != nil {
 		errs = append(errs, err)
 	}
-	froms, err := dockerfileImages(filepath.Join(fx.Dir, "Dockerfile"))
+	dockerfile := "Dockerfile"
+	if fx.Dockerfile != "" {
+		dockerfile = fx.Dockerfile
+	}
+	froms, err := dockerfileImages(filepath.Join(fx.Dir, dockerfile))
 	if err != nil {
 		errs = append(errs, err)
 	}

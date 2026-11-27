@@ -1,0 +1,135 @@
+# One workflow for the whole platform (monorepo guide, step 9): one Gradle build of every project with the cache of
+# main, the contract checks, then each vertical's manifests, image, scan and smoke test, and a gate job that is the
+# only required check. Publishing is not here yet: add it per vertical, after the gate (CI pipelines guide, step 6).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The JDK image of baseline v0.1-b3, pinned by digest.
+  JDK_IMAGE: eclipse-temurin@sha256:c7eef3dfeb81468533ea48c67bddaa8c7ca916454259e4d0d734d12bcff8e125
+  OASDIFF_IMAGE: tufin/oasdiff:v1.39.0@sha256:004bef22058ace818b61f0eb2f05efb89fc6a3882f68bf4db0b6a86f40723fe0
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    outputs:
+      verticals: ${{ steps.verticals.outputs.list }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Verticals
+        id: verticals
+        # Every folder in services/ with a build file is a vertical, as in settings.gradle.kts.
+        run: |
+          list=$(for f in services/*/build.gradle.kts; do basename "$(dirname "$f")"; done | jq -R . | jq -cs .)
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+      - name: Gradle dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cache/pyahu-gradle/caches/modules-2
+            ~/.cache/pyahu-gradle/wrapper/dists
+          key: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-${{ hashFiles('gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties', 'build-logic/build.gradle.kts') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-gradle-v1-
+      # Task outputs of main: the projects a change did not touch come back from here instead of running again.
+      # Pull requests restore it and never save (monorepo guide, step 7).
+      - name: Gradle build cache of main
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pyahu-gradle/caches/build-cache-1
+          key: gradle-build-cache-${{ github.sha }}
+          restore-keys: gradle-build-cache-
+      - name: Build and test every project in the pinned JDK
+        # Testcontainers starts PostgreSQL next to this container, through the runner's Docker.
+        run: >-
+          bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
+          -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          -e CI -e GITHUB_ACTIONS -e GITHUB_SERVER_URL -e GITHUB_REPOSITORY -e GITHUB_RUN_ID
+          -e GITHUB_RUN_ATTEMPT -e GITHUB_SHA
+          -v /var/run/docker.sock:/var/run/docker.sock
+          "$JDK_IMAGE" ./gradlew --no-daemon build :build-logic:check
+      - name: Quality reports
+        # Each vertical writes its report even when the build fails. The job fails unless every vertical says every
+        # gate passed (CI pipelines guide, step 9).
+        if: ${{ !cancelled() }}
+        env:
+          VERTICALS: ${{ steps.verticals.outputs.list }}
+        run: |
+          failed=0
+          for vertical in $(jq -r '.[]' <<< "$VERTICALS"); do
+            report=services/$vertical/build/reports/pyahu
+            if [ -f "$report/job-summary.md" ] && [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+              { echo "## $vertical"; cat "$report/job-summary.md"; } >> "$GITHUB_STEP_SUMMARY"
+            fi
+            if ! jq -e '.status == "passed"' "$report/quality.json" > /dev/null 2>&1; then
+              echo "$vertical: the quality report does not say passed: open $report/quality.html in the reports artifact."
+              jq -r '.gates[] | select(.status != "passed") | "  \(.title): \(.summary)"' "$report/quality.json" 2>/dev/null || true
+              failed=1
+            fi
+          done
+          exit "$failed"
+      - name: Contracts against the base of the change
+        # A breaking change fails here; the last of three pull requests that removes something on purpose carries
+        # the breaking-change label (monorepo guide, step 4).
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
+          ALLOW_BREAKING: ${{ contains(github.event.pull_request.labels.*.name, 'breaking-change') }}
+        run: |
+          if [ -z "$BASE" ] || [ "$BASE" = 0000000000000000000000000000000000000000 ]; then
+            echo "No base commit: nothing to compare with."
+            exit 0
+          fi
+          git fetch --no-tags --depth=1 origin "$BASE"
+          bash .github/scripts/contracts.sh "$BASE"
+      - name: Save the build cache
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pyahu-gradle/caches/build-cache-1
+          key: gradle-build-cache-${{ github.sha }}
+      - name: Keep the tested jars for the images
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: jars
+          path: services/*/build/libs/*.jar
+          if-no-files-found: error
+      - name: Keep the test and analysis reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reports
+          path: services/*/build/reports/
+          if-no-files-found: ignore
+
+  vertical:
+    needs: [build]
+    strategy:
+      fail-fast: false
+      matrix:
+        vertical: ${{ fromJSON(needs.build.outputs.verticals) }}
+    uses: ./.github/workflows/vertical.yml
+    with:
+      vertical: ${{ matrix.vertical }}
+
+  # The only required check: it always reports, and fails unless every job it needs passed (monorepo guide, step 9).
+  gate:
+    if: always()
+    needs: [build, vertical]
+    runs-on: ubuntu-24.04
+    steps:
+      - env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: for r in $RESULTS; do test "$r" = success; done

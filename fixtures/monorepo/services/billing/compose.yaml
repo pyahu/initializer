@@ -1,0 +1,4 @@
+# billing on the laptop: `./gradlew :billing:bootRun` starts these containers and Spring Boot connects to them
+# (local development guide; monorepo guide, step 8). Never in production.
+include:
+  - ../../platform.compose.yaml

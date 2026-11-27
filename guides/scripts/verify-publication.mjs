@@ -7,7 +7,7 @@ import { parse } from 'yaml';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 // What the site shows must be proven: the guides and their data, and the fixture whose tests prove the claims.
 // Online checks (links, npm audit) and the generator's workflow report on their own and never block a publication.
-export const required = ['guides.yml', 'fixture-single-hexagonal.yml'];
+export const required = ['guides.yml', 'fixture-single-hexagonal.yml', 'fixture-monorepo.yml'];
 const git = (...args) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 
 export function workflowPaths(text) {

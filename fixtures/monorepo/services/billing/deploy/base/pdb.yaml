@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: billing
+  labels:
+    initializer.pyahu.io/deploy-phase: application
+    app.kubernetes.io/component: api
+spec:
+  maxUnavailable: 1
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: billing
+      app.kubernetes.io/instance: billing
+      app.kubernetes.io/component: api

@@ -149,7 +149,9 @@ type Fixture struct {
 	Options       map[string]any `json:"options"`
 	Exercises     []string       `json:"exercises"`
 	RequiredTests []string       `json:"requiredTests"`
-	Dir           string         `json:"-"`
+	// Dockerfile whose base images are checked against the baseline, relative to the fixture; Dockerfile when empty.
+	Dockerfile string `json:"dockerfile,omitempty"`
+	Dir        string `json:"-"`
 }
 
 // GuideMeta is the guide block of a guide page's frontmatter.

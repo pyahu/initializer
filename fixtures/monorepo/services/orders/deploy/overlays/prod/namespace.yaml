@@ -1,0 +1,9 @@
+# Pod Security Standards restricted, pinned to the cluster's minor version (security guide, step 8).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: orders
+  labels:
+    initializer.pyahu.io/deploy-phase: prerequisites
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: v1.36
