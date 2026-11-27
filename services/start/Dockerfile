@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 #
-# start: the Initializer service, built from the repository root (monorepo guide, step 8):
+# start: the Initializer service, built from the repository root (monorepo guide, step 10):
 #   docker build -f services/start/Dockerfile .
 # Same stages as the fixture image (guides: JVM in containers, container image).
 #

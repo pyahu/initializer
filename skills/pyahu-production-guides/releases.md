@@ -10,6 +10,25 @@ leaves to a person: put them in a pull request of their own. **Required** steps 
 scanning clean on the new versions, **recommended** ones follow changed advice and **optional** ones adopt what new
 projects get.
 
+<a id="v0-1-b4"></a>
+
+## Unreleased, on start.pyahu.io now
+
+The monorepo guide is rewritten for a build that enforces its own boundaries. Generated projects get its new checklist items; nothing else they contain changes.
+
+### Guide steps that changed
+
+- [Monorepos with several services, step 2](https://initializer.pyahu.io/guides/monorepo/#mono-layout): A new step on the layout, with flat project names and an owner for every service folder.
+- [Monorepos with several services, step 3](https://initializer.pyahu.io/guides/monorepo/#mono-boundaries-rule): The service convention plugin fails the build when a service depends on another service's project.
+- [Monorepos with several services, step 4](https://initializer.pyahu.io/guides/monorepo/#mono-contracts): A contract lives in its service's `api` project, generated once and checked against `main` in CI.
+- [Monorepos with several services, step 7](https://initializer.pyahu.io/guides/monorepo/#mono-fast-build): A new step on the configuration cache and a build cache that only builds of `main` save.
+- [Monorepos with several services, step 8](https://initializer.pyahu.io/guides/monorepo/#mono-one-service): Each service has its own `compose.yaml` and `AGENTS.md`.
+- [Monorepos with several services, step 9](https://initializer.pyahu.io/guides/monorepo/#mono-ci): One workflow builds every project with the cache of `main` and runs the convention plugins' tests.
+
+### Other changes
+
+- The monorepo items in `CHECKLIST.md` follow the rewritten guide, with four new ones (MONO-14 to MONO-17). A project with one service can mark them not applicable.
+
 <a id="v0-1-b3"></a>
 
 ## v0.1-b3, 2026-11-27

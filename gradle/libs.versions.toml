@@ -1,4 +1,4 @@
-# The only version catalog of the Initializer's own build (monorepo guide, step 5). Versions are
+# The only version catalog of the Initializer's own build (monorepo guide, step 6). Versions are
 # those of the active baseline in data/versions.yaml; they change only with a new baseline revision.
 [versions]
 spring-boot = "4.2.0"

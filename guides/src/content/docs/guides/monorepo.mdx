@@ -1,6 +1,6 @@
 ---
 title: Monorepos with several services
-description: Keep several Spring Boot services in one repository without turning them into one distributed monolith.
+description: Keep several Spring Boot services in one Gradle build without turning them into one distributed monolith.
 tableOfContents: { maxHeadingLevel: 2 }
 guide:
   id: monorepo
@@ -11,24 +11,30 @@ guide:
       text: "Should our services share one repository?"
       answeredIn: mono-when
     - id: MONO-Q2
+      text: "Where does everything go?"
+      answeredIn: mono-layout
+    - id: MONO-Q3
       text: "What may services share and what must stay apart?"
       answeredIn: mono-boundaries-rule
-    - id: MONO-Q3
+    - id: MONO-Q4
       text: "Where do the contracts between services live?"
       answeredIn: mono-contracts
-    - id: MONO-Q4
-      text: "How do I keep the build the same in every service?"
-      answeredIn: mono-build-logic
     - id: MONO-Q5
+      text: "How do I keep the build the same in every project?"
+      answeredIn: mono-build-logic
+    - id: MONO-Q6
       text: "How do I keep versions in one place?"
       answeredIn: mono-catalog
-    - id: MONO-Q6
-      text: "How do I build and run just one service?"
-      answeredIn: mono-one-service
     - id: MONO-Q7
+      text: "How does the build stay fast as it grows?"
+      answeredIn: mono-fast-build
+    - id: MONO-Q8
+      text: "How do I work on just one service?"
+      answeredIn: mono-one-service
+    - id: MONO-Q9
       text: "How should CI decide what to build?"
       answeredIn: mono-ci
-    - id: MONO-Q8
+    - id: MONO-Q10
       text: "How does each service ship on its own?"
       answeredIn: mono-ship
 ---
@@ -39,11 +45,13 @@ import DiagramLegend from '../../../components/DiagramLegend.astro';
 import MonorepoBoundariesDiagram from '../../../components/diagrams/MonorepoBoundariesDiagram.astro';
 
 Your team owns five services, so you put them in one repository. A year later, a change in billing breaks the
-orders build, every pull request runs every test and nobody can release orders without a billing fix going out
-with it. You built one big service with five deployments.
+orders build, every pull request waits for every test, a CI file lists forty paths nobody dares to touch and
+nobody can release orders without a billing fix going out with it. You built one big service with five
+deployments.
 
-This guide shows how to keep the good parts of one repository (one build, one place for contracts, one CI) while
-each service stays separate: its own code, database, image and release.
+This guide keeps what one repository is good at (one build, one version of every library, a contract and its
+consumers changed in one pull request) while each service keeps its own code, contract, database, image and
+release. The build itself enforces the boundaries, so they hold when nobody is looking.
 
 <GuideStatus guide="monorepo" />
 
@@ -51,58 +59,153 @@ each service stays separate: its own code, database, image and release.
 
 ## 1. Should our services share one repository?
 
-**In short:** yes, when one team owns the services and changes them together often. Keep them apart when
-different teams own them or they release on unrelated schedules.
+**In short:** yes, when one team, or a few teams that work closely, own the services and often change two of them
+together. First check that you need several services at all.
 
 ### What's going on
 
-A shared repository is like a shared office. Working side by side lets you make small changes across services:
-rename a field in a contract and fix its consumer in one pull request. But a shared office only works if everyone keeps their
-own desk. When services start reading each other's code, the office turns into one big room where nobody can move
-anything alone.
+A shared repository is like a shared office. Working side by side makes small changes across services cheap: rename
+a field in a contract and fix its consumer in the same pull request. But the office only works if everyone keeps
+their own desk. When services start reading each other's code, the office turns into one big room where nobody can
+move anything alone.
 
-The repository is not the problem. Coupling is: dependencies that force services to change together. One
-repository lets you add them without noticing, so it needs rules that a separate repository gets for free.
+The repository is not the problem. Coupling is: dependencies that force services to change and release together.
+Separate repositories make coupling expensive by accident. One repository makes it free, so it needs rules that the
+build checks (steps 3 and 4).
+
+Before you split, ask why the parts are separate services. If they share a database, release together and are
+owned by one team, a single service with well-kept modules is simpler and faster to change (see
+[Architecture](/guides/architecture/)). Split a module out when it needs to scale, deploy or fail on its own.
 
 ### Do this
 
-1. Put services in one repository when the same team owns them and a change often touches two of them.
-2. Decide the boundaries before the second service arrives (steps 2 and 3).
-3. Write the decision down as an architecture decision record, with the reason.
+1. Keep services in one repository when the same people own them and a change often touches two of them.
+2. Check that each service has a reason to deploy on its own. If not, make it a module of one service instead.
+3. Write the decision down as an architecture decision record (ADR), with the reason and the owning teams.
 
 ### When this is not for you
 
-- Different teams own the services: give each its own repository, so ownership and access stay clear.
-- One service: start with one service in one repository. Add the monorepo structure when the second service is
-  real, not before.
+- Teams that rarely talk own the services: give each team its own repository, so ownership, access and review
+  stay clear.
+- One service today: start with one service in one repository. Add the monorepo structure when the second
+  service is real, not before.
 
-<a id="mono-boundaries-rule"></a>
+<a id="mono-layout"></a>
 
-## 2. What may services share and what must stay apart?
+## 2. Where does everything go?
 
-**In short:** services share build rules, versions and contracts. They never share domain code, a database or
-each other's projects.
+**In short:** one folder per service holding everything that service owns, a flat Gradle project name for each
+folder and nothing in the root project.
+
+```kotlin
+// settings.gradle.kts
+service("orders"); api("orders")
+service("billing")
+```
 
 ### What's going on
 
-The fastest way to build a distributed monolith, services that can only change and release together, is a shared
-module of internals: "common" entities, a client tied to another service's classes, a shared utility package that
-grows every week. Once billing compiles against orders' classes, a change in orders can break
+The layout answers two questions for every file: who owns it and which service it belongs to. When a service's
+code, contract, image, manifests and notes sit in one folder, the answers are the folder name. One line in
+`CODEOWNERS` gives the folder an owner, `git log services/orders` is its history and moving the service to its own
+repository later means moving one folder.
+
+Gradle names a project after its path. Including `services/orders` as `:services:orders` makes Gradle create an
+empty `:services` project for the folder above it. Gradle's best practices recommend flat names mapped to their
+folders instead: `:orders` lives in `services/orders`, its contract `:orders-api` in `services/orders/api`. The
+names stay short and every project is one you wrote.
+
+### Do this
+
+1. Give each service one folder: `services/<service>/` with its code, `api/` for its contract (step 4), its
+   `Dockerfile`, `deploy/`, `compose.yaml` and `AGENTS.md` (step 8).
+2. Put deliberately reusable code in `libs/<name>/` and the shared build in `build-logic/` and `gradle/`.
+3. Include every project by a flat name mapped to its folder, with three small functions at the top of
+   `settings.gradle.kts`:
+
+   ```kotlin
+   fun service(name: String) {
+       include(":$name")
+       project(":$name").projectDir = file("services/$name")
+   }
+
+   fun api(service: String) {
+       include(":$service-api")
+       project(":$service-api").projectDir = file("services/$service/api")
+   }
+
+   fun library(name: String) {
+       include(":lib-$name")
+       project(":lib-$name").projectDir = file("libs/$name")
+   }
+   ```
+
+   The name tells the build what a project is: `orders` is a service, `orders-api` a contract and `lib-money` a
+   library. Step 3 relies on it.
+4. Keep no source code and no build configuration for other projects in the root project.
+5. Give every folder an owner in `.github/CODEOWNERS` and turn on "Require review from Code Owners":
+
+   ```text
+   /services/orders/    @acme/orders
+   /services/billing/   @acme/billing
+   /build-logic/        @acme/platform
+   /gradle/             @acme/platform
+   ```
+
+### When this is not for you
+
+- A frontend in the same repository: keep it in `frontends/<app>/`, outside the Gradle build, with its own
+  toolchain (see [Next.js](/guides/nextjs/)). It generates its client from the service's contract file.
+- Configuring the build stays slow even with the configuration cache (step 7), or several organisations share the
+  repository: split it into one build per product, joined with `includeBuild`.
+
+<a id="mono-boundaries-rule"></a>
+
+## 3. What may services share and what must stay apart?
+
+**In short:** services share build rules, versions, libraries and contracts. They never share domain code, a
+database or each other's projects, and the build fails when one tries.
+
+### What's going on
+
+The fastest way to build a distributed monolith, services that can only change and release together, is to let
+them read each other's insides: "common" entities, a client tied to another service's classes, a shared utility
+package that grows every week. Once billing compiles against orders' classes, a change inside orders can break
 billing and the two must release together.
 
 Services that only talk through contracts (an HTTP API, a gRPC service, an event) can change their insides freely.
-The contract is the only promise between them.
+The contract is the only promise between them, and step 4 makes breaking it visible.
+
+A rule in a README gets broken the first busy week. A rule in the build cannot be: the service convention plugin
+(step 5) checks every project dependency when the build starts and stops at the first one that points at another
+service.
 
 <MonorepoBoundariesDiagram />
 <DiagramLegend items={['recommended', 'context', 'failure']} />
 
 ### Do this
 
-1. Never add a project dependency from one service to another.
-2. Give each service its own database and its own migration history.
-3. Create a library under `libs/` only for code that is deliberately reusable, never for shared entities or the
-   internals of a service. Start with no libraries.
-4. Pick an architecture style per service; inside one service, every capability uses the same style.
+1. Let a service depend only on `-api` projects and libraries. Put the check in the service convention plugin:
+
+   ```kotlin
+   // build-logic/src/main/kotlin/acme.service.gradle.kts
+   // Another service is reached only through its api project (monorepo guide, step 3).
+   configurations.configureEach {
+       dependencies.withType<ProjectDependency>().configureEach {
+           check(path == project.path || path.endsWith("-api") || path.startsWith(":lib-")) {
+               "${project.path} must not depend on $path: use its api project or a library"
+           }
+       }
+   }
+   ```
+2. Give the `api` and library conventions the same check with a narrower rule: they depend only on libraries. An
+   `api` project that depended on its service would hand that service's code to every consumer.
+3. Give each service its own database and its own migration history (see [Database](/guides/database/)).
+4. Create a library only for code that is deliberately reusable and owned, such as a logging setup shipped as
+   Spring Boot auto-configuration. Never put shared entities or the internals of a service there. Start with no
+   libraries.
+5. Pick an architecture style per service and test it inside the service (see
+   [Architecture](/guides/architecture/)). A layering rule that only a reviewer checks is broken within months.
 
 ### When this is not for you
 
@@ -111,38 +214,60 @@ The contract is the only promise between them.
 
 <a id="mono-contracts"></a>
 
-## 3. Where do the contracts between services live?
+## 4. Where do the contracts between services live?
 
-**In short:** next to the code, in `contracts/<service>/`, owned by the service that produces them and checked in
-CI.
+**In short:** in the producing service's folder, as an `api` project that generates the code once. Consumers depend
+on that project, and CI fails a breaking change.
 
 ### What's going on
 
-A contract in a shared root folder with no owner drifts: anyone edits it, nobody checks that old consumers still
-work. When the producing service owns its contract, a breaking change shows up in that service's pull request,
-where the right people review it.
+A contract in a shared root folder with no owner drifts: anyone edits it, every consumer compiles its own copy of
+the generated code and nobody checks that the services running in production still understand each other. When the
+contract sits in the producer's folder, the producer's owners review every change to it.
 
-Consumers should not read the contract file straight from a sibling folder. They depend on a client project
-generated from it, so the build knows that a contract change affects them.
+The `api` project holds the contract file (OpenAPI, Protocol Buffers or an event schema) and generates the code
+from it once: the interfaces and models the producer implements and the client the consumers call. A consumer
+declares `implementation(project(":orders-api"))`, so Gradle knows that a contract change affects billing, rebuilds
+it and runs its tests.
+
+Changing a contract in one pull request together with its consumers is the reason for one repository, but it does
+not make the change safe. The old billing keeps running in production while the new orders rolls out, so a removed
+field still breaks it. A breaking change takes three pull requests: add the new field and deprecate the old one,
+move the consumers, then remove the old one once production no longer uses it.
 
 ### Do this
 
-1. Keep each contract in `contracts/<service>/`, split by kind (`openapi`, `proto`, `avro`).
-2. Make the producing service the owner, for example with a CODEOWNERS entry.
-3. In CI, compare the contract with its last released version and fail on a breaking change.
-4. Generate a client project from the contract. Consumers depend on that project, never on the folder.
+1. Keep each contract in `services/<service>/api/` and make it a project with an `acme.api` convention plugin that
+   generates the code.
+2. Let consumers depend on the `api` project, never on the contract file or the producer's project.
+3. In CI, compare every contract with the commit the change starts from (the pull request's base, or the previous
+   commit on a push to `main`) and fail on a breaking change. Use `oasdiff` for OpenAPI and `buf breaking` for
+   Protocol Buffers, against the whole `api` folder of that commit, so references between files still resolve:
+
+   ```sh
+   git fetch --depth=1 origin "$BASE_SHA"
+   mkdir -p /tmp/base && git archive "$BASE_SHA" services/orders/api services/billing/api | tar -x -C /tmp/base
+   oasdiff breaking /tmp/base/services/orders/api/openapi.yaml services/orders/api/openapi.yaml --fail-on ERR
+   buf breaking services/billing/api --against /tmp/base/services/billing/api
+   ```
+
+   A contract that does not exist in the base yet has nothing to break: skip it.
+4. Expect the last of the three pull requests, the removal, to fail the check. Approve that one on purpose, for
+   example with a pull request label the check honours, once production no longer uses what you remove.
 
 ### When this is not for you
 
-- A contract shared with systems outside the repository: publish it as a versioned artifact as well, so outside
-  consumers do not depend on your repository layout.
+- A contract that systems outside the repository consume: also publish the `api` project as a versioned artifact,
+  so they do not depend on your repository layout.
+- The check compares schemas; it does not run the old consumer against the new producer. Add consumer-driven
+  contract tests, such as Pact, when a break reached production despite it.
 
 <a id="mono-build-logic"></a>
 
-## 4. How do I keep the build the same in every service?
+## 5. How do I keep the build the same in every project?
 
-**In short:** put shared build rules in an included build called `build-logic`, as small convention plugins that
-each service applies.
+**In short:** put the shared build in an included build called `build-logic`, as a few small convention plugins.
+Every project, libraries included, applies one.
 
 ```kotlin
 // settings.gradle.kts
@@ -152,21 +277,31 @@ pluginManagement { includeBuild("build-logic") }
 ### What's going on
 
 Copying the same Java, test and quality settings into every build file works for two services. With five, the
-copies drift. The old fixes were `buildSrc` or an `allprojects` block. Both hurt: Gradle's own guidance prefers an
-included build, because any change in `buildSrc` makes the whole build out of date. An `allprojects` block applies
-its configuration everywhere, even where it does not belong.
+copies drift, and the projects nobody thinks about, like a small library, silently skip the checks. The old fixes
+were `buildSrc` or an `allprojects` block. Both hurt. Gradle treats `buildSrc` specially: it is built before
+anything else and a change to it invalidates the configuration of every project, so Gradle's best practices prefer
+an included build, which is a plugin dependency like any other. And `allprojects` pushes configuration into
+projects from outside, where nobody looking at a project's build file can see it.
 
-A convention plugin is a small recipe, such as "a Java project with our compiler checks". Each service picks the
-recipes it needs in its `plugins {}` block and nothing else.
+A convention plugin is a small recipe, such as "a Java project with our compiler checks". Each project picks the
+one recipe that says what it is. The project's own build file then shows only what makes it different.
 
 ### Do this
 
 1. Create `build-logic/` as an included build, added with `includeBuild("build-logic")` inside `pluginManagement`.
-2. Start with few plugins: one for Java (toolchain, compiler checks, formatting), one for tests, one for a Spring
-   Boot service. Add more only when you see real duplication.
-3. Keep capabilities, like a database or messaging, in the service's own build file, not in a convention.
-4. Never use `allprojects {}` or `subprojects {}`.
-5. Test the convention plugins themselves with Gradle TestKit.
+2. Start with four plugins, named with your organisation's prefix, one per kind of project:
+   - `acme.java`: toolchain, Error Prone, NullAway and formatting (see
+     [Build quality](/guides/build-quality/)). The other three apply it.
+   - `acme.library`: a plain Java library, without the Spring Boot plugin, with the boundary check of step 3.
+   - `acme.api`: a library that generates code from its contract (step 4).
+   - `acme.service`: the Spring Boot plugin, tests, coverage, the SBOM and the boundary check of step 3.
+3. Keep capabilities, like a database or messaging, in the service's own build file, where a reader sees what the
+   service uses. A plugin per capability hides that behind names.
+4. Never use `allprojects {}`, `subprojects {}` or `afterEvaluate {}`. Configure lazily and react to another plugin
+   with `pluginManager.withPlugin(...)`.
+5. Test the convention plugins with Gradle TestKit: apply each one to an empty project and check the tasks it
+   promises, and check that a service depending on another service fails. `./gradlew build` does not run the tests
+   of an included build, so CI runs `./gradlew build :build-logic:check`.
 
 ### When this is not for you
 
@@ -175,175 +310,303 @@ recipes it needs in its `plugins {}` block and nothing else.
 
 <a id="mono-catalog"></a>
 
-## 5. How do I keep versions in one place?
+## 6. How do I keep versions in one place?
 
-**In short:** one version catalog, `gradle/libs.versions.toml`, read by every service and by `build-logic`.
+**In short:** one version catalog, `gradle/libs.versions.toml`, read by every project and by `build-logic`, and no
+version number anywhere else.
 
 ### What's going on
 
-Five services with their own version numbers end up on five versions of the same library and upgrades become five
-pull requests. A version catalog lists each library once under a name. Every build uses that name.
+Five services with their own version numbers end up on five versions of the same library, and an upgrade becomes
+five pull requests. A version catalog lists each library once under a name. Every build file uses the name, and
+Renovate updates the catalog in one pull request that CI tests against every service at once. That single upgrade
+is one of the best reasons to share a repository.
+
+A catalog only helps if it is the only place. A version written straight into a build file or a convention plugin
+is invisible to the catalog, and the services drift apart again.
 
 `build-logic` is a separate build, so it does not see the catalog by itself. You import it in `build-logic`'s
 settings file. Convention plugins read it through `VersionCatalogsExtension`.
 
 A catalog states the versions you ask for. It does not force what Gradle finally resolves, so the Spring Boot bill of
-materials (BOM), its list of compatible dependency versions, keeps aligning the libraries it manages.
+materials (BOM), its list of compatible dependency versions, keeps aligning the libraries it manages (see
+[Build quality](/guides/build-quality/), step 3).
 
 ### Do this
 
-1. Keep one catalog at `gradle/libs.versions.toml` and add every library there.
-2. In `build-logic/settings.gradle.kts`, import it with
-   `versionCatalogs { create("libs") { from(files("../gradle/libs.versions.toml")) } }`.
-3. Declare the external Gradle plugins your conventions use as dependencies of `build-logic`. A plugin from the
-   catalog becomes a dependency through its marker artifact:
+1. Keep one catalog at `gradle/libs.versions.toml` with every library and plugin, and write no version anywhere
+   else.
+2. Import it in `build-logic`'s settings, with the repositories its plugins come from:
+
+   ```kotlin
+   // build-logic/settings.gradle.kts
+   dependencyResolutionManagement {
+       repositories {
+           mavenCentral()
+           gradlePluginPortal()
+       }
+       versionCatalogs {
+           create("libs") { from(files("../gradle/libs.versions.toml")) }
+       }
+   }
+   ```
+3. Apply `kotlin-dsl` in `build-logic` and declare the external Gradle plugins your conventions use as its
+   dependencies. A plugin from the catalog becomes a dependency through its marker artifact:
 
    ```kotlin
    // build-logic/build.gradle.kts
+   plugins { `kotlin-dsl` }
+
    fun plugin(p: Provider<PluginDependency>) = p.map { "${it.pluginId}:${it.pluginId}.gradle.plugin:${it.version}" }
 
    dependencies {
        implementation(plugin(libs.plugins.spring.boot))
    }
    ```
-4. Keep the Spring Boot BOM for the libraries it manages. When you must override one, add a constraint with a
-   reason.
+4. Import the Spring Boot BOM as a `platform` in `acme.java`, so libraries and `api` projects get the same versions
+   as the services that use them.
+5. When you must override a version the BOM manages, add a constraint with a reason.
 
 ### When this is not for you
 
-- A service that truly needs a different version of a library: that is a sign it should live in its own
-  repository or that the upgrade should happen everywhere.
+- A service that truly needs a different version of a library: give that version its own name in the catalog with
+  the reason in a comment, and plan the upgrade that brings it back in line.
+
+<a id="mono-fast-build"></a>
+
+## 7. How does the build stay fast as it grows?
+
+**In short:** let Gradle skip the work it has already done: turn on the configuration cache, the build cache and
+parallel execution, and share the build cache from `main` with every pull request.
+
+```properties
+# gradle.properties
+org.gradle.configuration-cache=true
+org.gradle.caching=true
+org.gradle.parallel=true
+```
+
+### What's going on
+
+Gradle already builds only what changed, as long as it remembers what it did. The build cache stores the output of
+each cacheable task, such as compiling or testing, under a key made from all of its declared inputs. When billing
+changes, orders' compile and test tasks have the same inputs as before and come back from the cache in
+milliseconds. The configuration cache does the same for the setup phase, which otherwise runs every build script
+on every run.
+
+So the cheapest answer to "which services do we rebuild?" is: all of them, with a warm cache. Gradle works out what
+changed from the declared inputs. A list of paths someone wrote by hand goes stale.
+
+This goes one step further than the pipeline of a single service, which caches downloads and reruns every test
+(see [CI pipelines](/guides/ci-pipelines/), step 4). With many services, rerunning the tests of the ones nobody
+touched is most of the build. Reusing a test result is safe only when everything the test depends on is an input
+Gradle sees: a container image pinned by digest is, a shared test database or a moving image tag is not.
+
+A cache is only as trustworthy as whoever writes to it. Builds of `main` save it; pull requests restore it and do
+not save, since their results would only serve that pull request.
+
+### Do this
+
+1. Commit the three lines above in `gradle.properties`.
+2. In CI, restore Gradle's build cache from the mounted `GRADLE_USER_HOME` on every run and save it only on pushes
+   to `main`:
+
+   ```yaml
+   - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+     with:
+       path: ~/.cache/gradle-ci/caches/build-cache-1
+       key: gradle-build-cache-${{ github.sha }}
+       restore-keys: gradle-build-cache-
+   # ... the Gradle build in the pinned JDK image ...
+   - if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+     uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+     with:
+       path: ~/.cache/gradle-ci/caches/build-cache-1
+       key: gradle-build-cache-${{ github.sha }}
+   ```
+3. Declare the inputs and outputs of every task you write in `build-logic`, and pin every container image a test
+   starts by digest. A test with an input Gradle cannot see can come back from the cache with a stale result.
+4. Write build logic that does not reach into other projects, as step 5 asks. It is what the configuration cache
+   needs today and what Gradle's Isolated Projects, still incubating, will require.
+5. Measure before you optimise further: run the same command twice with `--scan` or `--profile` and look at what
+   still runs.
+
+### When this is not for you
+
+- A remote build cache shared with laptops: worth it for large teams, but only CI may write to it, and it is one
+  more service to run.
 
 <a id="mono-one-service"></a>
 
-## 6. How do I build and run just one service?
+## 8. How do I work on just one service?
 
-**In short:** give each service a short project name mapped to its folder, then run tasks by that name.
+**In short:** address the service by its project name. Its own `compose.yaml` starts only what it needs, and its
+own `AGENTS.md` tells a coding agent its rules.
 
 ```sh
 ./gradlew :orders:build
+./gradlew :orders:bootRun
 ```
 
 ### What's going on
 
 Gradle builds a task and whatever it depends on, nothing more. If billing does not depend on orders, building
-orders never touches billing. That only holds while the boundaries from step 2 hold.
+orders never touches billing. That holds because of the boundaries from step 3.
 
-Including a nested service as `:services:orders` makes Gradle create an empty `:services` project for the folder
-above it. A flat name mapped to the folder avoids those empty projects and keeps task names short.
+Running a service locally is the same idea. Spring Boot's Docker Compose support starts the `compose.yaml` it finds
+in the working directory, and `bootRun` runs in the service's folder, so each service starts only its own
+database and broker (see [Local development](/guides/local-development/)). A root `compose.yaml` includes every
+service's file to start the dependencies of all of them at once. The included files share one set of names, so
+each service prefixes what it defines.
+
+Coding agents work the same way. They read the `AGENTS.md` nearest to the file they edit, so a short one in each
+service gives its style, its commands and its owner, while the root one keeps the map and the rules of steps 2 to 6.
 
 ### Do this
 
-1. In `settings.gradle.kts`, include each service by a flat name and set its folder:
-   `include("orders")` and `project(":orders").projectDir = file("services/orders")`.
-2. Keep no source code in the root project.
-3. Build or test one service with `./gradlew :orders:build`.
-4. Give every service the same commands (build, test, run, lint), so moving between services needs no new habits.
+1. Give every service the same commands: `./gradlew :<service>:build`, `:<service>:test` and `:<service>:bootRun`.
+2. Put each service's local dependencies in `services/<service>/compose.yaml` and prefix every Compose service,
+   volume and network with the service's name, such as `orders-postgres`.
+3. Add a root `compose.yaml` that includes them all (Docker Compose 2.20.3 or later) and check the combined result
+   with `docker compose config`:
+
+   ```yaml
+   include:
+     - services/orders/compose.yaml
+     - services/billing/compose.yaml
+   ```
+4. Write a root `AGENTS.md` with the layout and the rules, and an `AGENTS.md` in each service with its
+   architecture style, its commands and what it must never depend on.
 
 ### When this is not for you
 
-- A change in `build-logic`, the catalog, a contract or a library affects every service that uses it. Build them
-  all for that change.
+- A change in `build-logic`, the catalog, a contract or a library affects every project that uses it. Build them
+  all for that change: `./gradlew build`.
 
 <a id="mono-ci"></a>
 
-## 7. How should CI decide what to build?
+## 9. How should CI decide what to build?
 
-**In short:** one workflow that always runs, starts a job per service and ends in a single gate job. Make that
-gate the only required check.
+**In short:** one workflow that always runs, builds and tests every project in one Gradle run and ends in a single
+gate job. Make that gate the only required check.
 
 ### What's going on
 
-The obvious idea is one workflow per service with a path filter. It breaks branch protection: when a workflow is
-skipped by a path filter, its required check stays pending and the pull request can never merge.
+The obvious idea is one workflow per service with a path filter. It breaks in two ways. A workflow skipped by its
+path filter leaves its required check pending, so a pull request that touches only the catalog, or a Renovate
+update, can never merge. And the path lists are copied by hand into every workflow, so they go stale the day a
+service gains a dependency.
 
-A workflow that always runs avoids that. It decides which services to build, calls a reusable workflow for each
-one and finishes with a gate job that checks every expected job passed. The gate always reports, so it can be the
-one required check.
+One workflow that always runs avoids both. It builds everything, which step 7 makes cheap: Gradle, not a path list,
+decides what really runs. A gate job at the end checks that every job it needs passed. The gate always reports, so
+it can be the one required check, and every other job, the frontend's included, feeds it.
 
 ### Do this
 
-1. Write one reusable workflow that builds, tests and packages a single service.
-2. Write one orchestration workflow that runs on every pull request and calls it for each service, through a
-   matrix.
-3. End with a gate job that runs with `if: always()` and fails when any expected job failed or was skipped. Make
-   that one job the required check:
+1. Run one workflow on `pull_request`, on pushes to `main` and on `merge_group` if you use a merge queue.
+2. Build and test every project in one job with `./gradlew build :build-logic:check`, in the pinned JDK (see
+   [CI pipelines](/guides/ci-pipelines/), step 3), and run the contract checks of step 4 in the same job. Gradle
+   runs the projects in parallel and the cache skips what did not change.
+3. Call one reusable workflow per service for its image, scan and smoke test (step 10), through a matrix.
+4. End with a gate job that runs with `if: always()`, needs every other job and fails unless all of them passed.
+   Make it the only required check:
 
    ```yaml
    jobs:
-     services:
+     build:
+       # ./gradlew build :build-logic:check and the contract checks
+     images:
+       needs: [build]
        strategy:
          matrix:
            service: [orders, billing]
-       uses: ./.github/workflows/service.yml
+       uses: ./.github/workflows/service-image.yml
        with:
          service: ${{ matrix.service }}
      gate:
        if: always()
-       needs: [services]
+       needs: [build, images]
        runs-on: ubuntu-24.04
        steps:
-         - run: test "${{ needs.services.result }}" = success
+         - env:
+             RESULTS: ${{ join(needs.*.result, ' ') }}
+           run: for r in $RESULTS; do test "$r" = success; done
    ```
-4. Start by building every service on every change. Build only the affected services later, once you can compute
-   which services depend on a changed contract, library, catalog or convention. When unsure, build everything.
 
 ### When this is not for you
 
-- No branch protection with required checks: path filters work but you lose the safety that a skipped build
-  cannot be merged by mistake.
+- A build that takes too long even with a warm cache: split the tests that need containers into their own jobs
+  first. Tools that pick tests by change, such as Develocity's Predictive Test Selection, come after that.
 
 <a id="mono-ship"></a>
 
-## 8. How does each service ship on its own?
+## 10. How does each service ship on its own?
 
-**In short:** one image, one deployment folder and one release history per service.
+**In short:** one image, one deployment folder and one history per service, and the same digest moves from one
+environment to the next.
 
 ### What's going on
 
 Sharing a repository must not mean sharing a release. If orders can only ship when billing is ready, the
 repository has become a release train where the slowest service sets the pace for all.
 
-Each service gets its own image and its own manifests. You promote the exact image you tested. A service
-image is built from the repository root, because the service folder alone cannot see `build-logic`, the
-contracts or the libraries.
+Each service gets its own image and its own manifests, and its deployment changes only when its image does. A
+service image is built from the repository root, because the service folder alone cannot see `build-logic`, the
+contracts or the libraries. In CI it receives the jar the build job already tested, so what ships is what passed.
+
+Building every image on every change is simple and always right, and Gradle has already skipped the compile and
+test work. Skipping an image too is tempting, but only safe when you can prove it would come out the same. Gradle 9
+makes archives reproducible, yet a Boot jar can still carry a build time or a generated SBOM serial number, and an
+image also depends on its `Dockerfile`, the files it copies and its base image.
 
 ### Do this
 
-1. Give each service its own image repository.
-2. Build each image from the repository root with a service target, for example a build argument that names the
-   service.
-3. Promote the same image digest from one environment to the next. Record the source commit in its provenance.
+1. Give each service its own image repository, such as `ghcr.io/acme/orders`.
+2. Build each image from the repository root with the service's `Dockerfile`, and pass it the tested jar through a
+   named build context (`--build-context`).
+3. Tag images with the commit, promote the same digest from one environment to the next and record the commit in
+   its provenance (see [CI pipelines](/guides/ci-pipelines/), step 6).
 4. Keep each service's Kubernetes manifests in its own `deploy/` folder (see
-   [Kubernetes manifests](/guides/kubernetes-manifests/)).
-5. Version and tag releases per service, so the history of one service is readable on its own.
+   [Kubernetes manifests](/guides/kubernetes-manifests/)). Updating one service's image never touches another's.
+5. Build and smoke-test every service's image on every change until the image builds are the slow part. Then skip
+   a service only when a hash of everything its image is made from, stored as a label on the image of `main`, is
+   unchanged, and only after two clean builds of the same commit gave the same jar.
 
 ### When this is not for you
 
-- Libraries inside the repository: they are project dependencies, not releases. Publish a library only when
-  something outside the repository uses it.
+- Libraries and `api` projects: they are project dependencies, not releases. Publish one, with a version, only
+  when something outside the repository uses it.
 
 ## Put it all together
 
-Everything above lands in the repository layout, the settings file and one CI workflow.
+Everything above lands in the repository layout, the build and one CI workflow.
 
 ### The layout
 
-- `settings.gradle.kts`: `pluginManagement { includeBuild("build-logic") }` and a flat name for each service
-  (step 6).
-- `build-logic/`: a few convention plugins, with their own tests (step 4).
-- `gradle/libs.versions.toml`: the only version catalog (step 5).
-- `contracts/<service>/`: each contract with its owner, plus a generated client project (step 3).
-- `services/<service>/`: code, build file, Dockerfile and `deploy/` of one service (steps 2 and 8).
-- `libs/`: empty until code is deliberately reusable (step 2).
-- `docs/adr/`: the decision to share a repository and every exception to the rules (step 1).
+- `settings.gradle.kts`: `includeBuild("build-logic")`, the `service`, `api` and `library` functions and one line
+  per project (steps 2 and 5).
+- `gradle/libs.versions.toml`: the only version catalog; `gradle.properties` with the caches on (steps 6 and 7).
+- `build-logic/`: the `acme.java`, `acme.library`, `acme.api` and `acme.service` plugins with their TestKit tests
+  (steps 3 and 5).
+- `services/<service>/`: code, `api/` with its contract, `Dockerfile`, `deploy/`, `compose.yaml` and `AGENTS.md`
+  (steps 2, 4, 8 and 10).
+- `libs/<name>/`: empty until code is deliberately reusable (step 3).
+- `.github/CODEOWNERS`, a root `AGENTS.md`, a root `compose.yaml` and `docs/adr/` with the decision to share a
+  repository (steps 1, 2 and 8).
+
+**Check it:** add `implementation(project(":orders"))` to billing's build file and run `./gradlew help`. The build
+stops before any task runs and names the dependency.
 
 ### In CI
 
-- One orchestration workflow on every pull request, a reusable workflow per service and a gate job as the only
-  required check (step 7).
-- A compatibility check for every contract against its last release (step 3).
-- One image per service, built from the root and promoted by digest (step 8).
+- One workflow on every pull request, with a build job that builds and tests everything with the build cache of
+  `main`, runs the convention plugins' tests and checks every contract against the base of the change (steps 4, 5,
+  7 and 9).
+- One image job per service, built from the repository root with the tested jar (step 10).
+- A gate job that needs every other job, as the only required check (step 9).
+
+**Check it:** remove a field from `services/orders/api/openapi.yaml` in a pull request. The contract check fails
+and the gate reports the failure, so the pull request cannot merge.
 
 ## Checklist
 

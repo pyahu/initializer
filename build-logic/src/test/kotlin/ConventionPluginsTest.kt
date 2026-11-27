@@ -4,7 +4,7 @@ import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-/** Applies each convention plugin to an empty project and checks the tasks it promises (monorepo guide, step 4). */
+/** Applies each convention plugin to an empty project and checks the tasks it promises (monorepo guide, step 5). */
 class ConventionPluginsTest {
 
     private fun tasksOf(plugin: String): String {

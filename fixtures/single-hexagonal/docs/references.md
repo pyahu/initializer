@@ -62,6 +62,8 @@ Official documentation for this project's versions (baseline v0.1-b3), filtered 
 | -------- | ---------------- | ----------------- | ----------- |
 | [Reference root](https://docs.spring.io/spring-boot/4.2/index.html) | 4.2.0 (docs 4.2) | pinned to 4.2 | Reference root. |
 | [System requirements](https://docs.spring.io/spring-boot/4.2/system-requirements.html) | 4.2.0 (docs 4.2) | pinned to 4.2 | System requirements. |
+| [Docker Compose support (dev services)](https://docs.spring.io/spring-boot/4.2/reference/features/dev-services.html) | 4.2.0 (docs 4.2) | pinned to 4.2 | Docker Compose support (dev services). |
+| [Creating your own auto-configuration](https://docs.spring.io/spring-boot/4.2/reference/features/developing-auto-configuration.html) | 4.2.0 (docs 4.2) | pinned to 4.2 | Creating your own auto-configuration. |
 | [Release notes 4.2 (wiki)](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.2-Release-Notes) | 4.2.0 (docs 4.2) | pinned to 4.2 | Release notes 4.2 (wiki). |
 | [Migration guide 3.x to 4.0 (wiki)](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide) | 4.2.0 (docs 4.0) | pinned to 4.0 | Migration guide 3.x to 4.0 (wiki). |
 | [Release notes 4.0 (wiki)](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Release-Notes) | 4.2.0 (docs 4.0) | pinned to 4.0 | Release notes 4.0 (wiki). |
@@ -228,6 +230,10 @@ Official documentation for this project's versions (baseline v0.1-b3), filtered 
 | [Convention plugins](https://docs.gradle.org/9.9.2/userguide/implementing_gradle_plugins_convention.html) | 9.9.2 | pinned to 9.9.2 | Convention plugins. |
 | [Best practices for structuring builds](https://docs.gradle.org/9.9.2/userguide/best_practices_structuring_builds.html) | 9.9.2 | pinned to 9.9.2 | Best practices for structuring builds. |
 | [Composite builds (included build-logic)](https://docs.gradle.org/9.9.2/userguide/composite_builds.html) | 9.9.2 | pinned to 9.9.2 | Composite builds (included build-logic). |
+| [Build cache](https://docs.gradle.org/9.9.2/userguide/build_cache.html) | 9.9.2 | pinned to 9.9.2 | Build cache. |
+| [Isolated Projects](https://docs.gradle.org/9.9.2/userguide/isolated_projects.html) | 9.9.2 | pinned to 9.9.2 | Isolated Projects. |
+| [General best practices](https://docs.gradle.org/9.9.2/userguide/best_practices_general.html) | 9.9.2 | pinned to 9.9.2 | General best practices. |
+| [Docker Compose: include](https://docs.docker.com/compose/how-tos/multiple-compose-files/include/) | n/a | not version-pinned | Docker Compose: include. |
 | [The PMD plugin](https://docs.gradle.org/9.9.2/userguide/pmd_plugin.html) | 9.9.2 | pinned to 9.9.2 | Gradle's pmd plugin: toolVersion, rule sets and the pmdMain task. |
 
 ## Kubernetes and Kustomize
@@ -262,6 +268,8 @@ Official documentation for this project's versions (baseline v0.1-b3), filtered 
 | [Gradle plugin README at tag](https://github.com/OpenAPITools/openapi-generator/blob/v7.27.0/modules/openapi-generator-gradle-plugin/README.adoc) | 7.27.0 | pinned to 7.27.0 | Gradle plugin README at tag. |
 | [Plugins overview](https://openapi-generator.tech/docs/plugins/) | 7.27.0 (docs latest) | not version-pinned | Plugins overview. |
 | [Release v7.27.0](https://github.com/OpenAPITools/openapi-generator/releases/tag/v7.27.0) | 7.27.0 | pinned to 7.27.0 | Release v7.27.0. |
+| [buf: breaking change detection](https://buf.build/docs/breaking/) | n/a | not version-pinned | buf: breaking change detection. |
+| [oasdiff: OpenAPI breaking changes](https://github.com/oasdiff/oasdiff) | n/a | not version-pinned | oasdiff: OpenAPI breaking changes. |
 
 ## OIDC and OAuth 2.0
 
@@ -281,6 +289,9 @@ Official documentation for this project's versions (baseline v0.1-b3), filtered 
 | [Secure use reference (formerly "Security hardening for GitHub Actions"; the old URL redirects here)](https://docs.github.com/en/actions/reference/security/secure-use) | n/a | not version-pinned | Secure use reference (formerly "Security hardening for GitHub Actions"; the old URL redirects here). |
 | [Reuse workflows (how-to)](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows) | n/a | not version-pinned | Reuse workflows (how-to). |
 | [Reusing workflow configurations (reference)](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations) | n/a | not version-pinned | Reusing workflow configurations (reference). |
+| [Troubleshooting required status checks](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks) | n/a | not version-pinned | Troubleshooting required status checks. |
+| [About code owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners) | n/a | not version-pinned | About code owners. |
+| [AGENTS.md](https://agents.md/) | n/a | not version-pinned | AGENTS.md. |
 | [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect) | n/a | not version-pinned | OpenID Connect in Actions (keyless cosign). |
 | [Docker Build: named contexts](https://docs.docker.com/build/concepts/context/#named-contexts) | n/a | not version-pinned | Supply the tested artifact while retaining the Dockerfile's extraction, runtime and AOT stages. |
 

@@ -4,6 +4,29 @@
 # on `previous` to this release; `detect` exits 0 when the project still needs it.
 schema: initializer.pyahu.io/releases/v1
 releases:
+  - id: v0.1-b4
+    status: unreleased
+    previous: v0.1-b3
+    summary: >-
+      The monorepo guide is rewritten for a build that enforces its own boundaries. Generated projects get its new
+      checklist items; nothing else they contain changes.
+    guides:
+      - step: monorepo#mono-layout
+        text: A new step on the layout, with flat project names and an owner for every service folder.
+      - step: monorepo#mono-boundaries-rule
+        text: The service convention plugin fails the build when a service depends on another service's project.
+      - step: monorepo#mono-contracts
+        text: A contract lives in its service's `api` project, generated once and checked against `main` in CI.
+      - step: monorepo#mono-fast-build
+        text: A new step on the configuration cache and a build cache that only builds of `main` save.
+      - step: monorepo#mono-one-service
+        text: Each service has its own `compose.yaml` and `AGENTS.md`.
+      - step: monorepo#mono-ci
+        text: One workflow builds every project with the cache of `main` and runs the convention plugins' tests.
+    changes:
+      - >-
+        The monorepo items in `CHECKLIST.md` follow the rewritten guide, with four new ones (MONO-14 to MONO-17). A
+        project with one service can mark them not applicable.
   - id: v0.1-b3
     status: released
     date: "2026-11-27"

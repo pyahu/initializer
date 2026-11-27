@@ -533,6 +533,32 @@ entries:
     expect: "<meta name=\"version\" content=\"4.2."
     purpose: "System requirements."
     baselines: [ v0.1-b3 ]
+  - id: spring-boot-docker-compose-support
+    title: "Docker Compose support (dev services)"
+    component: "spring-boot"
+    docVersion: "4.2"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.2/reference/features/dev-services.html"
+    pinned: true
+    expect: "<meta name=\"version\" content=\"4.2."
+    purpose: "Docker Compose support (dev services)."
+    guides: [ "monorepo" ]
+    baselines: [ v0.1-b3 ]
+  - id: spring-boot-developing-auto-configuration
+    title: "Creating your own auto-configuration"
+    component: "spring-boot"
+    docVersion: "4.2"
+    match: "minor"
+    kind: "reference"
+    area: "spring-boot"
+    url: "https://docs.spring.io/spring-boot/4.2/reference/features/developing-auto-configuration.html"
+    pinned: true
+    expect: "<meta name=\"version\" content=\"4.2."
+    purpose: "Creating your own auto-configuration."
+    guides: [ "monorepo" ]
+    baselines: [ v0.1-b3 ]
   - id: spring-boot-release-notes-4-2
     title: "Release notes 4.2 (wiki)"
     component: "spring-boot"
@@ -1712,7 +1738,7 @@ entries:
     url: "https://docs.gradle.org/9.9.2/userguide/best_practices.html"
     pinned: true
     purpose: "Best practices."
-    guides: [ "build-quality" ]
+    guides: [ "build-quality", "monorepo" ]
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
     baselines: [ v0.1-b3 ]
   - id: build-version-catalogs
@@ -1788,6 +1814,7 @@ entries:
     url: "https://docs.gradle.org/9.9.2/userguide/configuration_cache.html"
     pinned: true
     purpose: "Configuration cache."
+    guides: [ "monorepo" ]
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
     baselines: [ v0.1-b3 ]
   - id: build-compatibility-matrix
@@ -1863,6 +1890,45 @@ entries:
     url: "https://docs.gradle.org/9.9.2/userguide/composite_builds.html"
     pinned: true
     purpose: "Composite builds (included build-logic)."
+    guides: [ "monorepo" ]
+    llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
+    baselines: [ v0.1-b3 ]
+  - id: build-build-cache
+    title: "Build cache"
+    component: "gradle"
+    docVersion: "9.9.2"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.9.2/userguide/build_cache.html"
+    pinned: true
+    purpose: "Build cache."
+    guides: [ "monorepo" ]
+    llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
+    baselines: [ v0.1-b3 ]
+  - id: build-isolated-projects
+    title: "Isolated Projects"
+    component: "gradle"
+    docVersion: "9.9.2"
+    match: "exact"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.gradle.org/9.9.2/userguide/isolated_projects.html"
+    pinned: true
+    purpose: "Isolated Projects."
+    guides: [ "monorepo" ]
+    llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
+    baselines: [ v0.1-b3 ]
+  - id: build-best-practices-general
+    title: "General best practices"
+    component: "gradle"
+    docVersion: "9.9.2"
+    match: "exact"
+    kind: "guide"
+    area: "build"
+    url: "https://docs.gradle.org/9.9.2/userguide/best_practices_general.html"
+    pinned: true
+    purpose: "General best practices."
     guides: [ "monorepo" ]
     llms: { txt: "https://docs.gradle.org/llms.txt", full: "https://docs.gradle.org/llms-full.txt" }
     baselines: [ v0.1-b3 ]
@@ -2272,6 +2338,80 @@ entries:
     purpose: "Reusing workflow configurations (reference)."
     guides: [ "monorepo" ]
     llms: { txt: "https://docs.github.com/llms.txt" }
+    baselines: [ v0.1-b3 ]
+  - id: ci-troubleshooting-required-status-checks
+    title: "Troubleshooting required status checks"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "ci"
+    url: "https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks"
+    pinned: false
+    purpose: "Troubleshooting required status checks."
+    guides: [ "monorepo" ]
+    llms: { txt: "https://docs.github.com/llms.txt" }
+    baselines: [ v0.1-b3 ]
+  - id: ci-about-code-owners
+    title: "About code owners"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "ci"
+    url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+    pinned: false
+    purpose: "About code owners."
+    guides: [ "monorepo" ]
+    llms: { txt: "https://docs.github.com/llms.txt" }
+    baselines: [ v0.1-b3 ]
+  - id: api-buf-breaking-change-detection
+    title: "buf: breaking change detection"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "api"
+    url: "https://buf.build/docs/breaking/"
+    pinned: false
+    purpose: "buf: breaking change detection."
+    guides: [ "monorepo" ]
+    baselines: [ v0.1-b3 ]
+  - id: api-oasdiff
+    title: "oasdiff: OpenAPI breaking changes"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "api"
+    url: "https://github.com/oasdiff/oasdiff"
+    pinned: false
+    purpose: "oasdiff: OpenAPI breaking changes."
+    guides: [ "monorepo" ]
+    baselines: [ v0.1-b3 ]
+  - id: build-docker-compose-include
+    title: "Docker Compose: include"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "build"
+    url: "https://docs.docker.com/compose/how-tos/multiple-compose-files/include/"
+    pinned: false
+    purpose: "Docker Compose: include."
+    guides: [ "monorepo" ]
+    baselines: [ v0.1-b3 ]
+  - id: ci-agents-md
+    title: "AGENTS.md"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "ci"
+    url: "https://agents.md/"
+    pinned: false
+    purpose: "AGENTS.md."
+    guides: [ "monorepo" ]
     baselines: [ v0.1-b3 ]
   - id: ci-openid-connect-in-actions
     title: "OpenID Connect in Actions (keyless cosign)"

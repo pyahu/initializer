@@ -2546,21 +2546,21 @@
               "card": "mono-when",
               "step": 1,
               "type": "deployment-prerequisite",
-              "text": "The decision to keep several services in one repository is recorded in an ADR with its reason and the owning team.",
+              "text": "The decision to keep several services in one repository is recorded in an ADR with its reason and the owning teams.",
               "appliesWhen": {}
             },
             {
               "id": "MONO-02",
               "card": "mono-boundaries-rule",
-              "step": 2,
+              "step": 3,
               "type": "verified-behaviour",
-              "text": "No service has a project dependency on another service; services share only contracts and generated client projects.",
+              "text": "The build fails when a service depends on another service's project; services use only api projects and libraries, and api projects and libraries use only libraries.",
               "appliesWhen": {}
             },
             {
               "id": "MONO-03",
               "card": "mono-boundaries-rule",
-              "step": 2,
+              "step": 3,
               "type": "generated-config",
               "text": "Each service owns its database and its migration history.",
               "appliesWhen": {}
@@ -2568,7 +2568,7 @@
             {
               "id": "MONO-04",
               "card": "mono-boundaries-rule",
-              "step": 2,
+              "step": 3,
               "type": "generated-config",
               "text": "libs/ holds only deliberately reusable code, never shared entities or service internals.",
               "appliesWhen": {}
@@ -2576,73 +2576,105 @@
             {
               "id": "MONO-05",
               "card": "mono-contracts",
-              "step": 3,
+              "step": 4,
               "type": "generated-config",
-              "text": "Each contract lives in contracts/<service>/ with the producing service as owner.",
+              "text": "Each contract lives in its service's api project (services/<service>/api), which generates the code once; consumers depend on that project.",
               "appliesWhen": {}
             },
             {
               "id": "MONO-06",
               "card": "mono-contracts",
-              "step": 3,
+              "step": 4,
               "type": "verified-behaviour",
-              "text": "CI compares every contract with its last released version and fails on a breaking change.",
+              "text": "CI compares every contract with the base of each change and fails on a breaking change; a deliberate removal is approved explicitly.",
               "appliesWhen": {}
             },
             {
               "id": "MONO-07",
               "card": "mono-build-logic",
-              "step": 4,
+              "step": 5,
               "type": "generated-config",
-              "text": "Build logic lives in an included build-logic build, added with includeBuild inside pluginManagement; no buildSrc, allprojects or subprojects.",
+              "text": "Build logic lives in an included build-logic build, added with includeBuild inside pluginManagement; no buildSrc, allprojects, subprojects or afterEvaluate.",
               "appliesWhen": {}
             },
             {
               "id": "MONO-08",
               "card": "mono-build-logic",
-              "step": 4,
+              "step": 5,
               "type": "verified-behaviour",
-              "text": "Convention plugins have their own Gradle TestKit tests.",
+              "text": "Convention plugins have their own Gradle TestKit tests, including one that a service depending on another service fails.",
               "appliesWhen": {}
             },
             {
               "id": "MONO-09",
               "card": "mono-catalog",
-              "step": 5,
+              "step": 6,
               "type": "generated-config",
-              "text": "One version catalog at gradle/libs.versions.toml, imported into build-logic.",
+              "text": "One version catalog at gradle/libs.versions.toml, imported into build-logic; no build file or convention plugin writes a version.",
               "appliesWhen": {}
             },
             {
               "id": "MONO-10",
-              "card": "mono-one-service",
-              "step": 6,
+              "card": "mono-layout",
+              "step": 2,
               "type": "generated-config",
-              "text": "Each service is included by a flat project name with an explicit projectDir; the root project has no sources.",
+              "text": "Each project is included by a flat name with an explicit projectDir; the root project has no sources.",
               "appliesWhen": {}
             },
             {
               "id": "MONO-11",
               "card": "mono-ci",
-              "step": 7,
+              "step": 9,
               "type": "deployment-prerequisite",
-              "text": "One orchestration workflow that always runs ends in a gate job that is the only required check.",
+              "text": "One workflow that always runs builds and tests every project and ends in a gate job that is the only required check.",
               "appliesWhen": {}
             },
             {
               "id": "MONO-12",
               "card": "mono-ship",
-              "step": 8,
+              "step": 10,
               "type": "generated-config",
-              "text": "Each service has its own image repository, built from the repository root and its own deploy/ folder.",
+              "text": "Each service has its own image repository, built from the repository root, and its own deploy/ folder.",
               "appliesWhen": {}
             },
             {
               "id": "MONO-13",
               "card": "mono-ship",
-              "step": 8,
+              "step": 10,
               "type": "operator-task",
-              "text": "The same image digest is promoted between environments; releases are tagged per service.",
+              "text": "The same image digest is promoted between environments.",
+              "appliesWhen": {}
+            },
+            {
+              "id": "MONO-14",
+              "card": "mono-layout",
+              "step": 2,
+              "type": "deployment-prerequisite",
+              "text": "CODEOWNERS names an owner for every service folder, build-logic and gradle/, and code owner review is required.",
+              "appliesWhen": {}
+            },
+            {
+              "id": "MONO-15",
+              "card": "mono-build-logic",
+              "step": 5,
+              "type": "generated-config",
+              "text": "Every project, libraries and api projects included, applies one convention plugin.",
+              "appliesWhen": {}
+            },
+            {
+              "id": "MONO-16",
+              "card": "mono-fast-build",
+              "step": 7,
+              "type": "generated-config",
+              "text": "The configuration cache, the build cache and parallel execution are on, and only builds of main save the CI build cache.",
+              "appliesWhen": {}
+            },
+            {
+              "id": "MONO-17",
+              "card": "mono-one-service",
+              "step": 8,
+              "type": "generated-config",
+              "text": "Each service has its own compose.yaml and AGENTS.md; a root compose.yaml includes every service's file.",
               "appliesWhen": {}
             }
           ]

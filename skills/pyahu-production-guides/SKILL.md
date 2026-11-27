@@ -308,16 +308,18 @@ Work fast locally, add services and put a frontend next to them.
 7. How do I get useful data into the local database?
 8. When is a local Kubernetes worth it?
 
-**[Monorepos with several services](guides/monorepo.md)** (Draft): Keep several Spring Boot services in one repository without turning them into one distributed monolith.
+**[Monorepos with several services](guides/monorepo.md)** (Draft): Keep several Spring Boot services in one Gradle build without turning them into one distributed monolith.
 
 1. Should our services share one repository?
-2. What may services share and what must stay apart?
-3. Where do the contracts between services live?
-4. How do I keep the build the same in every service?
-5. How do I keep versions in one place?
-6. How do I build and run just one service?
-7. How should CI decide what to build?
-8. How does each service ship on its own?
+2. Where does everything go?
+3. What may services share and what must stay apart?
+4. Where do the contracts between services live?
+5. How do I keep the build the same in every project?
+6. How do I keep versions in one place?
+7. How does the build stay fast as it grows?
+8. How do I work on just one service?
+9. How should CI decide what to build?
+10. How does each service ship on its own?
 
 **[Next.js next to the service](guides/nextjs.md)** (Draft): A production Next.js frontend in the same repository as the Spring Boot service, with its own image and Deployment.
 

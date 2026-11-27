@@ -52,17 +52,17 @@ rules:
   - path: Dockerfile
     mode: adapted
     to: services/start/Dockerfile
-    why: Built from the repository root, which holds build-logic, the baseline and the templates (monorepo guide, step 8).
+    why: Built from the repository root, which holds build-logic, the baseline and the templates (monorepo guide, step 10).
   - path: build.gradle.kts
     mode: adapted
     to: services/start/build.gradle.kts
-    why: The conventions live in build-logic (monorepo guide, step 4); this file adds the engine's own.
+    why: The conventions live in build-logic (monorepo guide, step 5); this file adds the engine's own.
   - path: settings.gradle.kts
     mode: adapted
     why: The monorepo's settings, with build-logic and every project.
   - path: gradle/libs.versions.toml
     mode: adapted
-    why: One catalog for the whole repository (monorepo guide, step 5).
+    why: One catalog for the whole repository (monorepo guide, step 6).
   - path: .gitignore
     mode: adapted
     why: The repository's, which also covers the guides site and the fixtures.

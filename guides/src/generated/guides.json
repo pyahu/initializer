@@ -5946,7 +5946,7 @@
       "title": "Monorepos with several services",
       "state": "draft",
       "baseline": "v0.1-b3",
-      "coverage": "None of its 8 steps is tested here yet",
+      "coverage": "None of its 10 steps is tested here yet",
       "draft": true,
       "sources": [],
       "questions": [
@@ -5958,80 +5958,102 @@
         },
         {
           "id": "MONO-Q2",
-          "text": "What may services share and what must stay apart?",
-          "answeredIn": "mono-boundaries-rule",
-          "cardTitle": "2. What may services share and what must stay apart?"
+          "text": "Where does everything go?",
+          "answeredIn": "mono-layout",
+          "cardTitle": "2. Where does everything go?"
         },
         {
           "id": "MONO-Q3",
-          "text": "Where do the contracts between services live?",
-          "answeredIn": "mono-contracts",
-          "cardTitle": "3. Where do the contracts between services live?"
+          "text": "What may services share and what must stay apart?",
+          "answeredIn": "mono-boundaries-rule",
+          "cardTitle": "3. What may services share and what must stay apart?"
         },
         {
           "id": "MONO-Q4",
-          "text": "How do I keep the build the same in every service?",
-          "answeredIn": "mono-build-logic",
-          "cardTitle": "4. How do I keep the build the same in every service?"
+          "text": "Where do the contracts between services live?",
+          "answeredIn": "mono-contracts",
+          "cardTitle": "4. Where do the contracts between services live?"
         },
         {
           "id": "MONO-Q5",
-          "text": "How do I keep versions in one place?",
-          "answeredIn": "mono-catalog",
-          "cardTitle": "5. How do I keep versions in one place?"
+          "text": "How do I keep the build the same in every project?",
+          "answeredIn": "mono-build-logic",
+          "cardTitle": "5. How do I keep the build the same in every project?"
         },
         {
           "id": "MONO-Q6",
-          "text": "How do I build and run just one service?",
-          "answeredIn": "mono-one-service",
-          "cardTitle": "6. How do I build and run just one service?"
+          "text": "How do I keep versions in one place?",
+          "answeredIn": "mono-catalog",
+          "cardTitle": "6. How do I keep versions in one place?"
         },
         {
           "id": "MONO-Q7",
-          "text": "How should CI decide what to build?",
-          "answeredIn": "mono-ci",
-          "cardTitle": "7. How should CI decide what to build?"
+          "text": "How does the build stay fast as it grows?",
+          "answeredIn": "mono-fast-build",
+          "cardTitle": "7. How does the build stay fast as it grows?"
         },
         {
           "id": "MONO-Q8",
+          "text": "How do I work on just one service?",
+          "answeredIn": "mono-one-service",
+          "cardTitle": "8. How do I work on just one service?"
+        },
+        {
+          "id": "MONO-Q9",
+          "text": "How should CI decide what to build?",
+          "answeredIn": "mono-ci",
+          "cardTitle": "9. How should CI decide what to build?"
+        },
+        {
+          "id": "MONO-Q10",
           "text": "How does each service ship on its own?",
           "answeredIn": "mono-ship",
-          "cardTitle": "8. How does each service ship on its own?"
+          "cardTitle": "10. How does each service ship on its own?"
         }
       ],
       "cards": {
         "mono-boundaries-rule": {
-          "title": "2. What may services share and what must stay apart?",
+          "title": "3. What may services share and what must stay apart?",
           "coverage": "not tested here",
           "records": []
         },
         "mono-build-logic": {
-          "title": "4. How do I keep the build the same in every service?",
+          "title": "5. How do I keep the build the same in every project?",
           "coverage": "not tested here",
           "records": []
         },
         "mono-catalog": {
-          "title": "5. How do I keep versions in one place?",
+          "title": "6. How do I keep versions in one place?",
           "coverage": "not tested here",
           "records": []
         },
         "mono-ci": {
-          "title": "7. How should CI decide what to build?",
+          "title": "9. How should CI decide what to build?",
           "coverage": "not tested here",
           "records": []
         },
         "mono-contracts": {
-          "title": "3. Where do the contracts between services live?",
+          "title": "4. Where do the contracts between services live?",
+          "coverage": "not tested here",
+          "records": []
+        },
+        "mono-fast-build": {
+          "title": "7. How does the build stay fast as it grows?",
+          "coverage": "not tested here",
+          "records": []
+        },
+        "mono-layout": {
+          "title": "2. Where does everything go?",
           "coverage": "not tested here",
           "records": []
         },
         "mono-one-service": {
-          "title": "6. How do I build and run just one service?",
+          "title": "8. How do I work on just one service?",
           "coverage": "not tested here",
           "records": []
         },
         "mono-ship": {
-          "title": "8. How does each service ship on its own?",
+          "title": "10. How does each service ship on its own?",
           "coverage": "not tested here",
           "records": []
         },
@@ -6047,32 +6069,40 @@
           "title": "1. Should our services share one repository?"
         },
         {
+          "id": "mono-layout",
+          "title": "2. Where does everything go?"
+        },
+        {
           "id": "mono-boundaries-rule",
-          "title": "2. What may services share and what must stay apart?"
+          "title": "3. What may services share and what must stay apart?"
         },
         {
           "id": "mono-contracts",
-          "title": "3. Where do the contracts between services live?"
+          "title": "4. Where do the contracts between services live?"
         },
         {
           "id": "mono-build-logic",
-          "title": "4. How do I keep the build the same in every service?"
+          "title": "5. How do I keep the build the same in every project?"
         },
         {
           "id": "mono-catalog",
-          "title": "5. How do I keep versions in one place?"
+          "title": "6. How do I keep versions in one place?"
+        },
+        {
+          "id": "mono-fast-build",
+          "title": "7. How does the build stay fast as it grows?"
         },
         {
           "id": "mono-one-service",
-          "title": "6. How do I build and run just one service?"
+          "title": "8. How do I work on just one service?"
         },
         {
           "id": "mono-ci",
-          "title": "7. How should CI decide what to build?"
+          "title": "9. How should CI decide what to build?"
         },
         {
           "id": "mono-ship",
-          "title": "8. How does each service ship on its own?"
+          "title": "10. How does each service ship on its own?"
         }
       ],
       "checklist": [
@@ -6080,14 +6110,14 @@
           "id": "MONO-01",
           "type": "deployment-prerequisite",
           "card": "mono-when",
-          "text": "The decision to keep several services in one repository is recorded in an ADR with its reason and the owning team.",
+          "text": "The decision to keep several services in one repository is recorded in an ADR with its reason and the owning teams.",
           "tags": []
         },
         {
           "id": "MONO-02",
           "type": "verified-behaviour",
           "card": "mono-boundaries-rule",
-          "text": "No service has a project dependency on another service; services share only contracts and generated client projects.",
+          "text": "The build fails when a service depends on another service's project; services use only api projects and libraries, and api projects and libraries use only libraries.",
           "tags": []
         },
         {
@@ -6108,67 +6138,125 @@
           "id": "MONO-05",
           "type": "generated-config",
           "card": "mono-contracts",
-          "text": "Each contract lives in contracts/<service>/ with the producing service as owner.",
+          "text": "Each contract lives in its service's api project (services/<service>/api), which generates the code once; consumers depend on that project.",
           "tags": []
         },
         {
           "id": "MONO-06",
           "type": "verified-behaviour",
           "card": "mono-contracts",
-          "text": "CI compares every contract with its last released version and fails on a breaking change.",
+          "text": "CI compares every contract with the base of each change and fails on a breaking change; a deliberate removal is approved explicitly.",
           "tags": []
         },
         {
           "id": "MONO-07",
           "type": "generated-config",
           "card": "mono-build-logic",
-          "text": "Build logic lives in an included build-logic build, added with includeBuild inside pluginManagement; no buildSrc, allprojects or subprojects.",
+          "text": "Build logic lives in an included build-logic build, added with includeBuild inside pluginManagement; no buildSrc, allprojects, subprojects or afterEvaluate.",
           "tags": []
         },
         {
           "id": "MONO-08",
           "type": "verified-behaviour",
           "card": "mono-build-logic",
-          "text": "Convention plugins have their own Gradle TestKit tests.",
+          "text": "Convention plugins have their own Gradle TestKit tests, including one that a service depending on another service fails.",
           "tags": []
         },
         {
           "id": "MONO-09",
           "type": "generated-config",
           "card": "mono-catalog",
-          "text": "One version catalog at gradle/libs.versions.toml, imported into build-logic.",
+          "text": "One version catalog at gradle/libs.versions.toml, imported into build-logic; no build file or convention plugin writes a version.",
           "tags": []
         },
         {
           "id": "MONO-10",
           "type": "generated-config",
-          "card": "mono-one-service",
-          "text": "Each service is included by a flat project name with an explicit projectDir; the root project has no sources.",
+          "card": "mono-layout",
+          "text": "Each project is included by a flat name with an explicit projectDir; the root project has no sources.",
           "tags": []
         },
         {
           "id": "MONO-11",
           "type": "deployment-prerequisite",
           "card": "mono-ci",
-          "text": "One orchestration workflow that always runs ends in a gate job that is the only required check.",
+          "text": "One workflow that always runs builds and tests every project and ends in a gate job that is the only required check.",
           "tags": []
         },
         {
           "id": "MONO-12",
           "type": "generated-config",
           "card": "mono-ship",
-          "text": "Each service has its own image repository, built from the repository root and its own deploy/ folder.",
+          "text": "Each service has its own image repository, built from the repository root, and its own deploy/ folder.",
           "tags": []
         },
         {
           "id": "MONO-13",
           "type": "operator-task",
           "card": "mono-ship",
-          "text": "The same image digest is promoted between environments; releases are tagged per service.",
+          "text": "The same image digest is promoted between environments.",
+          "tags": []
+        },
+        {
+          "id": "MONO-14",
+          "type": "deployment-prerequisite",
+          "card": "mono-layout",
+          "text": "CODEOWNERS names an owner for every service folder, build-logic and gradle/, and code owner review is required.",
+          "tags": []
+        },
+        {
+          "id": "MONO-15",
+          "type": "generated-config",
+          "card": "mono-build-logic",
+          "text": "Every project, libraries and api projects included, applies one convention plugin.",
+          "tags": []
+        },
+        {
+          "id": "MONO-16",
+          "type": "generated-config",
+          "card": "mono-fast-build",
+          "text": "The configuration cache, the build cache and parallel execution are on, and only builds of main save the CI build cache.",
+          "tags": []
+        },
+        {
+          "id": "MONO-17",
+          "type": "generated-config",
+          "card": "mono-one-service",
+          "text": "Each service has its own compose.yaml and AGENTS.md; a root compose.yaml includes every service's file.",
           "tags": []
         }
       ],
       "references": [
+        {
+          "id": "spring-boot-docker-compose-support",
+          "title": "Docker Compose support (dev services)",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/features/dev-services.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
+          "pinned": true,
+          "purpose": "Docker Compose support (dev services).",
+          "later": false
+        },
+        {
+          "id": "spring-boot-developing-auto-configuration",
+          "title": "Creating your own auto-configuration",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/features/developing-auto-configuration.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
+          "pinned": true,
+          "purpose": "Creating your own auto-configuration.",
+          "later": false
+        },
+        {
+          "id": "build-best-practices",
+          "title": "Best practices",
+          "url": "https://docs.gradle.org/9.9.2/userguide/best_practices.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
+          "pinned": true,
+          "purpose": "Best practices.",
+          "later": false
+        },
         {
           "id": "build-version-catalogs",
           "title": "Version catalogs",
@@ -6187,6 +6275,16 @@
           "docVersion": "9.9.2",
           "pinned": true,
           "purpose": "Sharing build logic (buildSrc).",
+          "later": false
+        },
+        {
+          "id": "build-configuration-cache",
+          "title": "Configuration cache",
+          "url": "https://docs.gradle.org/9.9.2/userguide/configuration_cache.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
+          "pinned": true,
+          "purpose": "Configuration cache.",
           "later": false
         },
         {
@@ -6220,6 +6318,36 @@
           "later": false
         },
         {
+          "id": "build-build-cache",
+          "title": "Build cache",
+          "url": "https://docs.gradle.org/9.9.2/userguide/build_cache.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
+          "pinned": true,
+          "purpose": "Build cache.",
+          "later": false
+        },
+        {
+          "id": "build-isolated-projects",
+          "title": "Isolated Projects",
+          "url": "https://docs.gradle.org/9.9.2/userguide/isolated_projects.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
+          "pinned": true,
+          "purpose": "Isolated Projects.",
+          "later": false
+        },
+        {
+          "id": "build-best-practices-general",
+          "title": "General best practices",
+          "url": "https://docs.gradle.org/9.9.2/userguide/best_practices_general.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
+          "pinned": true,
+          "purpose": "General best practices.",
+          "later": false
+        },
+        {
           "id": "ci-reuse-workflows",
           "title": "Reuse workflows (how-to)",
           "url": "https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows",
@@ -6237,6 +6365,66 @@
           "docVersion": "n/a",
           "pinned": false,
           "purpose": "Reusing workflow configurations (reference).",
+          "later": false
+        },
+        {
+          "id": "ci-troubleshooting-required-status-checks",
+          "title": "Troubleshooting required status checks",
+          "url": "https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks",
+          "version": "n/a",
+          "docVersion": "n/a",
+          "pinned": false,
+          "purpose": "Troubleshooting required status checks.",
+          "later": false
+        },
+        {
+          "id": "ci-about-code-owners",
+          "title": "About code owners",
+          "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+          "version": "n/a",
+          "docVersion": "n/a",
+          "pinned": false,
+          "purpose": "About code owners.",
+          "later": false
+        },
+        {
+          "id": "api-buf-breaking-change-detection",
+          "title": "buf: breaking change detection",
+          "url": "https://buf.build/docs/breaking/",
+          "version": "n/a",
+          "docVersion": "n/a",
+          "pinned": false,
+          "purpose": "buf: breaking change detection.",
+          "later": false
+        },
+        {
+          "id": "api-oasdiff",
+          "title": "oasdiff: OpenAPI breaking changes",
+          "url": "https://github.com/oasdiff/oasdiff",
+          "version": "n/a",
+          "docVersion": "n/a",
+          "pinned": false,
+          "purpose": "oasdiff: OpenAPI breaking changes.",
+          "later": false
+        },
+        {
+          "id": "build-docker-compose-include",
+          "title": "Docker Compose: include",
+          "url": "https://docs.docker.com/compose/how-tos/multiple-compose-files/include/",
+          "version": "n/a",
+          "docVersion": "n/a",
+          "pinned": false,
+          "purpose": "Docker Compose: include.",
+          "later": false
+        },
+        {
+          "id": "ci-agents-md",
+          "title": "AGENTS.md",
+          "url": "https://agents.md/",
+          "version": "n/a",
+          "docVersion": "n/a",
+          "pinned": false,
+          "purpose": "AGENTS.md.",
           "later": false
         }
       ]
