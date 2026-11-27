@@ -317,8 +317,8 @@ Each choice lands in the build, in `application.yaml` and in the persistence ada
 
 - [Testcontainers support](https://docs.spring.io/spring-boot/4.2/reference/testing/testcontainers.html) (4.2.0 (docs 4.2); docs 4.2)
 - [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.2/reference/data/sql.html) (4.2.0 (docs 4.2); docs 4.2)
-- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html) (2026.1.0 (docs 4.1); docs 4.1)
-- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html) (2026.1.0 (docs 4.1); docs 4.1)
+- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.2/index.html) (2026.1.0 (docs 4.2); docs 4.2)
+- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.2/jdbc.html) (2026.1.0 (docs 4.2); docs 4.2)
 - [Testcontainers for Java docs](https://java.testcontainers.org/) (2.0.5, not version-pinned)
 - [Jakarta Persistence 3.2 specification (HTML)](https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html) (not in the baseline yet)
 - [Hibernate ORM 7.4 user guide](https://docs.hibernate.org/orm/7.4/userguide/html_single/Hibernate_User_Guide.html) (not in the baseline yet)
@@ -326,8 +326,8 @@ Each choice lands in the build, in `application.yaml` and in the persistence ada
 - [Hibernate ORM 7.4 migration guide](https://docs.hibernate.org/orm/7.4/migration-guide/migration-guide.html) (not in the baseline yet)
 - [jOOQ manual](https://www.jooq.org/doc/3.21/manual/) (not in the baseline yet)
 - [jOOQ manual, single page](https://www.jooq.org/doc/3.21/manual-single-page/) (not in the baseline yet)
-- [Spring Data JPA: projections](https://docs.spring.io/spring-data/jpa/reference/4.1/repositories/projections.html) (not in the baseline yet): Interface and class based projections for reads that skip entity loading.
-- [Spring Data JPA: JPA query methods](https://docs.spring.io/spring-data/jpa/reference/4.1/jpa/query-methods.html) (not in the baseline yet): Query methods, @Query and fetch plans on repository methods.
+- [Spring Data JPA: projections](https://docs.spring.io/spring-data/jpa/reference/4.2/repositories/projections.html) (not in the baseline yet): Interface and class based projections for reads that skip entity loading.
+- [Spring Data JPA: JPA query methods](https://docs.spring.io/spring-data/jpa/reference/4.2/jpa/query-methods.html) (not in the baseline yet): Query methods, @Query and fetch plans on repository methods.
 - [jOOQ manual: running the code generator with Gradle](https://www.jooq.org/doc/3.21/manual/code-generation/codegen-gradle/) (not in the baseline yet): The official org.jooq.jooq-codegen-gradle plugin.
 - [jOOQ manual: LiquibaseDatabase (deprecated in 3.21.0)](https://www.jooq.org/doc/3.21/manual/code-generation/codegen-liquibase/) (not in the baseline yet): Why generation from Liquibase files is deprecated and Testcontainers is recommended instead.
 - [jOOQ blog: using Testcontainers to generate jOOQ code](https://blog.jooq.org/using-testcontainers-to-generate-jooq-code/) (not in the baseline yet): Migrating a container database and generating jOOQ classes from it.

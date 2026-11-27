@@ -342,5 +342,5 @@ This is where each step lands.
 - [RabbitMQ docs](https://www.rabbitmq.com/docs) (not in the baseline yet)
 - [RabbitMQ quorum queues](https://www.rabbitmq.com/docs/quorum-queues) (not in the baseline yet)
 - [RabbitMQ reliability guide](https://www.rabbitmq.com/docs/reliability) (not in the baseline yet)
-- [Spring AMQP reference](https://docs.spring.io/spring-amqp/reference/4.1/index.html) (not in the baseline yet)
-- [Spring Boot AMQP](https://docs.spring.io/spring-boot/4.1/reference/messaging/amqp.html) (not in the baseline yet)
+- [Spring AMQP reference](https://docs.spring.io/spring-amqp/reference/4.2/index.html) (not in the baseline yet)
+- [Spring Boot AMQP](https://docs.spring.io/spring-boot/4.2/reference/messaging/amqp.html) (not in the baseline yet)

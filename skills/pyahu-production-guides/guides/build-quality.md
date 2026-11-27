@@ -514,4 +514,4 @@ tasks.named("build") {
 - [PMD Java design rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_design.html) (7.29.0): The complexity and size rules: CyclomaticComplexity, CognitiveComplexity, NPathComplexity, GodClass, ExcessiveParameterList.
 - [PMD Java error prone rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_errorprone.html) (7.29.0): EmptyCatchBlock and AvoidCatchingGenericException.
 - [The PMD plugin](https://docs.gradle.org/9.9.2/userguide/pmd_plugin.html) (9.9.2): Gradle's pmd plugin: toolVersion, rule sets and the pmdMain task.
-- [NullAway configuration](https://github.com/uber/NullAway/wiki/Configuration) (0.14.4 (docs 0.14.2); docs 0.14.2, not version-pinned): NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check.
+- [NullAway configuration](https://github.com/uber/NullAway/wiki/Configuration) (0.14.4, not version-pinned): NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check.

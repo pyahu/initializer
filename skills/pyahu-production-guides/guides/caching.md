@@ -344,6 +344,6 @@ Caching touches three places: the build, the application and the Valkey server.
 ## References
 
 - [Valkey docs](https://valkey.io/docs/) (not in the baseline yet)
-- [Spring Data Redis reference](https://docs.spring.io/spring-data/redis/reference/4.1/index.html) (not in the baseline yet)
-- [Spring Boot NoSQL (Redis)](https://docs.spring.io/spring-boot/4.1/reference/data/nosql.html) (not in the baseline yet)
+- [Spring Data Redis reference](https://docs.spring.io/spring-data/redis/reference/4.2/index.html) (not in the baseline yet)
+- [Spring Boot NoSQL (Redis)](https://docs.spring.io/spring-boot/4.2/reference/data/nosql.html) (not in the baseline yet)
 - [Lettuce reference](https://redis.github.io/lettuce/) (not in the baseline yet)

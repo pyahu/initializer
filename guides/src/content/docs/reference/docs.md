@@ -111,10 +111,10 @@ Baseline **v0.1-b3**. The baseline version is what the examples use. The documen
 
 | Document | Baseline version | Documentation pin | Read it for |
 | -------- | ---------------- | ----------------- | ----------- |
-| [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html) | 2026.1.0 (docs 4.1) | pinned to 4.1 | Spring Data Relational reference. |
-| [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html) | 2026.1.0 (docs 4.1) | pinned to 4.1 | JDBC section. |
-| [JDBC getting started](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc/getting-started.html) | 2026.1.0 (docs 4.1) | pinned to 4.1 | JDBC getting started. |
-| [Persisting entities (aggregates)](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc/entity-persistence.html) | 2026.1.0 (docs 4.1) | pinned to 4.1 | Persisting entities (aggregates). |
+| [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.2/index.html) | 2026.1.0 (docs 4.2) | pinned to 4.2 | Spring Data Relational reference. |
+| [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.2/jdbc.html) | 2026.1.0 (docs 4.2) | pinned to 4.2 | JDBC section. |
+| [JDBC getting started](https://docs.spring.io/spring-data/relational/reference/4.2/jdbc/getting-started.html) | 2026.1.0 (docs 4.2) | pinned to 4.2 | JDBC getting started. |
+| [Persisting entities (aggregates)](https://docs.spring.io/spring-data/relational/reference/4.2/jdbc/entity-persistence.html) | 2026.1.0 (docs 4.2) | pinned to 4.2 | Persisting entities (aggregates). |
 | [Spring Data 2026.1 release notes](https://github.com/spring-projects/spring-data-commons/wiki/Spring-Data-2026.1-Release-Notes) | 2026.1.0 (docs 2026.1) | pinned to 2026.1 | Spring Data 2026.1 release notes. |
 
 ## Spring Security
@@ -194,9 +194,9 @@ Baseline **v0.1-b3**. The baseline version is what the examples use. The documen
 
 | Document | Baseline version | Documentation pin | Read it for |
 | -------- | ---------------- | ----------------- | ----------- |
-| [OTel Java docs](https://opentelemetry.io/docs/languages/java/) | 1.68.0 (docs 1.62.0) | not version-pinned | OTel Java docs. |
-| [OTel Java SDK management](https://opentelemetry.io/docs/languages/java/sdk/) | 1.68.0 (docs 1.62.0) | not version-pinned | OTel Java SDK management. |
-| [OTel Java SDK configuration](https://opentelemetry.io/docs/languages/java/configuration/) | 1.68.0 (docs 1.62.0) | not version-pinned | OTel Java SDK configuration. |
+| [OTel Java docs](https://opentelemetry.io/docs/languages/java/) | 1.68.0 | not version-pinned | OTel Java docs. |
+| [OTel Java SDK management](https://opentelemetry.io/docs/languages/java/sdk/) | 1.68.0 | not version-pinned | OTel Java SDK management. |
+| [OTel Java SDK configuration](https://opentelemetry.io/docs/languages/java/configuration/) | 1.68.0 | not version-pinned | OTel Java SDK configuration. |
 | [OTel Java release 1.68.0 (Boot-managed)](https://github.com/open-telemetry/opentelemetry-java/releases/tag/v1.68.0) | 1.68.0 | pinned to 1.68.0 | OTel Java release 1.68.0 (Boot-managed). |
 | [OTLP specification](https://opentelemetry.io/docs/specs/otlp/) | 1.11.1 | not version-pinned | OTLP specification. |
 | [OTLP specification at tag](https://github.com/open-telemetry/opentelemetry-proto/blob/v1.11.1/docs/specification.md) | 1.11.1 | pinned to 1.11.1 | OTLP specification at tag. |
@@ -336,7 +336,7 @@ Baseline **v0.1-b3**. The baseline version is what the examples use. The documen
 | [PMD Java design rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_design.html) | 7.29.0 | pinned to 7.29.0 | The complexity and size rules: CyclomaticComplexity, CognitiveComplexity, NPathComplexity, GodClass, ExcessiveParameterList. |
 | [PMD Java error prone rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_errorprone.html) | 7.29.0 | pinned to 7.29.0 | EmptyCatchBlock and AvoidCatchingGenericException. |
 | [PMD release 7.29.0](https://github.com/pmd/pmd/releases/tag/pmd_releases/7.29.0) | 7.29.0 | pinned to 7.29.0 | PMD release 7.29.0. |
-| [NullAway configuration](https://github.com/uber/NullAway/wiki/Configuration) | 0.14.4 (docs 0.14.2) | not version-pinned | NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check. |
+| [NullAway configuration](https://github.com/uber/NullAway/wiki/Configuration) | 0.14.4 | not version-pinned | NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check. |
 
 ## Messaging
 
@@ -468,8 +468,8 @@ Baseline **v0.1-b3**. The baseline version is what the examples use. The documen
 - [Testcontainers support](https://docs.spring.io/spring-boot/4.2/reference/testing/testcontainers.html)
 - [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.2/reference/data/sql.html)
 - [Database initialization (Liquibase)](https://docs.spring.io/spring-boot/4.2/how-to/data-initialization.html)
-- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html)
-- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html)
+- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.2/index.html)
+- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.2/jdbc.html)
 - [What is a changelog (Community)](https://docs.liquibase.com/community/user-guide-5-0-4/what-is-a-changelog)
 - [Install with Spring Boot (Community)](https://docs.liquibase.com/community/get-started-5-0-4/install-liquibase-with-spring-boot)
 - [Connect with PostgreSQL (Community)](https://docs.liquibase.com/community/integration-guide-5-0-4/connect-liquibase-with-postgresql)
@@ -499,8 +499,8 @@ Baseline **v0.1-b3**. The baseline version is what the examples use. The documen
 
 - [Testcontainers support](https://docs.spring.io/spring-boot/4.2/reference/testing/testcontainers.html)
 - [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.2/reference/data/sql.html)
-- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html)
-- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html)
+- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.2/index.html)
+- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.2/jdbc.html)
 - [Testcontainers for Java docs](https://java.testcontainers.org/)
 
 ### [The JVM in containers](/guides/jvm-in-containers/)

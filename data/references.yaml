@@ -566,7 +566,7 @@ entries:
     area: "spring-boot"
     url: "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Release-Notes"
     pinned: true
-    pinNote: "4.0 release notes, still relevant on 4.1."
+    pinNote: "4.0 release notes, still relevant on 4.2."
     purpose: "Release notes 4.0 (wiki)."
     baselines: [ v0.1-b3 ]
   - id: spring-boot-upgrading-spring-boot
@@ -946,14 +946,14 @@ entries:
   - id: spring-data-relational-reference
     title: "Spring Data Relational reference"
     component: "spring-data"
-    docVersion: "4.1"
+    docVersion: "4.2"
     match: "none"
     kind: "reference"
     area: "spring-data"
-    url: "https://docs.spring.io/spring-data/relational/reference/4.1/index.html"
+    url: "https://docs.spring.io/spring-data/relational/reference/4.2/index.html"
     pinned: true
-    pinNote: "Spring Data JDBC 4.1 ships in the Spring Data 2026.0 train."
-    expect: "<meta name=\"version\" content=\"4.1."
+    pinNote: "Spring Data JDBC 4.2 ships in the Spring Data 2026.1 train."
+    expect: "<meta name=\"version\" content=\"4.2."
     purpose: "Spring Data Relational reference."
     guides: [ "database", "jpa-and-jooq" ]
     appliesWhen: { persistence: [ "jdbc" ] }
@@ -961,14 +961,14 @@ entries:
   - id: spring-data-jdbc-section
     title: "JDBC section"
     component: "spring-data"
-    docVersion: "4.1"
+    docVersion: "4.2"
     match: "none"
     kind: "reference"
     area: "spring-data"
-    url: "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html"
+    url: "https://docs.spring.io/spring-data/relational/reference/4.2/jdbc.html"
     pinned: true
-    pinNote: "Spring Data JDBC 4.1 ships in the Spring Data 2026.0 train."
-    expect: "<meta name=\"version\" content=\"4.1."
+    pinNote: "Spring Data JDBC 4.2 ships in the Spring Data 2026.1 train."
+    expect: "<meta name=\"version\" content=\"4.2."
     purpose: "JDBC section."
     guides: [ "database", "jpa-and-jooq" ]
     appliesWhen: { persistence: [ "jdbc" ] }
@@ -976,28 +976,28 @@ entries:
   - id: spring-data-jdbc-getting-started
     title: "JDBC getting started"
     component: "spring-data"
-    docVersion: "4.1"
+    docVersion: "4.2"
     match: "none"
     kind: "guide"
     area: "spring-data"
-    url: "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc/getting-started.html"
+    url: "https://docs.spring.io/spring-data/relational/reference/4.2/jdbc/getting-started.html"
     pinned: true
-    pinNote: "Spring Data JDBC 4.1 ships in the Spring Data 2026.0 train."
-    expect: "<meta name=\"version\" content=\"4.1."
+    pinNote: "Spring Data JDBC 4.2 ships in the Spring Data 2026.1 train."
+    expect: "<meta name=\"version\" content=\"4.2."
     purpose: "JDBC getting started."
     appliesWhen: { persistence: [ "jdbc" ] }
     baselines: [ v0.1-b3 ]
   - id: spring-data-persisting-entities
     title: "Persisting entities (aggregates)"
     component: "spring-data"
-    docVersion: "4.1"
+    docVersion: "4.2"
     match: "none"
     kind: "reference"
     area: "spring-data"
-    url: "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc/entity-persistence.html"
+    url: "https://docs.spring.io/spring-data/relational/reference/4.2/jdbc/entity-persistence.html"
     pinned: true
-    pinNote: "Spring Data JDBC 4.1 ships in the Spring Data 2026.0 train."
-    expect: "<meta name=\"version\" content=\"4.1."
+    pinNote: "Spring Data JDBC 4.2 ships in the Spring Data 2026.1 train."
+    expect: "<meta name=\"version\" content=\"4.2."
     purpose: "Persisting entities (aggregates)."
     appliesWhen: { persistence: [ "jdbc" ] }
     baselines: [ v0.1-b3 ]
@@ -1251,7 +1251,7 @@ entries:
     area: "database"
     url: "https://docs.liquibase.com/community/user-guide-5-0-4/what-is-a-changelog"
     pinned: true
-    pinNote: "Community docs exist for 5.0.4 only; Boot 4.1.1 manages 5.0.3."
+    pinNote: "Community docs are published per release; Boot 4.2.0 manages 5.0.4."
     purpose: "What is a changelog (Community)."
     guides: [ "database" ]
     appliesWhen: { database: [ "postgres" ] }
@@ -1266,7 +1266,7 @@ entries:
     area: "database"
     url: "https://docs.liquibase.com/community/get-started-5-0-4/install-liquibase-with-spring-boot"
     pinned: true
-    pinNote: "Community docs exist for 5.0.4 only; Boot 4.1.1 manages 5.0.3."
+    pinNote: "Community docs are published per release; Boot 4.2.0 manages 5.0.4."
     purpose: "Install with Spring Boot (Community)."
     guides: [ "database" ]
     appliesWhen: { database: [ "postgres" ] }
@@ -1281,7 +1281,7 @@ entries:
     area: "database"
     url: "https://docs.liquibase.com/community/integration-guide-5-0-4/connect-liquibase-with-postgresql"
     pinned: true
-    pinNote: "Community docs exist for 5.0.4 only; Boot 4.1.1 manages 5.0.3."
+    pinNote: "Community docs are published per release; Boot 4.2.0 manages 5.0.4."
     purpose: "Connect with PostgreSQL (Community)."
     guides: [ "database" ]
     appliesWhen: { database: [ "postgres" ] }
@@ -1296,7 +1296,7 @@ entries:
     area: "database"
     url: "https://docs.liquibase.com/community/release-notes/liquibase-community-5-0-4-release-notes"
     pinned: true
-    pinNote: "Community docs exist for 5.0.4 only; Boot 4.1.1 manages 5.0.3."
+    pinNote: "Community docs are published per release; Boot 4.2.0 manages 5.0.4."
     purpose: "Community 5.0.4 release notes."
     appliesWhen: { database: [ "postgres" ] }
     llms: { txt: "https://docs.liquibase.com/llms.txt" }
@@ -1428,13 +1428,13 @@ entries:
   - id: observability-otel-java-docs
     title: "OTel Java docs"
     component: "opentelemetry-java"
-    docVersion: "1.62.0"
+    docVersion: "1.68.0"
     match: "none"
     kind: "reference"
     area: "observability"
     url: "https://opentelemetry.io/docs/languages/java/"
     pinned: false
-    pinNote: "opentelemetry.io tracks the latest SDK (1.67.0 on 2026-10-17); Boot 4.1.1 manages 1.62.0."
+    pinNote: "opentelemetry.io tracks the latest SDK (1.68.0 on 2026-11-27); Boot 4.2.0 manages 1.68.0."
     purpose: "OTel Java docs."
     guides: [ "observability" ]
     llms: { txt: "https://opentelemetry.io/llms.txt" }
@@ -1442,13 +1442,13 @@ entries:
   - id: observability-otel-java-sdk-management
     title: "OTel Java SDK management"
     component: "opentelemetry-java"
-    docVersion: "1.62.0"
+    docVersion: "1.68.0"
     match: "none"
     kind: "reference"
     area: "observability"
     url: "https://opentelemetry.io/docs/languages/java/sdk/"
     pinned: false
-    pinNote: "opentelemetry.io tracks the latest SDK (1.67.0 on 2026-10-17); Boot 4.1.1 manages 1.62.0."
+    pinNote: "opentelemetry.io tracks the latest SDK (1.68.0 on 2026-11-27); Boot 4.2.0 manages 1.68.0."
     purpose: "OTel Java SDK management."
     guides: [ "observability" ]
     llms: { txt: "https://opentelemetry.io/llms.txt" }
@@ -1456,13 +1456,13 @@ entries:
   - id: observability-otel-java-sdk-configuration
     title: "OTel Java SDK configuration"
     component: "opentelemetry-java"
-    docVersion: "1.62.0"
+    docVersion: "1.68.0"
     match: "none"
     kind: "reference"
     area: "observability"
     url: "https://opentelemetry.io/docs/languages/java/configuration/"
     pinned: false
-    pinNote: "opentelemetry.io tracks the latest SDK (1.67.0 on 2026-10-17); Boot 4.1.1 manages 1.62.0."
+    pinNote: "opentelemetry.io tracks the latest SDK (1.68.0 on 2026-11-27); Boot 4.2.0 manages 1.68.0."
     purpose: "OTel Java SDK configuration."
     guides: [ "observability" ]
     llms: { txt: "https://opentelemetry.io/llms.txt" }
@@ -2766,16 +2766,16 @@ entries:
     purpose: "Spring gRPC getting started."
     guides: [ "grpc" ]
     baselines: []
-  - id: api-spring-boot-4-1-grpc
-    title: "Spring Boot 4.1 gRPC (first-party in Boot 4.1)"
+  - id: api-spring-boot-4-2-grpc
+    title: "Spring Boot 4.2 gRPC (first-party since Boot 4.1)"
     component: null
-    docVersion: "4.1.1"
+    docVersion: "4.2.0"
     match: "none"
     kind: "reference"
     area: "api"
-    url: "https://docs.spring.io/spring-boot/4.1/reference/io/grpc.html"
+    url: "https://docs.spring.io/spring-boot/4.2/reference/io/grpc.html"
     pinned: true
-    purpose: "Spring Boot 4.1 gRPC (first-party in Boot 4.1)."
+    purpose: "Spring Boot 4.2 gRPC (first-party since Boot 4.1)."
     guides: [ "grpc" ]
     baselines: []
   - id: api-grpc-java-docs
@@ -2865,11 +2865,11 @@ entries:
   - id: messaging-spring-for-apache-kafka-reference
     title: "Spring for Apache Kafka reference"
     component: null
-    docVersion: "4.1.1"
+    docVersion: "4.2.0"
     match: "none"
     kind: "reference"
     area: "messaging"
-    url: "https://docs.spring.io/spring-kafka/reference/4.1/index.html"
+    url: "https://docs.spring.io/spring-kafka/reference/4.2/index.html"
     pinned: true
     purpose: "Spring for Apache Kafka reference."
     guides: [ "kafka" ]
@@ -2877,11 +2877,11 @@ entries:
   - id: messaging-spring-boot-kafka-support
     title: "Spring Boot Kafka support"
     component: null
-    docVersion: "4.1.1"
+    docVersion: "4.2.0"
     match: "none"
     kind: "reference"
     area: "messaging"
-    url: "https://docs.spring.io/spring-boot/4.1/reference/messaging/kafka.html"
+    url: "https://docs.spring.io/spring-boot/4.2/reference/messaging/kafka.html"
     pinned: true
     purpose: "Spring Boot Kafka support."
     guides: [ "kafka" ]
@@ -3002,11 +3002,11 @@ entries:
   - id: messaging-spring-amqp-reference
     title: "Spring AMQP reference"
     component: null
-    docVersion: "4.1.1"
+    docVersion: "4.2.0"
     match: "none"
     kind: "reference"
     area: "messaging"
-    url: "https://docs.spring.io/spring-amqp/reference/4.1/index.html"
+    url: "https://docs.spring.io/spring-amqp/reference/4.2/index.html"
     pinned: true
     purpose: "Spring AMQP reference."
     guides: [ "rabbitmq" ]
@@ -3014,11 +3014,11 @@ entries:
   - id: messaging-spring-boot-amqp
     title: "Spring Boot AMQP"
     component: null
-    docVersion: "4.1.1"
+    docVersion: "4.2.0"
     match: "none"
     kind: "reference"
     area: "messaging"
-    url: "https://docs.spring.io/spring-boot/4.1/reference/messaging/amqp.html"
+    url: "https://docs.spring.io/spring-boot/4.2/reference/messaging/amqp.html"
     pinned: true
     purpose: "Spring Boot AMQP."
     guides: [ "rabbitmq" ]
@@ -3038,11 +3038,11 @@ entries:
   - id: cache-spring-data-redis-reference
     title: "Spring Data Redis reference"
     component: null
-    docVersion: "4.1.1"
+    docVersion: "4.2.0"
     match: "none"
     kind: "reference"
     area: "cache"
-    url: "https://docs.spring.io/spring-data/redis/reference/4.1/index.html"
+    url: "https://docs.spring.io/spring-data/redis/reference/4.2/index.html"
     pinned: true
     purpose: "Spring Data Redis reference."
     guides: [ "caching" ]
@@ -3050,11 +3050,11 @@ entries:
   - id: cache-spring-boot-nosql
     title: "Spring Boot NoSQL (Redis)"
     component: null
-    docVersion: "4.1.1"
+    docVersion: "4.2.0"
     match: "none"
     kind: "reference"
     area: "cache"
-    url: "https://docs.spring.io/spring-boot/4.1/reference/data/nosql.html"
+    url: "https://docs.spring.io/spring-boot/4.2/reference/data/nosql.html"
     pinned: true
     purpose: "Spring Boot NoSQL (Redis)."
     guides: [ "caching" ]
@@ -3178,26 +3178,26 @@ entries:
   - id: database-spring-data-jpa-projections
     title: "Spring Data JPA: projections"
     component: "spring-data"
-    docVersion: "4.1"
+    docVersion: "4.2"
     match: "none"
     kind: "reference"
     area: "spring-data"
-    url: "https://docs.spring.io/spring-data/jpa/reference/4.1/repositories/projections.html"
+    url: "https://docs.spring.io/spring-data/jpa/reference/4.2/repositories/projections.html"
     pinned: true
-    pinNote: "Spring Data JPA 4.1.1 is the module version in the 2026.0.1 release train, so the docs follow the module version, not the train."
+    pinNote: "Spring Data JPA 4.2.0 is the module version in the 2026.1.0 release train, so the docs follow the module version, not the train."
     purpose: "Interface and class based projections for reads that skip entity loading."
     guides: [ "jpa-and-jooq" ]
     baselines: []
   - id: database-spring-data-jpa-query-methods
     title: "Spring Data JPA: JPA query methods"
     component: "spring-data"
-    docVersion: "4.1"
+    docVersion: "4.2"
     match: "none"
     kind: "reference"
     area: "spring-data"
-    url: "https://docs.spring.io/spring-data/jpa/reference/4.1/jpa/query-methods.html"
+    url: "https://docs.spring.io/spring-data/jpa/reference/4.2/jpa/query-methods.html"
     pinned: true
-    pinNote: "Spring Data JPA 4.1.1 is the module version in the 2026.0.1 release train."
+    pinNote: "Spring Data JPA 4.2.0 is the module version in the 2026.1.0 release train."
     purpose: "Query methods, @Query and fetch plans on repository methods."
     guides: [ "jpa-and-jooq" ]
     baselines: []
@@ -3241,11 +3241,11 @@ entries:
   - id: messaging-spring-kafka-error-handling
     title: "Spring for Apache Kafka: handling exceptions"
     component: null
-    docVersion: "4.1"
+    docVersion: "4.2"
     match: "none"
     kind: "reference"
     area: "messaging"
-    url: "https://docs.spring.io/spring-kafka/reference/4.1/kafka/annotation-error-handling.html"
+    url: "https://docs.spring.io/spring-kafka/reference/4.2/kafka/annotation-error-handling.html"
     pinned: true
     purpose: "DefaultErrorHandler defaults, fatal exceptions, DeadLetterPublishingRecoverer and the <topic>-dlt naming."
     guides: [ "kafka" ]
@@ -3253,11 +3253,11 @@ entries:
   - id: messaging-spring-kafka-listener-container
     title: "Spring for Apache Kafka: message listener containers"
     component: null
-    docVersion: "4.1"
+    docVersion: "4.2"
     match: "none"
     kind: "reference"
     area: "messaging"
-    url: "https://docs.spring.io/spring-kafka/reference/4.1/kafka/receiving-messages/message-listener-container.html"
+    url: "https://docs.spring.io/spring-kafka/reference/4.2/kafka/receiving-messages/message-listener-container.html"
     pinned: true
     purpose: "Committing offsets: auto commit off by default and the default AckMode BATCH."
     guides: [ "kafka" ]
@@ -3265,11 +3265,11 @@ entries:
   - id: messaging-spring-kafka-retry-topics
     title: "Spring for Apache Kafka: non-blocking retries"
     component: null
-    docVersion: "4.1"
+    docVersion: "4.2"
     match: "none"
     kind: "reference"
     area: "messaging"
-    url: "https://docs.spring.io/spring-kafka/reference/4.1/retrytopic.html"
+    url: "https://docs.spring.io/spring-kafka/reference/4.2/retrytopic.html"
     pinned: true
     purpose: "Retry topics that wait without blocking the partition."
     guides: [ "kafka" ]
@@ -3343,7 +3343,7 @@ entries:
     area: "database"
     url: "https://docs.liquibase.com/community/release-notes/liquibase-community-5-0-4-release-notes"
     pinned: true
-    pinNote: "Exact patch reference for baseline v0.1-b2."
+    pinNote: "Exact patch reference for baseline v0.1-b3."
     purpose: "Community 5.0.4 release notes."
     guides: [ "database" ]
     appliesWhen: { database: [ "postgres" ] }
@@ -3358,7 +3358,7 @@ entries:
     area: "database"
     url: "https://github.com/liquibase/liquibase/releases/tag/v5.0.4"
     pinned: true
-    pinNote: "Exact patch reference for baseline v0.1-b2."
+    pinNote: "Exact patch reference for baseline v0.1-b3."
     purpose: "GitHub release v5.0.4."
     appliesWhen: { database: [ "postgres" ] }
     baselines: [ v0.1-b3 ]
@@ -3620,7 +3620,7 @@ entries:
   - id: static-analysis-nullaway-configuration
     title: "NullAway configuration"
     component: "nullaway"
-    docVersion: "0.14.2"
+    docVersion: "0.14.4"
     match: "none"
     kind: "reference"
     area: "static-analysis"

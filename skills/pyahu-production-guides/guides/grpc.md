@@ -344,7 +344,7 @@ This is where each step lands.
 - [Configure liveness/readiness/startup probes (task)](https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) (1.36.7 (docs 1.36); docs 1.36)
 - [Spring gRPC reference](https://docs.spring.io/spring-grpc/reference/1.1/index.html) (not in the baseline yet)
 - [Spring gRPC getting started](https://docs.spring.io/spring-grpc/reference/1.1/getting-started.html) (not in the baseline yet)
-- [Spring Boot 4.1 gRPC (first-party in Boot 4.1)](https://docs.spring.io/spring-boot/4.1/reference/io/grpc.html) (not in the baseline yet)
+- [Spring Boot 4.2 gRPC (first-party since Boot 4.1)](https://docs.spring.io/spring-boot/4.2/reference/io/grpc.html) (not in the baseline yet)
 - [gRPC Java docs](https://grpc.io/docs/languages/java/) (not in the baseline yet)
 - [gRPC Java basics tutorial](https://grpc.io/docs/languages/java/basics/) (not in the baseline yet)
 - [grpc-api javadoc 1.83.1](https://javadoc.io/doc/io.grpc/grpc-api/1.83.1/index.html) (not in the baseline yet)

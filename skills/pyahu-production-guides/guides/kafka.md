@@ -394,15 +394,15 @@ The outbox, the registry and the consumer rules land in four places.
 - [Karapace subject compatibility API](https://www.karapace.io/docs/api-examples/) (unversioned, not version-pinned): Set and read compatibility policy per subject instead of relying on the registry default.
 - [Apache Kafka 4.2 docs](https://kafka.apache.org/42/) (not in the baseline yet)
 - [Kafka 4.2 producer configs](https://kafka.apache.org/42/configuration/producer-configs/) (not in the baseline yet)
-- [Spring for Apache Kafka reference](https://docs.spring.io/spring-kafka/reference/4.1/index.html) (not in the baseline yet)
-- [Spring Boot Kafka support](https://docs.spring.io/spring-boot/4.1/reference/messaging/kafka.html) (not in the baseline yet)
+- [Spring for Apache Kafka reference](https://docs.spring.io/spring-kafka/reference/4.2/index.html) (not in the baseline yet)
+- [Spring Boot Kafka support](https://docs.spring.io/spring-boot/4.2/reference/messaging/kafka.html) (not in the baseline yet)
 - [Apache Avro specification](https://avro.apache.org/docs/1.12.0/specification/) (not in the baseline yet)
 - [Karapace docs](https://www.karapace.io/docs) (not in the baseline yet)
 - [Debezium Outbox Event Router](https://debezium.io/documentation/reference/3.7/transformations/outbox-event-router.html) (not in the baseline yet)
 - [Debezium PostgreSQL connector](https://debezium.io/documentation/reference/3.7/connectors/postgresql.html) (not in the baseline yet)
-- [Spring for Apache Kafka: handling exceptions](https://docs.spring.io/spring-kafka/reference/4.1/kafka/annotation-error-handling.html) (not in the baseline yet): DefaultErrorHandler defaults, fatal exceptions, DeadLetterPublishingRecoverer and the <topic>-dlt naming.
-- [Spring for Apache Kafka: message listener containers](https://docs.spring.io/spring-kafka/reference/4.1/kafka/receiving-messages/message-listener-container.html) (not in the baseline yet): Committing offsets: auto commit off by default and the default AckMode BATCH.
-- [Spring for Apache Kafka: non-blocking retries](https://docs.spring.io/spring-kafka/reference/4.1/retrytopic.html) (not in the baseline yet): Retry topics that wait without blocking the partition.
+- [Spring for Apache Kafka: handling exceptions](https://docs.spring.io/spring-kafka/reference/4.2/kafka/annotation-error-handling.html) (not in the baseline yet): DefaultErrorHandler defaults, fatal exceptions, DeadLetterPublishingRecoverer and the <topic>-dlt naming.
+- [Spring for Apache Kafka: message listener containers](https://docs.spring.io/spring-kafka/reference/4.2/kafka/receiving-messages/message-listener-container.html) (not in the baseline yet): Committing offsets: auto commit off by default and the default AckMode BATCH.
+- [Spring for Apache Kafka: non-blocking retries](https://docs.spring.io/spring-kafka/reference/4.2/retrytopic.html) (not in the baseline yet): Retry topics that wait without blocking the partition.
 - [Kafka 4.2 basic operations](https://kafka.apache.org/42/operations/basic-kafka-operations/) (not in the baseline yet): kafka-consumer-groups.sh and resetting offsets to a point in time.
 - [Kafka 4.2 monitoring](https://kafka.apache.org/42/operations/monitoring/) (not in the baseline yet): Consumer metrics such as records-lag-max.
 - [PostgreSQL 18 replication settings](https://www.postgresql.org/docs/18/runtime-config-replication.html) (not in the baseline yet): max_slot_wal_keep_size and other limits on replication slots.

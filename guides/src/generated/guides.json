@@ -1093,8 +1093,8 @@
           "id": "static-analysis-nullaway-configuration",
           "title": "NullAway configuration",
           "url": "https://github.com/uber/NullAway/wiki/Configuration",
-          "version": "0.14.4 (docs 0.14.2)",
-          "docVersion": "0.14.2",
+          "version": "0.14.4",
+          "docVersion": "0.14.4",
           "pinned": false,
           "purpose": "NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check.",
           "later": false
@@ -1341,7 +1341,7 @@
         {
           "id": "cache-spring-data-redis-reference",
           "title": "Spring Data Redis reference",
-          "url": "https://docs.spring.io/spring-data/redis/reference/4.1/index.html",
+          "url": "https://docs.spring.io/spring-data/redis/reference/4.2/index.html",
           "version": "",
           "docVersion": "",
           "pinned": false,
@@ -1351,7 +1351,7 @@
         {
           "id": "cache-spring-boot-nosql",
           "title": "Spring Boot NoSQL (Redis)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/data/nosql.html",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/data/nosql.html",
           "version": "",
           "docVersion": "",
           "pinned": false,
@@ -2878,9 +2878,9 @@
         {
           "id": "spring-data-relational-reference",
           "title": "Spring Data Relational reference",
-          "url": "https://docs.spring.io/spring-data/relational/reference/4.1/index.html",
-          "version": "2026.1.0 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-data/relational/reference/4.2/index.html",
+          "version": "2026.1.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Spring Data Relational reference.",
           "later": false
@@ -2888,9 +2888,9 @@
         {
           "id": "spring-data-jdbc-section",
           "title": "JDBC section",
-          "url": "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html",
-          "version": "2026.1.0 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-data/relational/reference/4.2/jdbc.html",
+          "version": "2026.1.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "JDBC section.",
           "later": false
@@ -3270,13 +3270,13 @@
           "later": true
         },
         {
-          "id": "api-spring-boot-4-1-grpc",
-          "title": "Spring Boot 4.1 gRPC (first-party in Boot 4.1)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/io/grpc.html",
+          "id": "api-spring-boot-4-2-grpc",
+          "title": "Spring Boot 4.2 gRPC (first-party since Boot 4.1)",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/io/grpc.html",
           "version": "",
           "docVersion": "",
           "pinned": false,
-          "purpose": "Spring Boot 4.1 gRPC (first-party in Boot 4.1).",
+          "purpose": "Spring Boot 4.2 gRPC (first-party since Boot 4.1).",
           "later": true
         },
         {
@@ -3894,9 +3894,9 @@
         {
           "id": "spring-data-relational-reference",
           "title": "Spring Data Relational reference",
-          "url": "https://docs.spring.io/spring-data/relational/reference/4.1/index.html",
-          "version": "2026.1.0 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-data/relational/reference/4.2/index.html",
+          "version": "2026.1.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Spring Data Relational reference.",
           "later": false
@@ -3904,9 +3904,9 @@
         {
           "id": "spring-data-jdbc-section",
           "title": "JDBC section",
-          "url": "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html",
-          "version": "2026.1.0 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-data/relational/reference/4.2/jdbc.html",
+          "version": "2026.1.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "JDBC section.",
           "later": false
@@ -3984,7 +3984,7 @@
         {
           "id": "database-spring-data-jpa-projections",
           "title": "Spring Data JPA: projections",
-          "url": "https://docs.spring.io/spring-data/jpa/reference/4.1/repositories/projections.html",
+          "url": "https://docs.spring.io/spring-data/jpa/reference/4.2/repositories/projections.html",
           "version": "",
           "docVersion": "",
           "pinned": false,
@@ -3994,7 +3994,7 @@
         {
           "id": "database-spring-data-jpa-query-methods",
           "title": "Spring Data JPA: JPA query methods",
-          "url": "https://docs.spring.io/spring-data/jpa/reference/4.1/jpa/query-methods.html",
+          "url": "https://docs.spring.io/spring-data/jpa/reference/4.2/jpa/query-methods.html",
           "version": "",
           "docVersion": "",
           "pinned": false,
@@ -4885,7 +4885,7 @@
         {
           "id": "messaging-spring-for-apache-kafka-reference",
           "title": "Spring for Apache Kafka reference",
-          "url": "https://docs.spring.io/spring-kafka/reference/4.1/index.html",
+          "url": "https://docs.spring.io/spring-kafka/reference/4.2/index.html",
           "version": "",
           "docVersion": "",
           "pinned": false,
@@ -4895,7 +4895,7 @@
         {
           "id": "messaging-spring-boot-kafka-support",
           "title": "Spring Boot Kafka support",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/messaging/kafka.html",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/messaging/kafka.html",
           "version": "",
           "docVersion": "",
           "pinned": false,
@@ -4945,7 +4945,7 @@
         {
           "id": "messaging-spring-kafka-error-handling",
           "title": "Spring for Apache Kafka: handling exceptions",
-          "url": "https://docs.spring.io/spring-kafka/reference/4.1/kafka/annotation-error-handling.html",
+          "url": "https://docs.spring.io/spring-kafka/reference/4.2/kafka/annotation-error-handling.html",
           "version": "",
           "docVersion": "",
           "pinned": false,
@@ -4955,7 +4955,7 @@
         {
           "id": "messaging-spring-kafka-listener-container",
           "title": "Spring for Apache Kafka: message listener containers",
-          "url": "https://docs.spring.io/spring-kafka/reference/4.1/kafka/receiving-messages/message-listener-container.html",
+          "url": "https://docs.spring.io/spring-kafka/reference/4.2/kafka/receiving-messages/message-listener-container.html",
           "version": "",
           "docVersion": "",
           "pinned": false,
@@ -4965,7 +4965,7 @@
         {
           "id": "messaging-spring-kafka-retry-topics",
           "title": "Spring for Apache Kafka: non-blocking retries",
-          "url": "https://docs.spring.io/spring-kafka/reference/4.1/retrytopic.html",
+          "url": "https://docs.spring.io/spring-kafka/reference/4.2/retrytopic.html",
           "version": "",
           "docVersion": "",
           "pinned": false,
@@ -7033,8 +7033,8 @@
           "id": "observability-otel-java-docs",
           "title": "OTel Java docs",
           "url": "https://opentelemetry.io/docs/languages/java/",
-          "version": "1.68.0 (docs 1.62.0)",
-          "docVersion": "1.62.0",
+          "version": "1.68.0",
+          "docVersion": "1.68.0",
           "pinned": false,
           "purpose": "OTel Java docs.",
           "later": false
@@ -7043,8 +7043,8 @@
           "id": "observability-otel-java-sdk-management",
           "title": "OTel Java SDK management",
           "url": "https://opentelemetry.io/docs/languages/java/sdk/",
-          "version": "1.68.0 (docs 1.62.0)",
-          "docVersion": "1.62.0",
+          "version": "1.68.0",
+          "docVersion": "1.68.0",
           "pinned": false,
           "purpose": "OTel Java SDK management.",
           "later": false
@@ -7053,8 +7053,8 @@
           "id": "observability-otel-java-sdk-configuration",
           "title": "OTel Java SDK configuration",
           "url": "https://opentelemetry.io/docs/languages/java/configuration/",
-          "version": "1.68.0 (docs 1.62.0)",
-          "docVersion": "1.62.0",
+          "version": "1.68.0",
+          "docVersion": "1.68.0",
           "pinned": false,
           "purpose": "OTel Java SDK configuration.",
           "later": false
@@ -7507,7 +7507,7 @@
         {
           "id": "messaging-spring-amqp-reference",
           "title": "Spring AMQP reference",
-          "url": "https://docs.spring.io/spring-amqp/reference/4.1/index.html",
+          "url": "https://docs.spring.io/spring-amqp/reference/4.2/index.html",
           "version": "",
           "docVersion": "",
           "pinned": false,
@@ -7517,7 +7517,7 @@
         {
           "id": "messaging-spring-boot-amqp",
           "title": "Spring Boot AMQP",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/messaging/amqp.html",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/messaging/amqp.html",
           "version": "",
           "docVersion": "",
           "pinned": false,
