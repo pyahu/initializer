@@ -1,6 +1,6 @@
 ---
 title: Virtual threads and concurrency
-description: Turn on virtual threads in Spring Boot 4.1 and put back the limits that protect your database and the services you call.
+description: Turn on virtual threads in Spring Boot 4.2 and put back the limits that protect your database and the services you call.
 tableOfContents: { maxHeadingLevel: 2 }
 guide:
   id: virtual-threads
@@ -74,7 +74,7 @@ network, its stack moves to the heap and the carrier runs another one.
 Think of a restaurant. Before, each table had its own waiter standing there while the kitchen cooked. Now a few
 waiters serve every table and only walk over when there is something to do.
 
-The property is off by default. Turning it on makes Spring Boot 4.1 handle web requests, `@Async` tasks and
+The property is off by default. Turning it on makes Spring Boot 4.2 handle web requests, `@Async` tasks and
 `@Scheduled` tasks on virtual threads and use them in the message listeners it configures for Kafka and RabbitMQ.
 
 ### Do this

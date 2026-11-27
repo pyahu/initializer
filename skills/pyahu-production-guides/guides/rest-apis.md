@@ -4,7 +4,7 @@
 
 Write the OpenAPI contract first, generate the Spring interfaces from it and serve errors, writes, lists and new versions the same way everywhere.
 
-On the web: https://initializer.pyahu.io/guides/rest-apis/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/rest-apis/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 The frontend team asks what `POST /orders` returns when the stock runs out. Nobody knows for sure: the answer is
 somewhere in a controller, a few exception handlers and a wiki page from last year. Each endpoint returns errors
@@ -76,7 +76,7 @@ application through a port and maps the answer back.
 
 ### Do this
 
-1. Apply the plugin `org.openapi.generator` 7.26.0 and point `openApiGenerate` at the contract:
+1. Apply the plugin `org.openapi.generator` 7.27.0 and point `openApiGenerate` at the contract:
 
    ```kotlin
    openApiGenerate {
@@ -321,7 +321,7 @@ contract describes.
 
 ### In the build
 
-- The `org.openapi.generator` plugin 7.26.0 with `interfaceOnly`, `useSpringBoot4` and
+- The `org.openapi.generator` plugin 7.27.0 with `interfaceOnly`, `useSpringBoot4` and
   `useSpringBuiltInValidation` (steps 2 and 3).
 - `spring-boot-starter-validation` (step 3).
 - `openApiValidate` in every build and a breaking change check in CI (step 8).
@@ -360,9 +360,9 @@ contract describes.
 
 ## References
 
-- [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html) (7.0.10 (docs 7.0); docs 7.0)
+- [Reference](https://docs.spring.io/spring-framework/reference/7.1/index.html) (7.1.0 (docs 7.1); docs 7.1)
 - [OpenAPI Specification v3.1.2 (latest 3.1 patch)](https://spec.openapis.org/oas/v3.1.2.html) (3.1.2)
-- [openapi-generator Spring generator](https://openapi-generator.tech/docs/generators/spring/) (7.26.0, not version-pinned)
-- [Spring generator doc at tag](https://github.com/OpenAPITools/openapi-generator/blob/v7.26.0/docs/generators/spring.md) (7.26.0)
-- [Gradle plugin README at tag](https://github.com/OpenAPITools/openapi-generator/blob/v7.26.0/modules/openapi-generator-gradle-plugin/README.adoc) (7.26.0)
-- [Release v7.26.0](https://github.com/OpenAPITools/openapi-generator/releases/tag/v7.26.0) (7.26.0)
+- [openapi-generator Spring generator](https://openapi-generator.tech/docs/generators/spring/) (7.27.0, not version-pinned)
+- [Spring generator doc at tag](https://github.com/OpenAPITools/openapi-generator/blob/v7.27.0/docs/generators/spring.md) (7.27.0)
+- [Gradle plugin README at tag](https://github.com/OpenAPITools/openapi-generator/blob/v7.27.0/modules/openapi-generator-gradle-plugin/README.adoc) (7.27.0)
+- [Release v7.27.0](https://github.com/OpenAPITools/openapi-generator/releases/tag/v7.27.0) (7.27.0)

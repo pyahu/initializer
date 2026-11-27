@@ -4,7 +4,7 @@
 
 Package, vary per environment, validate and apply the manifests of a Spring Boot service.
 
-On the web: https://initializer.pyahu.io/guides/kubernetes-manifests/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/kubernetes-manifests/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 **Draft:** no step of this guide is tested here yet.
 
@@ -360,11 +360,11 @@ Everything above lives in one folder next to the service and one job in CI.
 
 ## References
 
-- [Docs home](https://v1-36.docs.kubernetes.io/docs/home/) (1.36.5 (docs 1.36); docs 1.36)
-- [Kustomize via kubectl (task)](https://v1-36.docs.kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/) (1.36.5 (docs 1.36); docs 1.36)
-- [CHANGELOG 1.36](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.36.md) (1.36.5 (docs 1.36); docs 1.36)
+- [Docs home](https://v1-36.docs.kubernetes.io/docs/home/) (1.36.7 (docs 1.36); docs 1.36)
+- [Kustomize via kubectl (task)](https://v1-36.docs.kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/) (1.36.7 (docs 1.36); docs 1.36)
+- [CHANGELOG 1.36](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.36.md) (1.36.7 (docs 1.36); docs 1.36)
 - [Kustomize reference](https://kubectl.docs.kubernetes.io/references/kustomize/) (5.8.3 (docs 5.8); docs 5.8, not version-pinned)
 - [kustomization.yaml reference](https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/) (5.8.3 (docs 5.8); docs 5.8, not version-pinned)
 - [Release kustomize/v5.8.3](https://github.com/kubernetes-sigs/kustomize/releases/tag/kustomize%2Fv5.8.3) (5.8.3)
-- [Trivy docs](https://trivy.dev/docs/v0.76/guide/) (0.76.0 (docs 0.76); docs 0.76)
-- [Trivy release v0.76.0](https://github.com/aquasecurity/trivy/releases/tag/v0.76.0) (0.76.0)
+- [Trivy docs](https://trivy.dev/docs/v0.76/guide/) (0.76.2 (docs 0.76); docs 0.76)
+- [Trivy release v0.76.2](https://github.com/aquasecurity/trivy/releases/tag/v0.76.2) (0.76.2)

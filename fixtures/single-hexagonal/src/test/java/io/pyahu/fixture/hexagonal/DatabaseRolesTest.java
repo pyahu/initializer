@@ -48,7 +48,7 @@ class DatabaseRolesTest {
     void theMigratorOwnsTheSchemaAndItsTables() throws SQLException {
         try (Connection migrator = connection("fixture_migrator");
                 Statement sql = migrator.createStatement()) {
-            assertThat(migrator.getMetaData().getDatabaseProductVersion()).startsWith("18.6");
+            assertThat(migrator.getMetaData().getDatabaseProductVersion()).startsWith("18.7");
             try (var schema =
                     sql.executeQuery("SELECT pg_get_userbyid(nspowner) FROM pg_namespace WHERE nspname = 'fixture'")) {
                 assertThat(schema.next()).isTrue();

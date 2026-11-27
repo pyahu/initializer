@@ -1,17 +1,17 @@
 [versions]
-spring-boot = "4.1.2"
-spring-modulith = "2.1.1"
+spring-boot = "4.2.0"
+spring-modulith = "2.2.0"
 jmolecules = "2025.0.2"
-opentelemetry-logback-appender = "2.28.1-alpha"
+opentelemetry-logback-appender = "2.34.0-alpha"
 archunit = "1.5.1"
-error-prone = "2.50.0"
-nullaway = "0.14.2"
-palantir-java-format = "2.102.0"
-errorprone-gradle-plugin = "5.1.1"
-spotless = "8.10.4"
-cyclonedx = "3.5.1"
+error-prone = "2.53.0"
+nullaway = "0.14.4"
+palantir-java-format = "2.103.0"
+errorprone-gradle-plugin = "5.2.0"
+spotless = "8.12.0"
+cyclonedx = "3.6.1"
 testcontainers = "2.0.5"
-postgres-image = "18.6@sha256:74935e72241653ca55e0414067e6d8763aceb8a810eb51b452253ec3dcfc4336"
+postgres-image = "18.7@sha256:64c8b0d31e4ab6ea665e8426ea406a94bf52de3c05b3a4a8bf713704eefa9328"
 
 [libraries]
 spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }

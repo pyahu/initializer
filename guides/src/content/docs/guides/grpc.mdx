@@ -1,6 +1,6 @@
 ---
 title: gRPC services
-description: Serve and call gRPC from Spring Boot 4.1 with a safe contract, deadlines, honest errors and calls spread across pods.
+description: Serve and call gRPC from Spring Boot 4.2 with a safe contract, deadlines, honest errors and calls spread across pods.
 tableOfContents: { maxHeadingLevel: 2 }
 guide:
   id: grpc
@@ -44,7 +44,7 @@ four pods and one of them runs hot while three sit idle. A slow call hangs for m
 stop. And a reused field number breaks a client you forgot existed.
 
 gRPC is fast and strict but it brings its own failure modes. This guide covers when to use it, how to keep the
-contract safe and how to run it in Kubernetes with Spring Boot 4.1, which now supports gRPC out of the box.
+contract safe and how to run it in Kubernetes with Spring Boot 4.2, which supports gRPC out of the box.
 
 <GuideStatus guide="grpc" />
 
@@ -115,7 +115,7 @@ implementation with `@GrpcService`. It listens on port 9090, next to the web ser
 
 ### What's going on
 
-Spring Boot 4.1 has gRPC support built in, based on the Spring gRPC project. Spring Boot's BOM (bill of materials, its list
+Spring Boot 4.2 has gRPC support built in, based on the Spring gRPC project. Spring Boot's BOM (bill of materials, its list
 of managed dependency versions) sets Spring gRPC 1.1.1, gRPC Java 1.83.1 and Protocol Buffers 4.35.1.
 
 By default the gRPC server runs on its own Netty server, on port 9090, separate from Tomcat on 8080. So one service
@@ -220,7 +220,7 @@ health as liveness.
 
 Kubernetes asks two questions. Liveness: should it restart the pod? Readiness: should it send the pod traffic?
 
-gRPC has a standard health check protocol. Boot 4.1 starts its health service as soon as the app has a gRPC
+gRPC has a standard health check protocol. Boot 4.2 starts its health service as soon as the app has a gRPC
 service and updates it from the app's own health every 5 seconds. The overall check, whose service name is empty,
 includes all health indicators. A failed database can make it fail even when restarting the process cannot help.
 Using that check for liveness restarts every pod during a database outage.

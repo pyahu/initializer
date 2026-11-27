@@ -122,7 +122,7 @@ func baselineLine(r *guidedata.Repo) string {
 func skillIndex(r *guidedata.Repo, parts []Part, byID map[string]*guidedata.Guide) []byte {
 	var b strings.Builder
 	b.WriteString("---\nname: " + SkillName + "\n")
-	b.WriteString("description: Production practices for Spring Boot 4.1 services on Java 25 and Kubernetes, from the Pyahu Initializer guides. Use when building, configuring, reviewing or deploying a Spring Boot service, including build and architecture, tests, REST and gRPC APIs, PostgreSQL with JDBC, JPA or jOOQ, Kafka, RabbitMQ, caching, JVM sizing, configuration, observability, security, container images, CI, Kubernetes, local development, monorepos and a Next.js frontend next to the service.\n---\n\n")
+	b.WriteString("description: Production practices for Spring Boot 4.2 services on Java 25 and Kubernetes, from the Pyahu Initializer guides. Use when building, configuring, reviewing or deploying a Spring Boot service, including build and architecture, tests, REST and gRPC APIs, PostgreSQL with JDBC, JPA or jOOQ, Kafka, RabbitMQ, caching, JVM sizing, configuration, observability, security, container images, CI, Kubernetes, local development, monorepos and a Next.js frontend next to the service.\n---\n\n")
 	b.WriteString(Header + "\n\n")
 	b.WriteString("# Pyahu production guides\n\n")
 	b.WriteString("The practices Pyahu follows in every service it generates, written as guides for people and tools alike.\n")

@@ -477,7 +477,7 @@
   guide: security
   card: sec-headers
   type: deployment-prerequisite
-  text: "server.forward-headers-strategy pinned; server.tomcat.remoteip.internal-proxies narrowed to the ingress addresses."
+  text: "server.request.header.forwarded.strategy pinned; server.tomcat.remoteip.internal-proxies narrowed to the ingress addresses."
   appliesWhen: {}
 - id: SEC-07
   guide: security
@@ -1251,7 +1251,7 @@
   guide: local-development
   card: local-telemetry
   type: generated-config
-  text: grafana/otel-lgtm 0.37.0 runs locally for traces, metrics and logs and never in a shared or production environment.
+  text: grafana/otel-lgtm 0.41.1 runs locally for traces, metrics and logs and never in a shared or production environment.
   appliesWhen: {}
 - id: LOCAL-06
   guide: local-development

@@ -2,9 +2,9 @@
 
 # Build and code quality
 
-A Gradle build for a Spring Boot 4.1 service that is the same on every machine and stops bugs, nulls and drift before they ship.
+A Gradle build for a Spring Boot 4.2 service that is the same on every machine and stops bugs, nulls and drift before they ship.
 
-On the web: https://initializer.pyahu.io/guides/build-quality/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/build-quality/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 The build passes on your laptop and fails in CI. A teammate gets a different Spring version than you. A
 `NullPointerException` reaches production from a method everyone was sure never returned null. Half of every code
@@ -31,7 +31,7 @@ drift before anything ships.
 **In short:** commit the Gradle wrapper with the checksum of its distribution and pin the JDK with a toolchain.
 
 ```text
-distributionSha256Sum=dce76f55f8e251a3a1f130eb120f30b3d271de2b76c9b0729d316b5a1b6dc01f
+distributionSha256Sum=971fcd7150ca4ba04852c0b2ca0d2d0ab9468e14b03473eab19528809914c76b
 ```
 
 ### What's going on
@@ -51,7 +51,7 @@ toolchain in the build file solves it: the build asks for Java 25 instead of usi
    run the same command with an installed `gradle` once:
 
    ```sh
-   ./gradlew wrapper --gradle-version 9.8.1 --gradle-distribution-sha256-sum <checksum of the binary zip>
+   ./gradlew wrapper --gradle-version 9.9.2 --gradle-distribution-sha256-sum <checksum of the binary zip>
    ```
 
 2. Commit `gradlew`, `gradlew.bat` and the whole `gradle/wrapper` folder.
@@ -139,7 +139,7 @@ It runs while `javac` compiles, so the bug never reaches a test, let alone produ
 Think of the whole build as a line of gates. Each one stops a different kind of mistake and the first one that
 fails stops the build.
 
-> **Diagram:** What one ./gradlew build runs: five gates, each one stops a different mistake before it ships. Five boxes from left to right, joined by arrows. 1, wrapper: Gradle 9.8.1 is downloaded and its checksum checked and the build compiles with the JDK 25 toolchain; a checksum that differs stops the build. 2, resolve: every version comes from the version catalog and three BOMs, from repositories declared only in settings; a repository declared in a project is an error. 3, compile, highlighted: javac runs Error Prone and NullAway in JSpecify mode; a known bug pattern or a possible null is a compile error. 4, check: the JUnit tests and spotlessCheck; a failing test or unformatted code fails the check. 5, SBOM: cyclonedxBom writes build/sbom/bom.json and the build ends with the jar and its SBOM. A note at the bottom says the first failing task stops the build.
+> **Diagram:** What one ./gradlew build runs: five gates, each one stops a different mistake before it ships. Five boxes from left to right, joined by arrows. 1, wrapper: Gradle 9.9.2 is downloaded and its checksum checked and the build compiles with the JDK 25 toolchain; a checksum that differs stops the build. 2, resolve: every version comes from the version catalog and three BOMs, from repositories declared only in settings; a repository declared in a project is an error. 3, compile, highlighted: javac runs Error Prone and NullAway in JSpecify mode; a known bug pattern or a possible null is a compile error. 4, check: the JUnit tests and spotlessCheck; a failing test or unformatted code fails the check. 5, SBOM: cyclonedxBom writes build/sbom/bom.json and the build ends with the jar and its SBOM. A note at the bottom says the first failing task stops the build.
 
 ### Do this
 
@@ -339,11 +339,11 @@ The wrapper names the Gradle version and the checksum of its download (step 1).
 From [`gradle-wrapper.properties`](https://github.com/pyahu/initializer/blob/main/fixtures/single-hexagonal/gradle/wrapper/gradle-wrapper.properties):
 
 ```ini
-distributionSha256Sum=dce76f55f8e251a3a1f130eb120f30b3d271de2b76c9b0729d316b5a1b6dc01f
-distributionUrl=https\://services.gradle.org/distributions/gradle-9.8.1-bin.zip
+distributionSha256Sum=971fcd7150ca4ba04852c0b2ca0d2d0ab9468e14b03473eab19528809914c76b
+distributionUrl=https\://services.gradle.org/distributions/gradle-9.9.2-bin.zip
 ```
 
-**Check it:** `./gradlew --version` prints `Gradle 9.8.1`.
+**Check it:** `./gradlew --version` prints `Gradle 9.9.2`.
 
 ### Versions and repositories
 
@@ -366,20 +366,20 @@ From [`libs.versions.toml`](https://github.com/pyahu/initializer/blob/main/fixtu
 
 ```toml
 [versions]
-spring-boot = "4.1.2"
-spring-modulith = "2.1.1"
+spring-boot = "4.2.0"
+spring-modulith = "2.2.0"
 jmolecules = "2025.0.2"
-opentelemetry-logback-appender = "2.28.1-alpha"
+opentelemetry-logback-appender = "2.34.0-alpha"
 archunit = "1.5.1"
-error-prone = "2.50.0"
-nullaway = "0.14.2"
-palantir-java-format = "2.102.0"
-errorprone-gradle-plugin = "5.1.1"
-spotless = "8.10.4"
-cyclonedx = "3.5.1"
+error-prone = "2.53.0"
+nullaway = "0.14.4"
+palantir-java-format = "2.103.0"
+errorprone-gradle-plugin = "5.2.0"
+spotless = "8.12.0"
+cyclonedx = "3.6.1"
 ```
 
-**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `spring-core` 7.0.10, a version written
+**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `spring-core` 7.1.0, a version written
 nowhere in the build.
 
 ### The BOMs
@@ -495,23 +495,23 @@ tasks.named("build") {
 
 ## References
 
-- [Gradle plugin](https://docs.spring.io/spring-boot/4.1/gradle-plugin/index.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Best practices](https://docs.gradle.org/9.8.1/userguide/best_practices.html) (9.8.1)
-- [Version catalogs](https://docs.gradle.org/9.8.1/userguide/version_catalogs.html) (9.8.1)
-- [Toolchains](https://docs.gradle.org/9.8.1/userguide/toolchains.html) (9.8.1)
-- [Dependency verification](https://docs.gradle.org/9.8.1/userguide/dependency_verification.html) (9.8.1)
-- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/) (44.166.0 (docs latest); docs latest, not version-pinned)
-- [Renovate Gradle manager](https://docs.renovatebot.com/modules/manager/gradle/) (44.166.0 (docs latest); docs latest, not version-pinned)
-- [Renovate upgrade best practices](https://docs.renovatebot.com/upgrade-best-practices/) (44.166.0 (docs latest); docs latest, not version-pinned)
+- [Gradle plugin](https://docs.spring.io/spring-boot/4.2/gradle-plugin/index.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Best practices](https://docs.gradle.org/9.9.2/userguide/best_practices.html) (9.9.2)
+- [Version catalogs](https://docs.gradle.org/9.9.2/userguide/version_catalogs.html) (9.9.2)
+- [Toolchains](https://docs.gradle.org/9.9.2/userguide/toolchains.html) (9.9.2)
+- [Dependency verification](https://docs.gradle.org/9.9.2/userguide/dependency_verification.html) (9.9.2)
+- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/) (44.258.3 (docs latest); docs latest, not version-pinned)
+- [Renovate Gradle manager](https://docs.renovatebot.com/modules/manager/gradle/) (44.258.3 (docs latest); docs latest, not version-pinned)
+- [Renovate upgrade best practices](https://docs.renovatebot.com/upgrade-best-practices/) (44.258.3 (docs latest); docs latest, not version-pinned)
 - [JSpecify user guide](https://jspecify.dev/docs/user-guide/) (1.0.1 (docs 1.0); docs 1.0, not version-pinned)
 - [JSpecify annotations javadoc 1.0.0](https://javadoc.io/doc/org.jspecify/jspecify/1.0.0/org/jspecify/annotations/package-summary.html) (1.0.1 (docs 1.0); docs 1.0)
-- [NullAway README at tag](https://github.com/uber/NullAway/blob/v0.14.2/README.md) (0.14.2)
-- [NullAway JSpecify support (wiki)](https://github.com/uber/NullAway/wiki/JSpecify-Support) (0.14.2 (docs latest); docs latest, not version-pinned)
-- [Error Prone docs](https://errorprone.info/) (2.50.0, not version-pinned)
-- [Error Prone installation](https://errorprone.info/docs/installation) (2.50.0, not version-pinned)
-- [Error Prone bug patterns](https://errorprone.info/bugpatterns) (2.50.0, not version-pinned)
-- [gradle-errorprone-plugin (README)](https://github.com/tbroyer/gradle-errorprone-plugin) (5.1.1, not version-pinned)
+- [NullAway README at tag](https://github.com/uber/NullAway/blob/v0.14.4/README.md) (0.14.4)
+- [NullAway JSpecify support (wiki)](https://github.com/uber/NullAway/wiki/JSpecify-Support) (0.14.4 (docs latest); docs latest, not version-pinned)
+- [Error Prone docs](https://errorprone.info/) (2.53.0, not version-pinned)
+- [Error Prone installation](https://errorprone.info/docs/installation) (2.53.0, not version-pinned)
+- [Error Prone bug patterns](https://errorprone.info/bugpatterns) (2.53.0, not version-pinned)
+- [gradle-errorprone-plugin (README)](https://github.com/tbroyer/gradle-errorprone-plugin) (5.2.0, not version-pinned)
 - [PMD Java design rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_design.html) (7.29.0): The complexity and size rules: CyclomaticComplexity, CognitiveComplexity, NPathComplexity, GodClass, ExcessiveParameterList.
 - [PMD Java error prone rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_errorprone.html) (7.29.0): EmptyCatchBlock and AvoidCatchingGenericException.
-- [The PMD plugin](https://docs.gradle.org/9.8.1/userguide/pmd_plugin.html) (9.8.1): Gradle's pmd plugin: toolVersion, rule sets and the pmdMain task.
-- [NullAway configuration](https://github.com/uber/NullAway/wiki/Configuration) (0.14.2, not version-pinned): NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check.
+- [The PMD plugin](https://docs.gradle.org/9.9.2/userguide/pmd_plugin.html) (9.9.2): Gradle's pmd plugin: toolVersion, rule sets and the pmdMain task.
+- [NullAway configuration](https://github.com/uber/NullAway/wiki/Configuration) (0.14.4 (docs 0.14.2); docs 0.14.2, not version-pinned): NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check.

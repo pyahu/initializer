@@ -4,7 +4,7 @@
 
 Keep several Spring Boot services in one repository without turning them into one distributed monolith.
 
-On the web: https://initializer.pyahu.io/guides/monorepo/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/monorepo/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 **Draft:** no step of this guide is tested here yet.
 
@@ -336,10 +336,10 @@ Everything above lands in the repository layout, the settings file and one CI wo
 
 ## References
 
-- [Version catalogs](https://docs.gradle.org/9.8.1/userguide/version_catalogs.html) (9.8.1)
-- [Sharing build logic (buildSrc)](https://docs.gradle.org/9.8.1/userguide/sharing_build_logic_between_subprojects.html) (9.8.1)
-- [Convention plugins](https://docs.gradle.org/9.8.1/userguide/implementing_gradle_plugins_convention.html) (9.8.1)
-- [Best practices for structuring builds](https://docs.gradle.org/9.8.1/userguide/best_practices_structuring_builds.html) (9.8.1)
-- [Composite builds (included build-logic)](https://docs.gradle.org/9.8.1/userguide/composite_builds.html) (9.8.1)
+- [Version catalogs](https://docs.gradle.org/9.9.2/userguide/version_catalogs.html) (9.9.2)
+- [Sharing build logic (buildSrc)](https://docs.gradle.org/9.9.2/userguide/sharing_build_logic_between_subprojects.html) (9.9.2)
+- [Convention plugins](https://docs.gradle.org/9.9.2/userguide/implementing_gradle_plugins_convention.html) (9.9.2)
+- [Best practices for structuring builds](https://docs.gradle.org/9.9.2/userguide/best_practices_structuring_builds.html) (9.9.2)
+- [Composite builds (included build-logic)](https://docs.gradle.org/9.9.2/userguide/composite_builds.html) (9.9.2)
 - [Reuse workflows (how-to)](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows) (n/a, not version-pinned)
 - [Reusing workflow configurations (reference)](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations) (n/a, not version-pinned)

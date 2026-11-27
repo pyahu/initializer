@@ -143,7 +143,7 @@ jobs:
         with:
           args: lint build/manifests
       - name: Manifest security
-        uses: docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+        uses: docker://aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
         with:
           args: config --exit-code 1 --severity HIGH,CRITICAL build/manifests
       - name: Deprecated or removed APIs
@@ -179,12 +179,12 @@ jobs:
           docker save [[name]]-web:ci -o build/web-image.tar
 [[/nextjs]]
       - name: Backend image vulnerabilities
-        uses: docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+        uses: docker://aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
         with:
           args: image --input build/app-image.tar --scanners vuln --ignore-unfixed --severity HIGH,CRITICAL --exit-code 1 --cache-dir build/trivy-cache
 [[#nextjs]]
       - name: Frontend image vulnerabilities
-        uses: docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+        uses: docker://aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
         with:
           args: image --input build/web-image.tar --scanners vuln --ignore-unfixed --severity HIGH,CRITICAL --exit-code 1 --cache-dir build/trivy-cache
 [[/nextjs]]

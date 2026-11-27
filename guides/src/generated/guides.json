@@ -1,12 +1,12 @@
 {
-  "active": "v0.1-b2",
+  "active": "v0.1-b3",
   "generatedBy": "guidekit generate",
   "guides": {
     "architecture": {
       "id": "architecture",
       "title": "Architecture: hexagonal and DDD layered",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "4 of 8 steps are tested here (4 tested claims: 4 compiled)",
       "draft": false,
       "sources": [],
@@ -255,9 +255,9 @@
         {
           "id": "spring-modulith-reference",
           "title": "Reference",
-          "url": "https://docs.spring.io/spring-modulith/reference/2.1/index.html",
-          "version": "2.1.1 (docs 2.1)",
-          "docVersion": "2.1",
+          "url": "https://docs.spring.io/spring-modulith/reference/2.2/index.html",
+          "version": "2.2.0 (docs 2.2)",
+          "docVersion": "2.2",
           "pinned": true,
           "purpose": "Reference.",
           "later": false
@@ -265,9 +265,9 @@
         {
           "id": "spring-modulith-fundamentals",
           "title": "Fundamentals",
-          "url": "https://docs.spring.io/spring-modulith/reference/2.1/fundamentals.html",
-          "version": "2.1.1 (docs 2.1)",
-          "docVersion": "2.1",
+          "url": "https://docs.spring.io/spring-modulith/reference/2.2/fundamentals.html",
+          "version": "2.2.0 (docs 2.2)",
+          "docVersion": "2.2",
           "pinned": true,
           "purpose": "Fundamentals.",
           "later": false
@@ -275,9 +275,9 @@
         {
           "id": "spring-modulith-verifying-module-structure",
           "title": "Verifying module structure",
-          "url": "https://docs.spring.io/spring-modulith/reference/2.1/verification.html",
-          "version": "2.1.1 (docs 2.1)",
-          "docVersion": "2.1",
+          "url": "https://docs.spring.io/spring-modulith/reference/2.2/verification.html",
+          "version": "2.2.0 (docs 2.2)",
+          "docVersion": "2.2",
           "pinned": true,
           "purpose": "Verifying module structure.",
           "later": false
@@ -285,9 +285,9 @@
         {
           "id": "spring-modulith-integration-testing-modules",
           "title": "Integration testing modules",
-          "url": "https://docs.spring.io/spring-modulith/reference/2.1/testing.html",
-          "version": "2.1.1 (docs 2.1)",
-          "docVersion": "2.1",
+          "url": "https://docs.spring.io/spring-modulith/reference/2.2/testing.html",
+          "version": "2.2.0 (docs 2.2)",
+          "docVersion": "2.2",
           "pinned": true,
           "purpose": "Integration testing modules.",
           "later": false
@@ -325,9 +325,9 @@
         {
           "id": "spring-framework-declarative-transactions",
           "title": "Declarative transaction management",
-          "url": "https://docs.spring.io/spring-framework/reference/7.0/data-access/transaction/declarative.html",
-          "version": "7.0.10 (docs 7.0)",
-          "docVersion": "7.0",
+          "url": "https://docs.spring.io/spring-framework/reference/7.1/data-access/transaction/declarative.html",
+          "version": "7.1.0 (docs 7.1)",
+          "docVersion": "7.1",
           "pinned": true,
           "purpose": "How @Transactional works and where to put it.",
           "later": false
@@ -348,7 +348,7 @@
       "id": "architecture-styles",
       "title": "Architecture styles compared",
       "state": "explanatory",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "None of its 8 steps is tested here yet",
       "draft": false,
       "sources": [],
@@ -505,9 +505,9 @@
         {
           "id": "spring-modulith-fundamentals",
           "title": "Fundamentals",
-          "url": "https://docs.spring.io/spring-modulith/reference/2.1/fundamentals.html",
-          "version": "2.1.1 (docs 2.1)",
-          "docVersion": "2.1",
+          "url": "https://docs.spring.io/spring-modulith/reference/2.2/fundamentals.html",
+          "version": "2.2.0 (docs 2.2)",
+          "docVersion": "2.2",
           "pinned": true,
           "purpose": "Fundamentals.",
           "later": false
@@ -515,9 +515,9 @@
         {
           "id": "spring-modulith-verifying-module-structure",
           "title": "Verifying module structure",
-          "url": "https://docs.spring.io/spring-modulith/reference/2.1/verification.html",
-          "version": "2.1.1 (docs 2.1)",
-          "docVersion": "2.1",
+          "url": "https://docs.spring.io/spring-modulith/reference/2.2/verification.html",
+          "version": "2.2.0 (docs 2.2)",
+          "docVersion": "2.2",
           "pinned": true,
           "purpose": "Verifying module structure.",
           "later": false
@@ -618,7 +618,7 @@
       "id": "build-quality",
       "title": "Build and code quality",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "7 of 9 steps are tested here (7 tested claims: 7 compiled)",
       "draft": false,
       "sources": [],
@@ -703,7 +703,7 @@
             {
               "id": "ev-bld-error-prone-1",
               "badge": "compiled",
-              "canonical": "Evidence ev-bld-error-prone-1 · compiled by gradle/single-hexagonal::ApplicationTest. Main code compiles on JDK 25 with Error Prone 2.50.0 through the net.ltgt.errorprone plugin 5.1.1. Limitations: Shows the code passes the checks; no test plants a known bug pattern to see the build fail.",
+              "canonical": "Evidence ev-bld-error-prone-1 · compiled by gradle/single-hexagonal::ApplicationTest. Main code compiles on JDK 25 with Error Prone 2.53.0 through the net.ltgt.errorprone plugin 5.2.0. Limitations: Shows the code passes the checks; no test plants a known bug pattern to see the build fail.",
               "test": "gradle/single-hexagonal::ApplicationTest"
             }
           ]
@@ -715,7 +715,7 @@
             {
               "id": "ev-bld-format-1",
               "badge": "compiled",
-              "canonical": "Evidence ev-bld-format-1 · compiled by gradle/single-hexagonal::ApplicationTest. spotlessCheck with palantir-java-format 2.102.0 runs as part of check and passes on the fixture code. Limitations: Shows the code is formatted; no test commits unformatted code to see the check fail.",
+              "canonical": "Evidence ev-bld-format-1 · compiled by gradle/single-hexagonal::ApplicationTest. spotlessCheck with palantir-java-format 2.103.0 runs as part of check and passes on the fixture code. Limitations: Shows the code is formatted; no test commits unformatted code to see the check fail.",
               "test": "gradle/single-hexagonal::ApplicationTest"
             }
           ]
@@ -727,7 +727,7 @@
             {
               "id": "ev-bld-nullaway-1",
               "badge": "compiled",
-              "canonical": "Evidence ev-bld-nullaway-1 · compiled by gradle/single-hexagonal::ApplicationTest. Main code compiles with NullAway 0.14.2 as an error, OnlyNullMarked and JSpecifyMode on and @NullMarked on every package. Limitations: Shows the marked code passes; no test returns null from a marked method to see the build fail.",
+              "canonical": "Evidence ev-bld-nullaway-1 · compiled by gradle/single-hexagonal::ApplicationTest. Main code compiles with NullAway 0.14.4 as an error, OnlyNullMarked and JSpecifyMode on and @NullMarked on every package. Limitations: Shows the marked code passes; no test returns null from a marked method to see the build fail.",
               "test": "gradle/single-hexagonal::ApplicationTest"
             }
           ]
@@ -768,7 +768,7 @@
             {
               "id": "ev-bld-wrapper-1",
               "badge": "compiled",
-              "canonical": "Evidence ev-bld-wrapper-1 · compiled by gradle/single-hexagonal::ApplicationTest. In a fresh container, ./gradlew downloads Gradle 9.8.1, checks it against the committed distributionSha256Sum and builds with the Java 25 toolchain. Limitations: A passing build shows the checksum matched; no test feeds a wrong checksum to see the build fail.",
+              "canonical": "Evidence ev-bld-wrapper-1 · compiled by gradle/single-hexagonal::ApplicationTest. In a fresh container, ./gradlew downloads Gradle 9.9.2, checks it against the committed distributionSha256Sum and builds with the Java 25 toolchain. Limitations: A passing build shows the checksum matched; no test feeds a wrong checksum to see the build fail.",
               "test": "gradle/single-hexagonal::ApplicationTest"
             }
           ]
@@ -902,9 +902,9 @@
         {
           "id": "spring-boot-gradle-plugin",
           "title": "Gradle plugin",
-          "url": "https://docs.spring.io/spring-boot/4.1/gradle-plugin/index.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/gradle-plugin/index.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Gradle plugin.",
           "later": false
@@ -912,9 +912,9 @@
         {
           "id": "build-best-practices",
           "title": "Best practices",
-          "url": "https://docs.gradle.org/9.8.1/userguide/best_practices.html",
-          "version": "9.8.1",
-          "docVersion": "9.8.1",
+          "url": "https://docs.gradle.org/9.9.2/userguide/best_practices.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
           "pinned": true,
           "purpose": "Best practices.",
           "later": false
@@ -922,9 +922,9 @@
         {
           "id": "build-version-catalogs",
           "title": "Version catalogs",
-          "url": "https://docs.gradle.org/9.8.1/userguide/version_catalogs.html",
-          "version": "9.8.1",
-          "docVersion": "9.8.1",
+          "url": "https://docs.gradle.org/9.9.2/userguide/version_catalogs.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
           "pinned": true,
           "purpose": "Version catalogs.",
           "later": false
@@ -932,9 +932,9 @@
         {
           "id": "build-toolchains",
           "title": "Toolchains",
-          "url": "https://docs.gradle.org/9.8.1/userguide/toolchains.html",
-          "version": "9.8.1",
-          "docVersion": "9.8.1",
+          "url": "https://docs.gradle.org/9.9.2/userguide/toolchains.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
           "pinned": true,
           "purpose": "Toolchains.",
           "later": false
@@ -942,9 +942,9 @@
         {
           "id": "build-dependency-verification",
           "title": "Dependency verification",
-          "url": "https://docs.gradle.org/9.8.1/userguide/dependency_verification.html",
-          "version": "9.8.1",
-          "docVersion": "9.8.1",
+          "url": "https://docs.gradle.org/9.9.2/userguide/dependency_verification.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
           "pinned": true,
           "purpose": "Dependency verification.",
           "later": false
@@ -953,7 +953,7 @@
           "id": "dependencies-renovate-configuration-options",
           "title": "Renovate configuration options",
           "url": "https://docs.renovatebot.com/configuration-options/",
-          "version": "44.166.0 (docs latest)",
+          "version": "44.258.3 (docs latest)",
           "docVersion": "latest",
           "pinned": false,
           "purpose": "Renovate configuration options.",
@@ -963,7 +963,7 @@
           "id": "dependencies-renovate-gradle-manager",
           "title": "Renovate Gradle manager",
           "url": "https://docs.renovatebot.com/modules/manager/gradle/",
-          "version": "44.166.0 (docs latest)",
+          "version": "44.258.3 (docs latest)",
           "docVersion": "latest",
           "pinned": false,
           "purpose": "Renovate Gradle manager.",
@@ -973,7 +973,7 @@
           "id": "dependencies-renovate-upgrade-best-practices",
           "title": "Renovate upgrade best practices",
           "url": "https://docs.renovatebot.com/upgrade-best-practices/",
-          "version": "44.166.0 (docs latest)",
+          "version": "44.258.3 (docs latest)",
           "docVersion": "latest",
           "pinned": false,
           "purpose": "Renovate upgrade best practices.",
@@ -1002,9 +1002,9 @@
         {
           "id": "static-analysis-nullaway-readme-at-tag",
           "title": "NullAway README at tag",
-          "url": "https://github.com/uber/NullAway/blob/v0.14.2/README.md",
-          "version": "0.14.2",
-          "docVersion": "0.14.2",
+          "url": "https://github.com/uber/NullAway/blob/v0.14.4/README.md",
+          "version": "0.14.4",
+          "docVersion": "0.14.4",
           "pinned": true,
           "purpose": "NullAway README at tag.",
           "later": false
@@ -1013,7 +1013,7 @@
           "id": "static-analysis-nullaway-jspecify-support",
           "title": "NullAway JSpecify support (wiki)",
           "url": "https://github.com/uber/NullAway/wiki/JSpecify-Support",
-          "version": "0.14.2 (docs latest)",
+          "version": "0.14.4 (docs latest)",
           "docVersion": "latest",
           "pinned": false,
           "purpose": "NullAway JSpecify support (wiki).",
@@ -1023,8 +1023,8 @@
           "id": "static-analysis-error-prone-docs",
           "title": "Error Prone docs",
           "url": "https://errorprone.info/",
-          "version": "2.50.0",
-          "docVersion": "2.50.0",
+          "version": "2.53.0",
+          "docVersion": "2.53.0",
           "pinned": false,
           "purpose": "Error Prone docs.",
           "later": false
@@ -1033,8 +1033,8 @@
           "id": "static-analysis-error-prone-installation",
           "title": "Error Prone installation",
           "url": "https://errorprone.info/docs/installation",
-          "version": "2.50.0",
-          "docVersion": "2.50.0",
+          "version": "2.53.0",
+          "docVersion": "2.53.0",
           "pinned": false,
           "purpose": "Error Prone installation.",
           "later": false
@@ -1043,8 +1043,8 @@
           "id": "static-analysis-error-prone-bug-patterns",
           "title": "Error Prone bug patterns",
           "url": "https://errorprone.info/bugpatterns",
-          "version": "2.50.0",
-          "docVersion": "2.50.0",
+          "version": "2.53.0",
+          "docVersion": "2.53.0",
           "pinned": false,
           "purpose": "Error Prone bug patterns.",
           "later": false
@@ -1053,8 +1053,8 @@
           "id": "static-analysis-gradle-errorprone-plugin",
           "title": "gradle-errorprone-plugin (README)",
           "url": "https://github.com/tbroyer/gradle-errorprone-plugin",
-          "version": "5.1.1",
-          "docVersion": "5.1.1",
+          "version": "5.2.0",
+          "docVersion": "5.2.0",
           "pinned": false,
           "purpose": "gradle-errorprone-plugin (README).",
           "later": false
@@ -1082,9 +1082,9 @@
         {
           "id": "build-gradle-pmd-plugin",
           "title": "The PMD plugin",
-          "url": "https://docs.gradle.org/9.8.1/userguide/pmd_plugin.html",
-          "version": "9.8.1",
-          "docVersion": "9.8.1",
+          "url": "https://docs.gradle.org/9.9.2/userguide/pmd_plugin.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
           "pinned": true,
           "purpose": "Gradle's pmd plugin: toolVersion, rule sets and the pmdMain task.",
           "later": false
@@ -1093,7 +1093,7 @@
           "id": "static-analysis-nullaway-configuration",
           "title": "NullAway configuration",
           "url": "https://github.com/uber/NullAway/wiki/Configuration",
-          "version": "0.14.2",
+          "version": "0.14.4 (docs 0.14.2)",
           "docVersion": "0.14.2",
           "pinned": false,
           "purpose": "NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check.",
@@ -1105,7 +1105,7 @@
       "id": "caching",
       "title": "Caching with Valkey",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "None of its 8 steps is tested here yet",
       "draft": true,
       "sources": [],
@@ -1374,7 +1374,7 @@
       "id": "ci-pipelines",
       "title": "CI pipelines",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "3 of 9 steps are tested here (3 tested claims: 2 reproduced, 1 compiled)",
       "draft": false,
       "sources": [],
@@ -1712,7 +1712,7 @@
           "id": "supply-chain-cosign-signing-containers",
           "title": "cosign: signing containers",
           "url": "https://docs.sigstore.dev/cosign/signing/signing_with_containers/",
-          "version": "3.1.3 (docs 3)",
+          "version": "3.1.5 (docs 3)",
           "docVersion": "3",
           "pinned": false,
           "purpose": "cosign: signing containers.",
@@ -1722,7 +1722,7 @@
           "id": "supply-chain-cosign-verifying",
           "title": "cosign: verifying",
           "url": "https://docs.sigstore.dev/cosign/verifying/verify/",
-          "version": "3.1.3 (docs 3)",
+          "version": "3.1.5 (docs 3)",
           "docVersion": "3",
           "pinned": false,
           "purpose": "cosign: verifying.",
@@ -1732,8 +1732,8 @@
           "id": "supply-chain-syft-cli-reference",
           "title": "Syft CLI reference",
           "url": "https://oss.anchore.com/docs/reference/syft/cli/",
-          "version": "1.54.1",
-          "docVersion": "1.54.1",
+          "version": "1.57.2",
+          "docVersion": "1.57.2",
           "pinned": false,
           "purpose": "Syft CLI reference.",
           "later": false
@@ -1742,8 +1742,8 @@
           "id": "dependencies-renovate-docs",
           "title": "Renovate docs",
           "url": "https://docs.renovatebot.com/",
-          "version": "44.166.0",
-          "docVersion": "44.166.0",
+          "version": "44.258.3",
+          "docVersion": "44.258.3",
           "pinned": false,
           "purpose": "Renovate docs.",
           "later": false
@@ -1752,7 +1752,7 @@
           "id": "dependencies-renovate-configuration-options",
           "title": "Renovate configuration options",
           "url": "https://docs.renovatebot.com/configuration-options/",
-          "version": "44.166.0 (docs latest)",
+          "version": "44.258.3 (docs latest)",
           "docVersion": "latest",
           "pinned": false,
           "purpose": "Renovate configuration options.",
@@ -1764,7 +1764,7 @@
       "id": "configuration",
       "title": "Configuration and secrets",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "2 of 8 steps are tested here (2 tested claims: 2 reproduced)",
       "draft": false,
       "sources": [
@@ -2028,9 +2028,9 @@
         {
           "id": "spring-boot-application-properties-appendix",
           "title": "Application properties appendix",
-          "url": "https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/appendix/application-properties/index.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Application properties appendix.",
           "later": false
@@ -2038,9 +2038,9 @@
         {
           "id": "spring-boot-actuator",
           "title": "Actuator (production-ready features)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/index.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/index.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Actuator (production-ready features).",
           "later": false
@@ -2048,9 +2048,9 @@
         {
           "id": "spring-boot-actuator-endpoints",
           "title": "Actuator endpoints (incl. Kubernetes probes anchor, verified)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Actuator endpoints (incl. Kubernetes probes anchor, verified).",
           "later": false
@@ -2058,9 +2058,9 @@
         {
           "id": "spring-boot-actuator-rest-api",
           "title": "Actuator REST API",
-          "url": "https://docs.spring.io/spring-boot/4.1/api/rest/actuator/index.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/api/rest/actuator/index.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Actuator REST API.",
           "later": false
@@ -2071,7 +2071,7 @@
       "id": "container-image",
       "title": "The container image and supply chain",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "3 of 8 steps are tested here (3 tested claims: 2 reproduced, 1 compiled)",
       "draft": false,
       "sources": [
@@ -2328,9 +2328,9 @@
         {
           "id": "spring-boot-container-images",
           "title": "Container images",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/index.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Container images.",
           "later": false
@@ -2338,9 +2338,9 @@
         {
           "id": "spring-boot-efficient-container-images",
           "title": "Efficient container images (layering)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/efficient-images.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Efficient container images (layering).",
           "later": false
@@ -2348,9 +2348,9 @@
         {
           "id": "spring-boot-dockerfiles",
           "title": "Dockerfiles",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/dockerfiles.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Dockerfiles.",
           "later": false
@@ -2358,9 +2358,9 @@
         {
           "id": "spring-boot-cloud-native-buildpacks",
           "title": "Cloud Native Buildpacks",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/cloud-native-buildpacks.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Cloud Native Buildpacks.",
           "later": false
@@ -2368,9 +2368,9 @@
         {
           "id": "spring-boot-efficient-deployments",
           "title": "Efficient deployments",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/packaging/efficient.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Efficient deployments.",
           "later": false
@@ -2378,9 +2378,9 @@
         {
           "id": "spring-boot-gradle-plugin-packaging-oci-images",
           "title": "Gradle plugin: packaging OCI images",
-          "url": "https://docs.spring.io/spring-boot/4.1/gradle-plugin/packaging-oci-image.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/gradle-plugin/packaging-oci-image.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Gradle plugin: packaging OCI images.",
           "later": false
@@ -2429,7 +2429,7 @@
           "id": "supply-chain-sigstore-docs",
           "title": "Sigstore docs",
           "url": "https://docs.sigstore.dev/",
-          "version": "3.1.3 (docs 3)",
+          "version": "3.1.5 (docs 3)",
           "docVersion": "3",
           "pinned": false,
           "purpose": "Sigstore docs.",
@@ -2439,7 +2439,7 @@
           "id": "supply-chain-cosign-signing-containers",
           "title": "cosign: signing containers",
           "url": "https://docs.sigstore.dev/cosign/signing/signing_with_containers/",
-          "version": "3.1.3 (docs 3)",
+          "version": "3.1.5 (docs 3)",
           "docVersion": "3",
           "pinned": false,
           "purpose": "cosign: signing containers.",
@@ -2449,7 +2449,7 @@
           "id": "supply-chain-cosign-verifying",
           "title": "cosign: verifying",
           "url": "https://docs.sigstore.dev/cosign/verifying/verify/",
-          "version": "3.1.3 (docs 3)",
+          "version": "3.1.5 (docs 3)",
           "docVersion": "3",
           "pinned": false,
           "purpose": "cosign: verifying.",
@@ -2459,28 +2459,28 @@
           "id": "supply-chain-cosign-in-toto-attestations",
           "title": "cosign: in-toto attestations",
           "url": "https://docs.sigstore.dev/cosign/verifying/attestation/",
-          "version": "3.1.3 (docs 3)",
+          "version": "3.1.5 (docs 3)",
           "docVersion": "3",
           "pinned": false,
           "purpose": "cosign: in-toto attestations.",
           "later": false
         },
         {
-          "id": "supply-chain-cosign-release-v3-1-3",
-          "title": "cosign release v3.1.3",
-          "url": "https://github.com/sigstore/cosign/releases/tag/v3.1.3",
-          "version": "3.1.3",
-          "docVersion": "3.1.3",
+          "id": "supply-chain-cosign-release-v3-1-5",
+          "title": "cosign release v3.1.5",
+          "url": "https://github.com/sigstore/cosign/releases/tag/v3.1.5",
+          "version": "3.1.5",
+          "docVersion": "3.1.5",
           "pinned": true,
-          "purpose": "cosign release v3.1.3.",
+          "purpose": "cosign release v3.1.5.",
           "later": false
         },
         {
           "id": "supply-chain-syft-docs",
           "title": "Syft docs (Anchore OSS site)",
           "url": "https://oss.anchore.com/docs/guides/sbom/",
-          "version": "1.54.1",
-          "docVersion": "1.54.1",
+          "version": "1.57.2",
+          "docVersion": "1.57.2",
           "pinned": false,
           "purpose": "Syft docs (Anchore OSS site).",
           "later": false
@@ -2489,8 +2489,8 @@
           "id": "supply-chain-syft-cli-reference",
           "title": "Syft CLI reference",
           "url": "https://oss.anchore.com/docs/reference/syft/cli/",
-          "version": "1.54.1",
-          "docVersion": "1.54.1",
+          "version": "1.57.2",
+          "docVersion": "1.57.2",
           "pinned": false,
           "purpose": "Syft CLI reference.",
           "later": false
@@ -2499,28 +2499,28 @@
           "id": "supply-chain-trivy-docs",
           "title": "Trivy docs",
           "url": "https://trivy.dev/docs/v0.76/guide/",
-          "version": "0.76.0 (docs 0.76)",
+          "version": "0.76.2 (docs 0.76)",
           "docVersion": "0.76",
           "pinned": true,
           "purpose": "Trivy docs.",
           "later": false
         },
         {
-          "id": "supply-chain-trivy-release-v0-76-0",
-          "title": "Trivy release v0.76.0",
-          "url": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.0",
-          "version": "0.76.0",
-          "docVersion": "0.76.0",
+          "id": "supply-chain-trivy-release-v0-76-2",
+          "title": "Trivy release v0.76.2",
+          "url": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.2",
+          "version": "0.76.2",
+          "docVersion": "0.76.2",
           "pinned": true,
-          "purpose": "Trivy release v0.76.0.",
+          "purpose": "Trivy release v0.76.2.",
           "later": false
         },
         {
           "id": "dependencies-renovate-docs",
           "title": "Renovate docs",
           "url": "https://docs.renovatebot.com/",
-          "version": "44.166.0",
-          "docVersion": "44.166.0",
+          "version": "44.258.3",
+          "docVersion": "44.258.3",
           "pinned": false,
           "purpose": "Renovate docs.",
           "later": false
@@ -2529,7 +2529,7 @@
           "id": "dependencies-renovate-configuration-options",
           "title": "Renovate configuration options",
           "url": "https://docs.renovatebot.com/configuration-options/",
-          "version": "44.166.0 (docs latest)",
+          "version": "44.258.3 (docs latest)",
           "docVersion": "latest",
           "pinned": false,
           "purpose": "Renovate configuration options.",
@@ -2541,7 +2541,7 @@
       "id": "database",
       "title": "The database in production",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "3 of 9 steps are tested here (3 tested claims: 3 reproduced)",
       "draft": false,
       "sources": [
@@ -2848,9 +2848,9 @@
         {
           "id": "spring-boot-testcontainers-support",
           "title": "Testcontainers support",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/testing/testcontainers.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Testcontainers support.",
           "later": false
@@ -2858,9 +2858,9 @@
         {
           "id": "spring-boot-sql-databases",
           "title": "SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/data/sql.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/data/sql.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA).",
           "later": false
@@ -2868,9 +2868,9 @@
         {
           "id": "spring-boot-database-initialization",
           "title": "Database initialization (Liquibase)",
-          "url": "https://docs.spring.io/spring-boot/4.1/how-to/data-initialization.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/how-to/data-initialization.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Database initialization (Liquibase).",
           "later": false
@@ -2879,7 +2879,7 @@
           "id": "spring-data-relational-reference",
           "title": "Spring Data Relational reference",
           "url": "https://docs.spring.io/spring-data/relational/reference/4.1/index.html",
-          "version": "2026.0.2 (docs 4.1)",
+          "version": "2026.1.0 (docs 4.1)",
           "docVersion": "4.1",
           "pinned": true,
           "purpose": "Spring Data Relational reference.",
@@ -2889,7 +2889,7 @@
           "id": "spring-data-jdbc-section",
           "title": "JDBC section",
           "url": "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html",
-          "version": "2026.0.2 (docs 4.1)",
+          "version": "2026.1.0 (docs 4.1)",
           "docVersion": "4.1",
           "pinned": true,
           "purpose": "JDBC section.",
@@ -2929,7 +2929,7 @@
           "id": "database-documentation",
           "title": "Documentation",
           "url": "https://www.postgresql.org/docs/18/index.html",
-          "version": "18.6 (docs 18)",
+          "version": "18.7 (docs 18)",
           "docVersion": "18",
           "pinned": true,
           "purpose": "Documentation.",
@@ -2939,7 +2939,7 @@
           "id": "database-release-18-notes",
           "title": "Release 18 notes",
           "url": "https://www.postgresql.org/docs/18/release-18.html",
-          "version": "18.6 (docs 18)",
+          "version": "18.7 (docs 18)",
           "docVersion": "18",
           "pinned": true,
           "purpose": "Release 18 notes.",
@@ -2991,7 +2991,7 @@
       "id": "grpc",
       "title": "gRPC services",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "1 of 8 steps is tested here (1 tested claim: 1 reproduced)",
       "draft": false,
       "sources": [],
@@ -3243,7 +3243,7 @@
           "id": "kubernetes-configure-liveness-readiness-startup-probes",
           "title": "Configure liveness/readiness/startup probes (task)",
           "url": "https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Configure liveness/readiness/startup probes (task).",
@@ -3335,7 +3335,7 @@
       "id": "http-clients",
       "title": "HTTP clients and resilience",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "1 of 8 steps is tested here (1 tested claim: 1 reproduced)",
       "draft": false,
       "sources": [
@@ -3593,7 +3593,7 @@
           "id": "spring-boot-migration-guide-3-x-to-4-0",
           "title": "Migration guide 3.x to 4.0 (wiki)",
           "url": "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide",
-          "version": "4.1.2 (docs 4.0)",
+          "version": "4.2.0 (docs 4.0)",
           "docVersion": "4.0",
           "pinned": true,
           "purpose": "Migration guide 3.x to 4.0 (wiki).",
@@ -3602,9 +3602,9 @@
         {
           "id": "spring-boot-application-properties-appendix",
           "title": "Application properties appendix",
-          "url": "https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/appendix/application-properties/index.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Application properties appendix.",
           "later": false
@@ -3612,9 +3612,9 @@
         {
           "id": "spring-boot-tracing",
           "title": "Tracing (names spring-boot-starter-opentelemetry, OTLP export)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/tracing.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Tracing (names spring-boot-starter-opentelemetry, OTLP export).",
           "later": false
@@ -3622,9 +3622,9 @@
         {
           "id": "spring-boot-metrics",
           "title": "Metrics (incl. #actuator.metrics.export.otlp)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/metrics.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Metrics (incl. #actuator.metrics.export.otlp).",
           "later": false
@@ -3632,9 +3632,9 @@
         {
           "id": "spring-boot-virtual-threads",
           "title": "Virtual threads (anchor verified)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/features/spring-application.html#features.spring-application.virtual-threads",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Virtual threads (anchor verified).",
           "later": false
@@ -3642,21 +3642,21 @@
         {
           "id": "spring-framework-reference",
           "title": "Reference",
-          "url": "https://docs.spring.io/spring-framework/reference/7.0/index.html",
-          "version": "7.0.10 (docs 7.0)",
-          "docVersion": "7.0",
+          "url": "https://docs.spring.io/spring-framework/reference/7.1/index.html",
+          "version": "7.1.0 (docs 7.1)",
+          "docVersion": "7.1",
           "pinned": true,
           "purpose": "Reference.",
           "later": false
         },
         {
-          "id": "spring-framework-7-0-release-notes",
-          "title": "7.0 release notes (wiki, also covers upgrading)",
-          "url": "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes",
-          "version": "7.0.10 (docs 7.0)",
-          "docVersion": "7.0",
+          "id": "spring-framework-7-1-release-notes",
+          "title": "7.1 release notes (wiki, also covers upgrading)",
+          "url": "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.1-Release-Notes",
+          "version": "7.1.0 (docs 7.1)",
+          "docVersion": "7.1",
           "pinned": true,
-          "purpose": "7.0 release notes (wiki, also covers upgrading).",
+          "purpose": "7.1 release notes (wiki, also covers upgrading).",
           "later": false
         },
         {
@@ -3675,7 +3675,7 @@
       "id": "jpa-and-jooq",
       "title": "JPA and jOOQ",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "None of its 8 steps is tested here yet",
       "draft": true,
       "sources": [],
@@ -3874,9 +3874,9 @@
         {
           "id": "spring-boot-testcontainers-support",
           "title": "Testcontainers support",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/testing/testcontainers.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Testcontainers support.",
           "later": false
@@ -3884,9 +3884,9 @@
         {
           "id": "spring-boot-sql-databases",
           "title": "SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/data/sql.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/data/sql.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA).",
           "later": false
@@ -3895,7 +3895,7 @@
           "id": "spring-data-relational-reference",
           "title": "Spring Data Relational reference",
           "url": "https://docs.spring.io/spring-data/relational/reference/4.1/index.html",
-          "version": "2026.0.2 (docs 4.1)",
+          "version": "2026.1.0 (docs 4.1)",
           "docVersion": "4.1",
           "pinned": true,
           "purpose": "Spring Data Relational reference.",
@@ -3905,7 +3905,7 @@
           "id": "spring-data-jdbc-section",
           "title": "JDBC section",
           "url": "https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html",
-          "version": "2026.0.2 (docs 4.1)",
+          "version": "2026.1.0 (docs 4.1)",
           "docVersion": "4.1",
           "pinned": true,
           "purpose": "JDBC section.",
@@ -4037,7 +4037,7 @@
       "id": "jvm-in-containers",
       "title": "The JVM in containers",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "5 of 8 steps are tested here (10 tested claims: 1 measured, 9 reproduced)",
       "draft": false,
       "sources": [
@@ -4328,7 +4328,7 @@
           "id": "java-launcher-tool-reference",
           "title": "java launcher tool reference",
           "url": "https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html",
-          "version": "25.0.5+8 (docs 25)",
+          "version": "25.0.5.1+2 (docs 25)",
           "docVersion": "25",
           "pinned": true,
           "purpose": "java launcher tool reference.",
@@ -4338,7 +4338,7 @@
           "id": "java-virtual-threads-guide",
           "title": "Virtual threads guide (Core Libraries)",
           "url": "https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html",
-          "version": "25.0.5+8 (docs 25)",
+          "version": "25.0.5.1+2 (docs 25)",
           "docVersion": "25",
           "pinned": true,
           "purpose": "Virtual threads guide (Core Libraries).",
@@ -4348,7 +4348,7 @@
           "id": "java-hotspot-gc-tuning-guide",
           "title": "HotSpot GC tuning guide",
           "url": "https://docs.oracle.com/en/java/javase/25/gctuning/index.html",
-          "version": "25.0.5+8 (docs 25)",
+          "version": "25.0.5.1+2 (docs 25)",
           "docVersion": "25",
           "pinned": true,
           "purpose": "HotSpot GC tuning guide.",
@@ -4358,7 +4358,7 @@
           "id": "java-class-data-sharing-aot-cache",
           "title": "Class Data Sharing / AOT cache (VM guide)",
           "url": "https://docs.oracle.com/en/java/javase/25/vm/class-data-sharing.html",
-          "version": "25.0.5+8 (docs 25)",
+          "version": "25.0.5.1+2 (docs 25)",
           "docVersion": "25",
           "pinned": true,
           "purpose": "Class Data Sharing / AOT cache (VM guide).",
@@ -4368,7 +4368,7 @@
           "id": "java-openjdk-builds-page",
           "title": "OpenJDK builds page",
           "url": "https://jdk.java.net/25/",
-          "version": "25.0.5+8 (docs 25)",
+          "version": "25.0.5.1+2 (docs 25)",
           "docVersion": "25",
           "pinned": true,
           "purpose": "OpenJDK builds page.",
@@ -4477,9 +4477,9 @@
         {
           "id": "spring-boot-actuator-endpoints",
           "title": "Actuator endpoints (incl. Kubernetes probes anchor, verified)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Actuator endpoints (incl. Kubernetes probes anchor, verified).",
           "later": false
@@ -4487,9 +4487,9 @@
         {
           "id": "spring-boot-container-images",
           "title": "Container images",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/index.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Container images.",
           "later": false
@@ -4497,9 +4497,9 @@
         {
           "id": "spring-boot-efficient-container-images",
           "title": "Efficient container images (layering)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/efficient-images.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Efficient container images (layering).",
           "later": false
@@ -4507,9 +4507,9 @@
         {
           "id": "spring-boot-dockerfiles",
           "title": "Dockerfiles",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/dockerfiles.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Dockerfiles.",
           "later": false
@@ -4517,9 +4517,9 @@
         {
           "id": "spring-boot-cloud-native-buildpacks",
           "title": "Cloud Native Buildpacks",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/cloud-native-buildpacks.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Cloud Native Buildpacks.",
           "later": false
@@ -4527,9 +4527,9 @@
         {
           "id": "spring-boot-efficient-deployments",
           "title": "Efficient deployments",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/packaging/efficient.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Efficient deployments.",
           "later": false
@@ -4537,9 +4537,9 @@
         {
           "id": "spring-boot-aot-cache-and-cds",
           "title": "AOT cache and CDS (reference, sections #packaging.aot-cache.aot-cache and #packaging.aot-cache.cds)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/packaging/aot-cache.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/packaging/aot-cache.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "AOT cache and CDS (reference, sections #packaging.aot-cache.aot-cache and #packaging.aot-cache.cds).",
           "later": false
@@ -4547,9 +4547,9 @@
         {
           "id": "spring-boot-aot-cache",
           "title": "AOT cache (how-to)",
-          "url": "https://docs.spring.io/spring-boot/4.1/how-to/aot-cache.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/how-to/aot-cache.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "AOT cache (how-to).",
           "later": false
@@ -4557,9 +4557,9 @@
         {
           "id": "spring-boot-virtual-threads",
           "title": "Virtual threads (anchor verified)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/features/spring-application.html#features.spring-application.virtual-threads",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Virtual threads (anchor verified).",
           "later": false
@@ -4568,7 +4568,7 @@
           "id": "kubernetes-probes",
           "title": "Probes (concept)",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Probes (concept).",
@@ -4578,7 +4578,7 @@
           "id": "kubernetes-configure-liveness-readiness-startup-probes",
           "title": "Configure liveness/readiness/startup probes (task)",
           "url": "https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Configure liveness/readiness/startup probes (task).",
@@ -4588,7 +4588,7 @@
           "id": "kubernetes-pod-lifecycle",
           "title": "Pod lifecycle (graceful termination)",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Pod lifecycle (graceful termination).",
@@ -4598,7 +4598,7 @@
           "id": "kubernetes-resource-management",
           "title": "Resource management",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Resource management.",
@@ -4610,7 +4610,7 @@
       "id": "kafka",
       "title": "Kafka with the outbox",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "None of its 8 steps is tested here yet",
       "draft": true,
       "sources": [],
@@ -5008,7 +5008,7 @@
       "id": "kubernetes-deployment",
       "title": "Deploying to Kubernetes",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "1 of 9 steps is tested here (1 tested claim: 1 reproduced)",
       "draft": false,
       "sources": [
@@ -5273,9 +5273,9 @@
         {
           "id": "spring-boot-actuator-endpoints",
           "title": "Actuator endpoints (incl. Kubernetes probes anchor, verified)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Actuator endpoints (incl. Kubernetes probes anchor, verified).",
           "later": false
@@ -5284,7 +5284,7 @@
           "id": "kubernetes-probes",
           "title": "Probes (concept)",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Probes (concept).",
@@ -5294,7 +5294,7 @@
           "id": "kubernetes-configure-liveness-readiness-startup-probes",
           "title": "Configure liveness/readiness/startup probes (task)",
           "url": "https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Configure liveness/readiness/startup probes (task).",
@@ -5304,7 +5304,7 @@
           "id": "kubernetes-disruptions",
           "title": "Disruptions (PDB concept)",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/disruptions/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Disruptions (PDB concept).",
@@ -5314,7 +5314,7 @@
           "id": "kubernetes-configure-a-poddisruptionbudget",
           "title": "Configure a PodDisruptionBudget",
           "url": "https://v1-36.docs.kubernetes.io/docs/tasks/run-application/configure-pdb/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Configure a PodDisruptionBudget.",
@@ -5324,7 +5324,7 @@
           "id": "kubernetes-pod-topology-spread-constraints",
           "title": "Pod topology spread constraints",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Pod topology spread constraints.",
@@ -5334,7 +5334,7 @@
           "id": "kubernetes-pod-lifecycle",
           "title": "Pod lifecycle (graceful termination)",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Pod lifecycle (graceful termination).",
@@ -5344,7 +5344,7 @@
           "id": "kubernetes-resource-management",
           "title": "Resource management",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Resource management.",
@@ -5356,7 +5356,7 @@
       "id": "kubernetes-manifests",
       "title": "Kubernetes manifests: plain, Helm or Kustomize",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "None of its 8 steps is tested here yet",
       "draft": true,
       "sources": [
@@ -5586,7 +5586,7 @@
           "id": "kubernetes-docs-home",
           "title": "Docs home",
           "url": "https://v1-36.docs.kubernetes.io/docs/home/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Docs home.",
@@ -5596,7 +5596,7 @@
           "id": "kubernetes-kustomize-via-kubectl",
           "title": "Kustomize via kubectl (task)",
           "url": "https://v1-36.docs.kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Kustomize via kubectl (task).",
@@ -5606,7 +5606,7 @@
           "id": "kubernetes-changelog-1-36",
           "title": "CHANGELOG 1.36",
           "url": "https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.36.md",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "CHANGELOG 1.36.",
@@ -5646,20 +5646,20 @@
           "id": "supply-chain-trivy-docs",
           "title": "Trivy docs",
           "url": "https://trivy.dev/docs/v0.76/guide/",
-          "version": "0.76.0 (docs 0.76)",
+          "version": "0.76.2 (docs 0.76)",
           "docVersion": "0.76",
           "pinned": true,
           "purpose": "Trivy docs.",
           "later": false
         },
         {
-          "id": "supply-chain-trivy-release-v0-76-0",
-          "title": "Trivy release v0.76.0",
-          "url": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.0",
-          "version": "0.76.0",
-          "docVersion": "0.76.0",
+          "id": "supply-chain-trivy-release-v0-76-2",
+          "title": "Trivy release v0.76.2",
+          "url": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.2",
+          "version": "0.76.2",
+          "docVersion": "0.76.2",
           "pinned": true,
-          "purpose": "Trivy release v0.76.0.",
+          "purpose": "Trivy release v0.76.2.",
           "later": false
         }
       ]
@@ -5668,7 +5668,7 @@
       "id": "local-development",
       "title": "Local development",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "2 of 8 steps are tested here (2 tested claims: 2 reproduced)",
       "draft": false,
       "sources": [],
@@ -5767,7 +5767,7 @@
             {
               "id": "ev-local-telemetry-1",
               "badge": "reproduced",
-              "canonical": "Evidence ev-local-telemetry-1 · reproduced by acceptance/observability::TestSignalsArrive. Pointed at grafana/otel-lgtm 0.37.0, one request to the example service produces a trace, a metric and a log line that all arrive in the image's backends. Result: Tempo trace 6840ee0aaf968980f56a37f9d7516175 has server span \"http get /ping\" with uri /ping; Prometheus sum(http_server_requests_seconds_count{service_name=\"single-hexagonal\",uri=\"/ping\"}) = 1; Loki {service_name=\"single-hexagonal\"} | trace_id=\"6840ee0aaf968980f56a37f9d7516175\" returned \"ping\"; 4 more sampled parents at probability 0.1, all 5 traces in Tempo. Limitations: The test sets OTEL_EXPORTER_OTLP_ENDPOINT itself; Boot's automatic service connection for the image through Docker Compose or LgtmStackContainer is not exercised.",
+              "canonical": "Evidence ev-local-telemetry-1 · reproduced by acceptance/observability::TestSignalsArrive. Pointed at grafana/otel-lgtm 0.41.1, one request to the example service produces a trace, a metric and a log line that all arrive in the image's backends. Result: Tempo trace 6840ee0aaf968980f56a37f9d7516175 has server span \"http get /ping\" with uri /ping; Prometheus sum(http_server_requests_seconds_count{service_name=\"single-hexagonal\",uri=\"/ping\"}) = 1; Loki {service_name=\"single-hexagonal\"} | trace_id=\"6840ee0aaf968980f56a37f9d7516175\" returned \"ping\"; 4 more sampled parents at probability 0.1, all 5 traces in Tempo. Limitations: The test sets OTEL_EXPORTER_OTLP_ENDPOINT itself; Boot's automatic service connection for the image through Docker Compose or LgtmStackContainer is not exercised.",
               "test": "acceptance/observability::TestSignalsArrive"
             }
           ]
@@ -5845,7 +5845,7 @@
           "id": "LOCAL-05",
           "type": "generated-config",
           "card": "local-telemetry",
-          "text": "grafana/otel-lgtm 0.37.0 runs locally for traces, metrics and logs and never in a shared or production environment.",
+          "text": "grafana/otel-lgtm 0.41.1 runs locally for traces, metrics and logs and never in a shared or production environment.",
           "tags": []
         },
         {
@@ -5892,9 +5892,9 @@
         {
           "id": "spring-boot-observability-opentelemetry-section",
           "title": "Observability, OpenTelemetry section (anchor verified)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/observability.html#actuator.observability.opentelemetry",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/observability.html#actuator.observability.opentelemetry",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Observability, OpenTelemetry section (anchor verified).",
           "later": false
@@ -5902,9 +5902,9 @@
         {
           "id": "spring-boot-testcontainers-support",
           "title": "Testcontainers support",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/testing/testcontainers.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Testcontainers support.",
           "later": false
@@ -5913,7 +5913,7 @@
           "id": "database-documentation",
           "title": "Documentation",
           "url": "https://www.postgresql.org/docs/18/index.html",
-          "version": "18.6 (docs 18)",
+          "version": "18.7 (docs 18)",
           "docVersion": "18",
           "pinned": true,
           "purpose": "Documentation.",
@@ -5945,7 +5945,7 @@
       "id": "monorepo",
       "title": "Monorepos with several services",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "None of its 8 steps is tested here yet",
       "draft": true,
       "sources": [],
@@ -6172,9 +6172,9 @@
         {
           "id": "build-version-catalogs",
           "title": "Version catalogs",
-          "url": "https://docs.gradle.org/9.8.1/userguide/version_catalogs.html",
-          "version": "9.8.1",
-          "docVersion": "9.8.1",
+          "url": "https://docs.gradle.org/9.9.2/userguide/version_catalogs.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
           "pinned": true,
           "purpose": "Version catalogs.",
           "later": false
@@ -6182,9 +6182,9 @@
         {
           "id": "build-sharing-build-logic",
           "title": "Sharing build logic (buildSrc)",
-          "url": "https://docs.gradle.org/9.8.1/userguide/sharing_build_logic_between_subprojects.html",
-          "version": "9.8.1",
-          "docVersion": "9.8.1",
+          "url": "https://docs.gradle.org/9.9.2/userguide/sharing_build_logic_between_subprojects.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
           "pinned": true,
           "purpose": "Sharing build logic (buildSrc).",
           "later": false
@@ -6192,9 +6192,9 @@
         {
           "id": "build-convention-plugins",
           "title": "Convention plugins",
-          "url": "https://docs.gradle.org/9.8.1/userguide/implementing_gradle_plugins_convention.html",
-          "version": "9.8.1",
-          "docVersion": "9.8.1",
+          "url": "https://docs.gradle.org/9.9.2/userguide/implementing_gradle_plugins_convention.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
           "pinned": true,
           "purpose": "Convention plugins.",
           "later": false
@@ -6202,9 +6202,9 @@
         {
           "id": "build-best-practices-for-structuring-builds",
           "title": "Best practices for structuring builds",
-          "url": "https://docs.gradle.org/9.8.1/userguide/best_practices_structuring_builds.html",
-          "version": "9.8.1",
-          "docVersion": "9.8.1",
+          "url": "https://docs.gradle.org/9.9.2/userguide/best_practices_structuring_builds.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
           "pinned": true,
           "purpose": "Best practices for structuring builds.",
           "later": false
@@ -6212,9 +6212,9 @@
         {
           "id": "build-composite-builds",
           "title": "Composite builds (included build-logic)",
-          "url": "https://docs.gradle.org/9.8.1/userguide/composite_builds.html",
-          "version": "9.8.1",
-          "docVersion": "9.8.1",
+          "url": "https://docs.gradle.org/9.9.2/userguide/composite_builds.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
           "pinned": true,
           "purpose": "Composite builds (included build-logic).",
           "later": false
@@ -6245,7 +6245,7 @@
       "id": "nextjs",
       "title": "Next.js next to the service",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "None of its 8 steps is tested here yet",
       "draft": true,
       "sources": [],
@@ -6502,7 +6502,7 @@
           "id": "kubernetes-probes",
           "title": "Probes (concept)",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Probes (concept).",
@@ -6512,7 +6512,7 @@
           "id": "kubernetes-pod-security-standards",
           "title": "Pod Security Standards",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Pod Security Standards.",
@@ -6522,7 +6522,7 @@
           "id": "kubernetes-pod-lifecycle",
           "title": "Pod lifecycle (graceful termination)",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Pod lifecycle (graceful termination).",
@@ -6694,7 +6694,7 @@
       "id": "observability",
       "title": "Observability",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "7 of 8 steps are tested here (7 tested claims: 6 reproduced, 1 compiled)",
       "draft": false,
       "sources": [
@@ -6972,9 +6972,9 @@
         {
           "id": "spring-boot-actuator",
           "title": "Actuator (production-ready features)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/index.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/index.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Actuator (production-ready features).",
           "later": false
@@ -6982,9 +6982,9 @@
         {
           "id": "spring-boot-actuator-endpoints",
           "title": "Actuator endpoints (incl. Kubernetes probes anchor, verified)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Actuator endpoints (incl. Kubernetes probes anchor, verified).",
           "later": false
@@ -6992,9 +6992,9 @@
         {
           "id": "spring-boot-actuator-rest-api",
           "title": "Actuator REST API",
-          "url": "https://docs.spring.io/spring-boot/4.1/api/rest/actuator/index.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/api/rest/actuator/index.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Actuator REST API.",
           "later": false
@@ -7002,9 +7002,9 @@
         {
           "id": "spring-boot-observability-opentelemetry-section",
           "title": "Observability, OpenTelemetry section (anchor verified)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/observability.html#actuator.observability.opentelemetry",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/observability.html#actuator.observability.opentelemetry",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Observability, OpenTelemetry section (anchor verified).",
           "later": false
@@ -7012,9 +7012,9 @@
         {
           "id": "spring-boot-tracing",
           "title": "Tracing (names spring-boot-starter-opentelemetry, OTLP export)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/tracing.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Tracing (names spring-boot-starter-opentelemetry, OTLP export).",
           "later": false
@@ -7022,9 +7022,9 @@
         {
           "id": "spring-boot-metrics",
           "title": "Metrics (incl. #actuator.metrics.export.otlp)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/metrics.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Metrics (incl. #actuator.metrics.export.otlp).",
           "later": false
@@ -7033,7 +7033,7 @@
           "id": "observability-otel-java-docs",
           "title": "OTel Java docs",
           "url": "https://opentelemetry.io/docs/languages/java/",
-          "version": "1.62.0",
+          "version": "1.68.0 (docs 1.62.0)",
           "docVersion": "1.62.0",
           "pinned": false,
           "purpose": "OTel Java docs.",
@@ -7043,7 +7043,7 @@
           "id": "observability-otel-java-sdk-management",
           "title": "OTel Java SDK management",
           "url": "https://opentelemetry.io/docs/languages/java/sdk/",
-          "version": "1.62.0",
+          "version": "1.68.0 (docs 1.62.0)",
           "docVersion": "1.62.0",
           "pinned": false,
           "purpose": "OTel Java SDK management.",
@@ -7053,20 +7053,20 @@
           "id": "observability-otel-java-sdk-configuration",
           "title": "OTel Java SDK configuration",
           "url": "https://opentelemetry.io/docs/languages/java/configuration/",
-          "version": "1.62.0",
+          "version": "1.68.0 (docs 1.62.0)",
           "docVersion": "1.62.0",
           "pinned": false,
           "purpose": "OTel Java SDK configuration.",
           "later": false
         },
         {
-          "id": "observability-otel-java-release-1-62-0",
-          "title": "OTel Java release 1.62.0 (Boot-managed)",
-          "url": "https://github.com/open-telemetry/opentelemetry-java/releases/tag/v1.62.0",
-          "version": "1.62.0",
-          "docVersion": "1.62.0",
+          "id": "observability-otel-java-release-1-68-0",
+          "title": "OTel Java release 1.68.0 (Boot-managed)",
+          "url": "https://github.com/open-telemetry/opentelemetry-java/releases/tag/v1.68.0",
+          "version": "1.68.0",
+          "docVersion": "1.68.0",
           "pinned": true,
-          "purpose": "OTel Java release 1.62.0 (Boot-managed).",
+          "purpose": "OTel Java release 1.68.0 (Boot-managed).",
           "later": false
         },
         {
@@ -7162,9 +7162,9 @@
         {
           "id": "observability-micrometer-reference",
           "title": "Micrometer reference",
-          "url": "https://docs.micrometer.io/micrometer/reference/1.17/index.html",
-          "version": "1.17.2 (docs 1.17)",
-          "docVersion": "1.17",
+          "url": "https://docs.micrometer.io/micrometer/reference/1.18/index.html",
+          "version": "1.18.0 (docs 1.18)",
+          "docVersion": "1.18",
           "pinned": true,
           "purpose": "Micrometer reference.",
           "later": false
@@ -7172,9 +7172,9 @@
         {
           "id": "observability-micrometer-otlp-registry",
           "title": "Micrometer OTLP registry",
-          "url": "https://docs.micrometer.io/micrometer/reference/1.17/implementations/otlp.html",
-          "version": "1.17.2 (docs 1.17)",
-          "docVersion": "1.17",
+          "url": "https://docs.micrometer.io/micrometer/reference/1.18/implementations/otlp.html",
+          "version": "1.18.0 (docs 1.18)",
+          "docVersion": "1.18",
           "pinned": true,
           "purpose": "Micrometer OTLP registry.",
           "later": false
@@ -7183,8 +7183,8 @@
           "id": "observability-micrometer-observation",
           "title": "Micrometer Observation",
           "url": "https://docs.micrometer.io/micrometer/reference/observation.html",
-          "version": "1.17.2 (docs 1.17)",
-          "docVersion": "1.17",
+          "version": "1.18.0 (docs 1.18)",
+          "docVersion": "1.18",
           "pinned": false,
           "purpose": "Micrometer Observation.",
           "later": false
@@ -7192,9 +7192,9 @@
         {
           "id": "observability-micrometer-tracing-reference",
           "title": "Micrometer Tracing reference",
-          "url": "https://docs.micrometer.io/tracing/reference/1.7/index.html",
-          "version": "1.7.2 (docs 1.7)",
-          "docVersion": "1.7",
+          "url": "https://docs.micrometer.io/tracing/reference/1.8/index.html",
+          "version": "1.8.0 (docs 1.8)",
+          "docVersion": "1.8",
           "pinned": true,
           "purpose": "Micrometer Tracing reference.",
           "later": false
@@ -7215,7 +7215,7 @@
       "id": "rabbitmq",
       "title": "RabbitMQ",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "None of its 8 steps is tested here yet",
       "draft": true,
       "sources": [],
@@ -7530,7 +7530,7 @@
       "id": "rest-apis",
       "title": "REST APIs, contract first",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "1 of 8 steps is tested here (1 tested claim: 1 compiled)",
       "draft": false,
       "sources": [],
@@ -7754,9 +7754,9 @@
         {
           "id": "spring-framework-reference",
           "title": "Reference",
-          "url": "https://docs.spring.io/spring-framework/reference/7.0/index.html",
-          "version": "7.0.10 (docs 7.0)",
-          "docVersion": "7.0",
+          "url": "https://docs.spring.io/spring-framework/reference/7.1/index.html",
+          "version": "7.1.0 (docs 7.1)",
+          "docVersion": "7.1",
           "pinned": true,
           "purpose": "Reference.",
           "later": false
@@ -7775,8 +7775,8 @@
           "id": "api-openapi-generator-spring-generator",
           "title": "openapi-generator Spring generator",
           "url": "https://openapi-generator.tech/docs/generators/spring/",
-          "version": "7.26.0",
-          "docVersion": "7.26.0",
+          "version": "7.27.0",
+          "docVersion": "7.27.0",
           "pinned": false,
           "purpose": "openapi-generator Spring generator.",
           "later": false
@@ -7784,9 +7784,9 @@
         {
           "id": "api-spring-generator-doc-at-tag",
           "title": "Spring generator doc at tag",
-          "url": "https://github.com/OpenAPITools/openapi-generator/blob/v7.26.0/docs/generators/spring.md",
-          "version": "7.26.0",
-          "docVersion": "7.26.0",
+          "url": "https://github.com/OpenAPITools/openapi-generator/blob/v7.27.0/docs/generators/spring.md",
+          "version": "7.27.0",
+          "docVersion": "7.27.0",
           "pinned": true,
           "purpose": "Spring generator doc at tag.",
           "later": false
@@ -7794,21 +7794,21 @@
         {
           "id": "api-gradle-plugin-readme-at-tag",
           "title": "Gradle plugin README at tag",
-          "url": "https://github.com/OpenAPITools/openapi-generator/blob/v7.26.0/modules/openapi-generator-gradle-plugin/README.adoc",
-          "version": "7.26.0",
-          "docVersion": "7.26.0",
+          "url": "https://github.com/OpenAPITools/openapi-generator/blob/v7.27.0/modules/openapi-generator-gradle-plugin/README.adoc",
+          "version": "7.27.0",
+          "docVersion": "7.27.0",
           "pinned": true,
           "purpose": "Gradle plugin README at tag.",
           "later": false
         },
         {
-          "id": "api-release-v7-26-0",
-          "title": "Release v7.26.0",
-          "url": "https://github.com/OpenAPITools/openapi-generator/releases/tag/v7.26.0",
-          "version": "7.26.0",
-          "docVersion": "7.26.0",
+          "id": "api-release-v7-27-0",
+          "title": "Release v7.27.0",
+          "url": "https://github.com/OpenAPITools/openapi-generator/releases/tag/v7.27.0",
+          "version": "7.27.0",
+          "docVersion": "7.27.0",
           "pinned": true,
-          "purpose": "Release v7.26.0.",
+          "purpose": "Release v7.27.0.",
           "later": false
         }
       ]
@@ -7817,7 +7817,7 @@
       "id": "security",
       "title": "Security hardening",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "1 of 9 steps is tested here (1 tested claim: 1 reproduced)",
       "draft": false,
       "sources": [
@@ -8026,7 +8026,7 @@
           "id": "SEC-06",
           "type": "deployment-prerequisite",
           "card": "sec-headers",
-          "text": "server.forward-headers-strategy pinned; server.tomcat.remoteip.internal-proxies narrowed to the ingress addresses.",
+          "text": "server.request.header.forwarded.strategy pinned; server.tomcat.remoteip.internal-proxies narrowed to the ingress addresses.",
           "tags": []
         },
         {
@@ -8090,9 +8090,9 @@
         {
           "id": "spring-boot-actuator-endpoints",
           "title": "Actuator endpoints (incl. Kubernetes probes anchor, verified)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Actuator endpoints (incl. Kubernetes probes anchor, verified).",
           "later": false
@@ -8100,9 +8100,9 @@
         {
           "id": "spring-boot-oauth2",
           "title": "OAuth2 (resource server auto-config)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/security/oauth2.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/security/oauth2.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "OAuth2 (resource server auto-config).",
           "later": false
@@ -8110,9 +8110,9 @@
         {
           "id": "spring-security-reference",
           "title": "Reference",
-          "url": "https://docs.spring.io/spring-security/reference/7.1/index.html",
-          "version": "7.1.2 (docs 7.1)",
-          "docVersion": "7.1",
+          "url": "https://docs.spring.io/spring-security/reference/7.2/index.html",
+          "version": "7.2.0 (docs 7.2)",
+          "docVersion": "7.2",
           "pinned": true,
           "purpose": "Reference.",
           "later": false
@@ -8120,9 +8120,9 @@
         {
           "id": "spring-security-oauth-2-0-resource-server",
           "title": "OAuth 2.0 Resource Server",
-          "url": "https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/index.html",
-          "version": "7.1.2 (docs 7.1)",
-          "docVersion": "7.1",
+          "url": "https://docs.spring.io/spring-security/reference/7.2/servlet/oauth2/resource-server/index.html",
+          "version": "7.2.0 (docs 7.2)",
+          "docVersion": "7.2",
           "pinned": true,
           "purpose": "OAuth 2.0 Resource Server.",
           "later": false
@@ -8130,28 +8130,28 @@
         {
           "id": "spring-security-resource-server-jwt",
           "title": "Resource Server JWT",
-          "url": "https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/jwt.html",
-          "version": "7.1.2 (docs 7.1)",
-          "docVersion": "7.1",
+          "url": "https://docs.spring.io/spring-security/reference/7.2/servlet/oauth2/resource-server/jwt.html",
+          "version": "7.2.0 (docs 7.2)",
+          "docVersion": "7.2",
           "pinned": true,
           "purpose": "Resource Server JWT.",
           "later": false
         },
         {
-          "id": "spring-security-what-s-new-in-7-1",
-          "title": "What's new in 7.1",
-          "url": "https://docs.spring.io/spring-security/reference/7.1/whats-new.html",
-          "version": "7.1.2 (docs 7.1)",
-          "docVersion": "7.1",
+          "id": "spring-security-what-s-new-in-7-2",
+          "title": "What's new in 7.2",
+          "url": "https://docs.spring.io/spring-security/reference/7.2/whats-new.html",
+          "version": "7.2.0 (docs 7.2)",
+          "docVersion": "7.2",
           "pinned": true,
-          "purpose": "What's new in 7.1.",
+          "purpose": "What's new in 7.2.",
           "later": false
         },
         {
           "id": "kubernetes-pod-security-standards",
           "title": "Pod Security Standards",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Pod Security Standards.",
@@ -8161,7 +8161,7 @@
           "id": "kubernetes-pod-security-admission",
           "title": "Pod Security Admission",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-admission/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "Pod Security Admission.",
@@ -8171,7 +8171,7 @@
           "id": "kubernetes-networkpolicy",
           "title": "NetworkPolicy",
           "url": "https://v1-36.docs.kubernetes.io/docs/concepts/services-networking/network-policies/",
-          "version": "1.36.5 (docs 1.36)",
+          "version": "1.36.7 (docs 1.36)",
           "docVersion": "1.36",
           "pinned": true,
           "purpose": "NetworkPolicy.",
@@ -8213,7 +8213,7 @@
       "id": "testing",
       "title": "Testing a Spring Boot service",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "3 of 9 steps are tested here (4 tested claims: 1 reproduced, 3 compiled)",
       "draft": false,
       "sources": [],
@@ -8281,7 +8281,7 @@
             {
               "id": "ev-test-architecture-1",
               "badge": "compiled",
-              "canonical": "Evidence ev-test-architecture-1 · compiled by gradle/single-hexagonal::ModulithTest. ApplicationModules.of(Application.class).verify() passes on the example service with Spring Modulith 2.1.1. Limitations: The example service has one module, so the test proves the setup, not that a cycle or an internal access is caught.",
+              "canonical": "Evidence ev-test-architecture-1 · compiled by gradle/single-hexagonal::ModulithTest. ApplicationModules.of(Application.class).verify() passes on the example service with Spring Modulith 2.2.0. Limitations: The example service has one module, so the test proves the setup, not that a cycle or an internal access is caught.",
               "test": "gradle/single-hexagonal::ModulithTest"
             },
             {
@@ -8336,7 +8336,7 @@
             {
               "id": "ev-test-slices-1",
               "badge": "compiled",
-              "canonical": "Evidence ev-test-slices-1 · compiled by gradle/single-hexagonal::ApplicationTest. The example service's tests compile and run with spring-boot-starter-webmvc-test from the Spring Boot 4.1.2 BOM. Limitations: Proves the test starter resolves and a @SpringBootTest runs; no @WebMvcTest slice exists in the example service yet.",
+              "canonical": "Evidence ev-test-slices-1 · compiled by gradle/single-hexagonal::ApplicationTest. The example service's tests compile and run with spring-boot-starter-webmvc-test from the Spring Boot 4.2.0 BOM. Limitations: Proves the test starter resolves and a @SpringBootTest runs; no @WebMvcTest slice exists in the example service yet.",
               "test": "gradle/single-hexagonal::ApplicationTest"
             }
           ]
@@ -8472,9 +8472,9 @@
         {
           "id": "spring-boot-testcontainers-support",
           "title": "Testcontainers support",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/testing/testcontainers.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Testcontainers support.",
           "later": false
@@ -8482,9 +8482,9 @@
         {
           "id": "spring-modulith-verifying-module-structure",
           "title": "Verifying module structure",
-          "url": "https://docs.spring.io/spring-modulith/reference/2.1/verification.html",
-          "version": "2.1.1 (docs 2.1)",
-          "docVersion": "2.1",
+          "url": "https://docs.spring.io/spring-modulith/reference/2.2/verification.html",
+          "version": "2.2.0 (docs 2.2)",
+          "docVersion": "2.2",
           "pinned": true,
           "purpose": "Verifying module structure.",
           "later": false
@@ -8492,9 +8492,9 @@
         {
           "id": "spring-modulith-integration-testing-modules",
           "title": "Integration testing modules",
-          "url": "https://docs.spring.io/spring-modulith/reference/2.1/testing.html",
-          "version": "2.1.1 (docs 2.1)",
-          "docVersion": "2.1",
+          "url": "https://docs.spring.io/spring-modulith/reference/2.2/testing.html",
+          "version": "2.2.0 (docs 2.2)",
+          "docVersion": "2.2",
           "pinned": true,
           "purpose": "Integration testing modules.",
           "later": false
@@ -8562,9 +8562,9 @@
         {
           "id": "testing-gradle-jacoco-plugin",
           "title": "The JaCoCo plugin",
-          "url": "https://docs.gradle.org/9.8.1/userguide/jacoco_plugin.html",
-          "version": "9.8.1",
-          "docVersion": "9.8.1",
+          "url": "https://docs.gradle.org/9.9.2/userguide/jacoco_plugin.html",
+          "version": "9.9.2",
+          "docVersion": "9.9.2",
           "pinned": true,
           "purpose": "Gradle's jacoco plugin: reports, execution data and coverage verification rules.",
           "later": false
@@ -8615,7 +8615,7 @@
       "id": "virtual-threads",
       "title": "Virtual threads and concurrency",
       "state": "draft",
-      "baseline": "v0.1-b2",
+      "baseline": "v0.1-b3",
       "coverage": "3 of 8 steps are tested here (4 tested claims: 3 reproduced, 1 compiled)",
       "draft": false,
       "sources": [
@@ -8851,7 +8851,7 @@
           "id": "java-virtual-threads-guide",
           "title": "Virtual threads guide (Core Libraries)",
           "url": "https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html",
-          "version": "25.0.5+8 (docs 25)",
+          "version": "25.0.5.1+2 (docs 25)",
           "docVersion": "25",
           "pinned": true,
           "purpose": "Virtual threads guide (Core Libraries).",
@@ -8900,9 +8900,9 @@
         {
           "id": "spring-boot-virtual-threads",
           "title": "Virtual threads (anchor verified)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/features/spring-application.html#features.spring-application.virtual-threads",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Virtual threads (anchor verified).",
           "later": false
@@ -8910,9 +8910,9 @@
         {
           "id": "spring-boot-task-execution",
           "title": "Task execution (virtual-thread executors)",
-          "url": "https://docs.spring.io/spring-boot/4.1/reference/features/task-execution-and-scheduling.html",
-          "version": "4.1.2 (docs 4.1)",
-          "docVersion": "4.1",
+          "url": "https://docs.spring.io/spring-boot/4.2/reference/features/task-execution-and-scheduling.html",
+          "version": "4.2.0 (docs 4.2)",
+          "docVersion": "4.2",
           "pinned": true,
           "purpose": "Task execution (virtual-thread executors).",
           "later": false

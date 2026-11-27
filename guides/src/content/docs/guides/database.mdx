@@ -207,7 +207,7 @@ If the application connects as the owner of its tables, any bug or injected quer
 carries credentials that can change the schema.
 
 Split the jobs. The migration user creates and alters tables and owns them. The runtime user gets `SELECT`,
-`INSERT`, `UPDATE` and `DELETE` on business tables. The fixture tests the generated scripts on PostgreSQL 18.6:
+`INSERT`, `UPDATE` and `DELETE` on business tables. The fixture tests the generated scripts on PostgreSQL 18.7:
 business CRUD succeeds, schema changes are denied, and Liquibase history and lock records remain readable but
 cannot be written by the runtime user.
 

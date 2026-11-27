@@ -4,7 +4,7 @@
 
 Hexagonal, DDD layered, classic layered, Onion, Clean, vertical slice, BCE and MVC, compared on one scenario and on their consequences.
 
-On the web: https://initializer.pyahu.io/guides/architecture-styles/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/architecture-styles/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 Every team meeting about architecture ends the same way. One person draws hexagons, another draws circles, a third
 says "we just need controllers, services and repositories". Each picture looks reasonable and nobody can say what
@@ -288,8 +288,8 @@ The eight styles side by side, for the same scenario.
 
 ## References
 
-- [Fundamentals](https://docs.spring.io/spring-modulith/reference/2.1/fundamentals.html) (2.1.1 (docs 2.1); docs 2.1)
-- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.1/verification.html) (2.1.1 (docs 2.1); docs 2.1)
+- [Fundamentals](https://docs.spring.io/spring-modulith/reference/2.2/fundamentals.html) (2.2.0 (docs 2.2); docs 2.2)
+- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.2/verification.html) (2.2.0 (docs 2.2); docs 2.2)
 - [jmolecules-archunit at tag](https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit) (0.33.0)
 - [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html) (1.5.1, not version-pinned)
 - [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/) (2005): Ports and adapters as defined by its author.

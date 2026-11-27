@@ -4,7 +4,7 @@
 
 Connection pools, timeouts, roles, migrations and tests for a Spring Boot service on PostgreSQL.
 
-On the web: https://initializer.pyahu.io/guides/database/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/database/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 You deploy on a Friday afternoon. Halfway through the rollout the new pods stop getting ready and PostgreSQL
 answers `FATAL: sorry, too many clients already`. Nothing changed in the database. The deployment itself used up
@@ -166,7 +166,7 @@ If the application connects as the owner of its tables, any bug or injected quer
 carries credentials that can change the schema.
 
 Split the jobs. The migration user creates and alters tables and owns them. The runtime user gets `SELECT`,
-`INSERT`, `UPDATE` and `DELETE` on business tables. The fixture tests the generated scripts on PostgreSQL 18.6:
+`INSERT`, `UPDATE` and `DELETE` on business tables. The fixture tests the generated scripts on PostgreSQL 18.7:
 business CRUD succeeds, schema changes are denied, and Liquibase history and lock records remain readable but
 cannot be written by the runtime user.
 
@@ -437,16 +437,16 @@ Everything above lands in three places: the application's configuration, the dat
 
 ## References
 
-- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.2 (docs 4.1); docs 4.1)
-- [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.1/reference/data/sql.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Database initialization (Liquibase)](https://docs.spring.io/spring-boot/4.1/how-to/data-initialization.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html) (2026.0.2 (docs 4.1); docs 4.1)
-- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html) (2026.0.2 (docs 4.1); docs 4.1)
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.2/reference/testing/testcontainers.html) (4.2.0 (docs 4.2); docs 4.2)
+- [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.2/reference/data/sql.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Database initialization (Liquibase)](https://docs.spring.io/spring-boot/4.2/how-to/data-initialization.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html) (2026.1.0 (docs 4.1); docs 4.1)
+- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html) (2026.1.0 (docs 4.1); docs 4.1)
 - [What is a changelog (Community)](https://docs.liquibase.com/community/user-guide-5-0-4/what-is-a-changelog) (5.0.4)
 - [Install with Spring Boot (Community)](https://docs.liquibase.com/community/get-started-5-0-4/install-liquibase-with-spring-boot) (5.0.4)
 - [Connect with PostgreSQL (Community)](https://docs.liquibase.com/community/integration-guide-5-0-4/connect-liquibase-with-postgresql) (5.0.4)
-- [Documentation](https://www.postgresql.org/docs/18/index.html) (18.6 (docs 18); docs 18)
-- [Release 18 notes](https://www.postgresql.org/docs/18/release-18.html) (18.6 (docs 18); docs 18)
+- [Documentation](https://www.postgresql.org/docs/18/index.html) (18.7 (docs 18); docs 18)
+- [Release 18 notes](https://www.postgresql.org/docs/18/release-18.html) (18.7 (docs 18); docs 18)
 - [pgJDBC documentation](https://jdbc.postgresql.org/documentation/) (42.7.14 (docs 42.7); docs 42.7, not version-pinned)
 - [Testcontainers for Java docs](https://java.testcontainers.org/) (2.0.5, not version-pinned)
 - [Postgres module](https://java.testcontainers.org/modules/databases/postgres/) (2.0.5, not version-pinned)

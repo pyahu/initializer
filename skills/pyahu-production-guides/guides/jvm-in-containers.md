@@ -4,7 +4,7 @@
 
 Size memory, CPU, GC and startup for a Java 25 service in a pod and prove each choice.
 
-On the web: https://initializer.pyahu.io/guides/jvm-in-containers/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/jvm-in-containers/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 Your Spring Boot service runs fine on your laptop. In Kubernetes it restarts every few hours, takes ages to start
 and pauses for no reason. Usually the code is fine: the JVM is guessing the size of a machine it cannot see.
@@ -297,7 +297,7 @@ and starts the JVM with G1 and the cache.
 From [`Dockerfile`](https://github.com/pyahu/initializer/blob/main/fixtures/single-hexagonal/Dockerfile):
 
 ```dockerfile
-FROM eclipse-temurin:25.0.5_8-jre-noble@sha256:e3b6f7887a50f20d8f07abf279d8a81a5953fb398a9555bd9edd56b9bd15968c AS runtime
+FROM eclipse-temurin:25.0.5.1_2-jre-noble@sha256:2ec98aa522c472deadfd2b7c5b39bca680e33ef522a53a72f10789bdf89a6bb5 AS runtime
 RUN groupadd --system --gid 10001 app \
  && useradd --system --uid 10001 --gid app --home-dir /nonexistent --shell /usr/sbin/nologin app
 WORKDIR /app
@@ -361,11 +361,11 @@ so the cache is in use.
 
 ## References
 
-- [java launcher tool reference](https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html) (25.0.5+8 (docs 25); docs 25)
-- [Virtual threads guide (Core Libraries)](https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html) (25.0.5+8 (docs 25); docs 25)
-- [HotSpot GC tuning guide](https://docs.oracle.com/en/java/javase/25/gctuning/index.html) (25.0.5+8 (docs 25); docs 25)
-- [Class Data Sharing / AOT cache (VM guide)](https://docs.oracle.com/en/java/javase/25/vm/class-data-sharing.html) (25.0.5+8 (docs 25); docs 25)
-- [OpenJDK builds page](https://jdk.java.net/25/) (25.0.5+8 (docs 25); docs 25)
+- [java launcher tool reference](https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html) (25.0.5.1+2 (docs 25); docs 25)
+- [Virtual threads guide (Core Libraries)](https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html) (25.0.5.1+2 (docs 25); docs 25)
+- [HotSpot GC tuning guide](https://docs.oracle.com/en/java/javase/25/gctuning/index.html) (25.0.5.1+2 (docs 25); docs 25)
+- [Class Data Sharing / AOT cache (VM guide)](https://docs.oracle.com/en/java/javase/25/vm/class-data-sharing.html) (25.0.5.1+2 (docs 25); docs 25)
+- [OpenJDK builds page](https://jdk.java.net/25/) (25.0.5.1+2 (docs 25); docs 25)
 - [JEP 483: Ahead-of-Time Class Loading & Linking](https://openjdk.org/jeps/483) (JDK 24): What JEP 483 changes and in which JDK it was delivered.
 - [JEP 514: Ahead-of-Time Command-Line Ergonomics](https://openjdk.org/jeps/514) (JDK 25): What JEP 514 changes and in which JDK it was delivered.
 - [JEP 515: Ahead-of-Time Method Profiling](https://openjdk.org/jeps/515) (JDK 25): What JEP 515 changes and in which JDK it was delivered.
@@ -376,16 +376,16 @@ so the cache is in use.
 - [JEP 474: ZGC: Generational Mode by Default](https://openjdk.org/jeps/474) (JDK 23): What JEP 474 changes and in which JDK it was delivered.
 - [JEP 490: ZGC: Remove the Non-Generational Mode](https://openjdk.org/jeps/490) (JDK 24): What JEP 490 changes and in which JDK it was delivered.
 - [JEP 521: Generational Shenandoah](https://openjdk.org/jeps/521) (JDK 25): What JEP 521 changes and in which JDK it was delivered.
-- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.2 (docs 4.1); docs 4.1)
-- [Container images](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Efficient container images (layering)](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Dockerfiles](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Cloud Native Buildpacks](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Efficient deployments](https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html) (4.1.2 (docs 4.1); docs 4.1)
-- [AOT cache and CDS (reference, sections #packaging.aot-cache.aot-cache and #packaging.aot-cache.cds)](https://docs.spring.io/spring-boot/4.1/reference/packaging/aot-cache.html) (4.1.2 (docs 4.1); docs 4.1)
-- [AOT cache (how-to)](https://docs.spring.io/spring-boot/4.1/how-to/aot-cache.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.1.2 (docs 4.1); docs 4.1)
-- [Probes (concept)](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/) (1.36.5 (docs 1.36); docs 1.36)
-- [Configure liveness/readiness/startup probes (task)](https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) (1.36.5 (docs 1.36); docs 1.36)
-- [Pod lifecycle (graceful termination)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/) (1.36.5 (docs 1.36); docs 1.36)
-- [Resource management](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/) (1.36.5 (docs 1.36); docs 1.36)
+- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.2/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.2.0 (docs 4.2); docs 4.2)
+- [Container images](https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/index.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Efficient container images (layering)](https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/efficient-images.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Dockerfiles](https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/dockerfiles.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Cloud Native Buildpacks](https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/cloud-native-buildpacks.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Efficient deployments](https://docs.spring.io/spring-boot/4.2/reference/packaging/efficient.html) (4.2.0 (docs 4.2); docs 4.2)
+- [AOT cache and CDS (reference, sections #packaging.aot-cache.aot-cache and #packaging.aot-cache.cds)](https://docs.spring.io/spring-boot/4.2/reference/packaging/aot-cache.html) (4.2.0 (docs 4.2); docs 4.2)
+- [AOT cache (how-to)](https://docs.spring.io/spring-boot/4.2/how-to/aot-cache.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.2/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.2.0 (docs 4.2); docs 4.2)
+- [Probes (concept)](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/) (1.36.7 (docs 1.36); docs 1.36)
+- [Configure liveness/readiness/startup probes (task)](https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) (1.36.7 (docs 1.36); docs 1.36)
+- [Pod lifecycle (graceful termination)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/) (1.36.7 (docs 1.36); docs 1.36)
+- [Resource management](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/) (1.36.7 (docs 1.36); docs 1.36)

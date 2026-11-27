@@ -163,7 +163,7 @@ public final class ProjectRecipe {
         property(d, "spring.mvc.problemdetails.enabled", "true");
         // Behind the ingress: trust its forwarded headers, so HSTS and client addresses are right (security guide,
         // step 5). Narrow server.tomcat.remoteip.internal-proxies to the ingress in each environment.
-        property(d, "server.forward-headers-strategy", "native");
+        property(d, "server.request.header.forwarded.strategy", "web-server");
         property(d, "logging.structured.format.console", "ecs");
         property(d, "management.server.port", "8081");
         property(d, "management.endpoints.web.exposure.include", "health,info");

@@ -2,9 +2,9 @@
 
 # Caching with Valkey
 
-When a cache helps a Spring Boot 4.1 service and how to run one on Valkey with TTLs, safe keys, fresh data and a plan for when it goes down.
+When a cache helps a Spring Boot 4.2 service and how to run one on Valkey with TTLs, safe keys, fresh data and a plan for when it goes down.
 
-On the web: https://initializer.pyahu.io/guides/caching/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/caching/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 **Draft:** no step of this guide is tested here yet.
 
@@ -13,7 +13,7 @@ show up and a deploy filled the cache with values the new code could not read. T
 hammered the database at once.
 
 A cache is a copy of data that can be wrong, missing or gone at any moment. This guide shows how to add one to a
-Spring Boot 4.1 service on Valkey so that it stays a speed boost and never becomes the reason the service is down.
+Spring Boot 4.2 service on Valkey so that it stays a speed boost and never becomes the reason the service is down.
 
 ## What you'll learn
 

@@ -4,7 +4,7 @@ import Diagram from "../Diagram.astro";
 ---
 <Diagram id="bld-build-gates"
   caption="What one ./gradlew build runs: five gates, each one stops a different mistake before it ships."
-  description="Five boxes from left to right, joined by arrows. 1, wrapper: Gradle 9.8.1 is downloaded and its checksum checked and the build compiles with the JDK 25 toolchain; a checksum that differs stops the build. 2, resolve: every version comes from the version catalog and three BOMs, from repositories declared only in settings; a repository declared in a project is an error. 3, compile, highlighted: javac runs Error Prone and NullAway in JSpecify mode; a known bug pattern or a possible null is a compile error. 4, check: the JUnit tests and spotlessCheck; a failing test or unformatted code fails the check. 5, SBOM: cyclonedxBom writes build/sbom/bom.json and the build ends with the jar and its SBOM. A note at the bottom says the first failing task stops the build.">
+  description="Five boxes from left to right, joined by arrows. 1, wrapper: Gradle 9.9.2 is downloaded and its checksum checked and the build compiles with the JDK 25 toolchain; a checksum that differs stops the build. 2, resolve: every version comes from the version catalog and three BOMs, from repositories declared only in settings; a repository declared in a project is an error. 3, compile, highlighted: javac runs Error Prone and NullAway in JSpecify mode; a known bug pattern or a possible null is a compile error. 4, check: the JUnit tests and spotlessCheck; a failing test or unformatted code fails the check. 5, SBOM: cyclonedxBom writes build/sbom/bom.json and the build ends with the jar and its SBOM. A note at the bottom says the first failing task stops the build.">
   <svg viewBox="0 0 1000 290">
     <defs>
       <marker id="bld-build-gates-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
@@ -17,7 +17,7 @@ import Diagram from "../Diagram.astro";
     <text x="788" y="40" class="dg-group">5 · SBOM</text>
 
     <rect x="20" y="60" width="170" height="110" rx="6" class="dg-box" />
-    <text x="34" y="90" class="dg-title">Gradle 9.8.1</text>
+    <text x="34" y="90" class="dg-title">Gradle 9.9.2</text>
     <text x="34" y="116" class="dg-detail">checksum checked</text>
     <text x="34" y="136" class="dg-detail">JDK 25 toolchain</text>
     <path d="M190 115 H210" class="dg-line dg-accent" marker-end="url(#bld-build-gates-accent)" />

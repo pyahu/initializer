@@ -4,7 +4,7 @@
 
 How a Spring Boot service is split into capabilities, what goes inside each one and how tests keep the rules true.
 
-On the web: https://initializer.pyahu.io/guides/architecture/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/architecture/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 A new developer opens the service and asks where the order rules live. Someone answers "in OrderService, a bit in
 the controller and the SQL handles the rest". Every change touches five packages and nobody is sure what
@@ -392,12 +392,12 @@ From [`package-info.java`](https://github.com/pyahu/initializer/blob/main/fixtur
 
 ## References
 
-- [Reference](https://docs.spring.io/spring-modulith/reference/2.1/index.html) (2.1.1 (docs 2.1); docs 2.1)
-- [Fundamentals](https://docs.spring.io/spring-modulith/reference/2.1/fundamentals.html) (2.1.1 (docs 2.1); docs 2.1)
-- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.1/verification.html) (2.1.1 (docs 2.1); docs 2.1)
-- [Integration testing modules](https://docs.spring.io/spring-modulith/reference/2.1/testing.html) (2.1.1 (docs 2.1); docs 2.1)
+- [Reference](https://docs.spring.io/spring-modulith/reference/2.2/index.html) (2.2.0 (docs 2.2); docs 2.2)
+- [Fundamentals](https://docs.spring.io/spring-modulith/reference/2.2/fundamentals.html) (2.2.0 (docs 2.2); docs 2.2)
+- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.2/verification.html) (2.2.0 (docs 2.2); docs 2.2)
+- [Integration testing modules](https://docs.spring.io/spring-modulith/reference/2.2/testing.html) (2.2.0 (docs 2.2); docs 2.2)
 - [jMolecules repo at release tag](https://github.com/xmolecules/jmolecules/tree/2.0.1) (2025.0.2 (docs 2.0.1); docs 2.0.1)
 - [jmolecules-archunit at tag](https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit) (0.33.0)
 - [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html) (1.5.1, not version-pinned)
-- [Declarative transaction management](https://docs.spring.io/spring-framework/reference/7.0/data-access/transaction/declarative.html) (7.0.10 (docs 7.0); docs 7.0): How @Transactional works and where to put it.
+- [Declarative transaction management](https://docs.spring.io/spring-framework/reference/7.1/data-access/transaction/declarative.html) (7.1.0 (docs 7.1); docs 7.1): How @Transactional works and where to put it.
 - [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/) (2005): Ports and adapters as defined by its author.

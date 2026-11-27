@@ -1,6 +1,6 @@
 ---
 title: HTTP clients and resilience
-description: Call other services from Spring Boot 4.1 with timeouts, bounded retries and a limit per downstream service.
+description: Call other services from Spring Boot 4.2 with timeouts, bounded retries and a limit per downstream service.
 tableOfContents: { maxHeadingLevel: 2 }
 guide:
   id: http-clients
@@ -64,8 +64,8 @@ write no new `RestTemplate` code.
 
 ### What's going on
 
-Spring has three HTTP clients. `RestTemplate` is the old one: the Spring team plans to deprecate it in
-Framework 7.1 and remove it in 8.0. `WebClient` is reactive and adding WebFlux to a Spring MVC app just to get a
+Spring has three HTTP clients. `RestTemplate` is the old one: Framework 7.1 deprecates it for removal in 8.0 and
+Spring Boot 4.2 deprecates `RestTemplateBuilder` and `TestRestTemplate` with it. `WebClient` is reactive and adding WebFlux to a Spring MVC app just to get a
 client brings in a second stack. `RestClient` is the blocking client where new features land and it works well
 with virtual threads.
 
@@ -91,8 +91,8 @@ from properties under `spring.http.serviceclient.<group>`.
 ### When this is not for you
 
 - A reactive WebFlux app: use `WebClient`.
-- Existing `RestTemplate` code keeps working. Move it to `RestClient` when you touch it: both share the same request
-  factories, interceptors and converters.
+- Existing `RestTemplate` code keeps working until Framework 8.0, with deprecation warnings. Move it to
+  `RestClient` when you touch it: both share the same request factories, interceptors and converters.
 
 <a id="http-timeouts"></a>
 
@@ -119,7 +119,7 @@ before you can even dial.
 <HttpCallPathDiagram />
 <DiagramLegend items={['recommended', 'context', 'optional', 'failure']} />
 
-Boot 4.1 has properties for the first two: `spring.http.clients.*` for every client and
+Boot 4.2 has properties for the first two: `spring.http.clients.*` for every client and
 `spring.http.serviceclient.<group>.*` for one group. A group value you leave out falls back to the global one. The
 third has no property: step 3 sets it in code.
 
@@ -234,7 +234,7 @@ than the last. Without jitter, a random part added to each wait, every replica r
 waves. And a 400 or a 404 will not change on the next try.
 
 Spring Framework 7 has `@Retryable` built in but a bare one retries every exception 3 times with a fixed 1 second
-delay. It also does nothing until you add `@EnableResilientMethods`: Boot 4.1 does not turn it on for you. Like
+delay. It also does nothing until you add `@EnableResilientMethods`: Boot 4.2 does not turn it on for you. Like
 `@Transactional`, it works through a proxy, so a call from inside the same class skips it.
 
 ### Do this

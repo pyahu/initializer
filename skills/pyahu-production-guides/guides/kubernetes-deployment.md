@@ -2,9 +2,9 @@
 
 # Deploying to Kubernetes
 
-Probes, shutdown, resources, rollouts, disruption, scaling and placement for a Spring Boot 4.1 service in a pod.
+Probes, shutdown, resources, rollouts, disruption, scaling and placement for a Spring Boot 4.2 service in a pod.
 
-On the web: https://initializer.pyahu.io/guides/kubernetes-deployment/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/kubernetes-deployment/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 The database fails over at 3 a.m. Thirty seconds later every pod of your service restarts at once and each one
 hits the database while it is still recovering. Next day a routine deploy returns a burst of 502s. Nothing in the
@@ -415,11 +415,11 @@ port, while Actuator itself listens on 8081. With a database, it answers 503 unt
 
 ## References
 
-- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.2 (docs 4.1); docs 4.1)
-- [Probes (concept)](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/) (1.36.5 (docs 1.36); docs 1.36)
-- [Configure liveness/readiness/startup probes (task)](https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) (1.36.5 (docs 1.36); docs 1.36)
-- [Disruptions (PDB concept)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/disruptions/) (1.36.5 (docs 1.36); docs 1.36)
-- [Configure a PodDisruptionBudget](https://v1-36.docs.kubernetes.io/docs/tasks/run-application/configure-pdb/) (1.36.5 (docs 1.36); docs 1.36)
-- [Pod topology spread constraints](https://v1-36.docs.kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) (1.36.5 (docs 1.36); docs 1.36)
-- [Pod lifecycle (graceful termination)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/) (1.36.5 (docs 1.36); docs 1.36)
-- [Resource management](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/) (1.36.5 (docs 1.36); docs 1.36)
+- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.2/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.2.0 (docs 4.2); docs 4.2)
+- [Probes (concept)](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/) (1.36.7 (docs 1.36); docs 1.36)
+- [Configure liveness/readiness/startup probes (task)](https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) (1.36.7 (docs 1.36); docs 1.36)
+- [Disruptions (PDB concept)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/disruptions/) (1.36.7 (docs 1.36); docs 1.36)
+- [Configure a PodDisruptionBudget](https://v1-36.docs.kubernetes.io/docs/tasks/run-application/configure-pdb/) (1.36.7 (docs 1.36); docs 1.36)
+- [Pod topology spread constraints](https://v1-36.docs.kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) (1.36.7 (docs 1.36); docs 1.36)
+- [Pod lifecycle (graceful termination)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/) (1.36.7 (docs 1.36); docs 1.36)
+- [Resource management](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/) (1.36.7 (docs 1.36); docs 1.36)

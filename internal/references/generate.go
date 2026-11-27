@@ -176,7 +176,7 @@ func ReferencePage(r *guidedata.Repo) ([]byte, error) {
 	var b strings.Builder
 	b.WriteString("---\ntitle: Reference docs\ndescription: Official documentation for the exact versions the guides and the generator use.\ntableOfContents: { maxHeadingLevel: 2 }\n---\n\n")
 	b.WriteString(Header + "\n\n")
-	fmt.Fprintf(&b, "Baseline **%s**. The baseline version is what the examples use. The documentation pin is the version or release line the official site serves; a release line such as Spring Boot 4.1 follows its latest patch. Links that cannot be pinned say \"not version-pinned\".\n\n", active)
+	fmt.Fprintf(&b, "Baseline **%s**. The baseline version is what the examples use. The documentation pin is the version or release line the official site serves; a release line such as Spring Boot 4.2 follows its latest patch. Links that cannot be pinned say \"not version-pinned\".\n\n", active)
 	renderEntries(&b, r, active, es, "##")
 	b.WriteString("## By guide\n\n")
 	for _, g := range r.Guides {

@@ -65,7 +65,7 @@ These are the steps we follow, in order.
 
 1. **Pick the updates** from the Dependency Dashboard. Read the release notes of each one.
 2. **Change the pins** in `data/versions.yaml`, with updated versions and image digests. Give the baseline a
-   new `id` (`v0.1-b3` after `v0.1-b2`) and set `active` to the same value, so pages and generated projects say
+   new `id` (`v0.1-b4` after `v0.1-b3`) and set `active` to the same value, so pages and generated projects say
    which list they follow.
 3. **Update the services** to the same versions: the fixtures in `fixtures/` and the Initializer's own build
    (`gradle/libs.versions.toml`, the Gradle wrapper and each Dockerfile).
@@ -98,7 +98,7 @@ These are the steps we follow, in order.
 ## Keeping the links alive
 
 Every external link is checked on every change and again every Monday, together with the versions that a BOM
-manages. Some official documentation is pinned to a release line, such as Spring Boot 4.1, and follows its
+manages. Some official documentation is pinned to a release line, such as Spring Boot 4.2, and follows its
 latest patch. The link check verifies that release line; the examples and their evidence stay on the exact
 baseline patch until the baseline is updated. A link that is down for a reason we accept gets an exception
 with that reason. So does a security

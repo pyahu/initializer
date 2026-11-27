@@ -4,7 +4,7 @@
 
 A production Next.js frontend in the same repository as the Spring Boot service, with its own image and Deployment.
 
-On the web: https://initializer.pyahu.io/guides/nextjs/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/nextjs/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 **Draft:** no step of this guide is tested here yet.
 
@@ -365,9 +365,9 @@ generated with the Next.js option has every file listed here.
 ## References
 
 - [OTel specification](https://opentelemetry.io/docs/specs/otel/) (1.61.0, not version-pinned)
-- [Probes (concept)](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/) (1.36.5 (docs 1.36); docs 1.36)
-- [Pod Security Standards](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/) (1.36.5 (docs 1.36); docs 1.36)
-- [Pod lifecycle (graceful termination)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/) (1.36.5 (docs 1.36); docs 1.36)
+- [Probes (concept)](https://v1-36.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/) (1.36.7 (docs 1.36); docs 1.36)
+- [Pod Security Standards](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/) (1.36.7 (docs 1.36); docs 1.36)
+- [Pod lifecycle (graceful termination)](https://v1-36.docs.kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/) (1.36.7 (docs 1.36); docs 1.36)
 - [OpenAPI Specification v3.1.2 (latest 3.1 patch)](https://spec.openapis.org/oas/v3.1.2.html) (3.1.2)
 - [OpenID Connect Core 1.0 (errata set 2)](https://openid.net/specs/openid-connect-core-1_0.html) (final)
 - [RFC 9700 OAuth 2.0 Security BCP](https://www.rfc-editor.org/rfc/rfc9700.html) (final)

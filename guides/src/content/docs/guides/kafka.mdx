@@ -1,6 +1,6 @@
 ---
 title: Kafka with the outbox
-description: Publish and consume events from Spring Boot 4.1 without losing them or sending them twice.
+description: Publish and consume events from Spring Boot 4.2 without losing them or sending them twice.
 tableOfContents: { maxHeadingLevel: 2 }
 guide:
   id: kafka
@@ -42,8 +42,8 @@ An order is saved and the "order placed" event never reaches billing. Or it reac
 is charged twice. Nobody sees an error: the database committed and Kafka said yes. The gap was in between.
 
 This guide makes events as reliable as the data they describe: saved in the same transaction, published from the
-database log, read with a known format and handled safely when they fail. It uses Spring for Apache Kafka 4.1.2
-and the Kafka 4.2.2 client, the versions Spring Boot 4.1.2 manages.
+database log, read with a known format and handled safely when they fail. It uses Spring for Apache Kafka 4.2.0
+and the Kafka 4.4.0 client, the versions Spring Boot 4.2.0 manages.
 
 <GuideStatus guide="kafka" />
 

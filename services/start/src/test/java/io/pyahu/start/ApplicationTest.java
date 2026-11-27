@@ -24,7 +24,7 @@ class ApplicationTest {
         var baseline = describeOptions.describe().baseline();
         assertThat(baseline.id()).matches("v\\d+\\.\\d+-b\\d+");
         assertThat(baseline.javaFeature()).isEqualTo(25);
-        assertThat(baseline.springBoot()).startsWith("4.1.");
+        assertThat(baseline.springBoot()).startsWith("4.2.");
     }
 
     @Test

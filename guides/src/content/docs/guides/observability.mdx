@@ -1,6 +1,6 @@
 ---
 title: Observability
-description: Traces, metrics and logs over OTLP with Spring Boot 4.1, correlated by one trace ID.
+description: Traces, metrics and logs over OTLP with Spring Boot 4.2, correlated by one trace ID.
 tableOfContents: { maxHeadingLevel: 2 }
 guide:
   id: observability
@@ -50,7 +50,7 @@ A customer says checkout is slow. The dashboard agrees: latency is up. But which
 ID and the trace you need was never kept. Three tools and no thread to pull.
 
 This guide builds one pipeline where every trace, metric and log line carries the same trace ID, so a slow request
-on a graph leads to its trace and the trace to its logs. It uses Spring Boot 4.1's own OpenTelemetry support, with
+on a graph leads to its trace and the trace to its logs. It uses Spring Boot 4.2's own OpenTelemetry support, with
 no Java agent.
 
 <GuideStatus guide="observability" />
@@ -105,7 +105,7 @@ OTLP, the OpenTelemetry Protocol, carries traces, metrics and logs from the app 
 Boot 4 renamed its OTLP properties. Advice written for Boot 3 uses names that no longer work and the app quietly
 exports nothing.
 
-The good news: Boot 4.1 reads the standard OpenTelemetry variable `OTEL_EXPORTER_OTLP_ENDPOINT` and adds
+The good news: Boot 4.2 reads the standard OpenTelemetry variable `OTEL_EXPORTER_OTLP_ENDPOINT` and adds
 `/v1/traces`, `/v1/metrics` and `/v1/logs` for each signal. The variable wins over `application.yaml`, so the same
 image talks to a local backend on your laptop and to the collector in the cluster.
 
@@ -147,7 +147,7 @@ that wrote it.
 ### Do this
 
 1. Add `opentelemetry-logback-appender-1.0`, at the release built on the OpenTelemetry SDK that Boot manages
-   (2.28.1-alpha for SDK 1.62.0).
+   (2.34.0-alpha for SDK 1.68.0).
 2. Reference it in `logback-spring.xml`, next to the console appender.
 3. Install it with an `InitializingBean` that calls `OpenTelemetryAppender.install(openTelemetry)`.
 4. In Loki, keep `trace_id` out of the index labels. It travels as structured metadata.
@@ -273,7 +273,7 @@ and fans out to each backend. Your apps never hold backend credentials.
 
 ### What's going on
 
-A latency spike tells you something is slow, not what. Boot 4.1 attaches an exemplar to latency histograms: the
+A latency spike tells you something is slow, not what. Boot 4.2 attaches an exemplar to latency histograms: the
 trace ID of one real request in that bucket. Spans carry the same ID and log records carry it as `trace_id` once
 the appender from step 3 is installed.
 
@@ -338,8 +338,8 @@ Boot BOM sets every version except the appender's.
 
 <Recipe id="obs-dependencies" path="fixtures/single-hexagonal/build.gradle.kts" start="implementation(libs.spring.boot.starter.opentelemetry)" end="implementation(libs.opentelemetry.logback.appender)" lang="kotlin" />
 
-**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `opentelemetry-api` 1.62.0 and
-`opentelemetry-logback-appender-1.0` 2.28.1-alpha.
+**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `opentelemetry-api` 1.68.0 and
+`opentelemetry-logback-appender-1.0` 2.34.0-alpha.
 
 ### The settings
 

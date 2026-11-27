@@ -1,6 +1,6 @@
 ---
 title: RabbitMQ
-description: Work queues and commands with Spring AMQP on Spring Boot 4.1, with no message lost on the way in and none stuck forever on the way out.
+description: Work queues and commands with Spring AMQP on Spring Boot 4.2, with no message lost on the way in and none stuck forever on the way out.
 tableOfContents: { maxHeadingLevel: 2 }
 guide:
   id: rabbitmq
@@ -43,7 +43,7 @@ restarted a second after the publish, the message lived only in memory and nobod
 opposite happens: one malformed message fails, goes back to the queue, fails again and keeps a consumer busy all
 night.
 
-This guide sets up RabbitMQ with Spring AMQP on Spring Boot 4.1 so a message is either safely stored or the
+This guide sets up RabbitMQ with Spring AMQP on Spring Boot 4.2 so a message is either safely stored or the
 publisher knows it is not. A message that cannot be handled ends up somewhere you can look at it.
 
 <GuideStatus guide="rabbitmq" />
@@ -74,8 +74,9 @@ and acknowledges each message on its own, so one slow job does not block the nex
 1. Choose RabbitMQ for task queues, commands to one service and routing by key or pattern.
 2. Choose Kafka for events that several services consume or that you may need to replay
    ([Kafka with the outbox](/guides/kafka/)).
-3. Add `spring-boot-starter-amqp`. The Spring Boot 4.1.2 BOM manages Spring AMQP 4.1.2 and the RabbitMQ Java
-   client `amqp-client` 5.30.0.
+3. Add `spring-boot-starter-rabbitmq`. Since Spring Boot 4.2, `spring-boot-starter-amqp` is generic AMQP 1.0 and
+   no longer the RabbitMQ starter. The Spring Boot 4.2.0 BOM manages Spring AMQP 4.2.0 and the RabbitMQ Java client
+   `amqp-client` 5.37.1.
 
 ### When this is not for you
 

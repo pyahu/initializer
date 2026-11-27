@@ -4,7 +4,7 @@
 
 What to test at each layer and with which tool, from fast domain tests to tests against the built image.
 
-On the web: https://initializer.pyahu.io/guides/testing/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/testing/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 The build takes twelve minutes and half of that is tests that start the whole application to check one `if`. A
 change to a controller breaks a test about the database. A bug still reaches production, because the one thing
@@ -181,7 +181,7 @@ migrations, versions and pools.
        @Bean
        @ServiceConnection
        PostgreSQLContainer postgres() {
-           return new PostgreSQLContainer("postgres:18.6");
+           return new PostgreSQLContainer("postgres:18.7");
        }
    }
    ```
@@ -432,16 +432,16 @@ classes.
 
 ## References
 
-- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.1/verification.html) (2.1.1 (docs 2.1); docs 2.1)
-- [Integration testing modules](https://docs.spring.io/spring-modulith/reference/2.1/testing.html) (2.1.1 (docs 2.1); docs 2.1)
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.2/reference/testing/testcontainers.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Verifying module structure](https://docs.spring.io/spring-modulith/reference/2.2/verification.html) (2.2.0 (docs 2.2); docs 2.2)
+- [Integration testing modules](https://docs.spring.io/spring-modulith/reference/2.2/testing.html) (2.2.0 (docs 2.2); docs 2.2)
 - [jmolecules-archunit at tag](https://github.com/xmolecules/jmolecules-integrations/tree/0.33.0/jmolecules-archunit) (0.33.0)
 - [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html) (1.5.1, not version-pinned)
 - [Testcontainers for Java docs](https://java.testcontainers.org/) (2.0.5, not version-pinned)
 - [Postgres module](https://java.testcontainers.org/modules/databases/postgres/) (2.0.5, not version-pinned)
 - [JUnit 5 quickstart](https://java.testcontainers.org/quickstart/junit_5_quickstart/) (2.0.5, not version-pinned)
 - [Release 2.0.5](https://github.com/testcontainers/testcontainers-java/releases/tag/2.0.5) (2.0.5)
-- [The JaCoCo plugin](https://docs.gradle.org/9.8.1/userguide/jacoco_plugin.html) (9.8.1): Gradle's jacoco plugin: reports, execution data and coverage verification rules.
+- [The JaCoCo plugin](https://docs.gradle.org/9.9.2/userguide/jacoco_plugin.html) (9.9.2): Gradle's jacoco plugin: reports, execution data and coverage verification rules.
 - [JaCoCo coverage counters](https://www.jacoco.org/jacoco/trunk/doc/counters.html) (0.8.16, not version-pinned): What line and branch coverage count.
 - [PIT quick start](https://pitest.org/quickstart/) (1.30.2, not version-pinned): How mutation testing works and how PIT reports killed and surviving mutants.
 - [PIT mutators](https://pitest.org/quickstart/mutators/) (1.30.2, not version-pinned): The changes PIT makes to the code.

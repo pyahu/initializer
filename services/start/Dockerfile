@@ -14,7 +14,7 @@
 # CI supplies the tested jar at workspace/application.jar through --build-context build=...,
 # replacing only the build stage. Extraction, runtime layers and AOT training still run here.
 
-FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f AS build
+FROM eclipse-temurin:25.0.5.1_2-jdk-noble@sha256:c7eef3dfeb81468533ea48c67bddaa8c7ca916454259e4d0d734d12bcff8e125 AS build
 WORKDIR /workspace
 COPY gradlew gradlew.bat settings.gradle.kts ./
 COPY gradle/ gradle/
@@ -31,14 +31,14 @@ COPY services/start/src/ services/start/src/
 RUN --mount=type=cache,target=/root/.gradle bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :start:bootJar \
  && cp services/start/build/libs/start-0.1.0.jar /workspace/application.jar
 
-FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f AS extract
+FROM eclipse-temurin:25.0.5.1_2-jdk-noble@sha256:c7eef3dfeb81468533ea48c67bddaa8c7ca916454259e4d0d734d12bcff8e125 AS extract
 WORKDIR /extract
 COPY --from=build /workspace/application.jar application.jar
 # --layers without --launcher: application/application.jar plus lib/*.jar on its manifest class
 # path, started with java -jar. The AOT cache needs this layout.
 RUN java -Djarmode=tools -jar application.jar extract --layers --destination extracted
 
-FROM eclipse-temurin:25.0.5_8-jre-noble@sha256:e3b6f7887a50f20d8f07abf279d8a81a5953fb398a9555bd9edd56b9bd15968c AS runtime
+FROM eclipse-temurin:25.0.5.1_2-jre-noble@sha256:2ec98aa522c472deadfd2b7c5b39bca680e33ef522a53a72f10789bdf89a6bb5 AS runtime
 RUN groupadd --system --gid 10001 app \
  && useradd --system --uid 10001 --gid app --home-dir /nonexistent --shell /usr/sbin/nologin app
 WORKDIR /app

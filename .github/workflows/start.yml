@@ -50,7 +50,7 @@ concurrency:
 
 env:
   GOTOOLCHAIN: go1.27.2
-  JDK_IMAGE: eclipse-temurin@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f
+  JDK_IMAGE: eclipse-temurin@sha256:c7eef3dfeb81468533ea48c67bddaa8c7ca916454259e4d0d734d12bcff8e125
   # The Node of frontends/start-web/.node-version, pinned by digest.
   NODE_IMAGE: node:24.22.3-trixie-slim@sha256:af02d57b57719b9657a45199a79264a9437940cd55b3c7b3fc99615654f124a0
   # The browsers of the @playwright/test version in frontends/start-web/package.json.
@@ -99,7 +99,7 @@ jobs:
         with:
           args: lint build/manifests
       - name: Manifest security
-        uses: docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+        uses: docker://aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
         with:
           args: config --exit-code 1 --severity HIGH,CRITICAL build/manifests
       - name: Deprecated or removed APIs
@@ -115,7 +115,7 @@ jobs:
       - name: Export the built image for scanning
         run: docker save start:ci -o build/start-image.tar
       - name: Backend image vulnerabilities
-        uses: docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+        uses: docker://aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
         with:
           args: image --input build/start-image.tar --scanners vuln --ignore-unfixed --severity HIGH,CRITICAL --exit-code 1 --cache-dir build/trivy-cache
       - name: Smoke
@@ -165,7 +165,7 @@ jobs:
           mkdir -p build
           docker save start-web:ci -o build/web-image.tar
       - name: Frontend image vulnerabilities
-        uses: docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+        uses: docker://aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
         with:
           args: image --input build/web-image.tar --scanners vuln --ignore-unfixed --severity HIGH,CRITICAL --exit-code 1 --cache-dir build/trivy-cache
       - name: The page in a browser

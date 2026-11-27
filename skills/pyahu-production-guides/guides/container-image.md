@@ -4,7 +4,7 @@
 
 Build a small layered image for a Spring Boot service, run it without root and know what it ships and who built it.
 
-On the web: https://initializer.pyahu.io/guides/container-image/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/container-image/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 A security alert lands: a library with a known hole is out there. Which of your services ship it? Nobody knows,
 because the images are opaque boxes. Meanwhile every small commit pushes 50 MB, the app runs as root and the base
@@ -66,7 +66,7 @@ less often than code, a normal commit only pushes the small top layers.
 **In short:** Eclipse Temurin JRE on Ubuntu, with the Ubuntu codename in the tag.
 
 ```dockerfile
-FROM eclipse-temurin:25.0.5_8-jre-noble@sha256:e3b6f7887a50f20d8f07abf279d8a81a5953fb398a9555bd9edd56b9bd15968c
+FROM eclipse-temurin:25.0.5.1_2-jre-noble@sha256:2ec98aa522c472deadfd2b7c5b39bca680e33ef522a53a72f10789bdf89a6bb5
 ```
 
 ### What's going on
@@ -88,7 +88,7 @@ the tag, you stay on 24.04 until you choose to move.
 
 ### Do this
 
-1. Start from `eclipse-temurin:25.0.5_8-jre-noble` for the runtime stage and the matching `-jdk-noble` image for the
+1. Start from `eclipse-temurin:25.0.5.1_2-jre-noble` for the runtime stage and the matching `-jdk-noble` image for the
    build stages.
 2. If the service calls hosts whose certificates are signed by your company's certificate authority (CA), add the
    CA certificate in the runtime stage with
@@ -107,7 +107,7 @@ the tag, you stay on 24.04 until you choose to move.
 **In short:** pin every image by tag and digest and let a bot open a pull request when the digest moves.
 
 ```dockerfile
-FROM eclipse-temurin:25.0.5_8-jre-noble@sha256:e3b6f7887a50f20d8f07abf279d8a81a5953fb398a9555bd9edd56b9bd15968c
+FROM eclipse-temurin:25.0.5.1_2-jre-noble@sha256:2ec98aa522c472deadfd2b7c5b39bca680e33ef522a53a72f10789bdf89a6bb5
 ```
 
 ### What's going on
@@ -283,7 +283,7 @@ pinned by digest (steps 2 and 3).
 From [`Dockerfile`](https://github.com/pyahu/initializer/blob/main/fixtures/single-hexagonal/Dockerfile):
 
 ```dockerfile
-FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f AS build
+FROM eclipse-temurin:25.0.5.1_2-jdk-noble@sha256:c7eef3dfeb81468533ea48c67bddaa8c7ca916454259e4d0d734d12bcff8e125 AS build
 WORKDIR /workspace
 COPY gradlew settings.gradle.kts build.gradle.kts ./
 COPY gradle/ gradle/
@@ -296,7 +296,7 @@ COPY src/ src/
 RUN --mount=type=cache,target=/root/.gradle bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet bootJar \
  && cp build/libs/single-hexagonal-0.1.0.jar /workspace/application.jar
 
-FROM eclipse-temurin:25.0.5_8-jdk-noble@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f AS extract
+FROM eclipse-temurin:25.0.5.1_2-jdk-noble@sha256:c7eef3dfeb81468533ea48c67bddaa8c7ca916454259e4d0d734d12bcff8e125 AS extract
 WORKDIR /extract
 COPY --from=build /workspace/application.jar application.jar
 # --layers without --launcher: application/application.jar plus lib/*.jar on its manifest class
@@ -384,24 +384,24 @@ tasks.cyclonedxBom {
 
 ## References
 
-- [Container images](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/index.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Efficient container images (layering)](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/efficient-images.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Dockerfiles](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/dockerfiles.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Cloud Native Buildpacks](https://docs.spring.io/spring-boot/4.1/reference/packaging/container-images/cloud-native-buildpacks.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Efficient deployments](https://docs.spring.io/spring-boot/4.1/reference/packaging/efficient.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Gradle plugin: packaging OCI images](https://docs.spring.io/spring-boot/4.1/gradle-plugin/packaging-oci-image.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Container images](https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/index.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Efficient container images (layering)](https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/efficient-images.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Dockerfiles](https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/dockerfiles.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Cloud Native Buildpacks](https://docs.spring.io/spring-boot/4.2/reference/packaging/container-images/cloud-native-buildpacks.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Efficient deployments](https://docs.spring.io/spring-boot/4.2/reference/packaging/efficient.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Gradle plugin: packaging OCI images](https://docs.spring.io/spring-boot/4.2/gradle-plugin/packaging-oci-image.html) (4.2.0 (docs 4.2); docs 4.2)
 - [OpenID Connect in Actions (keyless cosign)](https://docs.github.com/en/actions/concepts/security/openid-connect) (n/a, not version-pinned)
 - [Docker Build: named contexts](https://docs.docker.com/build/concepts/context/#named-contexts) (n/a, not version-pinned): Supply the tested artifact while retaining the Dockerfile's extraction, runtime and AOT stages.
 - [SLSA spec v1.2 (current; /spec/ and /spec/latest/ both redirect to v1.2)](https://slsa.dev/spec/v1.2/) (1.2)
 - [SLSA v1.2 Provenance](https://slsa.dev/spec/v1.2/provenance) (1.2)
-- [Sigstore docs](https://docs.sigstore.dev/) (3.1.3 (docs 3); docs 3, not version-pinned)
-- [cosign: signing containers](https://docs.sigstore.dev/cosign/signing/signing_with_containers/) (3.1.3 (docs 3); docs 3, not version-pinned)
-- [cosign: verifying](https://docs.sigstore.dev/cosign/verifying/verify/) (3.1.3 (docs 3); docs 3, not version-pinned)
-- [cosign: in-toto attestations](https://docs.sigstore.dev/cosign/verifying/attestation/) (3.1.3 (docs 3); docs 3, not version-pinned)
-- [cosign release v3.1.3](https://github.com/sigstore/cosign/releases/tag/v3.1.3) (3.1.3)
-- [Syft docs (Anchore OSS site)](https://oss.anchore.com/docs/guides/sbom/) (1.54.1, not version-pinned)
-- [Syft CLI reference](https://oss.anchore.com/docs/reference/syft/cli/) (1.54.1, not version-pinned)
-- [Trivy docs](https://trivy.dev/docs/v0.76/guide/) (0.76.0 (docs 0.76); docs 0.76)
-- [Trivy release v0.76.0](https://github.com/aquasecurity/trivy/releases/tag/v0.76.0) (0.76.0)
-- [Renovate docs](https://docs.renovatebot.com/) (44.166.0, not version-pinned)
-- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/) (44.166.0 (docs latest); docs latest, not version-pinned)
+- [Sigstore docs](https://docs.sigstore.dev/) (3.1.5 (docs 3); docs 3, not version-pinned)
+- [cosign: signing containers](https://docs.sigstore.dev/cosign/signing/signing_with_containers/) (3.1.5 (docs 3); docs 3, not version-pinned)
+- [cosign: verifying](https://docs.sigstore.dev/cosign/verifying/verify/) (3.1.5 (docs 3); docs 3, not version-pinned)
+- [cosign: in-toto attestations](https://docs.sigstore.dev/cosign/verifying/attestation/) (3.1.5 (docs 3); docs 3, not version-pinned)
+- [cosign release v3.1.5](https://github.com/sigstore/cosign/releases/tag/v3.1.5) (3.1.5)
+- [Syft docs (Anchore OSS site)](https://oss.anchore.com/docs/guides/sbom/) (1.57.2, not version-pinned)
+- [Syft CLI reference](https://oss.anchore.com/docs/reference/syft/cli/) (1.57.2, not version-pinned)
+- [Trivy docs](https://trivy.dev/docs/v0.76/guide/) (0.76.2 (docs 0.76); docs 0.76)
+- [Trivy release v0.76.2](https://github.com/aquasecurity/trivy/releases/tag/v0.76.2) (0.76.2)
+- [Renovate docs](https://docs.renovatebot.com/) (44.258.3, not version-pinned)
+- [Renovate configuration options](https://docs.renovatebot.com/configuration-options/) (44.258.3 (docs latest); docs latest, not version-pinned)

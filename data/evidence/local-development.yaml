@@ -1,7 +1,7 @@
 # Tested claims of this guide. See CONTRIBUTING.md, "Evidence".
 - id: ev-local-telemetry-1
   card: local-telemetry
-  claim: "Pointed at grafana/otel-lgtm 0.37.0, one request to the example service produces a trace, a metric and a log line that all arrive in the image's backends."
+  claim: "Pointed at grafana/otel-lgtm 0.41.1, one request to the example service produces a trace, a metric and a log line that all arrive in the image's backends."
   badge: reproduced
   test: acceptance/observability::TestSignalsArrive
   result: "Tempo trace 6840ee0aaf968980f56a37f9d7516175 has server span \"http get /ping\" with uri /ping; Prometheus sum(http_server_requests_seconds_count{service_name=\"single-hexagonal\",uri=\"/ping\"}) = 1; Loki {service_name=\"single-hexagonal\"} | trace_id=\"6840ee0aaf968980f56a37f9d7516175\" returned \"ping\"; 4 more sampled parents at probability 0.1, all 5 traces in Tempo"

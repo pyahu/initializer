@@ -1,7 +1,7 @@
 # Tested claims of this guide. See CONTRIBUTING.md, "Evidence".
 - id: ev-bld-wrapper-1
   card: bld-wrapper
-  claim: "In a fresh container, ./gradlew downloads Gradle 9.8.1, checks it against the committed distributionSha256Sum and builds with the Java 25 toolchain."
+  claim: "In a fresh container, ./gradlew downloads Gradle 9.9.2, checks it against the committed distributionSha256Sum and builds with the Java 25 toolchain."
   badge: compiled
   test: gradle/single-hexagonal::ApplicationTest
   limitations: "A passing build shows the checksum matched; no test feeds a wrong checksum to see the build fail."
@@ -19,19 +19,19 @@
   limitations: "The fixture workflow also compares the resolved versions in the SBOM with the baseline; this record covers the build only."
 - id: ev-bld-error-prone-1
   card: bld-error-prone
-  claim: "Main code compiles on JDK 25 with Error Prone 2.50.0 through the net.ltgt.errorprone plugin 5.1.1."
+  claim: "Main code compiles on JDK 25 with Error Prone 2.53.0 through the net.ltgt.errorprone plugin 5.2.0."
   badge: compiled
   test: gradle/single-hexagonal::ApplicationTest
   limitations: "Shows the code passes the checks; no test plants a known bug pattern to see the build fail."
 - id: ev-bld-nullaway-1
   card: bld-nullaway
-  claim: "Main code compiles with NullAway 0.14.2 as an error, OnlyNullMarked and JSpecifyMode on and @NullMarked on every package."
+  claim: "Main code compiles with NullAway 0.14.4 as an error, OnlyNullMarked and JSpecifyMode on and @NullMarked on every package."
   badge: compiled
   test: gradle/single-hexagonal::ApplicationTest
   limitations: "Shows the marked code passes; no test returns null from a marked method to see the build fail."
 - id: ev-bld-format-1
   card: bld-format
-  claim: "spotlessCheck with palantir-java-format 2.102.0 runs as part of check and passes on the fixture code."
+  claim: "spotlessCheck with palantir-java-format 2.103.0 runs as part of check and passes on the fixture code."
   badge: compiled
   test: gradle/single-hexagonal::ApplicationTest
   limitations: "Shows the code is formatted; no test commits unformatted code to see the check fail."

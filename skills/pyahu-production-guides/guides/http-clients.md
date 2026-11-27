@@ -2,9 +2,9 @@
 
 # HTTP clients and resilience
 
-Call other services from Spring Boot 4.1 with timeouts, bounded retries and a limit per downstream service.
+Call other services from Spring Boot 4.2 with timeouts, bounded retries and a limit per downstream service.
 
-On the web: https://initializer.pyahu.io/guides/http-clients/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/http-clients/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 The payments service did not go down. It just got slow. Within a minute your own service stops answering: every
 request is stuck waiting on payments and the retries you added to be safe triple the load on a service that is
@@ -32,8 +32,8 @@ write no new `RestTemplate` code.
 
 ### What's going on
 
-Spring has three HTTP clients. `RestTemplate` is the old one: the Spring team plans to deprecate it in
-Framework 7.1 and remove it in 8.0. `WebClient` is reactive and adding WebFlux to a Spring MVC app just to get a
+Spring has three HTTP clients. `RestTemplate` is the old one: Framework 7.1 deprecates it for removal in 8.0 and
+Spring Boot 4.2 deprecates `RestTemplateBuilder` and `TestRestTemplate` with it. `WebClient` is reactive and adding WebFlux to a Spring MVC app just to get a
 client brings in a second stack. `RestClient` is the blocking client where new features land and it works well
 with virtual threads.
 
@@ -59,8 +59,8 @@ from properties under `spring.http.serviceclient.<group>`.
 ### When this is not for you
 
 - A reactive WebFlux app: use `WebClient`.
-- Existing `RestTemplate` code keeps working. Move it to `RestClient` when you touch it: both share the same request
-  factories, interceptors and converters.
+- Existing `RestTemplate` code keeps working until Framework 8.0, with deprecation warnings. Move it to
+  `RestClient` when you touch it: both share the same request factories, interceptors and converters.
 
 ## 2. Which timeouts does every call need?
 
@@ -84,7 +84,7 @@ before you can even dial.
 
 > **Diagram:** One outbound call: a limit, a retry, the client, the pool and the network, each with its own bound. Six boxes from left to right. 1, your code makes one call. 2, the limit: @ConcurrencyLimit with policy REJECT lets at most 64 calls through and rejects the rest at once. 3, the retry: @Retryable with 2 retries, backoff and jitter; its timeout of 6 seconds stops new attempts but never interrupts one in flight. 4, the client: a RestClient from Boot's builder, which records metrics and sends the traceparent header. 5, the pool: Apache HttpClient with 64 connections per host; the acquisition timeout of 0.5 seconds bounds the wait for a free connection. 6, the remote payments service. Under the hop from the pool to the remote service, the connect timeout of 1 second bounds opening the connection and the read timeout of 3 seconds bounds waiting for the answer. A failure box at the bottom shows the defaults: Apache allows 5 connections per host and waits up to 3 minutes for one and there is no read timeout, so calls queue without any error.
 
-Boot 4.1 has properties for the first two: `spring.http.clients.*` for every client and
+Boot 4.2 has properties for the first two: `spring.http.clients.*` for every client and
 `spring.http.serviceclient.<group>.*` for one group. A group value you leave out falls back to the global one. The
 third has no property: step 3 sets it in code.
 
@@ -193,7 +193,7 @@ than the last. Without jitter, a random part added to each wait, every replica r
 waves. And a 400 or a 404 will not change on the next try.
 
 Spring Framework 7 has `@Retryable` built in but a bare one retries every exception 3 times with a fixed 1 second
-delay. It also does nothing until you add `@EnableResilientMethods`: Boot 4.1 does not turn it on for you. Like
+delay. It also does nothing until you add `@EnableResilientMethods`: Boot 4.2 does not turn it on for you. Like
 `@Transactional`, it works through a proxy, so a call from inside the same class skips it.
 
 ### Do this
@@ -357,11 +357,11 @@ This section lists where each step lands.
 
 ## References
 
-- [Migration guide 3.x to 4.0 (wiki)](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide) (4.1.2 (docs 4.0); docs 4.0)
-- [Application properties appendix](https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Tracing (names spring-boot-starter-opentelemetry, OTLP export)](https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Metrics (incl. #actuator.metrics.export.otlp)](https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.1.2 (docs 4.1); docs 4.1)
-- [Reference](https://docs.spring.io/spring-framework/reference/7.0/index.html) (7.0.10 (docs 7.0); docs 7.0)
-- [7.0 release notes (wiki, also covers upgrading)](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes) (7.0.10 (docs 7.0); docs 7.0)
+- [Migration guide 3.x to 4.0 (wiki)](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide) (4.2.0 (docs 4.0); docs 4.0)
+- [Application properties appendix](https://docs.spring.io/spring-boot/4.2/appendix/application-properties/index.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Tracing (names spring-boot-starter-opentelemetry, OTLP export)](https://docs.spring.io/spring-boot/4.2/reference/actuator/tracing.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Metrics (incl. #actuator.metrics.export.otlp)](https://docs.spring.io/spring-boot/4.2/reference/actuator/metrics.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.2/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.2.0 (docs 4.2); docs 4.2)
+- [Reference](https://docs.spring.io/spring-framework/reference/7.1/index.html) (7.1.0 (docs 7.1); docs 7.1)
+- [7.1 release notes (wiki, also covers upgrading)](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.1-Release-Notes) (7.1.0 (docs 7.1); docs 7.1)
 - [Semconv HTTP spans](https://opentelemetry.io/docs/specs/semconv/http/http-spans/) (1.44.0, not version-pinned)

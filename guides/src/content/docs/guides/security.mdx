@@ -1,6 +1,6 @@
 ---
 title: Security hardening
-description: Tokens, permissions, headers, errors, outbound calls and the pod, locked down for a Spring Boot 4.1 service.
+description: Tokens, permissions, headers, errors, outbound calls and the pod, locked down for a Spring Boot 4.2 service.
 tableOfContents: { maxHeadingLevel: 2 }
 guide:
   id: security
@@ -83,7 +83,7 @@ another app.
 <SecurityRequestPathDiagram />
 <DiagramLegend items={['recommended', 'context', 'failure']} />
 
-Boot 4.1 fetches the issuer's discovery document and signing keys on the first request, not at startup, so a slow
+Boot 4.2 fetches the issuer's discovery document and signing keys on the first request, not at startup, so a slow
 identity provider does not stop the pod from starting.
 
 ### Do this
@@ -117,7 +117,7 @@ Microsoft Entra ID uses two claims. A token for a user who signed in carries `sc
 separated by spaces. A token an app gets for itself (client credentials) carries `roles` (an array) and no `scp`.
 Rules that check only `SCOPE_` therefore reject every call from another service with 403.
 
-Boot 4.1 can map one claim with one prefix through properties (`authorities-claim-name`, `authority-prefix` and
+Boot 4.2 can map one claim with one prefix through properties (`authorities-claim-name`, `authority-prefix` and
 the new `authorities-claim-expressions`). Two claims with two prefixes need a few lines of code.
 
 ### Do this
@@ -240,8 +240,9 @@ IPs in audit logs and rate limits.
 
 1. Add `Content-Security-Policy: default-src 'none'; frame-ancestors 'none'` and `Referrer-Policy: no-referrer` in
    the filter chain's `headers` section.
-2. Pin `server.forward-headers-strategy: native`. Tomcat then reads the `X-Forwarded-*` headers itself and only
-   from addresses it trusts.
+2. Pin `server.request.header.forwarded.strategy: web-server`, which Spring Boot 4.2 calls what was
+   `server.forward-headers-strategy: native`. Tomcat then reads the `X-Forwarded-*` headers itself and only from
+   addresses it trusts.
 3. Narrow that trust to the ingress controller. `server.tomcat.remoteip.internal-proxies` is a regular
    expression over the caller's address, such as `10\.42\.7\.\d{1,3}` for the pods of the ingress.
 4. Add HSTS `preload` only at the edge, for the whole domain.
@@ -292,7 +293,7 @@ finds the whole story.
 
 ## 7. How do I stop a URL fetch from reaching inside the network?
 
-**In short:** send URLs that users supply through a client with Boot 4.1's `InetAddressFilter.externalAddresses()` and
+**In short:** send URLs that users supply through a client with Boot 4.2's `InetAddressFilter.externalAddresses()` and
 no redirects.
 
 ### What's going on
@@ -301,7 +302,7 @@ A webhook or a "fetch this URL" feature lets a user choose where your service co
 `169.254.169.254` and it reads the cloud's metadata service; point it at `localhost:8081` and it reads Actuator.
 This is server-side request forgery.
 
-Boot 4.1 adds `InetAddressFilter`, an allow list checked after DNS resolution: an address that does not match fails
+Since 4.1, Boot has `InetAddressFilter`, an allow list checked after DNS resolution: an address that does not match fails
 with `FilteredHostException`. For Apache HttpClient, Jetty and Reactor Netty the check runs in the DNS resolver, so
 a DNS answer that changes between check and connect is caught too.
 

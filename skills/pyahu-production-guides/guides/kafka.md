@@ -2,9 +2,9 @@
 
 # Kafka with the outbox
 
-Publish and consume events from Spring Boot 4.1 without losing them or sending them twice.
+Publish and consume events from Spring Boot 4.2 without losing them or sending them twice.
 
-On the web: https://initializer.pyahu.io/guides/kafka/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/kafka/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 **Draft:** no step of this guide is tested here yet.
 
@@ -12,8 +12,8 @@ An order is saved and the "order placed" event never reaches billing. Or it reac
 is charged twice. Nobody sees an error: the database committed and Kafka said yes. The gap was in between.
 
 This guide makes events as reliable as the data they describe: saved in the same transaction, published from the
-database log, read with a known format and handled safely when they fail. It uses Spring for Apache Kafka 4.1.2
-and the Kafka 4.2.2 client, the versions Spring Boot 4.1.2 manages.
+database log, read with a known format and handled safely when they fail. It uses Spring for Apache Kafka 4.2.0
+and the Kafka 4.4.0 client, the versions Spring Boot 4.2.0 manages.
 
 ## What you'll learn
 

@@ -2,9 +2,9 @@
 
 # Virtual threads and concurrency
 
-Turn on virtual threads in Spring Boot 4.1 and put back the limits that protect your database and the services you call.
+Turn on virtual threads in Spring Boot 4.2 and put back the limits that protect your database and the services you call.
 
-On the web: https://initializer.pyahu.io/guides/virtual-threads/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/virtual-threads/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 You turn on virtual threads with one property and the benchmark looks great. Then production gets slower: the
 database pool is always full, a service you call starts failing and the slowest requests take longer than before.
@@ -41,7 +41,7 @@ network, its stack moves to the heap and the carrier runs another one.
 Think of a restaurant. Before, each table had its own waiter standing there while the kitchen cooked. Now a few
 waiters serve every table and only walk over when there is something to do.
 
-The property is off by default. Turning it on makes Spring Boot 4.1 handle web requests, `@Async` tasks and
+The property is off by default. Turning it on makes Spring Boot 4.2 handle web requests, `@Async` tasks and
 `@Scheduled` tasks on virtual threads and use them in the message listeners it configures for Kafka and RabbitMQ.
 
 ### Do this
@@ -369,10 +369,10 @@ threads:
 
 ## References
 
-- [Virtual threads guide (Core Libraries)](https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html) (25.0.5+8 (docs 25); docs 25)
+- [Virtual threads guide (Core Libraries)](https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html) (25.0.5.1+2 (docs 25); docs 25)
 - [JEP 444: Virtual Threads](https://openjdk.org/jeps/444) (JDK 21): What JEP 444 changes and in which JDK it was delivered.
 - [JEP 491: Synchronize Virtual Threads without Pinning](https://openjdk.org/jeps/491) (JDK 24): What JEP 491 changes and in which JDK it was delivered.
 - [JEP 505: Structured Concurrency (Fifth Preview), the preview in JDK 25](https://openjdk.org/jeps/505) (JDK 25): What JEP 505 changes and in which JDK it was delivered.
 - [JEP 506: Scoped Values (final)](https://openjdk.org/jeps/506) (JDK 25): What JEP 506 changes and in which JDK it was delivered.
-- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.1.2 (docs 4.1); docs 4.1)
-- [Task execution (virtual-thread executors)](https://docs.spring.io/spring-boot/4.1/reference/features/task-execution-and-scheduling.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Virtual threads (anchor verified)](https://docs.spring.io/spring-boot/4.2/reference/features/spring-application.html#features.spring-application.virtual-threads) (4.2.0 (docs 4.2); docs 4.2)
+- [Task execution (virtual-thread executors)](https://docs.spring.io/spring-boot/4.2/reference/features/task-execution-and-scheduling.html) (4.2.0 (docs 4.2); docs 4.2)

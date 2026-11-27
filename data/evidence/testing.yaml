@@ -1,13 +1,13 @@
 # Tested claims of this guide. See CONTRIBUTING.md, "Evidence".
 - id: ev-test-slices-1
   card: test-slices
-  claim: "The example service's tests compile and run with spring-boot-starter-webmvc-test from the Spring Boot 4.1.2 BOM."
+  claim: "The example service's tests compile and run with spring-boot-starter-webmvc-test from the Spring Boot 4.2.0 BOM."
   badge: compiled
   test: gradle/single-hexagonal::ApplicationTest
   limitations: "Proves the test starter resolves and a @SpringBootTest runs; no @WebMvcTest slice exists in the example service yet."
 - id: ev-test-architecture-1
   card: test-architecture
-  claim: "ApplicationModules.of(Application.class).verify() passes on the example service with Spring Modulith 2.1.1."
+  claim: "ApplicationModules.of(Application.class).verify() passes on the example service with Spring Modulith 2.2.0."
   badge: compiled
   test: gradle/single-hexagonal::ModulithTest
   limitations: "The example service has one module, so the test proves the setup, not that a cycle or an internal access is caught."

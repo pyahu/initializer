@@ -45,8 +45,8 @@ concurrency:
 
 env:
   GOTOOLCHAIN: go1.27.2
-  # temurin-jdk-image of baseline v0.1-b2.
-  JDK_IMAGE: eclipse-temurin@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f
+  # temurin-jdk-image of baseline v0.1-b3.
+  JDK_IMAGE: eclipse-temurin@sha256:c7eef3dfeb81468533ea48c67bddaa8c7ca916454259e4d0d734d12bcff8e125
 
 jobs:
   fixture:
@@ -87,7 +87,7 @@ jobs:
           mkdir -p out
           docker save single-hexagonal:ci -o out/fixture-image.tar
       - name: Image vulnerabilities
-        uses: docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+        uses: docker://aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
         with:
           args: image --input out/fixture-image.tar --scanners vuln --ignore-unfixed --severity HIGH,CRITICAL --exit-code 1 --cache-dir out/trivy-cache
       - name: Acceptance

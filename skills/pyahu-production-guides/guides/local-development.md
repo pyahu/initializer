@@ -2,9 +2,9 @@
 
 # Local development
 
-A fast local loop for a Spring Boot 4.1 service, with the real database and telemetry running next to it.
+A fast local loop for a Spring Boot 4.2 service, with the real database and telemetry running next to it.
 
-On the web: https://initializer.pyahu.io/guides/local-development/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/local-development/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 A new developer clones the service and asks how to run it. The answer is a wiki page from last year: install
 PostgreSQL by hand, copy a properties file from a colleague and do not worry about the failing tests. Two days
@@ -29,7 +29,7 @@ containers, wired to the app by Spring Boot, with the same settings as the clust
 **In short:** run the PostgreSQL version production runs, in a container. Save mocks for unit tests.
 
 ```text
-postgres:18.6
+postgres:18.7
 ```
 
 ### What's going on
@@ -45,7 +45,7 @@ first real flight. A container with the real database costs a few seconds to sta
 ### Do this
 
 1. Run your real dependencies in containers: PostgreSQL first, then anything else the service calls.
-2. Use the image and version that production runs. These guides use `postgres:18.6`.
+2. Use the image and version that production runs. These guides use `postgres:18.7`.
 3. Keep mocks for unit tests of your own code, where they belong.
 
 ### When this is not for you
@@ -72,7 +72,7 @@ password come from the container and win over whatever your config holds.
 If the containers are already running, Boot only connects to them. It needs the Docker Compose CLI, version
 2.2.0 or later.
 
-> **Diagram:** The local loop: the app starts its real dependencies and Spring Boot wires them back, with no URLs in your config. Three numbered stages from left to right. 1, code: the app runs in your IDE with devtools, which restarts it on every compile. 2, start, recommended: Spring Boot's Docker Compose support reads compose.yml and runs docker compose up when the app starts; optional, dashed: Testcontainers beans started by a TestApplication launcher with bootTestRun do the same from Java. 3, containers: postgres:18.6, the same version as production and grafana/otel-lgtm:0.37.0 with OTLP on port 4318 and Grafana on port 3000. A highlighted path returns from the containers to the app: service connections, where Boot takes the URL, user and password from each container, so the config holds none of them. Failure, at the bottom: mocks or an embedded database pass on the laptop, then the first real query fails in CI or production.
+> **Diagram:** The local loop: the app starts its real dependencies and Spring Boot wires them back, with no URLs in your config. Three numbered stages from left to right. 1, code: the app runs in your IDE with devtools, which restarts it on every compile. 2, start, recommended: Spring Boot's Docker Compose support reads compose.yml and runs docker compose up when the app starts; optional, dashed: Testcontainers beans started by a TestApplication launcher with bootTestRun do the same from Java. 3, containers: postgres:18.7, the same version as production and grafana/otel-lgtm:0.41.1 with OTLP on port 4318 and Grafana on port 3000. A highlighted path returns from the containers to the app: service connections, where Boot takes the URL, user and password from each container, so the config holds none of them. Failure, at the bottom: mocks or an embedded database pass on the laptop, then the first real query fails in CI or production.
 
 ### Do this
 
@@ -83,7 +83,7 @@ If the containers are already running, Boot only connects to them. It needs the 
    ```yaml
    services:
      postgres:
-       image: postgres:18.6
+       image: postgres:18.7
        environment:
          POSTGRES_PASSWORD: local
          POSTGRES_DB: orders
@@ -145,7 +145,7 @@ test suite and for the app you click through.
 Tempo for traces, Loki for logs, Prometheus for metrics and Grafana to look at them.
 
 ```text
-grafana/otel-lgtm:0.37.0
+grafana/otel-lgtm:0.41.1
 ```
 
 ### What's going on
@@ -160,7 +160,7 @@ metrics and logs flow without any endpoint in your config. The same pipeline as 
 
 ### Do this
 
-1. Add `grafana/otel-lgtm:0.37.0` to your `compose.yml` or an `LgtmStackContainer` bean to your test
+1. Add `grafana/otel-lgtm:0.41.1` to your `compose.yml` or an `LgtmStackContainer` bean to your test
    configuration.
 2. Start the app with `TRACING_SAMPLING_PROBABILITY=1.0`, so every request leaves a trace, and send a request.
 3. Open Grafana on `http://localhost:3000` and find the request's trace, then its log lines by trace ID.
@@ -311,7 +311,7 @@ resource attributes: `deployment.environment.name` is `dev`, not `local`.
 
 ### Next to the service
 
-- A `compose.yml` with `postgres:18.6` and `grafana/otel-lgtm:0.37.0`, each with a healthcheck (steps 1, 2
+- A `compose.yml` with `postgres:18.7` and `grafana/otel-lgtm:0.41.1`, each with a healthcheck (steps 1, 2
   and 4).
 - `spring-boot-docker-compose` and `spring-boot-devtools` as `developmentOnly` (steps 2 and 6).
 - Sample data in Liquibase changesets with `context: dev` and a non `dev` context everywhere else (step 7).
@@ -323,7 +323,7 @@ resource attributes: `deployment.environment.name` is `dev`, not `local`.
 - **LOCAL-01** Local dependencies run in containers with the image versions production runs; no embedded database stands in for PostgreSQL. (step 1)
 - **LOCAL-02** spring-boot-docker-compose is a developmentOnly dependency and compose.yml sits next to the app, with a healthcheck per service. (step 2)
 - **LOCAL-04** Containers are started one way only, Docker Compose support or Testcontainers at development time, never both. (step 3)
-- **LOCAL-05** grafana/otel-lgtm 0.37.0 runs locally for traces, metrics and logs and never in a shared or production environment. (step 4)
+- **LOCAL-05** grafana/otel-lgtm 0.41.1 runs locally for traces, metrics and logs and never in a shared or production environment. (step 4)
 - **LOCAL-07** spring-boot-devtools is a developmentOnly dependency and never reaches the image. (step 6)
 
 ### Verified behaviour
@@ -342,8 +342,8 @@ resource attributes: `deployment.environment.name` is `dev`, not `local`.
 
 ## References
 
-- [Observability, OpenTelemetry section (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/observability.html#actuator.observability.opentelemetry) (4.1.2 (docs 4.1); docs 4.1)
-- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Documentation](https://www.postgresql.org/docs/18/index.html) (18.6 (docs 18); docs 18)
+- [Observability, OpenTelemetry section (anchor verified)](https://docs.spring.io/spring-boot/4.2/reference/actuator/observability.html#actuator.observability.opentelemetry) (4.2.0 (docs 4.2); docs 4.2)
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.2/reference/testing/testcontainers.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Documentation](https://www.postgresql.org/docs/18/index.html) (18.7 (docs 18); docs 18)
 - [Testcontainers for Java docs](https://java.testcontainers.org/) (2.0.5, not version-pinned)
 - [Postgres module](https://java.testcontainers.org/modules/databases/postgres/) (2.0.5, not version-pinned)

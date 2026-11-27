@@ -2,16 +2,16 @@
 
 # gRPC services
 
-Serve and call gRPC from Spring Boot 4.1 with a safe contract, deadlines, honest errors and calls spread across pods.
+Serve and call gRPC from Spring Boot 4.2 with a safe contract, deadlines, honest errors and calls spread across pods.
 
-On the web: https://initializer.pyahu.io/guides/grpc/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/grpc/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 You moved two internal services from JSON to gRPC and the first week looks great. Then you scale the server to
 four pods and one of them runs hot while three sit idle. A slow call hangs for minutes because nothing told it to
 stop. And a reused field number breaks a client you forgot existed.
 
 gRPC is fast and strict but it brings its own failure modes. This guide covers when to use it, how to keep the
-contract safe and how to run it in Kubernetes with Spring Boot 4.1, which now supports gRPC out of the box.
+contract safe and how to run it in Kubernetes with Spring Boot 4.2, which supports gRPC out of the box.
 
 ## What you'll learn
 
@@ -85,7 +85,7 @@ implementation with `@GrpcService`. It listens on port 9090, next to the web ser
 
 ### What's going on
 
-Spring Boot 4.1 has gRPC support built in, based on the Spring gRPC project. Spring Boot's BOM (bill of materials, its list
+Spring Boot 4.2 has gRPC support built in, based on the Spring gRPC project. Spring Boot's BOM (bill of materials, its list
 of managed dependency versions) sets Spring gRPC 1.1.1, gRPC Java 1.83.1 and Protocol Buffers 4.35.1.
 
 By default the gRPC server runs on its own Netty server, on port 9090, separate from Tomcat on 8080. So one service
@@ -184,7 +184,7 @@ health as liveness.
 
 Kubernetes asks two questions. Liveness: should it restart the pod? Readiness: should it send the pod traffic?
 
-gRPC has a standard health check protocol. Boot 4.1 starts its health service as soon as the app has a gRPC
+gRPC has a standard health check protocol. Boot 4.2 starts its health service as soon as the app has a gRPC
 service and updates it from the app's own health every 5 seconds. The overall check, whose service name is empty,
 includes all health indicators. A failed database can make it fail even when restarting the process cannot help.
 Using that check for liveness restarts every pod during a database outage.
@@ -341,7 +341,7 @@ This is where each step lands.
 
 ## References
 
-- [Configure liveness/readiness/startup probes (task)](https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) (1.36.5 (docs 1.36); docs 1.36)
+- [Configure liveness/readiness/startup probes (task)](https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) (1.36.7 (docs 1.36); docs 1.36)
 - [Spring gRPC reference](https://docs.spring.io/spring-grpc/reference/1.1/index.html) (not in the baseline yet)
 - [Spring gRPC getting started](https://docs.spring.io/spring-grpc/reference/1.1/getting-started.html) (not in the baseline yet)
 - [Spring Boot 4.1 gRPC (first-party in Boot 4.1)](https://docs.spring.io/spring-boot/4.1/reference/io/grpc.html) (not in the baseline yet)

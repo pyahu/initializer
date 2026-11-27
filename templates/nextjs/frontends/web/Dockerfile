@@ -19,9 +19,10 @@ COPY . .
 RUN npm run build
 
 FROM node:24.22.3-trixie-slim@sha256:af02d57b57719b9657a45199a79264a9437940cd55b3c7b3fc99615654f124a0 AS runtime
-# Security patch until the pinned upstream base includes Debian's fixed zlib. Standalone needs no package manager.
+# Security patches until the pinned upstream base includes Debian's fixed zlib and zstd.
+# Standalone needs no package manager.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends zlib1g=1:1.3.dfsg+really1.3.1-1+deb13u1 \
+    && apt-get install -y --no-install-recommends zlib1g=1:1.3.dfsg+really1.3.1-1+deb13u1 libzstd1=1.5.7+dfsg-1+deb13u1 \
     && rm -rf /var/lib/apt/lists/* /usr/local/lib/node_modules/npm /opt/yarn* \
     && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg
 WORKDIR /web

@@ -2,15 +2,15 @@
 
 # Observability
 
-Traces, metrics and logs over OTLP with Spring Boot 4.1, correlated by one trace ID.
+Traces, metrics and logs over OTLP with Spring Boot 4.2, correlated by one trace ID.
 
-On the web: https://initializer.pyahu.io/guides/observability/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/observability/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 A customer says checkout is slow. The dashboard agrees: latency is up. But which request? The logs have no request
 ID and the trace you need was never kept. Three tools and no thread to pull.
 
 This guide builds one pipeline where every trace, metric and log line carries the same trace ID, so a slow request
-on a graph leads to its trace and the trace to its logs. It uses Spring Boot 4.1's own OpenTelemetry support, with
+on a graph leads to its trace and the trace to its logs. It uses Spring Boot 4.2's own OpenTelemetry support, with
 no Java agent.
 
 ## What you'll learn
@@ -69,7 +69,7 @@ OTLP, the OpenTelemetry Protocol, carries traces, metrics and logs from the app 
 Boot 4 renamed its OTLP properties. Advice written for Boot 3 uses names that no longer work and the app quietly
 exports nothing.
 
-The good news: Boot 4.1 reads the standard OpenTelemetry variable `OTEL_EXPORTER_OTLP_ENDPOINT` and adds
+The good news: Boot 4.2 reads the standard OpenTelemetry variable `OTEL_EXPORTER_OTLP_ENDPOINT` and adds
 `/v1/traces`, `/v1/metrics` and `/v1/logs` for each signal. The variable wins over `application.yaml`, so the same
 image talks to a local backend on your laptop and to the collector in the cluster.
 
@@ -109,7 +109,7 @@ that wrote it.
 ### Do this
 
 1. Add `opentelemetry-logback-appender-1.0`, at the release built on the OpenTelemetry SDK that Boot manages
-   (2.28.1-alpha for SDK 1.62.0).
+   (2.34.0-alpha for SDK 1.68.0).
 2. Reference it in `logback-spring.xml`, next to the console appender.
 3. Install it with an `InitializingBean` that calls `OpenTelemetryAppender.install(openTelemetry)`.
 4. In Loki, keep `trace_id` out of the index labels. It travels as structured metadata.
@@ -227,7 +227,7 @@ and fans out to each backend. Your apps never hold backend credentials.
 
 ### What's going on
 
-A latency spike tells you something is slow, not what. Boot 4.1 attaches an exemplar to latency histograms: the
+A latency spike tells you something is slow, not what. Boot 4.2 attaches an exemplar to latency histograms: the
 trace ID of one real request in that bucket. Spans carry the same ID and log records carry it as `trace_id` once
 the appender from step 3 is installed.
 
@@ -295,8 +295,8 @@ implementation(libs.spring.boot.starter.opentelemetry)
 implementation(libs.opentelemetry.logback.appender)
 ```
 
-**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `opentelemetry-api` 1.62.0 and
-`opentelemetry-logback-appender-1.0` 2.28.1-alpha.
+**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `opentelemetry-api` 1.68.0 and
+`opentelemetry-logback-appender-1.0` 2.34.0-alpha.
 
 ### The settings
 
@@ -402,16 +402,16 @@ InitializingBean installOpenTelemetryAppender(OpenTelemetry openTelemetry) {
 
 ## References
 
-- [Actuator (production-ready features)](https://docs.spring.io/spring-boot/4.1/reference/actuator/index.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.2 (docs 4.1); docs 4.1)
-- [Actuator REST API](https://docs.spring.io/spring-boot/4.1/api/rest/actuator/index.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Observability, OpenTelemetry section (anchor verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/observability.html#actuator.observability.opentelemetry) (4.1.2 (docs 4.1); docs 4.1)
-- [Tracing (names spring-boot-starter-opentelemetry, OTLP export)](https://docs.spring.io/spring-boot/4.1/reference/actuator/tracing.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Metrics (incl. #actuator.metrics.export.otlp)](https://docs.spring.io/spring-boot/4.1/reference/actuator/metrics.html) (4.1.2 (docs 4.1); docs 4.1)
-- [OTel Java docs](https://opentelemetry.io/docs/languages/java/) (1.62.0, not version-pinned)
-- [OTel Java SDK management](https://opentelemetry.io/docs/languages/java/sdk/) (1.62.0, not version-pinned)
-- [OTel Java SDK configuration](https://opentelemetry.io/docs/languages/java/configuration/) (1.62.0, not version-pinned)
-- [OTel Java release 1.62.0 (Boot-managed)](https://github.com/open-telemetry/opentelemetry-java/releases/tag/v1.62.0) (1.62.0)
+- [Actuator (production-ready features)](https://docs.spring.io/spring-boot/4.2/reference/actuator/index.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.2/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.2.0 (docs 4.2); docs 4.2)
+- [Actuator REST API](https://docs.spring.io/spring-boot/4.2/api/rest/actuator/index.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Observability, OpenTelemetry section (anchor verified)](https://docs.spring.io/spring-boot/4.2/reference/actuator/observability.html#actuator.observability.opentelemetry) (4.2.0 (docs 4.2); docs 4.2)
+- [Tracing (names spring-boot-starter-opentelemetry, OTLP export)](https://docs.spring.io/spring-boot/4.2/reference/actuator/tracing.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Metrics (incl. #actuator.metrics.export.otlp)](https://docs.spring.io/spring-boot/4.2/reference/actuator/metrics.html) (4.2.0 (docs 4.2); docs 4.2)
+- [OTel Java docs](https://opentelemetry.io/docs/languages/java/) (1.68.0 (docs 1.62.0); docs 1.62.0, not version-pinned)
+- [OTel Java SDK management](https://opentelemetry.io/docs/languages/java/sdk/) (1.68.0 (docs 1.62.0); docs 1.62.0, not version-pinned)
+- [OTel Java SDK configuration](https://opentelemetry.io/docs/languages/java/configuration/) (1.68.0 (docs 1.62.0); docs 1.62.0, not version-pinned)
+- [OTel Java release 1.68.0 (Boot-managed)](https://github.com/open-telemetry/opentelemetry-java/releases/tag/v1.68.0) (1.68.0)
 - [OTLP specification](https://opentelemetry.io/docs/specs/otlp/) (1.11.1, not version-pinned)
 - [OTLP specification at tag](https://github.com/open-telemetry/opentelemetry-proto/blob/v1.11.1/docs/specification.md) (1.11.1)
 - [Semantic conventions](https://opentelemetry.io/docs/specs/semconv/) (1.44.0, not version-pinned)
@@ -421,8 +421,8 @@ InitializingBean installOpenTelemetryAppender(OpenTelemetry openTelemetry) {
 - [Semconv JVM metrics](https://opentelemetry.io/docs/specs/semconv/runtime/jvm-metrics/) (1.44.0, not version-pinned)
 - [OTel specification](https://opentelemetry.io/docs/specs/otel/) (1.61.0, not version-pinned)
 - [OTel's own Spring Boot starter (a different artifact from Boot's starter; listed to avoid confusion)](https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/) (latest, not version-pinned)
-- [Micrometer reference](https://docs.micrometer.io/micrometer/reference/1.17/index.html) (1.17.2 (docs 1.17); docs 1.17)
-- [Micrometer OTLP registry](https://docs.micrometer.io/micrometer/reference/1.17/implementations/otlp.html) (1.17.2 (docs 1.17); docs 1.17)
-- [Micrometer Observation](https://docs.micrometer.io/micrometer/reference/observation.html) (1.17.2 (docs 1.17); docs 1.17, not version-pinned)
-- [Micrometer Tracing reference](https://docs.micrometer.io/tracing/reference/1.7/index.html) (1.7.2 (docs 1.7); docs 1.7)
+- [Micrometer reference](https://docs.micrometer.io/micrometer/reference/1.18/index.html) (1.18.0 (docs 1.18); docs 1.18)
+- [Micrometer OTLP registry](https://docs.micrometer.io/micrometer/reference/1.18/implementations/otlp.html) (1.18.0 (docs 1.18); docs 1.18)
+- [Micrometer Observation](https://docs.micrometer.io/micrometer/reference/observation.html) (1.18.0 (docs 1.18); docs 1.18, not version-pinned)
+- [Micrometer Tracing reference](https://docs.micrometer.io/tracing/reference/1.8/index.html) (1.8.0 (docs 1.8); docs 1.8)
 - [Semconv messaging spans](https://opentelemetry.io/docs/specs/semconv/messaging/messaging-spans/) (not in the baseline yet)

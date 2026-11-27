@@ -1,6 +1,6 @@
 ---
 title: Build and code quality
-description: A Gradle build for a Spring Boot 4.1 service that is the same on every machine and stops bugs, nulls and drift before they ship.
+description: A Gradle build for a Spring Boot 4.2 service that is the same on every machine and stops bugs, nulls and drift before they ship.
 tableOfContents: { maxHeadingLevel: 2 }
 guide:
   id: build-quality
@@ -59,7 +59,7 @@ drift before anything ships.
 **In short:** commit the Gradle wrapper with the checksum of its distribution and pin the JDK with a toolchain.
 
 ```text
-distributionSha256Sum=dce76f55f8e251a3a1f130eb120f30b3d271de2b76c9b0729d316b5a1b6dc01f
+distributionSha256Sum=971fcd7150ca4ba04852c0b2ca0d2d0ab9468e14b03473eab19528809914c76b
 ```
 
 ### What's going on
@@ -79,7 +79,7 @@ toolchain in the build file solves it: the build asks for Java 25 instead of usi
    run the same command with an installed `gradle` once:
 
    ```sh
-   ./gradlew wrapper --gradle-version 9.8.1 --gradle-distribution-sha256-sum <checksum of the binary zip>
+   ./gradlew wrapper --gradle-version 9.9.2 --gradle-distribution-sha256-sum <checksum of the binary zip>
    ```
 
 2. Commit `gradlew`, `gradlew.bat` and the whole `gradle/wrapper` folder.
@@ -383,7 +383,7 @@ The wrapper names the Gradle version and the checksum of its download (step 1).
 
 <Recipe id="bld-wrapper-properties" path="fixtures/single-hexagonal/gradle/wrapper/gradle-wrapper.properties" start="distributionSha256Sum=" end="distributionUrl=" lang="ini" />
 
-**Check it:** `./gradlew --version` prints `Gradle 9.8.1`.
+**Check it:** `./gradlew --version` prints `Gradle 9.9.2`.
 
 ### Versions and repositories
 
@@ -393,7 +393,7 @@ Settings allow repositories in one place only and the catalog holds every versio
 
 <Recipe id="bld-catalog-versions" path="fixtures/single-hexagonal/gradle/libs.versions.toml" start="[versions]" end="cyclonedx = " lang="toml" />
 
-**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `spring-core` 7.0.10, a version written
+**Check it:** `./gradlew dependencies --configuration runtimeClasspath` lists `spring-core` 7.1.0, a version written
 nowhere in the build.
 
 ### The BOMs

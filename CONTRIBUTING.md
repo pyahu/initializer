@@ -36,7 +36,7 @@ Testcontainers, so it mounts the whole repository and the Docker socket, as its 
 ```sh
 docker run --rm -v "$PWD:/repo" -w /repo/fixtures/single-hexagonal \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  eclipse-temurin@sha256:80f67fb3d6f76e2d817d98a4cc2a9cf05f054d4e6adc5e2144bde671d722e63f ./gradlew --no-daemon build
+  eclipse-temurin@sha256:c7eef3dfeb81468533ea48c67bddaa8c7ca916454259e4d0d734d12bcff8e125 ./gradlew --no-daemon build
 docker buildx build --load -t single-hexagonal:ci fixtures/single-hexagonal
 go test -tags acceptance -count=1 -p 1 ./acceptance/...
 ```
@@ -85,7 +85,7 @@ go run ./cmd/runworkflow -dir orders             # the generated project's own C
   | checklist item | `<prefix>-<two digits>` | `JVM-03` |
   | evidence record | `ev-<card>-<n>` | `ev-jvm-heap-sizing-1` |
   | reference entry, diagram | kebab-case | `jvm-container-memory` |
-  | baseline | `<release>-b<n>` | `v0.1-b2` |
+  | baseline | `<release>-b<n>` | `v0.1-b3` |
 
 - Guides, cards and checklist items are in URLs and anchors readers save. Removing or renaming one fails unless
   `data/retired.yaml` gains a record in the same change (`id`, `kind`, `retired`, `reason` and `replacedBy` for a
@@ -176,7 +176,7 @@ The process, step by step, is public at https://initializer.pyahu.io/maintenance
 Dependency Dashboard.
 
 `data/versions.yaml` holds the one baseline the guides, the fixture and the generator use. Update the pins in
-place and give it a new `id` (`v0.1-b3` after `v0.1-b2`); git keeps the earlier lists. The fixture's CI fails
+place and give it a new `id` (`v0.1-b4` after `v0.1-b3`); git keeps the earlier lists. The fixture's CI fails
 when a resolved version, image digest or `java -version` differs from it.
 
 A pin with `managedBy` must equal what the managing BOM gives its `coordinates`; `guidekit boms`

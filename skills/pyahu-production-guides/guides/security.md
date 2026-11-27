@@ -2,9 +2,9 @@
 
 # Security hardening
 
-Tokens, permissions, headers, errors, outbound calls and the pod, locked down for a Spring Boot 4.1 service.
+Tokens, permissions, headers, errors, outbound calls and the pod, locked down for a Spring Boot 4.2 service.
 
-On the web: https://initializer.pyahu.io/guides/security/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/security/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 A security review lands on your desk. A token issued to another app opens your API, an error body shows a SQL
 query and the pod runs as root with a writable disk. Nobody broke in with an exotic exploit: each finding is a
@@ -47,7 +47,7 @@ another app.
 
 > **Diagram:** Every request passes the same checks before your code runs; a failed check stops it early. A request flows from left to right through five numbered stages. First a client sends a request with a bearer token. 1, edge: the ingress ends TLS and adds X-Forwarded headers. 2, server: Tomcat's RemoteIpValve reads those headers but trusts only the ingress addresses. Stages 3 to 5 sit inside the Spring Security filter chain, recommended. 3, token: the decoder checks the signature, expiry, issuer and audience. 4, permissions: the scp claim becomes SCOPE_ authorities and the roles claim becomes ROLE_ authorities. 5, rules: URL rules deny by default and @PreAuthorize checks business rules; only then the request reaches the controller, which validates input and returns fixed error texts. Failure, dotted and marked with a cross: a token issued for another app, expired or from another issuer is rejected with 401 at stage 3 and never reaches the controller.
 
-Boot 4.1 fetches the issuer's discovery document and signing keys on the first request, not at startup, so a slow
+Boot 4.2 fetches the issuer's discovery document and signing keys on the first request, not at startup, so a slow
 identity provider does not stop the pod from starting.
 
 ### Do this
@@ -79,7 +79,7 @@ Microsoft Entra ID uses two claims. A token for a user who signed in carries `sc
 separated by spaces. A token an app gets for itself (client credentials) carries `roles` (an array) and no `scp`.
 Rules that check only `SCOPE_` therefore reject every call from another service with 403.
 
-Boot 4.1 can map one claim with one prefix through properties (`authorities-claim-name`, `authority-prefix` and
+Boot 4.2 can map one claim with one prefix through properties (`authorities-claim-name`, `authority-prefix` and
 the new `authorities-claim-expressions`). Two claims with two prefixes need a few lines of code.
 
 ### Do this
@@ -196,8 +196,9 @@ IPs in audit logs and rate limits.
 
 1. Add `Content-Security-Policy: default-src 'none'; frame-ancestors 'none'` and `Referrer-Policy: no-referrer` in
    the filter chain's `headers` section.
-2. Pin `server.forward-headers-strategy: native`. Tomcat then reads the `X-Forwarded-*` headers itself and only
-   from addresses it trusts.
+2. Pin `server.request.header.forwarded.strategy: web-server`, which Spring Boot 4.2 calls what was
+   `server.forward-headers-strategy: native`. Tomcat then reads the `X-Forwarded-*` headers itself and only from
+   addresses it trusts.
 3. Narrow that trust to the ingress controller. `server.tomcat.remoteip.internal-proxies` is a regular
    expression over the caller's address, such as `10\.42\.7\.\d{1,3}` for the pods of the ingress.
 4. Add HSTS `preload` only at the edge, for the whole domain.
@@ -244,7 +245,7 @@ finds the whole story.
 
 ## 7. How do I stop a URL fetch from reaching inside the network?
 
-**In short:** send URLs that users supply through a client with Boot 4.1's `InetAddressFilter.externalAddresses()` and
+**In short:** send URLs that users supply through a client with Boot 4.2's `InetAddressFilter.externalAddresses()` and
 no redirects.
 
 ### What's going on
@@ -253,7 +254,7 @@ A webhook or a "fetch this URL" feature lets a user choose where your service co
 `169.254.169.254` and it reads the cloud's metadata service; point it at `localhost:8081` and it reads Actuator.
 This is server-side request forgery.
 
-Boot 4.1 adds `InetAddressFilter`, an allow list checked after DNS resolution: an address that does not match fails
+Since 4.1, Boot has `InetAddressFilter`, an allow list checked after DNS resolution: an address that does not match fails
 with `FilteredHostException`. For Apache HttpClient, Jetty and Reactor Netty the check runs in the DNS resolver, so
 a DNS answer that changes between check and connect is caught too.
 
@@ -434,7 +435,7 @@ USER 10001:10001
 
 ### Deployment prerequisites
 
-- **SEC-06** server.forward-headers-strategy pinned; server.tomcat.remoteip.internal-proxies narrowed to the ingress addresses. (step 5)
+- **SEC-06** server.request.header.forwarded.strategy pinned; server.tomcat.remoteip.internal-proxies narrowed to the ingress addresses. (step 5)
 - **SEC-11** The namespace enforces Pod Security restricted; a NetworkPolicy denies by default with explicit allows and blocks 169.254.169.254. (step 8)
 - **SEC-12** Where TLS ends is written down: at the ingress, in the pod or in a mesh. (step 9)
 
@@ -444,15 +445,15 @@ USER 10001:10001
 
 ## References
 
-- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.2 (docs 4.1); docs 4.1)
-- [OAuth2 (resource server auto-config)](https://docs.spring.io/spring-boot/4.1/reference/security/oauth2.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Reference](https://docs.spring.io/spring-security/reference/7.1/index.html) (7.1.2 (docs 7.1); docs 7.1)
-- [OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/index.html) (7.1.2 (docs 7.1); docs 7.1)
-- [Resource Server JWT](https://docs.spring.io/spring-security/reference/7.1/servlet/oauth2/resource-server/jwt.html) (7.1.2 (docs 7.1); docs 7.1)
-- [What's new in 7.1](https://docs.spring.io/spring-security/reference/7.1/whats-new.html) (7.1.2 (docs 7.1); docs 7.1)
-- [Pod Security Standards](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/) (1.36.5 (docs 1.36); docs 1.36)
-- [Pod Security Admission](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-admission/) (1.36.5 (docs 1.36); docs 1.36)
-- [NetworkPolicy](https://v1-36.docs.kubernetes.io/docs/concepts/services-networking/network-policies/) (1.36.5 (docs 1.36); docs 1.36)
+- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.2/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.2.0 (docs 4.2); docs 4.2)
+- [OAuth2 (resource server auto-config)](https://docs.spring.io/spring-boot/4.2/reference/security/oauth2.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Reference](https://docs.spring.io/spring-security/reference/7.2/index.html) (7.2.0 (docs 7.2); docs 7.2)
+- [OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/7.2/servlet/oauth2/resource-server/index.html) (7.2.0 (docs 7.2); docs 7.2)
+- [Resource Server JWT](https://docs.spring.io/spring-security/reference/7.2/servlet/oauth2/resource-server/jwt.html) (7.2.0 (docs 7.2); docs 7.2)
+- [What's new in 7.2](https://docs.spring.io/spring-security/reference/7.2/whats-new.html) (7.2.0 (docs 7.2); docs 7.2)
+- [Pod Security Standards](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-standards/) (1.36.7 (docs 1.36); docs 1.36)
+- [Pod Security Admission](https://v1-36.docs.kubernetes.io/docs/concepts/security/pod-security-admission/) (1.36.7 (docs 1.36); docs 1.36)
+- [NetworkPolicy](https://v1-36.docs.kubernetes.io/docs/concepts/services-networking/network-policies/) (1.36.7 (docs 1.36); docs 1.36)
 - [RFC 6750 Bearer Token Usage](https://www.rfc-editor.org/rfc/rfc6750.html) (final)
 - [RFC 9068 JWT Profile for OAuth 2.0 Access Tokens](https://www.rfc-editor.org/rfc/rfc9068.html) (final)
 - [RFC 9700 OAuth 2.0 Security BCP](https://www.rfc-editor.org/rfc/rfc9700.html) (final)

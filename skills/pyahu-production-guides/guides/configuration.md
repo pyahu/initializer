@@ -4,7 +4,7 @@
 
 Typed settings that fail fast, one source per kind of value and secrets that never show up in logs or manifests.
 
-On the web: https://initializer.pyahu.io/guides/configuration/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/configuration/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 A typo in a ConfigMap key matches no property, so the default quietly wins. A missing secret leaves the text
 `${payment-api-key}` in a request header. A property that only exists in `application-prod.yaml` was never run
@@ -270,7 +270,7 @@ If the vault refuses or is down, the volume never mounts and the pod waits in `C
   lives in etcd, readable by anyone allowed to `get secrets` in the namespace. Move to files when the driver
   arrives; only the Deployment and one line of `application.yaml` change.
 - No Kubernetes at all, such as App Service or plain VMs: Spring Cloud Azure can read Key Vault as a property source. It
-  adds the Azure SDK and a network call at startup; check that it supports Spring Boot 4.1.2 before adopting it.
+  adds the Azure SDK and a network call at startup; check that it supports Spring Boot 4.2.0 before adopting it.
 - Tools that need a real Kubernetes Secret, such as image pulls or ingress TLS: sync one with an operator. The app
   still reads files.
 - Keep secret property names distinctive: an environment variable with the same relaxed name outranks the mounted
@@ -283,7 +283,7 @@ write a secret into a manifest.
 
 ### What's going on
 
-Actuator's `env` and `configprops` endpoints list every property. In Spring Boot 4.1.2 they mask every value by
+Actuator's `env` and `configprops` endpoints list every property. In Spring Boot 4.2.0 they mask every value by
 default (`show-values: never`). Switch that to `always` or `when-authorized` and masking turns off for every value,
 secrets included, unless you add a `SanitizingFunction`.
 
@@ -458,7 +458,7 @@ management:
 
 ## References
 
-- [Application properties appendix](https://docs.spring.io/spring-boot/4.1/appendix/application-properties/index.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Actuator (production-ready features)](https://docs.spring.io/spring-boot/4.1/reference/actuator/index.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.1/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.1.2 (docs 4.1); docs 4.1)
-- [Actuator REST API](https://docs.spring.io/spring-boot/4.1/api/rest/actuator/index.html) (4.1.2 (docs 4.1); docs 4.1)
+- [Application properties appendix](https://docs.spring.io/spring-boot/4.2/appendix/application-properties/index.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Actuator (production-ready features)](https://docs.spring.io/spring-boot/4.2/reference/actuator/index.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Actuator endpoints (incl. Kubernetes probes anchor, verified)](https://docs.spring.io/spring-boot/4.2/reference/actuator/endpoints.html#actuator.endpoints.kubernetes-probes) (4.2.0 (docs 4.2); docs 4.2)
+- [Actuator REST API](https://docs.spring.io/spring-boot/4.2/api/rest/actuator/index.html) (4.2.0 (docs 4.2); docs 4.2)

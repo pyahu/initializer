@@ -4,7 +4,7 @@
 
 Choose between Spring Data JDBC, JPA and jOOQ and use each one well in production.
 
-On the web: https://initializer.pyahu.io/guides/jpa-and-jooq/. Written for baseline v0.1-b2: Java 25, Spring Boot 4.1.2.
+On the web: https://initializer.pyahu.io/guides/jpa-and-jooq/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
 **Draft:** no step of this guide is tested here yet.
 
@@ -37,7 +37,7 @@ All three talk to the same PostgreSQL. They differ in how much they hide.
 
 Spring Data JDBC loads and saves a whole aggregate, a root object with the objects that belong to it, such as an
 order and its lines. Nothing loads later on first access (no lazy loading) and no session tracks your objects
-between calls: what you call is what runs. JPA, here Hibernate 7.4 (the version Spring Boot 4.1.2 manages), tracks the objects you load and
+between calls: what you call is what runs. JPA, here Hibernate 7.4 (the version Spring Boot 4.2.0 manages), tracks the objects you load and
 writes your changes for you. That saves code and costs predictability. jOOQ (3.21 in the Boot BOM) hides nothing:
 you write SQL in Java, checked by the compiler against your real schema.
 
@@ -81,7 +81,7 @@ So a setter called by mistake becomes a database write and a query in the middle
 flush first, so the query sees your pending changes.
 
 The schema is the other surprise. Hibernate can create and change tables itself. With Liquibase in charge, that
-must stay off. Spring Boot 4.1.2 defaults `ddl-auto` to `none` unless the database is embedded.
+must stay off. Spring Boot 4.2.0 defaults `ddl-auto` to `none` unless the database is embedded.
 
 ### Do this
 
@@ -144,7 +144,7 @@ spring.jpa.open-in-view: false
 
 ### What's going on
 
-`spring.jpa.open-in-view` is `true` by default in Spring Boot 4.1.2. It binds one entity manager to the request,
+`spring.jpa.open-in-view` is `true` by default in Spring Boot 4.2.0. It binds one entity manager to the request,
 so lazy associations still load while the response is written, outside your transaction and after your service
 code is done. Boot even logs a warning about it at startup.
 
@@ -277,7 +277,7 @@ Each choice lands in the build, in `application.yaml` and in the persistence ada
 ### In the build
 
 - `spring-boot-starter-data-jpa` or `spring-boot-starter-jooq`, with versions from the Spring Boot BOM: Hibernate
-  7.4.13.Final, Spring Data JPA 4.1.2 and jOOQ 3.21.9 in Spring Boot 4.1.2.
+  7.4.15.Final, Spring Data JPA 4.2.0 and jOOQ 3.21.9 in Spring Boot 4.2.0.
 - For jOOQ, a generation task that migrates a PostgreSQL container with Liquibase and then generates (step 8).
 
 ### In application.yaml, with JPA
@@ -315,10 +315,10 @@ Each choice lands in the build, in `application.yaml` and in the persistence ada
 
 ## References
 
-- [Testcontainers support](https://docs.spring.io/spring-boot/4.1/reference/testing/testcontainers.html) (4.1.2 (docs 4.1); docs 4.1)
-- [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.1/reference/data/sql.html) (4.1.2 (docs 4.1); docs 4.1)
-- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html) (2026.0.2 (docs 4.1); docs 4.1)
-- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html) (2026.0.2 (docs 4.1); docs 4.1)
+- [Testcontainers support](https://docs.spring.io/spring-boot/4.2/reference/testing/testcontainers.html) (4.2.0 (docs 4.2); docs 4.2)
+- [SQL databases (JDBC, Spring Data JDBC, jOOQ, JPA)](https://docs.spring.io/spring-boot/4.2/reference/data/sql.html) (4.2.0 (docs 4.2); docs 4.2)
+- [Spring Data Relational reference](https://docs.spring.io/spring-data/relational/reference/4.1/index.html) (2026.1.0 (docs 4.1); docs 4.1)
+- [JDBC section](https://docs.spring.io/spring-data/relational/reference/4.1/jdbc.html) (2026.1.0 (docs 4.1); docs 4.1)
 - [Testcontainers for Java docs](https://java.testcontainers.org/) (2.0.5, not version-pinned)
 - [Jakarta Persistence 3.2 specification (HTML)](https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html) (not in the baseline yet)
 - [Hibernate ORM 7.4 user guide](https://docs.hibernate.org/orm/7.4/userguide/html_single/Hibernate_User_Guide.html) (not in the baseline yet)
