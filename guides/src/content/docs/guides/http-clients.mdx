@@ -65,9 +65,9 @@ write no new `RestTemplate` code.
 ### What's going on
 
 Spring has three HTTP clients. `RestTemplate` is the old one: Framework 7.1 deprecates it for removal in 8.0 and
-Spring Boot 4.2 deprecates `RestTemplateBuilder` and `TestRestTemplate` with it. `WebClient` is reactive and adding WebFlux to a Spring MVC app just to get a
-client brings in a second stack. `RestClient` is the blocking client where new features land and it works well
-with virtual threads.
+Spring Boot 4.2 deprecates `RestTemplateBuilder` and `TestRestTemplate` with it. `WebClient` is reactive and adding
+WebFlux to a Spring MVC app just to get a client brings in a second stack. `RestClient` is the blocking client where
+new features land and it works well with virtual threads.
 
 On top of it, you rarely write calls by hand. You describe the other service as a Java interface with
 `@HttpExchange` methods and Spring builds the client for you. Framework 7 puts these interfaces into groups with

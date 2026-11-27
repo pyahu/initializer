@@ -91,6 +91,10 @@ class GenerationTest {
                         .doesNotContain("\n\n\n");
             }
         });
+        String releaseNotes =
+                "https://initializer.pyahu.io/releases/#" + baseline.id().replace('.', '-');
+        assertThat(files.get("README.md")).contains("(" + releaseNotes + ")");
+        assertThat(files.get("AGENTS.md")).contains("(" + releaseNotes + ")");
         boolean postgres = options.get("database").equals("postgres");
         boolean nextjs = options.get("frontend").equals("nextjs");
         assertThat(files.containsKey("db/roles.sql")).isEqualTo(postgres);

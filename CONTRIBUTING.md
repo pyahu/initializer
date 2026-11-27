@@ -57,6 +57,8 @@ go run ./cmd/runworkflow -dir orders             # the generated project's own C
 | ---- | ---- |
 | `guides/` | Astro and Starlight site: pages, components, diagrams |
 | `data/versions.yaml` | The baseline: every pinned version |
+| `data/releases.yaml` | Release notes: per baseline, what changed and the steps to upgrade a generated project |
+| `data/baselines/<id>.yaml` | The pins of each released baseline, kept for the next release's version table |
 | `data/references.yaml` | Official documentation per component and baseline |
 | `data/checklist.yaml` | Checklist items of every guide |
 | `data/evidence/<guide>.yaml` | Evidence records, one claim each |
@@ -182,6 +184,34 @@ when a resolved version, image digest or `java -version` differs from it.
 A pin with `managedBy` must equal what the managing BOM gives its `coordinates`; `guidekit boms`
 checks this weekly.
 
+## Release notes
+
+A release is a baseline revision with its notes, and its git tag has the same name (`v0.1-b3`). `data/releases.yaml`
+has one entry per release, newest first, down to an `initial` entry that only keeps its pins. `guidekit generate`
+writes the [Release notes](https://initializer.pyahu.io/releases/) page, the Agent Skill's `releases.md`, the GitHub
+release bodies in `releases/` and the snapshot `data/baselines/<active>.yaml`; the version table always comes from
+two snapshots, never from text.
+
+- **An upgrade step** (`actions`) is for a team whose project was generated on the previous release. It names the
+  files, a `detect` command run from the project root that exits 0 while the project still needs the step, the
+  steps, a `verify` command and the guide step behind it. `kind` is `required` when the project stops building or
+  scanning clean without it, `recommended` for changed advice and `optional` to adopt what new projects get.
+  `components` lists the pins a generated project carries; the page shows the exact strings to replace.
+- **Between releases**, start.pyahu.io already generates what is on `main`. Record each change to what it generates
+  in an `unreleased` entry at the top (an upgrade step, or a line in `changes`). `guidekit check --base` fails when
+  `templates/`, the generation code or `data/versions.yaml` changed without `data/releases.yaml`; Renovate's own
+  updates are exempt.
+- **Cutting a release**: with the new baseline, turn the `unreleased` entry into the release (`status: released`,
+  `date`), run `guidekit generate`, push, wait for the fixture, Start and Guides workflows, then tag the commit
+  they passed on and push the tag (`git tag v0.1-b4 <sha> && git push origin v0.1-b4`). The Releases workflow
+  creates the GitHub release from `releases/<id>.md` of the tagged commit, and updates it from `main` after a
+  Guides run passes, so corrected notes reach GitHub only once checked.
+- **Published notes stay.** A released entry keeps its date and every upgrade step's anchor, and its pins never
+  change, the active baseline's included: a new pin needs a new baseline id. `guidekit check --base` enforces
+  all three. Correct the text, do not remove a step.
+- **`detect: auto`** on a step with `components` finds any old value of those pins still in its files, so a
+  project whose Renovate already moved some of them still gets the step.
+
 ## References
 
 Each entry in `data/references.yaml` names a `component`, the `docVersion` it covers and how that must `match`
@@ -207,7 +237,10 @@ keys combine with AND, values with OR, `{}` means always.
 - `guides/src/generated/guides.json` and `guides/src/generated/fixture-files.json`
 - `fixtures/<name>/docs/references.md`
 - `templates/checklist.json` (the checklist the project generator filters by the project's options)
-- `skills/pyahu-production-guides/` (the Agent Skill: `SKILL.md`, `checklist.md` and one file per guide)
+- `skills/pyahu-production-guides/` (the Agent Skill: `SKILL.md`, `checklist.md`, `releases.md` and one file per
+  guide)
+- `guides/src/content/docs/releases.md` and `releases/<id>.md` (release notes for the site and GitHub)
+- `data/baselines/<active>.yaml` (a copy of `data/versions.yaml`; the files of past releases stay as they were)
 
 ## Fixtures
 

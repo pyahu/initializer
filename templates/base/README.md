@@ -67,7 +67,9 @@ puts its summary on the run's page and keeps the report with the other reports.
 schemas, kube-linter, Trivy (HIGH/CRITICAL misconfigurations) and Pluto for deprecated or removed APIs.
 It scans the exact built backend[[#nextjs]] and frontend[[/nextjs]] images for fixable HIGH/CRITICAL vulnerabilities
 before smoke tests[[#nextjs]] and runs `npm audit --audit-level=high` on the frontend lockfile[[/nextjs]].
-Renovate keeps the versions current (`renovate.json`).
+Renovate keeps the versions current (`renovate.json`). A new baseline also changes generated files: its
+[release notes]([[releaseNotes]]) list, from this project's baseline on, each step to apply and how to tell whether
+the project still needs it.
 [[#nextjs]]
 
 The frontend image requires `DEPLOYMENT_ID` at build time: choose a different identifier for each release. CI uses

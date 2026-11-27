@@ -74,12 +74,22 @@ These are the steps we follow, in order.
 5. **Read the guides of the components that changed.** Fix the text and the version numbers. A measured claim
    keeps the run it was measured in; measure it again if the change could move the numbers.
 6. **Check the references.** `guidekit check` fails for every entry whose documentation version no longer
-   matches; point those at the new documentation.
-7. **Regenerate and commit.** Run `go run ./cmd/guidekit generate` and commit the changes with the regenerated
-   files: the site, the [Agent Skill](https://github.com/pyahu/initializer/tree/main/skills) and `llms.txt` come
-   from the same data, so all of them change together.
-8. **Update the running generator.** Rebuild and redeploy both images, `start` and `start-web`, so
+   matches; point those at the new documentation. Entries that are not version-pinned are not compared, so search
+   them for the old version numbers too.
+7. **Write the release notes** in `data/releases.yaml`: for a team whose project was generated on the previous
+   baseline, each step to apply, how to tell whether the project still needs it and how to check the result. We
+   apply them to a project generated on the previous baseline and run its CI before we publish.
+8. **Regenerate and commit.** Run `go run ./cmd/guidekit generate` and commit the changes with the regenerated
+   files: the site, the [Agent Skill](https://github.com/pyahu/initializer/tree/main/skills), `llms.txt`, the
+   [release notes](/releases/) and the baseline snapshot come from the same data, so all of them change together.
+9. **Update the running generator.** Rebuild and redeploy both images, `start` and `start-web`, so
    [start.pyahu.io](https://start.pyahu.io) generates projects on the new baseline.
+10. **Tag the release** on the commit the fixture, Start and Guides workflows passed on. The tag has the baseline's
+    name and its [GitHub release](https://github.com/pyahu/initializer/releases) carries the same notes.
+
+Changes to what the generator produces between two baselines are listed as unreleased at the top of the
+[release notes](/releases/) from the day they reach start.pyahu.io; CI fails a change to the templates that does
+not say so.
 
 ## Keeping the advice right
 
@@ -119,13 +129,15 @@ prove what the site shows. The publication check rejects pending, failed or supe
 service still requires its real image registry, environment settings, database roles, Secrets and deployment pipeline.
 
 A project you generate is yours from then on. Keep it current with Renovate in your own repository, as the
-[build quality guide](/guides/build-quality/) shows.
+[build quality guide](/guides/build-quality/) shows. Its `README.md` and `AGENTS.md` name the baseline it was
+generated on and link to the [release notes](/releases/) after it: the steps to move it to a newer baseline.
 
 ## See it for yourself
 
 - [Dependency Dashboard](https://github.com/pyahu/initializer/issues?q=is%3Aissue%20%22Dependency%20Dashboard%22):
   updates waiting for the next baseline.
 - [`data/versions.yaml`](https://github.com/pyahu/initializer/blob/main/data/versions.yaml): the baseline.
+- [Release notes](/releases/): what each baseline changed and how to upgrade a generated project.
 - [CI runs](https://github.com/pyahu/initializer/actions): every build, test and link check.
 - [`renovate.json`](https://github.com/pyahu/initializer/blob/main/renovate.json): the rules on this page, as
   Renovate reads them.

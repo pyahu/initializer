@@ -14,6 +14,7 @@ type Repo struct {
 	Root       string
 	Schemas    *Schemas
 	Versions   Versions
+	Releases   Releases
 	References References
 	Checklist  []ChecklistItem
 	Evidence   []EvidenceRecord
@@ -69,6 +70,7 @@ func Load(root string) (*Repo, []error, error) {
 		out         any
 	}{
 		{"data/versions.yaml", "versions", &r.Versions},
+		{"data/releases.yaml", "releases", &r.Releases},
 		{"data/references.yaml", "references", &r.References},
 		{"data/checklist.yaml", "checklist", &r.Checklist},
 		{"data/retired.yaml", "retired", &r.Retired},
@@ -107,6 +109,23 @@ func Load(root string) (*Repo, []error, error) {
 			return nil, nil, fmt.Errorf("%s: name %q must equal its directory", rel, fx.Name)
 		}
 		r.Fixtures = append(r.Fixtures, fx)
+	}
+	for i := range r.Releases.Releases {
+		rel := &r.Releases.Releases[i]
+		if rel.Status == "unreleased" {
+			continue
+		}
+		var snap Versions
+		p := filepath.Join("data", "baselines", rel.ID+".yaml")
+		if rel.ID == r.Versions.Active {
+			snap = r.Versions // the generated snapshot of the active baseline is a copy of versions.yaml
+		} else if err := load(p, "versions", &snap); err != nil {
+			return nil, nil, fmt.Errorf("release %s: %w", rel.ID, err)
+		}
+		rel.Baseline = snap.Revision(rel.ID)
+		if rel.Baseline == nil {
+			return nil, nil, fmt.Errorf("%s: revision %s not found", p, rel.ID)
+		}
 	}
 	r.Diagrams, err = LoadDiagrams(root)
 	if err != nil {

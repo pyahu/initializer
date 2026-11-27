@@ -1,0 +1,271 @@
+# The baseline: every version the guides, the fixture and the generator use.
+# Change a pin in place; CI proves the fixture still passes with it. Git keeps the history.
+schema: initializer.pyahu.io/versions/v1
+active: v0.1-b3
+revisions:
+  - id: v0.1-b3
+    release: v0.1
+    created: "2026-11-27"
+    components:
+      java:
+        version: "25.0.5.1+2"
+        kind: jdk
+        vendor: "Eclipse Temurin"
+        feature: "25"
+        build: "25.0.5.1+2"
+        managedBy: null
+        verifiedAt: "Adoptium release jdk-25.0.5.1+2, 2026-11-27"
+      temurin-jdk-image:
+        version: "25.0.5.1_2-jdk-noble"
+        kind: image
+        image: "eclipse-temurin:25.0.5.1_2-jdk-noble"
+        digest: "sha256:c7eef3dfeb81468533ea48c67bddaa8c7ca916454259e4d0d734d12bcff8e125"
+        managedBy: null
+        verifiedAt: "Docker Hub manifest index, 2026-11-27"
+      temurin-jre-image:
+        version: "25.0.5.1_2-jre-noble"
+        kind: image
+        image: "eclipse-temurin:25.0.5.1_2-jre-noble"
+        digest: "sha256:2ec98aa522c472deadfd2b7c5b39bca680e33ef522a53a72f10789bdf89a6bb5"
+        managedBy: null
+        verifiedAt: "Docker Hub manifest index, 2026-11-27"
+      gradle:
+        version: "9.9.2"
+        kind: tool
+        distributionSha256Sum: "971fcd7150ca4ba04852c0b2ca0d2d0ab9468e14b03473eab19528809914c76b"
+        managedBy: null
+        verifiedAt: "services.gradle.org, 2026-11-27"
+      spring-boot:
+        version: "4.2.0"
+        kind: maven-bom
+        coordinates: "org.springframework.boot:spring-boot-dependencies"
+        pluginId: "org.springframework.boot"
+        managedBy: null
+        verifiedAt: "Maven Central and Spring Boot release v4.2.0, 2026-11-27"
+      spring-framework:
+        version: "7.1.0"
+        kind: maven
+        coordinates: "org.springframework:spring-core"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.2.0, 2026-11-27"
+      spring-data:
+        version: "2026.1.0"
+        kind: maven-bom
+        coordinates: "org.springframework.data:spring-data-bom"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.2.0, 2026-11-27"
+      spring-security:
+        version: "7.2.0"
+        kind: maven
+        coordinates: "org.springframework.security:spring-security-core"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.2.0, 2026-11-27"
+      micrometer:
+        version: "1.18.0"
+        kind: maven
+        coordinates: "io.micrometer:micrometer-core"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.2.0, 2026-11-27"
+      micrometer-tracing:
+        version: "1.8.0"
+        kind: maven
+        coordinates: "io.micrometer:micrometer-tracing"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.2.0, 2026-11-27"
+      opentelemetry-java:
+        version: "1.68.0"
+        kind: maven
+        coordinates: "io.opentelemetry:opentelemetry-api"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.2.0, 2026-11-27"
+      opentelemetry-logback-appender:
+        version: "2.34.0-alpha"
+        kind: maven
+        coordinates: "io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0"
+        managedBy: null
+        verifiedAt: "Maven Central; opentelemetry-instrumentation-bom 2.34.0 imports opentelemetry-bom 1.68.0, 2026-11-27"
+      jspecify:
+        version: "1.0.1"
+        kind: maven
+        coordinates: "org.jspecify:jspecify"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.2.0, 2026-11-27"
+      liquibase:
+        version: "5.0.4"
+        kind: maven
+        coordinates: "org.liquibase:liquibase-core"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.2.0, 2026-11-27"
+      pgjdbc:
+        version: "42.7.14"
+        kind: maven
+        coordinates: "org.postgresql:postgresql"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.2.0, 2026-11-27"
+      testcontainers:
+        version: "2.0.5"
+        kind: maven-bom
+        coordinates: "org.testcontainers:testcontainers-bom"
+        managedBy: spring-boot
+        verifiedAt: "spring-boot-dependencies 4.2.0, 2026-11-27"
+      spring-modulith:
+        version: "2.2.0"
+        kind: maven-bom
+        coordinates: "org.springframework.modulith:spring-modulith-bom"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-27"
+      jmolecules-bom:
+        version: "2025.0.2"
+        kind: maven-bom
+        coordinates: "org.jmolecules:jmolecules-bom"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-10-17 (manages jmolecules-hexagonal-architecture 2.0.1)"
+      jmolecules-archunit:
+        version: "0.33.0"
+        kind: maven
+        coordinates: "org.jmolecules.integrations:jmolecules-archunit"
+        managedBy: jmolecules-bom
+        verifiedAt: "jmolecules-bom 2025.0.2 POM, 2026-10-17"
+      archunit:
+        version: "1.5.1"
+        kind: maven
+        coordinates: "com.tngtech.archunit:archunit-junit5"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-10-17"
+      error-prone:
+        version: "2.53.0"
+        kind: maven
+        coordinates: "com.google.errorprone:error_prone_core"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-27"
+      errorprone-gradle-plugin:
+        version: "5.2.0"
+        kind: gradle-plugin
+        pluginId: "net.ltgt.errorprone"
+        managedBy: null
+        verifiedAt: "Gradle plugin portal, 2026-11-27"
+      nullaway:
+        version: "0.14.4"
+        kind: maven
+        coordinates: "com.uber.nullaway:nullaway"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-27"
+      spotless-gradle-plugin:
+        version: "8.12.0"
+        kind: gradle-plugin
+        pluginId: "com.diffplug.spotless"
+        managedBy: null
+        verifiedAt: "Gradle plugin portal, 2026-11-27"
+      palantir-java-format:
+        version: "2.103.0"
+        kind: maven
+        coordinates: "com.palantir.javaformat:palantir-java-format"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-27"
+      pmd:
+        version: "7.29.0"
+        kind: maven
+        coordinates: "net.sourceforge.pmd:pmd-java"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-21"
+      jacoco:
+        version: "0.8.16"
+        kind: maven
+        coordinates: "org.jacoco:org.jacoco.agent"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-21"
+      pitest:
+        version: "1.30.2"
+        kind: maven
+        coordinates: "org.pitest:pitest"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-21"
+      pitest-junit5-plugin:
+        version: "1.2.3"
+        kind: maven
+        coordinates: "org.pitest:pitest-junit5-plugin"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-21"
+      pitest-gradle-plugin:
+        version: "1.19.0"
+        kind: gradle-plugin
+        pluginId: "info.solidsoft.pitest"
+        managedBy: null
+        verifiedAt: "Gradle plugin portal, 2026-11-21"
+      cyclonedx-gradle-plugin:
+        version: "3.6.1"
+        kind: gradle-plugin
+        pluginId: "org.cyclonedx.bom"
+        managedBy: null
+        verifiedAt: "Gradle plugin portal, 2026-11-27"
+      openapi-generator-gradle-plugin:
+        version: "7.27.0"
+        kind: gradle-plugin
+        pluginId: "org.openapi.generator"
+        managedBy: null
+        verifiedAt: "Gradle plugin portal, 2026-11-27"
+      openapi-spec:
+        version: "3.1.2"
+        kind: spec
+        managedBy: null
+        verifiedAt: "spec.openapis.org, 2026-10-17"
+      datasource-micrometer:
+        version: "2.3.1"
+        kind: maven
+        coordinates: "net.ttddyy.observation:datasource-micrometer-spring-boot"
+        managedBy: null
+        verifiedAt: "Maven Central, 2026-11-27"
+      postgres-image:
+        version: "18.7"
+        kind: image
+        image: "postgres:18.7"
+        digest: "sha256:64c8b0d31e4ab6ea665e8426ea406a94bf52de3c05b3a4a8bf713704eefa9328"
+        managedBy: null
+        verifiedAt: "Docker Hub manifest index, 2026-11-27"
+      otel-lgtm-image:
+        version: "0.41.1"
+        kind: image
+        image: "grafana/otel-lgtm:0.41.1"
+        digest: "sha256:1b852b77d7bcadb7699bfe7c78a51d059dff85168de674728cf7abf4474645e5"
+        managedBy: null
+        verifiedAt: "registry-1.docker.io manifest index; GitHub release v0.41.1 of 2026-11-20"
+      kubernetes-1.36:
+        version: "1.36.7"
+        kind: platform
+        managedBy: null
+        verifiedAt: "dl.k8s.io, 2026-11-27"
+      kubernetes-1.37:
+        version: "1.37.3"
+        kind: platform
+        managedBy: null
+        verifiedAt: "dl.k8s.io, 2026-11-27"
+      kustomize:
+        version: "5.8.3"
+        kind: tool
+        managedBy: null
+        verifiedAt: "GitHub release kustomize/v5.8.3, 2026-10-17"
+      cosign:
+        version: "3.1.5"
+        kind: tool
+        managedBy: null
+        verifiedAt: "GitHub release v3.1.5, 2026-11-27"
+      syft:
+        version: "1.57.2"
+        kind: tool
+        managedBy: null
+        verifiedAt: "GitHub release v1.57.2, 2026-11-27"
+      trivy:
+        version: "0.76.2"
+        kind: tool
+        managedBy: null
+        verifiedAt: "GitHub release v0.76.2, 2026-11-27"
+      renovate:
+        version: "44.258.3"
+        kind: tool
+        managedBy: null
+        verifiedAt: "GitHub release 44.258.3, 2026-11-27"
+      slsa:
+        version: "1.2"
+        kind: spec
+        managedBy: null
+        verifiedAt: "slsa.dev, 2026-10-17"

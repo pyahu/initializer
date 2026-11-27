@@ -13,6 +13,11 @@ on:
       - acceptance/**
       - skills/**
       - templates/**
+      - releases/**
+      - services/start/src/main/java/io/pyahu/start/generation/**
+      - gradle/wrapper/**
+      - gradlew
+      - gradlew.bat
       - go.mod
       - go.sum
       - .github/workflows/guides.yml
@@ -27,6 +32,11 @@ on:
       - acceptance/**
       - skills/**
       - templates/**
+      - releases/**
+      - services/start/src/main/java/io/pyahu/start/generation/**
+      - gradle/wrapper/**
+      - gradlew
+      - gradlew.bat
       - go.mod
       - go.sum
       - .github/workflows/guides.yml

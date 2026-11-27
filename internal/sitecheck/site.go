@@ -198,6 +198,29 @@ func Check(r *guidedata.Repo, dist, site string) []error {
 	errs = append(errs, checkGuides(r, dist, pages)...)
 	errs = append(errs, checkFixturePages(r, dist, pages)...)
 	errs = append(errs, checkExports(r, dist, site)...)
+	errs = append(errs, checkReleasePage(r, dist, pages)...)
+	return errs
+}
+
+// checkReleasePage requires the anchor of every release and upgrade step, which other pages and generated
+// projects link to.
+func checkReleasePage(r *guidedata.Repo, dist string, pages map[string]*page) []error {
+	pg := pages[filepath.Join(dist, "releases", "index.html")]
+	if pg == nil {
+		return []error{fmt.Errorf("releases/index.html: not built")}
+	}
+	var errs []error
+	for _, rel := range r.Releases.Releases {
+		a := guidedata.ReleaseAnchor(rel.ID)
+		if pg.ids[a] == 0 {
+			errs = append(errs, fmt.Errorf("releases/index.html: no anchor %s", a))
+		}
+		for _, s := range rel.Actions {
+			if pg.ids[a+"-"+s.ID] == 0 {
+				errs = append(errs, fmt.Errorf("releases/index.html: no anchor %s-%s", a, s.ID))
+			}
+		}
+	}
 	return errs
 }
 
@@ -317,7 +340,7 @@ func checkExports(r *guidedata.Repo, dist, site string) []error {
 		return []error{fmt.Errorf("llms.txt: %v", err)}
 	}
 	base := strings.TrimSuffix(site, "/")
-	want := []string{"/guides/", "/reference/docs/"}
+	want := []string{"/guides/", "/reference/docs/", "/releases/"}
 	for _, g := range r.Guides {
 		want = append(want, "/guides/"+g.Meta.ID+"/")
 	}

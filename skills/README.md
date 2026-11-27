@@ -1,8 +1,9 @@
 # Skills
 
 `pyahu-production-guides` is every guide of the site as plain Markdown, packaged as an
-[Agent Skill](https://agentskills.io): an index (`SKILL.md`), one file per guide and the full checklist. People
-can read it on GitHub and AI coding tools can load the one guide a task needs.
+[Agent Skill](https://agentskills.io): an index (`SKILL.md`), one file per guide, the full checklist and the
+release notes (`releases.md`). People can read it on GitHub and AI coding tools can load the one guide a task
+needs.
 
 `guidekit generate` writes it from the same sources as the site, so the two never drift. Do not edit it by
 hand: change the guide and regenerate.
@@ -16,6 +17,9 @@ To start a project that already follows the guides, use the generator at https:/
   the matching step and follows it, naming the guide and step behind each change.
 - **Reviewing a service:** ask for a review against `checklist.md`. Every item comes back pass, fail or not
   applicable, with its ID (such as `DB-03`) and the step that explains it.
+- **Upgrading a generated project:** ask your tool to bring the project to the current baseline. It reads
+  `releases.md` from the baseline the project's `AGENTS.md` names, runs each step's check and applies only the
+  steps the project still needs.
 - **Agreeing on a team standard:** the checklist IDs give your team a shared vocabulary. Write exceptions down
   with their reason, such as "KUBE-07 not applicable: batch job, no traffic".
 

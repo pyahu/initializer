@@ -110,6 +110,19 @@ func Skill(r *guidedata.Repo) (Outputs, error) {
 	return out, nil
 }
 
+// bootLine is the Spring Boot release line of the active baseline, such as 4.2.
+func bootLine(r *guidedata.Repo) string {
+	rev := r.Versions.ActiveRevision()
+	if rev == nil {
+		return ""
+	}
+	parts := strings.SplitN(rev.Components["spring-boot"].Version, ".", 3)
+	if len(parts) < 2 {
+		return rev.Components["spring-boot"].Version
+	}
+	return parts[0] + "." + parts[1]
+}
+
 func baselineLine(r *guidedata.Repo) string {
 	rev := r.Versions.Revision(r.Versions.Active)
 	if rev == nil {
@@ -122,7 +135,7 @@ func baselineLine(r *guidedata.Repo) string {
 func skillIndex(r *guidedata.Repo, parts []Part, byID map[string]*guidedata.Guide) []byte {
 	var b strings.Builder
 	b.WriteString("---\nname: " + SkillName + "\n")
-	b.WriteString("description: Production practices for Spring Boot 4.2 services on Java 25 and Kubernetes, from the Pyahu Initializer guides. Use when building, configuring, reviewing or deploying a Spring Boot service, including build and architecture, tests, REST and gRPC APIs, PostgreSQL with JDBC, JPA or jOOQ, Kafka, RabbitMQ, caching, JVM sizing, configuration, observability, security, container images, CI, Kubernetes, local development, monorepos and a Next.js frontend next to the service.\n---\n\n")
+	b.WriteString("description: Production practices for Spring Boot " + bootLine(r) + " services on Java 25 and Kubernetes, from the Pyahu Initializer guides. Use when building, configuring, reviewing or deploying a Spring Boot service, including build and architecture, tests, REST and gRPC APIs, PostgreSQL with JDBC, JPA or jOOQ, Kafka, RabbitMQ, caching, JVM sizing, configuration, observability, security, container images, CI, Kubernetes, local development, monorepos and a Next.js frontend next to the service.\n---\n\n")
 	b.WriteString(Header + "\n\n")
 	b.WriteString("# Pyahu production guides\n\n")
 	b.WriteString("The practices Pyahu follows in every service it generates, written as guides for people and tools alike.\n")
@@ -142,6 +155,8 @@ func skillIndex(r *guidedata.Repo, parts []Part, byID map[string]*guidedata.Guid
 	b.WriteString("4. To review a service, use [checklist.md](checklist.md). Report each item as pass, fail or not applicable,\n")
 	b.WriteString("   with its ID (for example `DB-03`) and the step that explains it.\n")
 	b.WriteString("5. Name the guide and step behind each change, so a reviewer can read the reason.\n\n")
+	b.WriteString("To upgrade a generated project to this baseline, follow [releases.md](releases.md) from the baseline its\n")
+	b.WriteString("`AGENTS.md` names: run each step's **Needed when** command and apply the steps that apply, oldest release first.\n\n")
 	b.WriteString("Keep the versions the guides use. When a guide marks a document as \"not in the baseline yet\" or a practice\n")
 	b.WriteString("as an example, say so instead of presenting it as settled.\n\n")
 	b.WriteString("## Index\n")

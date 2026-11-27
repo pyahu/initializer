@@ -113,6 +113,7 @@ func (r *Repo) CheckHistory(base string) []error {
 			add("audit exception %s: a new record must have added: %q (the commit date, UTC)", x.Advisory, today)
 		}
 	}
+	errs = append(errs, r.checkReleaseHistory(base)...)
 	return errs
 }
 

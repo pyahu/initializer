@@ -90,6 +90,7 @@ export default defineConfig({
           items: [
             { label: "Why it exists", slug: "why" },
             { label: "How we keep it current", slug: "maintenance" },
+            { label: "Release notes", slug: "releases" },
             { label: "Reference docs", slug: "reference/docs" },
           ],
         },
@@ -102,6 +103,7 @@ export default defineConfig({
             `- [Reference docs](${site}/reference/docs/): official documentation for the exact versions of the baseline.`,
             `- [Why it exists](${site}/why/): the problem it solves, why guides come first and why versions are pinned.`,
             `- [How we keep it current](${site}/maintenance/): how versions, advice and links stay up to date.`,
+            `- [Release notes](${site}/releases/): what each baseline changed and the steps to upgrade a generated project.`,
             "",
             "Guides:",
             "",

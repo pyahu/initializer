@@ -1,5 +1,7 @@
 package guidedata
 
+import "strings"
+
 // Versions is data/versions.yaml.
 type Versions struct {
 	Schema    string     `json:"schema"`
@@ -184,3 +186,57 @@ type AuditException struct {
 	Added    string `json:"added"`
 	Expires  string `json:"expires"`
 }
+
+// Releases is data/releases.yaml.
+type Releases struct {
+	Schema   string    `json:"schema"`
+	Releases []Release `json:"releases"`
+}
+
+// Release is the notes of one baseline revision. Initial marks the first one kept, which has a snapshot and no
+// notes; Unreleased collects what start.pyahu.io already generates for the next revision.
+type Release struct {
+	ID       string        `json:"id"`
+	Status   string        `json:"status"`
+	Date     string        `json:"date,omitempty"`
+	Previous *string       `json:"previous"`
+	Summary  string        `json:"summary"`
+	Actions  []UpgradeStep `json:"actions,omitempty"`
+	Guides   []GuideChange `json:"guides,omitempty"`
+	Changes  []string      `json:"changes,omitempty"`
+	Baseline *Revision     `json:"-"` // from data/baselines/<id>.yaml; nil for an unreleased entry
+}
+
+// UpgradeStep is what a team changes in a project generated on the previous release.
+type UpgradeStep struct {
+	ID          string   `json:"id"`
+	Kind        string   `json:"kind"`
+	Title       string   `json:"title"`
+	AppliesWhen Filter   `json:"appliesWhen"`
+	When        string   `json:"when,omitempty"`
+	Files       []string `json:"files"`
+	Detect      string   `json:"detect"`
+	Steps       string   `json:"steps"`
+	Components  []string `json:"components,omitempty"`
+	Verify      string   `json:"verify"`
+	Guide       string   `json:"guide,omitempty"`
+}
+
+// GuideChange is one guide step whose advice changed in a release.
+type GuideChange struct {
+	Step string `json:"step"`
+	Text string `json:"text"`
+}
+
+// Release returns the entry with the id, or nil.
+func (r *Releases) Release(id string) *Release {
+	for i := range r.Releases {
+		if r.Releases[i].ID == id {
+			return &r.Releases[i]
+		}
+	}
+	return nil
+}
+
+// Anchor is the page anchor of a release id: v0.1-b3 becomes v0-1-b3.
+func ReleaseAnchor(id string) string { return strings.ReplaceAll(id, ".", "-") }

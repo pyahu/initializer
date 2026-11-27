@@ -74,6 +74,13 @@ func Generate(r *guidedata.Repo) (Outputs, error) {
 	for p, b := range skill {
 		out[p] = b
 	}
+	rel, err := Releases(r)
+	if err != nil {
+		return nil, err
+	}
+	for p, b := range rel {
+		out[p] = b
+	}
 	return out, nil
 }
 

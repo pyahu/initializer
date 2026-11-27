@@ -1,0 +1,286 @@
+# Release notes: one entry per baseline revision, newest first. guidekit generate turns them into the Release
+# notes page, the Agent Skill's releases.md and the GitHub release bodies in releases/. The version table comes from
+# the snapshots in data/baselines/, never from this file. An action tells a team how to bring a project generated
+# on `previous` to this release; `detect` exits 0 when the project still needs it.
+schema: initializer.pyahu.io/releases/v1
+releases:
+  - id: v0.1-b3
+    status: released
+    date: "2026-11-27"
+    previous: v0.1-b2
+    summary: >-
+      Spring Boot 4.2.0 with Spring Framework 7.1, Spring Security 7.2, Spring Data 2026.1, Micrometer 1.18 and
+      OpenTelemetry 1.68, on Temurin 25.0.5.1 and Gradle 9.9.2. Projects generated on v0.1-b2 move their pins, the
+      Gradle wrapper and one renamed property; a Next.js frontend also patches zstd in its runtime image. Projects
+      generated before the quality gates can adopt them.
+    actions:
+      - id: pins
+        kind: required
+        title: Move every pin to v0.1-b3
+        appliesWhen: {}
+        files:
+          - gradle/libs.versions.toml
+          - Dockerfile
+          - .github/workflows/ci.yml
+          - compose.yml
+          - src/test/java/**/Postgres.java
+          - src/test/java/**/PendingMigrationsTest.java
+        detect: auto
+        components: [ spring-boot, spring-modulith, opentelemetry-logback-appender, error-prone, nullaway,
+          palantir-java-format, errorprone-gradle-plugin, spotless-gradle-plugin, cyclonedx-gradle-plugin,
+          openapi-generator-gradle-plugin, datasource-micrometer, temurin-jdk-image, temurin-jre-image,
+          postgres-image, otel-lgtm-image ]
+        steps: |-
+          Replace each `-` value below with the `+` value under it. Image references and digests are unique strings:
+          replace them in every file of the project (`Dockerfile`, `.github/workflows/ci.yml`, `compose.yml` and the
+          PostgreSQL test containers). Replace plain versions in `gradle/libs.versions.toml` only, where each appears
+          once. Components not listed are not in a generated project or come from a BOM. The **Needed when** command
+          finds any old value still there, also after Renovate moved some of them.
+        verify: "./gradlew build"
+        guide: build-quality#bld-version-catalog
+      - id: trivy-image
+        kind: required
+        title: Trivy 0.76.2 in CI
+        appliesWhen: {}
+        files:
+          - .github/workflows/ci.yml
+        detect: "grep -qF 'aquasec/trivy:0.76.0@' .github/workflows/ci.yml"
+        steps: |-
+          The Trivy image is pinned in the workflow, not in the catalog. Replace it in every step that uses it:
+
+          ```diff
+          -docker://aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+          +docker://aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
+          ```
+        verify: "! grep -qF 'aquasec/trivy:0.76.0@' .github/workflows/ci.yml"
+        guide: container-image#img-scanning
+      - id: gradle-wrapper
+        kind: required
+        title: Gradle 9.9.2 in the wrapper
+        appliesWhen: {}
+        files:
+          - gradle/wrapper/gradle-wrapper.properties
+          - gradle/wrapper/gradle-wrapper.jar
+          - gradlew
+          - gradlew.bat
+        detect: "! grep -q 'gradle-9.9.2-bin.zip' gradle/wrapper/gradle-wrapper.properties"
+        steps: |-
+          Run the wrapper task twice: the first run writes the new version and checksum, the second runs on 9.9.2 and
+          writes its own wrapper jar and scripts.
+
+          ```sh
+          ./gradlew wrapper --gradle-version 9.9.2 \
+            --gradle-distribution-sha256-sum 971fcd7150ca4ba04852c0b2ca0d2d0ab9468e14b03473eab19528809914c76b
+          ./gradlew wrapper --gradle-version 9.9.2 \
+            --gradle-distribution-sha256-sum 971fcd7150ca4ba04852c0b2ca0d2d0ab9468e14b03473eab19528809914c76b
+          ```
+        verify: "./gradlew --version | grep -q 'Gradle 9.9.2'"
+        guide: build-quality#bld-wrapper
+      - id: forwarded-headers
+        kind: required
+        title: Rename the forwarded headers property
+        appliesWhen: {}
+        files:
+          - src/main/resources/application.yaml
+        detect: "grep -q 'forward-headers-strategy' src/main/resources/application.yaml"
+        steps: |-
+          Spring Boot 4.2 deprecates `server.forward-headers-strategy`. Its `native` value is now `web-server`, and
+          setting both properties stops the application at startup.
+
+          ```diff
+           server:
+          -  forward-headers-strategy: native
+          +  request:
+          +    header:
+          +      forwarded:
+          +        strategy: web-server
+          ```
+
+          Do the same in any profile file or Deployment environment variable that sets it
+          (`SERVER_FORWARD_HEADERS_STRATEGY` becomes `SERVER_REQUEST_HEADER_FORWARDED_STRATEGY`).
+        verify: "./gradlew build"
+        guide: security#sec-headers
+      - id: frontend-zstd
+        kind: required
+        title: Patch zstd in the frontend image
+        appliesWhen: { frontend: [ nextjs ] }
+        files:
+          - frontends/web/Dockerfile
+        detect: "test -f frontends/web/Dockerfile && ! grep -q 'libzstd1=1.5.7+dfsg-1+deb13u1' frontends/web/Dockerfile"
+        steps: |-
+          The Node base image still ships zstd 1.5.7+dfsg-1, which Trivy reports as HIGH (CVE-2026-124851), so the
+          image scan in CI fails. Install Debian's fixed package next to the zlib patch in the runtime stage, and keep
+          the zlib pin:
+
+          ```diff
+          -    && apt-get install -y --no-install-recommends zlib1g=1:1.3.dfsg+really1.3.1-1+deb13u1 \
+          +    && apt-get install -y --no-install-recommends zlib1g=1:1.3.dfsg+really1.3.1-1+deb13u1 libzstd1=1.5.7+dfsg-1+deb13u1 \
+          ```
+        verify: "docker build --build-arg DEPLOYMENT_ID=check -t web-check frontends/web && docker run --rm --entrypoint dpkg-query web-check -W libzstd1 | grep -q deb13u1"
+        guide: container-image#img-scanning
+      - id: checklist-text
+        kind: recommended
+        title: Two checklist items changed their text
+        appliesWhen: {}
+        files:
+          - CHECKLIST.md
+        detect: "grep -qE 'server.forward-headers-strategy pinned|otel-lgtm 0.37.0' CHECKLIST.md"
+        steps: |-
+          SEC-06 names `server.request.header.forwarded.strategy` instead of `server.forward-headers-strategy`, and
+          LOCAL-05 names `grafana/otel-lgtm` 0.41.1. Edit both lines and keep your ticks.
+        verify: "! grep -qE 'server.forward-headers-strategy pinned|otel-lgtm 0.37.0' CHECKLIST.md"
+        guide: security#sec-headers
+      - id: rabbitmq-starter
+        kind: required
+        title: The RabbitMQ starter is spring-boot-starter-rabbitmq
+        appliesWhen: {}
+        when: your build depends on spring-boot-starter-amqp to talk to RabbitMQ
+        files:
+          - gradle/libs.versions.toml
+          - build.gradle.kts
+        detect: "grep -q 'spring-boot-starter-amqp' gradle/libs.versions.toml build.gradle.kts"
+        steps: |-
+          In Spring Boot 4.2, `spring-boot-starter-amqp` is generic AMQP 1.0. Depend on `spring-boot-starter-rabbitmq`
+          for RabbitMQ's AMQP 0.9.1 client, and `spring-boot-starter-amqp-rabbitmq` only for RabbitMQ's AMQP 1.0
+          client. Auto-configuration classes moved from `org.springframework.boot.amqp` to
+          `org.springframework.boot.rabbitmq`; `spring.rabbitmq.*` properties are unchanged.
+        verify: "./gradlew build"
+        guide: rabbitmq#rmq-when
+      - id: rest-template
+        kind: recommended
+        title: Plan the move off RestTemplate
+        appliesWhen: {}
+        when: your code uses RestTemplate, RestTemplateBuilder or TestRestTemplate
+        files:
+          - src/main/java
+          - src/test/java
+        detect: "grep -rqE 'RestTemplate' src"
+        steps: |-
+          Spring Framework 7.1 deprecates `RestTemplate` for removal in 8.0 and Spring Boot 4.2 deprecates
+          `RestTemplateBuilder` and `TestRestTemplate`. The code keeps working with deprecation warnings. Move each
+          client to `RestClient` when you touch it, and tests to `RestTestClient` with `@AutoConfigureRestTestClient`.
+        verify: "./gradlew compileJava compileTestJava"
+        guide: http-clients#http-client-choice
+      - id: quality-gates
+        kind: optional
+        title: Adopt the quality gates and the quality report
+        appliesWhen: {}
+        when: your project was generated before the quality gates and has no gradle/quality-report directory
+        files:
+          - build.gradle.kts
+          - settings.gradle.kts
+          - gradle/libs.versions.toml
+          - gradle/quality-report/
+          - config/pmd/ruleset.xml
+          - .github/workflows/ci.yml
+          - src/test/java
+          - CHECKLIST.md
+          - README.md
+        detect: "test ! -d gradle/quality-report"
+        steps: |-
+          New projects fail the build on complex code (PMD), untested business rules (JaCoCo, 80% of lines and 70% of
+          branches in the domain and application packages), tests that notice no mistake (PIT, 70% of mutations) and
+          more architecture rules (ArchUnit), and write a quality report that CI requires to say passed. To adopt
+          them, generate the same project on [start.pyahu.io](https://start.pyahu.io) with the same name, group,
+          package and options into a temporary directory, then take from it what follows. The generator always serves
+          the newest release: if it is past v0.1-b3, you get the newer versions of these files, and the upgrade steps
+          of the later releases find that part done.
+
+          1. `gradle/quality-report/` and `config/pmd/ruleset.xml`, copied as they are.
+          2. `settings.gradle.kts`: `includeBuild("gradle/quality-report")` at the top of `pluginManagement`.
+          3. `gradle/libs.versions.toml`: the `pmd`, `jacoco`, `pitest`, `pitest-junit5` and `pitest-gradle-plugin`
+             versions and the `pitest` plugin.
+          4. `build.gradle.kts`: the `jacoco`, `pmd`, `id("io.pyahu.quality-report")` and `alias(libs.plugins.pitest)`
+             plugins; `check("RequireExplicitNullMarking", CheckSeverity.ERROR)` in the Error Prone options; and in
+             place of your `tasks.test` block, everything from the comment "Fast tests on every change" to the end of
+             `tasks.check`.
+          5. Tests: `@Tag("integration")` on every test that starts the application or a container
+             (`ApplicationTest`, `DatabaseRolesTest` and `PendingMigrationsTest` in a generated project), the new
+             project's `ArchitectureTest`, and its fast tests in `ping/application/` while the sample `ping` capability
+             is still there. Your own domain and application code needs fast tests of its own.
+          6. `.github/workflows/ci.yml`: in place of the step "Gradle build in the pinned JDK", every step from
+             "Format" to "Keep the test and analysis reports".
+          7. `CHECKLIST.md`: the new items BLD-12, ARCH-11, TEST-10, TEST-11 and CI-15 and the new text of BLD-07;
+             `README.md`: the paragraph about the quality report.
+
+          Existing code may fail the new gates. Fix the code or add tests; do not lower a limit.
+        verify: "./gradlew check && jq -e '.status == \"passed\"' build/reports/pyahu/quality.json"
+        guide: ci-pipelines#ci-quality-report
+      - id: agents-md
+        kind: optional
+        title: Add AGENTS.md for coding agents
+        appliesWhen: {}
+        when: your project was generated before AGENTS.md was added
+        files:
+          - AGENTS.md
+          - CLAUDE.md
+        detect: "test ! -f AGENTS.md"
+        steps: |-
+          New projects carry an `AGENTS.md` with what the build enforces, what to do when it fails and which guide to
+          read before each change, and a `CLAUDE.md` that points to it. Copy both from a project generated with the same
+          options and adjust the layout table if you moved packages.
+        verify: "test -f AGENTS.md && test -f CLAUDE.md"
+      - id: release-notes-link
+        kind: optional
+        title: Link these notes from README.md and AGENTS.md
+        appliesWhen: {}
+        files:
+          - README.md
+          - AGENTS.md
+        detect: "! grep -q 'initializer.pyahu.io/releases/' AGENTS.md"
+        steps: |-
+          New projects link to the release notes after their baseline. Add, after the Renovate sentence of
+          `README.md`:
+
+          ```md
+          A new baseline also changes generated files: its
+          [release notes](https://initializer.pyahu.io/releases/#v0-1-b3) list, from this project's baseline on, each
+          step to apply and how to tell whether the project still needs it.
+          ```
+
+          and, before "Leave these to a person" in `AGENTS.md`:
+
+          ```md
+          ## Upgrading to a newer baseline
+
+          The [release notes](https://initializer.pyahu.io/releases/#v0-1-b3) list every step after baseline v0.1-b3,
+          oldest first. Run a step's **Needed when** command from the repository root and apply the step only when it
+          exits 0, then run its **Check**. A step that changes a file listed below goes in its own pull request.
+          ```
+        verify: "grep -q 'initializer.pyahu.io/releases/#v0-1-b3' AGENTS.md README.md"
+      - id: record-baseline
+        kind: required
+        title: Record v0.1-b3 as the project's baseline, last
+        appliesWhen: {}
+        files:
+          - README.md
+          - AGENTS.md
+          - gradle/libs.versions.toml
+          - .github/workflows/ci.yml
+        detect: "grep -qF 'baseline v0.1-b2' README.md AGENTS.md gradle/libs.versions.toml .github/workflows/ci.yml"
+        steps: |-
+          Once every required step above that applies, and each other step you chose, passed its check, replace `v0.1-b2` with `v0.1-b3` and
+          `Spring Boot 4.1.2` with `Spring Boot 4.2.0` in these files. Until then the project still says v0.1-b2, so
+          whoever picks the upgrade up starts from these notes again.
+        verify: "! grep -qF 'v0.1-b2' README.md AGENTS.md gradle/libs.versions.toml .github/workflows/ci.yml"
+    guides:
+      - step: security#sec-headers
+        text: Pins `server.request.header.forwarded.strategy` (`web-server`), the Spring Boot 4.2 name.
+      - step: http-clients#http-client-choice
+        text: RestTemplate is deprecated for removal; RestTemplateBuilder and TestRestTemplate with it.
+      - step: rabbitmq#rmq-when
+        text: Adds `spring-boot-starter-rabbitmq`, no longer `spring-boot-starter-amqp`.
+      - step: build-quality#bld-wrapper
+        text: Gradle 9.9.2 and its checksum.
+      - step: observability#obs-logs-otlp
+        text: The OpenTelemetry Logback appender 2.34.0-alpha for SDK 1.68.0.
+    changes:
+      - Release notes, on this page, in the Agent Skill and as GitHub releases; generated projects link to them.
+      - The Initializer itself runs on Spring Boot 4.2.0 and the same pins.
+      - The reference docs point at the Spring Boot 4.2, Spring Framework 7.1 and Spring Security 7.2 documentation.
+  - id: v0.1-b2
+    status: initial
+    previous: null
+    summary: >-
+      The first release with release notes. Its pins are kept in data/baselines/v0.1-b2.yaml so the next release can
+      list what changed.

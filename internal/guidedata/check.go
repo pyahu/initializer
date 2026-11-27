@@ -232,6 +232,7 @@ func (r *Repo) Check() []error {
 			}
 		}
 	}
+	errs = append(errs, r.checkReleases(cards)...)
 	errs = append(errs, r.checkDashes()...)
 	sort.Slice(errs, func(i, j int) bool { return errs[i].Error() < errs[j].Error() })
 	return errs

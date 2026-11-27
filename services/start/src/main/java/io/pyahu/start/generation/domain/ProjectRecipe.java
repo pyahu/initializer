@@ -78,6 +78,8 @@ public final class ProjectRecipe {
         Baseline b = d.baseline();
 
         d.add(new Value("baseline", b.id()))
+                // The release notes after this baseline say how to upgrade the project (data/releases.yaml).
+                .add(new Value("releaseNotes", "https://initializer.pyahu.io/releases/#" + b.id().replace('.', '-')))
                 .add(new Value("javaFeature", Integer.toString(b.javaFeature())))
                 .add(new Value("springBoot", b.springBoot()))
                 .add(new Value("gradleVersion", b.version("gradle")))

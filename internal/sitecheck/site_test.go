@@ -28,7 +28,7 @@ func TestExportsRequireEveryGuide(t *testing.T) {
 					t.Fatal(err)
 				}
 			}
-			write("llms.txt", site+"/guides/ "+site+"/reference/docs/ "+site+"/guides/example/")
+			write("llms.txt", site+"/guides/ "+site+"/reference/docs/ "+site+"/releases/ "+site+"/guides/example/")
 			for _, name := range []string{"llms-full.txt", "llms-small.txt"} {
 				body := ""
 				if name != missing {

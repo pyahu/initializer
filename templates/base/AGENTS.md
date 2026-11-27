@@ -113,6 +113,12 @@ The same guides come as an [Agent Skill](https://github.com/pyahu/initializer/tr
 the repository and the tool reads the step without leaving it. A guide marked Draft has no tested step yet: say
 so when you rely on one.
 
+## Upgrading to a newer baseline
+
+The [release notes]([[releaseNotes]]) list every step after baseline [[baseline]], oldest first. Run a step's
+**Needed when** command from the repository root and apply the step only when it exits 0, then run its **Check**.
+A step that changes a file listed below goes in its own pull request.
+
 ## Leave these to a person
 
 `gradle/wrapper/`, `gradle/quality-report/`, `gradlew`, `renovate.json`, `config/pmd/`, `.github/`,

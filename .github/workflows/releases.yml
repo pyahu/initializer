@@ -1,0 +1,53 @@
+# GitHub releases follow releases/<id>.md, which guidekit generate writes from data/releases.yaml. A person pushes
+# the tag of a release on the commit its CI passed (CONTRIBUTING.md, "Release notes"). Bodies are published only
+# from a validated commit: the tagged one when a tag is pushed, or a main commit whose Guides run passed, so a
+# correction to published notes reaches GitHub after its checks and never before.
+name: Releases
+
+on:
+  create:
+  workflow_run:
+    workflows: [Guides]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: releases
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      (github.event_name == 'create' && github.ref_type == 'tag') ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push') ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The tag's commit, or the main commit Guides validated.
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+      - name: Create or update each tagged release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          shopt -s nullglob
+          for notes in releases/*.md; do
+            tag=$(basename "$notes" .md)
+            if ! git rev-parse -q --verify "refs/tags/$tag" > /dev/null; then
+              echo "$tag: no tag yet, nothing to publish"
+              continue
+            fi
+            if gh release view "$tag" > /dev/null 2>&1; then
+              gh release edit "$tag" --title "$tag" --notes-file "$notes"
+            else
+              gh release create "$tag" --verify-tag --title "$tag" --notes-file "$notes"
+            fi
+          done

@@ -28,6 +28,9 @@ each, are in https://github.com/pyahu/initializer/tree/main/data/evidence.
    with its ID (for example `DB-03`) and the step that explains it.
 5. Name the guide and step behind each change, so a reviewer can read the reason.
 
+To upgrade a generated project to this baseline, follow [releases.md](releases.md) from the baseline its
+`AGENTS.md` names: run each step's **Needed when** command and apply the steps that apply, oldest release first.
+
 Keep the versions the guides use. When a guide marks a document as "not in the baseline yet" or a practice
 as an example, say so instead of presenting it as settled.
 
