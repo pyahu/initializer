@@ -2152,7 +2152,7 @@
             {
               "id": "ev-img-layers-1",
               "badge": "reproduced",
-              "canonical": "Evidence ev-img-layers-1 · reproduced by acceptance/jvm::TestAOTCacheFailFast. The image built from the layered extract (extract --layers without --launcher, started with java -jar) has a usable AOT cache: -XX:AOTMode=on exits 0. Result: AOTMode=on with the image's GC and class path: exit 0 (openjdk version \"25.0.5\" 2026-10-20 LTS). Limitations: Proves the layout works with the AOT cache, not the layer sizes.",
+              "canonical": "Evidence ev-img-layers-1 · reproduced by acceptance/jvm::TestAOTCacheFailFast. The image built from the layered extract (extract --layers without --launcher, started with java -jar) has a usable AOT cache: -XX:AOTMode=on exits 0. Result: AOTMode=on with the image's GC and class path: exit 0 (openjdk version \"25.0.5.1\" 2026-11-17 LTS). Limitations: Proves the layout works with the AOT cache, not the layer sizes.",
               "test": "acceptance/jvm::TestAOTCacheFailFast"
             }
           ]
@@ -4108,13 +4108,13 @@
             {
               "id": "ev-jvm-aot-cache-1",
               "badge": "reproduced",
-              "canonical": "Evidence ev-jvm-aot-cache-1 · reproduced by acceptance/jvm::TestAOTCacheFailFast. The AOT cache built in the image is usable with the image's GC and class path: -XX:AOTMode=on exits 0. Result: AOTMode=on with the image's GC and class path: exit 0 (openjdk version \"25.0.5\" 2026-10-20 LTS). Limitations: The training run warns that a few Spring ClassFile reader classes cannot be archived; the cache is still used.",
+              "canonical": "Evidence ev-jvm-aot-cache-1 · reproduced by acceptance/jvm::TestAOTCacheFailFast. The AOT cache built in the image is usable with the image's GC and class path: -XX:AOTMode=on exits 0. Result: AOTMode=on with the image's GC and class path: exit 0 (openjdk version \"25.0.5.1\" 2026-11-17 LTS). Limitations: The training run warns that a few Spring ClassFile reader classes cannot be archived; the cache is still used.",
               "test": "acceptance/jvm::TestAOTCacheFailFast"
             },
             {
               "id": "ev-jvm-aot-cache-2",
               "badge": "reproduced",
-              "canonical": "Evidence ev-jvm-aot-cache-2 · reproduced by acceptance/jvm::TestAOTCacheLoadedOnLaunch. The unchanged ENTRYPOINT opens the cache: with -Xlog:aot the JVM logs Opened AOT cache /app/app.aot. Result: unchanged ENTRYPOINT with -Xlog:aot logs \"Opened AOT cache /app/app.aot.\". Limitations: The log text was read from the first run on 25.0.5+8 and may change with the JDK.",
+              "canonical": "Evidence ev-jvm-aot-cache-2 · reproduced by acceptance/jvm::TestAOTCacheLoadedOnLaunch. The unchanged ENTRYPOINT opens the cache: with -Xlog:aot the JVM logs Opened AOT cache /app/app.aot. Result: unchanged ENTRYPOINT with -Xlog:aot logs \"Opened AOT cache /app/app.aot.\". Limitations: The log text was read from the first run on 25.0.5.1+2 and may change with the JDK.",
               "test": "acceptance/jvm::TestAOTCacheLoadedOnLaunch"
             },
             {

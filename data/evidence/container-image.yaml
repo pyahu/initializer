@@ -4,7 +4,7 @@
   claim: "The image built from the layered extract (extract --layers without --launcher, started with java -jar) has a usable AOT cache: -XX:AOTMode=on exits 0."
   badge: reproduced
   test: acceptance/jvm::TestAOTCacheFailFast
-  result: "AOTMode=on with the image's GC and class path: exit 0 (openjdk version \"25.0.5\" 2026-10-20 LTS)"
+  result: "AOTMode=on with the image's GC and class path: exit 0 (openjdk version \"25.0.5.1\" 2026-11-17 LTS)"
   limitations: "Proves the layout works with the AOT cache, not the layer sizes."
 - id: ev-img-non-root-1
   card: img-non-root

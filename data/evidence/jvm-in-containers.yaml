@@ -53,7 +53,7 @@
   claim: "The AOT cache built in the image is usable with the image's GC and class path: -XX:AOTMode=on exits 0."
   badge: reproduced
   test: acceptance/jvm::TestAOTCacheFailFast
-  result: "AOTMode=on with the image's GC and class path: exit 0 (openjdk version \"25.0.5\" 2026-10-20 LTS)"
+  result: "AOTMode=on with the image's GC and class path: exit 0 (openjdk version \"25.0.5.1\" 2026-11-17 LTS)"
   limitations: "The training run warns that a few Spring ClassFile reader classes cannot be archived; the cache is still used."
 - id: ev-jvm-aot-cache-2
   card: jvm-aot-cache
@@ -61,7 +61,7 @@
   badge: reproduced
   test: acceptance/jvm::TestAOTCacheLoadedOnLaunch
   result: "unchanged ENTRYPOINT with -Xlog:aot logs \"Opened AOT cache /app/app.aot.\""
-  limitations: "The log text was read from the first run on 25.0.5+8 and may change with the JDK."
+  limitations: "The log text was read from the first run on 25.0.5.1+2 and may change with the JDK."
 - id: ev-jvm-aot-cache-3
   card: jvm-aot-cache
   claim: "The AOT cache shortens startup of the stage 1 fixture on two CPUs and 1 GiB."
