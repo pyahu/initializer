@@ -1,6 +1,6 @@
 # 4. The generator gets a monorepo option, proven by a fixture it reproduces
 
-Date: 2026-11-27. Status: accepted. Owner: Pyahu (Terson Rigaud).
+Date: 2026-11-27, amended 2026-11-28 (the layout of a vertical). Status: accepted. Owner: Pyahu (Terson Rigaud).
 
 ## Context
 
@@ -15,12 +15,16 @@ from a build that runs.
 
 ## Decision
 
-- **The generator gets a second shape, a monorepo of verticals.** A vertical is one service in
-  `services/<name>/` with its contract project in `api/`. Each vertical picks its own architecture style, its
-  database and whether it has a Next.js app. Group and the identity provider are shared: one OIDC issuer for the
-  whole platform. When any vertical has an app, a central `frontends/portal` owns the home page, login, refresh
-  and logout, and the vertical apps are Next.js zones on the same origin.
-- **A vertical is a folder.** `settings.gradle.kts` and CI discover `services/*`, so adding a vertical later means
+- **The generator gets a second shape, a monorepo of verticals.** A vertical is one business capability that one
+  team owns end to end: Otto's term for the parts it cut its shop into, the unit self-contained systems describe
+  (own UI, logic and data) and what micro-frontends call a vertical split. Not to be confused with Vertical Slice
+  Architecture, which arranges the code inside one service. Each vertical is one folder, `verticals/<name>/`, with
+  its service in `service/`, its contract project in `api/` and, when it has one, its Next.js app in `web/`. Each
+  vertical picks its own architecture style, its database and whether it has an app. Group and the identity provider
+  are shared: one OIDC issuer for the whole platform. When any vertical has an app, a central portal owns the home
+  page, login, refresh and logout and finds the vertical apps by their folders; they are Next.js zones on the same
+  origin.
+- **A vertical is a folder.** `settings.gradle.kts` and CI discover `verticals/*`, so adding a vertical later means
   adding a folder; start.pyahu.io can generate one vertical for an existing monorepo.
 - **The build enforces the boundaries twice.** The service convention plugin fails the build on a project
   dependency to another service, and each vertical's `ArchitectureTest` fails on a class that reaches into

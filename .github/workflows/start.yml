@@ -302,7 +302,7 @@ jobs:
           cmp out/post.zip out/get.zip
           cd out && unzip -q post.zip
           test -x "$NAME/gradlew"
-          test -x "$NAME/services/orders/ci/smoke.sh"
+          test -x "$NAME/verticals/orders/service/ci/smoke.sh"
       - name: Gradle dependencies
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -320,17 +320,17 @@ jobs:
       - name: Every vertical's quality report says every gate passed
         working-directory: out/market
         run: |
-          for report in services/*/build/reports/pyahu/quality.json; do
+          for report in verticals/*/service/build/reports/pyahu/quality.json; do
             jq -e '.status == "passed" and (.gates | length == 9)' "$report"
           done
       - name: Every vertical's image starts and answers
         working-directory: out/market
         run: |
-          for dir in services/*/; do
+          for dir in verticals/*/; do
             vertical=$(basename "$dir")
             context=$(mktemp -d)
             mkdir -p "$context/workspace"
-            cp "services/$vertical/build/libs/$vertical-0.1.0.jar" "$context/workspace/application.jar"
-            docker buildx build --load --build-context "build=$context" -f "services/$vertical/Dockerfile" -t "$vertical:ci" .
-            IMAGE="$vertical:ci" bash "services/$vertical/ci/smoke.sh"
+            cp "verticals/$vertical/service/build/libs/$vertical-0.1.0.jar" "$context/workspace/application.jar"
+            docker buildx build --load --build-context "build=$context" -f "verticals/$vertical/service/Dockerfile" -t "$vertical:ci" .
+            IMAGE="$vertical:ci" bash "verticals/$vertical/service/ci/smoke.sh"
           done

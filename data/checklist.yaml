@@ -1323,7 +1323,7 @@
   guide: monorepo
   card: mono-contracts
   type: generated-config
-  text: "Each contract lives in its service's api project (services/<service>/api), which generates the code once; consumers depend on that project."
+  text: "Each contract lives in its service's api project (verticals/<vertical>/api), which generates the code once; consumers depend on that project."
   appliesWhen: {layout: [monorepo]}
 - id: MONO-06
   guide: monorepo

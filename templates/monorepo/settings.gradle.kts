@@ -1,6 +1,6 @@
-// One build for the whole platform (monorepo guide). Every folder in services/ is a vertical, its api/ folder
-// the contract it offers and every folder in libs/ a library, each a project with a flat name (step 2). Adding
-// a vertical is adding a folder.
+// One build for the whole platform (monorepo guide). Every folder in verticals/ is a vertical: its service/ folder
+// the service, its api/ folder the contract it offers. Every folder in libs/ is a library. Each is a project with a
+// flat name (step 2). Adding a vertical is adding a folder.
 pluginManagement {
     includeBuild("build-logic")
     repositories {
@@ -21,15 +21,15 @@ rootProject.name = "[[name]]"
 fun foldersWith(dir: String, buildFile: String): List<File> =
     file(dir).listFiles { f -> f.resolve(buildFile).isFile }.orEmpty().sortedBy { it.name }
 
-for (service in foldersWith("services", "build.gradle.kts")) {
-    include(":${service.name}")
-    project(":${service.name}").projectDir = service
+for (vertical in foldersWith("verticals", "service/build.gradle.kts")) {
+    include(":${vertical.name}")
+    project(":${vertical.name}").projectDir = vertical.resolve("service")
 }
 
 // A contract is found on its own, so a vertical's image build sees the contracts it uses without their services.
-for (service in foldersWith("services", "api/build.gradle.kts")) {
-    include(":${service.name}-api")
-    project(":${service.name}-api").projectDir = service.resolve("api")
+for (vertical in foldersWith("verticals", "api/build.gradle.kts")) {
+    include(":${vertical.name}-api")
+    project(":${vertical.name}-api").projectDir = vertical.resolve("api")
 }
 
 for (library in foldersWith("libs", "build.gradle.kts")) {

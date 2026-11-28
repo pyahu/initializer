@@ -346,7 +346,7 @@ explains why it matters. Items with a "when" apply only to services that use tha
 - [ ] **MONO-02** The build fails when a service depends on another service's project; services use only api projects and libraries, and api projects and libraries use only libraries. (step 3; when layout: monorepo)
 - [ ] **MONO-03** Each service owns its database and its migration history. (step 3; when layout: monorepo)
 - [ ] **MONO-04** libs/ holds only deliberately reusable code, never shared entities or service internals. (step 3; when layout: monorepo)
-- [ ] **MONO-05** Each contract lives in its service's api project (services/<service>/api), which generates the code once; consumers depend on that project. (step 4; when layout: monorepo)
+- [ ] **MONO-05** Each contract lives in its service's api project (verticals/<vertical>/api), which generates the code once; consumers depend on that project. (step 4; when layout: monorepo)
 - [ ] **MONO-06** CI compares every contract with the base of each change and fails on a breaking change; a deliberate removal is approved explicitly. (step 4; when layout: monorepo)
 - [ ] **MONO-07** Build logic lives in an included build-logic build, added with includeBuild inside pluginManagement; no buildSrc, allprojects, subprojects or afterEvaluate. (step 5; when layout: monorepo)
 - [ ] **MONO-08** Convention plugins have their own Gradle TestKit tests, including one that a service depending on another service fails. (step 5; when layout: monorepo)

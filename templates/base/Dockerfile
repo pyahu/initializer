@@ -2,7 +2,7 @@
 #
 # [[name]]: multi-stage image for Java [[javaFeature]] and Spring Boot (guides: JVM in containers, container image)[[#vertical]], built from
 # the repository root so the build sees build-logic, the catalog and the contract (monorepo guide, step 10):
-#   docker build -f services/[[name]]/Dockerfile .[[/vertical]][[^vertical]].[[/vertical]]
+#   docker build -f verticals/[[name]]/service/Dockerfile .[[/vertical]][[^vertical]].[[/vertical]]
 #
 #   build    compiles the Boot jar (Gradle cache in a BuildKit cache mount)
 #   extract  splits the jar into layers (jarmode=tools, without --launcher)
@@ -35,13 +35,13 @@ COPY config/ config/
 COPY .github/scripts/gradle-ci.sh .github/scripts/
 COPY libs/ libs/
 # This vertical with every contract it may use; its allow list, Dockerfile.dockerignore, keeps out the rest.
-COPY services/ services/
+COPY verticals/ verticals/
 RUN --mount=type=cache,target=/root/.gradle \
     bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :[[name]]:dependencies > /tmp/gradle-dependencies.log 2>&1 \
     || { cat /tmp/gradle-dependencies.log; exit 1; }
 # Tests run in CI before the image build.
 RUN --mount=type=cache,target=/root/.gradle bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :[[name]]:bootJar \
- && cp services/[[name]]/build/libs/[[name]]-0.1.0.jar /workspace/application.jar
+ && cp verticals/[[name]]/service/build/libs/[[name]]-0.1.0.jar /workspace/application.jar
 [[/vertical]]
 
 FROM [[jdkImage]] AS extract

@@ -5,14 +5,14 @@
       "fixture": "monorepo",
       "baseline": "v0.1-b3",
       "lang": "bash",
-      "sha256": "8aced26286ac72bc6a40ea25a0d1d7c80a8b737fecb3fc4d6b59187448faea30"
+      "sha256": "f3a7e791a63736f9e636e9dd32a07088ed680a06a611b5c34f46208a3cace2d5"
     },
     {
       "path": "fixtures/monorepo/.github/workflows/ci.yml",
       "fixture": "monorepo",
       "baseline": "v0.1-b3",
       "lang": "yaml",
-      "sha256": "930b576df0275a11c31ec1cc67c3a579103dd82d9cf68587b4d33290cea670f8"
+      "sha256": "ace67be9da88f005d767066264ea5cb25dde07425fdd973303bdc136aa2d5be8"
     },
     {
       "path": "fixtures/monorepo/gradle.properties",
@@ -22,39 +22,39 @@
       "sha256": "24f70879c473147bbc07def43c9cb296df353f8f7c076844fa028dff4ceb6503"
     },
     {
-      "path": "fixtures/monorepo/services/billing/Dockerfile.dockerignore",
+      "path": "fixtures/monorepo/settings.gradle.kts",
+      "fixture": "monorepo",
+      "baseline": "v0.1-b3",
+      "lang": "kotlin",
+      "sha256": "cc22a0c4ba4d085677e30a592799e830e078a416859a03934d4ba2e47b8c0c06"
+    },
+    {
+      "path": "fixtures/monorepo/verticals/billing/service/Dockerfile.dockerignore",
       "fixture": "monorepo",
       "baseline": "v0.1-b3",
       "lang": "text",
-      "sha256": "7ecb8f4a3e45b38dafa802a02af7e104a0c8a0c30a53ae896cd23101f5e80d38"
+      "sha256": "fb9a47dc9ca2c6fdf332af575561ac8c4188fa89a6e905244f71316e5523d11d"
     },
     {
-      "path": "fixtures/monorepo/services/billing/src/test/java/io/pyahu/fixture/billing/ArchitectureTest.java",
+      "path": "fixtures/monorepo/verticals/billing/service/src/test/java/io/pyahu/fixture/billing/ArchitectureTest.java",
       "fixture": "monorepo",
       "baseline": "v0.1-b3",
       "lang": "java",
       "sha256": "8fd72121a7b987ebb55694f221a3c08cd7f9cf14b46278fd25cde985df759cdc"
     },
     {
-      "path": "fixtures/monorepo/services/orders/api/build.gradle.kts",
+      "path": "fixtures/monorepo/verticals/orders/api/build.gradle.kts",
       "fixture": "monorepo",
       "baseline": "v0.1-b3",
       "lang": "kotlin",
       "sha256": "48e2de2cd9676f115211c3c8bb05e5dc07d455073618d4ee8a3760351d9cacc1"
     },
     {
-      "path": "fixtures/monorepo/services/orders/compose.yaml",
+      "path": "fixtures/monorepo/verticals/orders/service/compose.yaml",
       "fixture": "monorepo",
       "baseline": "v0.1-b3",
       "lang": "yaml",
-      "sha256": "f25b1cb486bdb2e625696a0faea94fe620af997f75b9430ba1086c9147fb6705"
-    },
-    {
-      "path": "fixtures/monorepo/settings.gradle.kts",
-      "fixture": "monorepo",
-      "baseline": "v0.1-b3",
-      "lang": "kotlin",
-      "sha256": "954384a2e64a79e777f3b53093dac3ced666550ccf11a916518887a76d819402"
+      "sha256": "a48c6ded745b6ffd6fbc6e2649abceec0bdbad3250da3e3d8dd35172ae91ce9b"
     },
     {
       "path": "fixtures/single-hexagonal/Dockerfile",

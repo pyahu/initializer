@@ -3,5 +3,5 @@
 name: [[name]]
 include:
 [[#verticals]]
-  - services/[[name]]/compose.yaml
+  - verticals/[[name]]/service/compose.yaml
 [[/verticals]]

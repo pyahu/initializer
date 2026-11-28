@@ -13,7 +13,7 @@ options:
     - {name: billing, architecture: ddd-layered, database: none, frontend: none}
     - {name: orders, architecture: hexagonal, database: postgres, persistence: jdbc, frontend: none}
 # The image whose base images are checked against the baseline; every vertical's Dockerfile uses the same ones.
-dockerfile: services/orders/Dockerfile
+dockerfile: verticals/orders/service/Dockerfile
 exercises:
   - java
   - temurin-jdk-image

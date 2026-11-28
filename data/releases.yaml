@@ -26,7 +26,9 @@ releases:
         guide: monorepo#mono-when
     guides:
       - step: monorepo#mono-layout
-        text: A new step on the layout, with flat project names and an owner for every service folder.
+        text: >-
+          A new step on the layout: one folder per vertical, `verticals/<name>/`, with its service in `service/`, its
+          contract in `api/` and its web app in `web/`; flat project names and an owner for every vertical.
       - step: monorepo#mono-boundaries-rule
         text: The service convention plugin fails the build when a service depends on another service's project.
       - step: monorepo#mono-contracts
@@ -40,7 +42,8 @@ releases:
     changes:
       - >-
         A monorepo option on start.pyahu.io and in the API (`layout=monorepo`, `verticals=name:architecture:database,...`),
-        proven by fixtures/monorepo, which is what the generator produces for its options. Each vertical's
+        proven by fixtures/monorepo, which is what the generator produces for its options. Each vertical is a folder,
+        `verticals/<name>/`, with its service in `service/` and its contract project in `api/`. Each vertical's
         `ArchitectureTest` names the packages it may use of the platform: itself, every contract and the libraries.
       - >-
         The quality report keeps one report per project, so a build of several projects writes one for each

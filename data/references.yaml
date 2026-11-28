@@ -2401,6 +2401,42 @@ entries:
     purpose: "Docker Compose: include."
     guides: [ "monorepo" ]
     baselines: [ v0.1-b3 ]
+  - id: architecture-otto-verticals
+    title: "Otto: on monoliths and microservices (vertical decomposition)"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "architecture"
+    url: "https://www.otto.de/jobs/en/blogs/techblog/on-monoliths-and-microservices_2015-09-30/"
+    pinned: false
+    purpose: "Where the term vertical comes from: a system cut into verticals that each belong entirely to one team."
+    guides: [ "monorepo" ]
+    baselines: [ v0.1-b3 ]
+  - id: architecture-self-contained-systems
+    title: "Self-contained systems"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "architecture"
+    url: "https://scs-architecture.org/"
+    pinned: false
+    purpose: "The same unit as a vertical: an autonomous web application with its own UI, logic and data."
+    guides: [ "monorepo" ]
+    baselines: [ v0.1-b3 ]
+  - id: frontend-micro-frontend-boundaries
+    title: "AWS Prescriptive Guidance: identifying micro-frontend boundaries"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "guide"
+    area: "frontend"
+    url: "https://docs.aws.amazon.com/prescriptive-guidance/latest/micro-frontends-aws/micro-frontend-boundaries.html"
+    pinned: false
+    purpose: "The vertical split: one micro-frontend per business domain, delivered by the team that owns it."
+    guides: [ "monorepo" ]
+    baselines: [ v0.1-b3 ]
   - id: ci-agents-md
     title: "AGENTS.md"
     component: null

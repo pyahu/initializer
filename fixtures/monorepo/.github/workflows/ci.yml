@@ -32,9 +32,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Verticals
         id: verticals
-        # Every folder in services/ with a build file is a vertical, as in settings.gradle.kts.
+        # Every folder in verticals/ with a service build file is a vertical, as in settings.gradle.kts.
         run: |
-          list=$(for f in services/*/build.gradle.kts; do basename "$(dirname "$f")"; done | jq -R . | jq -cs .)
+          list=$(for f in verticals/*/service/build.gradle.kts; do f=${f#verticals/}; echo "${f%%/*}"; done | jq -R . | jq -cs .)
           echo "list=$list" >> "$GITHUB_OUTPUT"
       - name: Gradle dependencies
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -70,7 +70,7 @@ jobs:
         run: |
           failed=0
           for vertical in $(jq -r '.[]' <<< "$VERTICALS"); do
-            report=services/$vertical/build/reports/pyahu
+            report=verticals/$vertical/service/build/reports/pyahu
             if [ -f "$report/job-summary.md" ] && [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
               { echo "## $vertical"; cat "$report/job-summary.md"; } >> "$GITHUB_STEP_SUMMARY"
             fi
@@ -104,14 +104,14 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: jars
-          path: services/*/build/libs/*.jar
+          path: verticals/*/service/build/libs/*.jar
           if-no-files-found: error
       - name: Keep the test and analysis reports
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: reports
-          path: services/*/build/reports/
+          path: verticals/*/service/build/reports/
           if-no-files-found: ignore
 
   vertical:

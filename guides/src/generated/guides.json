@@ -6166,7 +6166,7 @@
           "id": "MONO-05",
           "type": "generated-config",
           "card": "mono-contracts",
-          "text": "Each contract lives in its service's api project (services/<service>/api), which generates the code once; consumers depend on that project.",
+          "text": "Each contract lives in its service's api project (verticals/<vertical>/api), which generates the code once; consumers depend on that project.",
           "tags": [
             "layout: monorepo"
           ]
@@ -6469,6 +6469,36 @@
           "docVersion": "n/a",
           "pinned": false,
           "purpose": "Docker Compose: include.",
+          "later": false
+        },
+        {
+          "id": "architecture-otto-verticals",
+          "title": "Otto: on monoliths and microservices (vertical decomposition)",
+          "url": "https://www.otto.de/jobs/en/blogs/techblog/on-monoliths-and-microservices_2015-09-30/",
+          "version": "n/a",
+          "docVersion": "n/a",
+          "pinned": false,
+          "purpose": "Where the term vertical comes from: a system cut into verticals that each belong entirely to one team.",
+          "later": false
+        },
+        {
+          "id": "architecture-self-contained-systems",
+          "title": "Self-contained systems",
+          "url": "https://scs-architecture.org/",
+          "version": "n/a",
+          "docVersion": "n/a",
+          "pinned": false,
+          "purpose": "The same unit as a vertical: an autonomous web application with its own UI, logic and data.",
+          "later": false
+        },
+        {
+          "id": "frontend-micro-frontend-boundaries",
+          "title": "AWS Prescriptive Guidance: identifying micro-frontend boundaries",
+          "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/micro-frontends-aws/micro-frontend-boundaries.html",
+          "version": "n/a",
+          "docVersion": "n/a",
+          "pinned": false,
+          "purpose": "The vertical split: one micro-frontend per business domain, delivered by the team that owns it.",
           "later": false
         },
         {

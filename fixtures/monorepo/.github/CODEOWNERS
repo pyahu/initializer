@@ -1,7 +1,7 @@
 # Every folder has an owner (monorepo guide, step 2). Turn on "Require review from Code Owners" for main. The last
 # matching line wins.
 *                 @your-org/platform
-/services/billing/ @your-org/billing
-/services/orders/ @your-org/orders
+/verticals/billing/ @your-org/billing
+/verticals/orders/ @your-org/orders
 /build-logic/     @your-org/platform
 /gradle/          @your-org/platform

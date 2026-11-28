@@ -4,4 +4,4 @@
 # one share Grafana and the identity provider instead of fighting over their ports. Never in production.
 name: monorepo
 include:
-  - ../../platform.compose.yaml
+  - ../../../platform.compose.yaml

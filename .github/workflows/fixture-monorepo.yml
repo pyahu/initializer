@@ -78,7 +78,7 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           failed=0
-          for report in services/*/build/reports/pyahu/quality.json; do
+          for report in verticals/*/service/build/reports/pyahu/quality.json; do
             jq -e '.status == "passed"' "$report" > /dev/null || { echo "$report: not passed"; failed=1; }
           done
           exit "$failed"
@@ -91,7 +91,7 @@ jobs:
           bash .github/scripts/contracts.sh "$BASE"
       - name: Manifests of every vertical
         run: |
-          for deploy in services/*/deploy; do
+          for deploy in verticals/*/service/deploy; do
             for overlay in dev prod; do
               docker run --rm -v "$PWD:/w" -w /w "$KUSTOMIZE_IMAGE" build "$deploy/overlays/$overlay" > "/tmp/manifests.yaml"
               for k8s in 1.36.0 1.37.0; do
@@ -101,18 +101,18 @@ jobs:
           done
       - name: Images and smoke tests of every vertical
         run: |
-          for dir in services/*/; do
+          for dir in verticals/*/; do
             vertical=$(basename "$dir")
             context=$(mktemp -d)
             mkdir -p "$context/workspace"
-            cp "services/$vertical/build/libs/$vertical-0.1.0.jar" "$context/workspace/application.jar"
-            docker buildx build --load --build-context "build=$context" -f "services/$vertical/Dockerfile" -t "$vertical:ci" .
-            IMAGE="$vertical:ci" bash "services/$vertical/ci/smoke.sh"
+            cp "verticals/$vertical/service/build/libs/$vertical-0.1.0.jar" "$context/workspace/application.jar"
+            docker buildx build --load --build-context "build=$context" -f "verticals/$vertical/service/Dockerfile" -t "$vertical:ci" .
+            IMAGE="$vertical:ci" bash "verticals/$vertical/service/ci/smoke.sh"
           done
       - name: Export the images for scanning
         run: |
           mkdir -p out
-          for dir in services/*/; do docker save "$(basename "$dir"):ci" -o "out/$(basename "$dir").tar"; done
+          for dir in verticals/*/; do docker save "$(basename "$dir"):ci" -o "out/$(basename "$dir").tar"; done
       - name: Image vulnerabilities
         run: |
           for image in out/*.tar; do
@@ -124,11 +124,11 @@ jobs:
         working-directory: .
         run: |
           mkdir -p out fixtures/monorepo/build/junit
-          cp fixtures/monorepo/services/*/build/test-results/*/TEST-*.xml fixtures/monorepo/build-logic/build/test-results/test/TEST-*.xml fixtures/monorepo/build/junit/ || true
+          cp fixtures/monorepo/verticals/*/service/build/test-results/*/TEST-*.xml fixtures/monorepo/build-logic/build/test-results/test/TEST-*.xml fixtures/monorepo/build/junit/ || true
           go run ./cmd/guidekit evidence verify --fixture monorepo \
             --gradle-outcome "${{ steps.gradle.outcome }}" \
             --junit fixtures/monorepo/build/junit \
-            --sbom fixtures/monorepo/services/orders/build/sbom/bom.json \
+            --sbom fixtures/monorepo/verticals/orders/service/build/sbom/bom.json \
             --image orders:ci \
             --out out/evidence-report-monorepo.json
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

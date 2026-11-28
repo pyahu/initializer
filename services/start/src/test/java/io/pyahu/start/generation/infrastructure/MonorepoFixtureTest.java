@@ -38,8 +38,8 @@ class MonorepoFixtureTest {
     private static final Set<String> FIXTURE_ONLY = Set.of(
             "fixture.yaml",
             "docs/references.md",
-            "services/billing/src/test/java/io/pyahu/fixture/billing/VerticalBoundaryTest.java",
-            "services/billing/src/test/java/io/pyahu/fixture/orders/StandIn.java");
+            "verticals/billing/service/src/test/java/io/pyahu/fixture/billing/VerticalBoundaryTest.java",
+            "verticals/billing/service/src/test/java/io/pyahu/fixture/orders/StandIn.java");
 
     @Test
     void theFixtureIsWhatTheEngineGenerates() throws IOException {

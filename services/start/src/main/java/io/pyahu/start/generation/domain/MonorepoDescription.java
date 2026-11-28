@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Everything a monorepo consists of: the platform's own files (the build, build-logic, CI and documents) and one
- * description per vertical, whose files land in {@code services/<vertical>/}.
+ * description per vertical, whose files land in {@code verticals/<vertical>/}.
  */
 public record MonorepoDescription(
         MonorepoRequest request, ProjectDescription platform, List<ProjectDescription> verticals) {

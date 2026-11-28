@@ -10,9 +10,9 @@
 !config/
 !.github/scripts/gradle-ci.sh
 !libs/
-!services/*/api/
-!services/billing/build.gradle.kts
-!services/billing/src/
+!verticals/*/api/
+!verticals/billing/service/build.gradle.kts
+!verticals/billing/service/src/
 **/build
 **/.gradle
 **/.kotlin

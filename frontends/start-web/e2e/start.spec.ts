@@ -98,7 +98,7 @@ test('a terminal gets a monorepo with its verticals', async ({ request }) => {
   });
   expect(response.status()).toBe(200);
   const zip = await response.body();
-  expect(zip.includes(Buffer.from('shop/services/orders/build.gradle.kts'))).toBe(true);
+  expect(zip.includes(Buffer.from('shop/verticals/orders/service/build.gradle.kts'))).toBe(true);
   expect(zip.includes(Buffer.from('shop/build-logic/src/main/kotlin/platform.service.gradle.kts'))).toBe(true);
 });
 

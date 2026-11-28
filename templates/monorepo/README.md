@@ -11,7 +11,7 @@ check before production. The [release notes]([[releaseNotes]]) say how to move i
 | Vertical | Architecture | Database | Local port |
 | -------- | ------------ | -------- | ---------- |
 [[#verticals]]
-| [`[[name]]`](services/[[name]]/) | [[architectureTitle]] | [[#postgres]]PostgreSQL[[/postgres]][[^postgres]]none[[/postgres]] | [[port]] |
+| [`[[name]]`](verticals/[[name]]/) | [[architectureTitle]] | [[#postgres]]PostgreSQL[[/postgres]][[^postgres]]none[[/postgres]] | [[port]] |
 [[/verticals]]
 
 ## Run it
@@ -31,10 +31,10 @@ http://localhost:8090/default signs in any user name; in each environment set `O
 ## Ship it
 
 Each vertical has its own image, built from the repository root, and its own Kustomize tree in
-`services/<vertical>/deploy/`:
+`verticals/<vertical>/service/deploy/`:
 
 ```sh
-docker build -f services/<vertical>/Dockerfile -t <vertical> .
+docker build -f verticals/<vertical>/service/Dockerfile -t <vertical> .
 ```
 
 CI (`.github/workflows/ci.yml`) builds and tests every project once, checks every contract against the base of the

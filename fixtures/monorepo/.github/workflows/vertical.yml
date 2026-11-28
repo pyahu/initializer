@@ -1,5 +1,5 @@
 # One vertical after the build: its manifests, its image from the tested jar, the image scan and its own smoke test
-# (CI pipelines guide, steps 5 and 6; monorepo guide, step 10). ci.yml calls it once per folder in services/.
+# (CI pipelines guide, steps 5 and 6; monorepo guide, step 10). ci.yml calls it once per folder in verticals/.
 name: Vertical
 
 on:
@@ -31,17 +31,17 @@ jobs:
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: jars
-          path: services
+          path: verticals
       - name: Manifest output directory
         run: mkdir -p build/manifests
       - name: Render the dev overlay
         uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
         with:
-          args: build services/${{ inputs.vertical }}/deploy/overlays/dev --output build/manifests/dev.yaml
+          args: build verticals/${{ inputs.vertical }}/service/deploy/overlays/dev --output build/manifests/dev.yaml
       - name: Render the prod overlay
         uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
         with:
-          args: build services/${{ inputs.vertical }}/deploy/overlays/prod --output build/manifests/prod.yaml
+          args: build verticals/${{ inputs.vertical }}/service/deploy/overlays/prod --output build/manifests/prod.yaml
       - name: Strict schemas for Kubernetes 1.36
         uses: docker://ghcr.io/yannh/kubeconform:v0.8.0@sha256:faffaf43f95aa6425306e1ab8d6fcad72acb9049158f38e574c085ea1ec0f64e
         with:
@@ -67,9 +67,9 @@ jobs:
         run: |
           artifact_context=$(mktemp -d)
           mkdir -p "$artifact_context/workspace"
-          cp "services/$VERTICAL/build/libs/$VERTICAL-0.1.0.jar" "$artifact_context/workspace/application.jar"
+          cp "verticals/$VERTICAL/service/build/libs/$VERTICAL-0.1.0.jar" "$artifact_context/workspace/application.jar"
           docker buildx build --load --build-context "build=$artifact_context" \
-            -f "services/$VERTICAL/Dockerfile" -t "$VERTICAL:ci" .
+            -f "verticals/$VERTICAL/service/Dockerfile" -t "$VERTICAL:ci" .
           docker save "$VERTICAL:ci" -o build/app-image.tar
       - name: Image vulnerabilities
         uses: docker://aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
@@ -77,4 +77,4 @@ jobs:
           args: image --input build/app-image.tar --scanners vuln --ignore-unfixed --severity HIGH,CRITICAL --exit-code 1 --cache-dir build/trivy-cache
       - name: Smoke
         # Each vertical owns its smoke test, next to its code.
-        run: IMAGE="$VERTICAL:ci" bash "services/$VERTICAL/ci/smoke.sh"
+        run: IMAGE="$VERTICAL:ci" bash "verticals/$VERTICAL/service/ci/smoke.sh"

@@ -12,14 +12,14 @@ tmp=$work
 trap 'rm -rf "$tmp"' EXIT
 # The repository may hold the platform in a subfolder; contracts are compared at the same path.
 prefix=$(git rev-parse --show-prefix)
-if ! git cat-file -e "$base:${prefix}services" 2> /dev/null; then
-  echo "No services at $base: nothing to compare with."
+if ! git cat-file -e "$base:${prefix}verticals" 2> /dev/null; then
+  echo "No verticals at $base: nothing to compare with."
   exit 0
 fi
-git -C "$(git rev-parse --show-toplevel)" archive "$base" "${prefix}services" | tar -x -C "$work"
+git -C "$(git rev-parse --show-toplevel)" archive "$base" "${prefix}verticals" | tar -x -C "$work"
 work="$work/$prefix"
 failed=0
-contracts=$( { ls services/*/api/src/main/openapi/*.yaml; (cd "$work" && ls services/*/api/src/main/openapi/*.yaml); } \
+contracts=$( { ls verticals/*/api/src/main/openapi/*.yaml; (cd "$work" && ls verticals/*/api/src/main/openapi/*.yaml); } \
   2> /dev/null | sort -u)
 for contract in $contracts; do
   if [ ! -f "$work/$contract" ]; then

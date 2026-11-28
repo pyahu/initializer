@@ -3,8 +3,8 @@
 import Diagram from "../Diagram.astro";
 ---
 <Diagram id="mono-boundaries"
-  caption="One repository, separate services: they share build rules, versions and contracts, never each other's code."
-  description="A frame labelled one repository. Top row: build-logic, recommended, with one convention plugin per kind of project; the version catalog in gradle/libs.versions.toml, recommended; and libs, for reusable code only, with none to start. Below, a frame labelled services/orders holds two projects: :orders, with its code, database, image and deploy folder, and :orders-api, recommended, the contract and the code generated from it once. A frame labelled services/billing holds :billing, with its own style and database. Arrows point from the dependent to its dependency: :orders implements :orders-api, :billing uses :orders-api, both services apply the conventions from build-logic and build-logic reads the version catalog. A dotted failure arrow from :billing to :orders, marked with a cross, shows the edge the build rejects: a service never depends on another service's project.">
+  caption="One repository, separate verticals: they share build rules, versions and contracts, never each other's code."
+  description="A frame labelled one repository. Top row: build-logic, recommended, with one convention plugin per kind of project; the version catalog in gradle/libs.versions.toml, recommended; and libs, for reusable code only, with none to start. Below, a frame labelled verticals/orders holds two projects: :orders in service/, with its code, database, image and deploy folder, and :orders-api in api/, recommended, the contract and the code generated from it once. A frame labelled verticals/billing holds :billing in service/, with its own style and database. Arrows point from the dependent to its dependency: :orders implements :orders-api, :billing uses :orders-api, both services apply the conventions from build-logic and build-logic reads the version catalog. A dotted failure arrow from :billing to :orders, marked with a cross, shows the edge the build rejects: a service never depends on another service's project.">
   <svg viewBox="0 0 1000 480">
     <defs>
       <marker id="mono-boundaries-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="dg-marker dg-accent" /></marker>
@@ -26,24 +26,24 @@ import Diagram from "../Diagram.astro";
     <text x="716" y="116" class="dg-detail">reusable code only, none to start</text>
 
     <rect x="40" y="196" width="560" height="150" rx="8" class="dg-frame" />
-    <text x="56" y="218" class="dg-group">SERVICES/ORDERS</text>
+    <text x="56" y="218" class="dg-group">VERTICALS/ORDERS</text>
 
     <rect x="60" y="236" width="220" height="90" rx="6" class="dg-box" />
     <text x="76" y="264" class="dg-title">:orders</text>
-    <text x="76" y="288" class="dg-detail">its code, database,</text>
-    <text x="76" y="306" class="dg-detail">image and deploy/</text>
+    <text x="76" y="288" class="dg-detail">service/: its code,</text>
+    <text x="76" y="306" class="dg-detail">database, image, deploy/</text>
 
     <rect x="360" y="236" width="220" height="90" rx="6" class="dg-box dg-emphasis" />
     <text x="376" y="264" class="dg-title">:orders-api</text>
-    <text x="376" y="288" class="dg-detail">the contract and the</text>
-    <text x="376" y="306" class="dg-detail">code generated once</text>
+    <text x="376" y="288" class="dg-detail">api/: the contract and</text>
+    <text x="376" y="306" class="dg-detail">the code generated once</text>
 
     <rect x="660" y="196" width="300" height="150" rx="8" class="dg-frame" />
-    <text x="676" y="218" class="dg-group">SERVICES/BILLING</text>
+    <text x="676" y="218" class="dg-group">VERTICALS/BILLING</text>
 
     <rect x="690" y="236" width="240" height="90" rx="6" class="dg-box" />
     <text x="706" y="264" class="dg-title">:billing</text>
-    <text x="706" y="288" class="dg-detail">its own style</text>
+    <text x="706" y="288" class="dg-detail">service/: its own style</text>
     <text x="706" y="306" class="dg-detail">and database</text>
 
     <path d="M280 281 H357" class="dg-line dg-accent" marker-end="url(#mono-boundaries-accent)" />

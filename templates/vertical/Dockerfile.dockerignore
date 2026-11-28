@@ -10,9 +10,9 @@
 !config/
 !.github/scripts/gradle-ci.sh
 !libs/
-!services/*/api/
-!services/[[name]]/build.gradle.kts
-!services/[[name]]/src/
+!verticals/*/api/
+!verticals/[[name]]/service/build.gradle.kts
+!verticals/[[name]]/service/src/
 **/build
 **/.gradle
 **/.kotlin

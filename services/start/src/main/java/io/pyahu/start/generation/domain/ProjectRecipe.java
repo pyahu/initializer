@@ -64,8 +64,8 @@ public final class ProjectRecipe {
     }
 
     /**
-     * A monorepo (monorepo guide, ADR 0004): each vertical composed like one service, in {@code services/<name>/},
-     * then the platform around them, whose catalog holds every vertical's versions.
+     * A monorepo (monorepo guide, ADR 0004): each vertical composed like one service, in {@code
+     * verticals/<name>/service/} with its contract beside it in {@code api/}, then the platform around them, whose catalog holds every vertical's versions.
      */
     public MonorepoDescription describe(MonorepoRequest request, Baseline baseline) {
         List<ProjectDescription> verticals = new ArrayList<>();
@@ -79,9 +79,9 @@ public final class ProjectRecipe {
         ProjectRequest r = platform.service(vertical);
         ProjectDescription d = new ProjectDescription(r, baseline);
         String architecture = r.architecture().id();
-        String prefix = "services/" + vertical.name() + "/";
+        String prefix = "verticals/" + vertical.name() + "/";
         files(d, BASE, prefix, file -> inVertical(file, vertical.name()));
-        files(d, architecture, prefix, file -> file);
+        files(d, architecture, prefix, ProjectRecipe::inService);
         d.add(new Value("platform", platform.name()))
                 // The contract lives in the vertical's api project, outside its own packages (monorepo guide,
                 // step 4), so another vertical can use it and the vertical's module rules never see it.
@@ -98,31 +98,42 @@ public final class ProjectRecipe {
             case DDD_LAYERED -> dddLayered(d);
         }
         if (r.database() == Database.POSTGRES) {
-            files(d, "postgres", prefix, file -> file);
-            files(d, architecture + "-postgres", prefix, file -> file);
+            files(d, "postgres", prefix, ProjectRecipe::inService);
+            files(d, architecture + "-postgres", prefix, ProjectRecipe::inService);
             postgres(d);
         }
         if (r.auth() == Auth.OIDC) {
-            files(d, "oidc", prefix, file -> file);
+            files(d, "oidc", prefix, ProjectRecipe::inService);
             oidc(d);
         }
         // Verticals started one by one share the platform's containers: none stops them when it stops.
         property(d, "spring.docker.compose.lifecycle-management", "start-only");
-        files(d, "vertical", prefix, file -> file.replace("_vertical_", vertical.name()));
+        files(d, "vertical", prefix, file -> {
+            String path = file.replace("_vertical_", vertical.name());
+            // The vertical's own guide and its contract sit beside the service, not in it.
+            return path.equals("AGENTS.md") || path.startsWith("api/") ? path : inService(path);
+        });
         runtimeLauncher(d);
         d.add(new Value("verticalDependencies", verticalDependencies(d)));
         return d;
     }
 
     /**
-     * From the base set, a vertical takes its code, its manifests and its Dockerfile; its contract moves into its
-     * api project. The build, CI and documents belong to the platform.
+     * From the base set, a vertical's service takes its code, its manifests and its Dockerfile; its contract moves
+     * into the api project beside it. The build, CI and documents belong to the platform.
      */
     private static @Nullable String inVertical(String file, String name) {
         if (file.equals("src/main/openapi/api.yaml")) {
             return "api/src/main/openapi/" + name + ".yaml";
         }
-        return file.startsWith("src/") || file.startsWith("deploy/") || file.equals("Dockerfile") ? file : null;
+        return file.startsWith("src/") || file.startsWith("deploy/") || file.equals("Dockerfile")
+                ? inService(file)
+                : null;
+    }
+
+    /** A file of a vertical's service, in {@code service/} next to the vertical's contract. */
+    private static String inService(String file) {
+        return "service/" + file;
     }
 
     /** What the platform takes from the base set: the wrapper, the shared settings and the catalog. */

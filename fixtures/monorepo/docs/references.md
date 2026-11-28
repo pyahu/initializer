@@ -135,6 +135,8 @@ Official documentation for this project's versions (baseline v0.1-b3), filtered 
 | [jmolecules-integrations repo](https://github.com/xmolecules/jmolecules-integrations) | 0.33.0 (docs main) | not version-pinned | jmolecules-integrations repo. |
 | [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html) | 1.5.1 | not version-pinned | ArchUnit user guide. |
 | [ArchUnit release 1.5.1](https://github.com/TNG/ArchUnit/releases/tag/v1.5.1) | 1.5.1 | pinned to 1.5.1 | ArchUnit release 1.5.1. |
+| [Otto: on monoliths and microservices (vertical decomposition)](https://www.otto.de/jobs/en/blogs/techblog/on-monoliths-and-microservices_2015-09-30/) | n/a | not version-pinned | Where the term vertical comes from: a system cut into verticals that each belong entirely to one team. |
+| [Self-contained systems](https://scs-architecture.org/) | n/a | not version-pinned | The same unit as a vertical: an autonomous web application with its own UI, logic and data. |
 | [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/) | 2005 | pinned to 2005 | Ports and adapters as defined by its author. |
 | [Eric Evans: Domain-Driven Design Reference](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf) | 2015 | pinned to 2015 | Definitions and pattern summaries, including Layered Architecture. |
 | [Jeffrey Palermo: The Onion Architecture, part 1](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/) | 2008 | pinned to 2008 | Onion Architecture as defined by its author: all coupling toward the center. |
@@ -307,4 +309,10 @@ Official documentation for this project's versions (baseline v0.1-b3), filtered 
 | [PMD Java error prone rules](https://docs.pmd-code.org/pmd-doc-7.29.0/pmd_rules_java_errorprone.html) | 7.29.0 | pinned to 7.29.0 | EmptyCatchBlock and AvoidCatchingGenericException. |
 | [PMD release 7.29.0](https://github.com/pmd/pmd/releases/tag/pmd_releases/7.29.0) | 7.29.0 | pinned to 7.29.0 | PMD release 7.29.0. |
 | [NullAway configuration](https://github.com/uber/NullAway/wiki/Configuration) | 0.14.4 | not version-pinned | NullAway options, including OnlyNullMarked and the RequireExplicitNullMarking check. |
+
+## Next.js and the frontend
+
+| Document | Baseline version | Documentation pin | Read it for |
+| -------- | ---------------- | ----------------- | ----------- |
+| [AWS Prescriptive Guidance: identifying micro-frontend boundaries](https://docs.aws.amazon.com/prescriptive-guidance/latest/micro-frontends-aws/micro-frontend-boundaries.html) | n/a | not version-pinned | The vertical split: one micro-frontend per business domain, delivered by the team that owns it. |
 

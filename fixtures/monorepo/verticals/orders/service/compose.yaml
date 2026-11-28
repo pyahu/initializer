@@ -4,7 +4,7 @@
 # one share Grafana and the identity provider instead of fighting over their ports. Never in production.
 name: monorepo
 include:
-  - ../../platform.compose.yaml
+  - ../../../platform.compose.yaml
 services:
   # One user on the laptop; db/init-local.sh still creates the two roles of production (database guide, step 4).
   orders-postgres:

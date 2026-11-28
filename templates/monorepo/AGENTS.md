@@ -12,9 +12,10 @@ says what is particular to it: read it before you change that vertical.
 | Path | What |
 | ---- | ---- |
 [[#verticals]]
-| `services/[[name]]/` | The [[name]] vertical: [[architectureTitle]][[#postgres]], with PostgreSQL[[/postgres]], on port [[port]] locally. |
+| `verticals/[[name]]/` | The [[name]] vertical: [[architectureTitle]][[#postgres]], with PostgreSQL[[/postgres]], on port [[port]] locally. |
 [[/verticals]]
-| `services/<vertical>/api/` | Its contract, `src/main/openapi/<vertical>.yaml`, and the code generated from it once. |
+| `verticals/<vertical>/service/` | Its Spring Boot service: code, image, manifests in `deploy/`, local dependencies in `compose.yaml`. |
+| `verticals/<vertical>/api/` | Its contract, `src/main/openapi/<vertical>.yaml`, and the code generated from it once. |
 | `libs/<name>/` | Code that several verticals reuse on purpose. Empty until there is some. |
 | `build-logic/` | The convention plugins every project applies, and their tests. |
 | `gradle/libs.versions.toml` | Every version of the build, and the only place for one. |
@@ -39,7 +40,7 @@ or leave code out of one to get to green.
   `subprojects` or `afterEvaluate`.
 - **Versions live in the catalog.** No build file or convention plugin writes a version.
 - **Each vertical keeps its own architecture**, the quality gates and its quality report in
-  `services/<vertical>/build/reports/pyahu/quality.json`: read it first when the build fails.
+  `verticals/<vertical>/service/build/reports/pyahu/quality.json`: read it first when the build fails.
 
 ## Commands
 
@@ -53,7 +54,7 @@ docker compose up -d                   # every vertical's dependencies, to run s
 
 ## Adding a vertical
 
-Copy the folder of the vertical closest to what you need into `services/<name>/`, then rename its package and its
+Copy the folder of the vertical closest to what you need into `verticals/<name>/`, then rename its package and its
 names. The build and CI find it by its folder. By hand: a line in `compose.yaml`, one in `.github/CODEOWNERS`
 and the next free local ports in its `build.gradle.kts`.
 

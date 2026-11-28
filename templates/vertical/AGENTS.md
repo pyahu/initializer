@@ -12,6 +12,8 @@ Read the root `AGENTS.md` first: its rules hold here.
 - **Architecture: [[architectureTitle]].** `ArchitectureTest` keeps each layer to what it may use, and
   `ModulithTest` keeps one capability to the public API of another
   ([Architecture]([[architectureGuide]])).
+- **Service: `service/`.** Its code, its image (`Dockerfile`), its manifests (`deploy/`), its local dependencies
+  (`compose.yaml`) and its smoke test (`ci/smoke.sh`).
 - **Contract: `api/src/main/openapi/[[name]].yaml`.** Change it first: the build generates the interfaces the
   controllers implement, in `[[apiPackage]]`, and other verticals call the same interfaces.
 - **Never depend on another vertical** other than through its `api` project.
@@ -22,5 +24,5 @@ Read the root `AGENTS.md` first: its rules hold here.
 ./gradlew :[[name]]:test             # the fast tests
 ./gradlew :[[name]]:integrationTest  # the tests tagged integration; they need Docker
 ./gradlew :[[name]]:build            # every gate, the jar and the SBOM
-./gradlew :[[name]]:bootRun          # on port [[port]], with compose.yaml started for it
+./gradlew :[[name]]:bootRun          # on port [[port]], with service/compose.yaml started for it
 ```

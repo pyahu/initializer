@@ -2,7 +2,7 @@
 # matching line wins.
 *                 @your-org/platform
 [[#verticals]]
-/services/[[name]]/ @your-org/[[name]]
+/verticals/[[name]]/ @your-org/[[name]]
 [[/verticals]]
 /build-logic/     @your-org/platform
 /gradle/          @your-org/platform

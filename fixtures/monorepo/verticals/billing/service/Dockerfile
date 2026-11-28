@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1
 #
-# orders: multi-stage image for Java 25 and Spring Boot (guides: JVM in containers, container image), built from
+# billing: multi-stage image for Java 25 and Spring Boot (guides: JVM in containers, container image), built from
 # the repository root so the build sees build-logic, the catalog and the contract (monorepo guide, step 10):
-#   docker build -f services/orders/Dockerfile .
+#   docker build -f verticals/billing/service/Dockerfile .
 #
 #   build    compiles the Boot jar (Gradle cache in a BuildKit cache mount)
 #   extract  splits the jar into layers (jarmode=tools, without --launcher)
@@ -22,13 +22,13 @@ COPY config/ config/
 COPY .github/scripts/gradle-ci.sh .github/scripts/
 COPY libs/ libs/
 # This vertical with every contract it may use; its allow list, Dockerfile.dockerignore, keeps out the rest.
-COPY services/ services/
+COPY verticals/ verticals/
 RUN --mount=type=cache,target=/root/.gradle \
-    bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :orders:dependencies > /tmp/gradle-dependencies.log 2>&1 \
+    bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :billing:dependencies > /tmp/gradle-dependencies.log 2>&1 \
     || { cat /tmp/gradle-dependencies.log; exit 1; }
 # Tests run in CI before the image build.
-RUN --mount=type=cache,target=/root/.gradle bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :orders:bootJar \
- && cp services/orders/build/libs/orders-0.1.0.jar /workspace/application.jar
+RUN --mount=type=cache,target=/root/.gradle bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :billing:bootJar \
+ && cp verticals/billing/service/build/libs/billing-0.1.0.jar /workspace/application.jar
 
 FROM eclipse-temurin:25.0.5.1_2-jdk-noble@sha256:c7eef3dfeb81468533ea48c67bddaa8c7ca916454259e4d0d734d12bcff8e125 AS extract
 WORKDIR /extract

@@ -48,6 +48,15 @@ Before you split, ask why the parts are separate services. If they share a datab
 owned by one team, a single service with well-kept modules is simpler and faster to change (see
 [Architecture](architecture.md)). Split a module out when it needs to scale, deploy or fail on its own.
 
+This guide calls each of those parts a **vertical**: one business capability that one team owns end to end, with
+its service, its contract, its data and, when it has one, its web app. The term comes from Otto, which cut its shop
+into [verticals that each belong entirely to one team](https://www.otto.de/jobs/en/blogs/techblog/on-monoliths-and-microservices_2015-09-30/).
+[Self-contained systems](https://scs-architecture.org/) describe the same unit, with its own UI, logic and data, and
+the micro-frontend literature calls a frontend cut this way a
+[vertical split](https://docs.aws.amazon.com/prescriptive-guidance/latest/micro-frontends-aws/micro-frontend-boundaries.html).
+A vertical is not Vertical Slice Architecture, which arranges the code inside one service by feature: inside a
+vertical, pick an architecture style as in [Architecture](architecture.md).
+
 ### Do this
 
 1. Keep services in one repository when the same people own them and a change often touches two of them.
@@ -63,48 +72,53 @@ owned by one team, a single service with well-kept modules is simpler and faster
 
 ## 2. Where does everything go?
 
-**In short:** one folder per service holding everything that service owns, a flat Gradle project name for each
-folder and nothing in the root project.
+**In short:** one folder per vertical holding everything it owns, a flat Gradle project name for each project in it
+and nothing in the root project.
 
 ```kotlin
-// settings.gradle.kts: every folder in services/ with a build file is a vertical
-for (service in foldersWith("services", "build.gradle.kts")) { include(":${service.name}"); project(":${service.name}").projectDir = service }
+// settings.gradle.kts: every folder in verticals/ with a service is a vertical
+for (vertical in foldersWith("verticals", "service/build.gradle.kts")) {
+    include(":${vertical.name}")
+    project(":${vertical.name}").projectDir = vertical.resolve("service")
+}
 ```
 
 ### What's going on
 
-The layout answers two questions for every file: who owns it and which service it belongs to. When a service's
-code, contract, image, manifests and notes sit in one folder, the answers are the folder name. One line in
-`CODEOWNERS` gives the folder an owner, `git log services/orders` is its history and moving the service to its own
-repository later means moving one folder.
+The layout answers two questions for every file: who owns it and which vertical it belongs to. When a vertical's
+service, contract, web app, image, manifests and notes sit in one folder, the answers are the folder name. One line
+in `CODEOWNERS` gives the folder an owner, `git log verticals/orders` is its history and moving the vertical to its
+own repository later means moving one folder. Inside it, the service, the contract and the web app are siblings, so
+the Java build and the Node toolchain never share a folder.
 
-Gradle names a project after its path. Including `services/orders` as `:services:orders` makes Gradle create an
-empty `:services` project for the folder above it. Gradle's best practices recommend flat names mapped to their
-folders instead: `:orders` lives in `services/orders`, its contract `:orders-api` in `services/orders/api`. The
-names stay short and every project is one you wrote.
+Gradle names a project after its path. Including `verticals/orders/service` as `:verticals:orders:service` makes
+Gradle create empty `:verticals` and `:verticals:orders` projects for the folders above it. Gradle's best practices
+recommend flat names mapped to their folders instead: `:orders` lives in `verticals/orders/service`, its contract
+`:orders-api` in `verticals/orders/api`. The names stay short and every project is one you wrote.
 
 ### Do this
 
-1. Give each service one folder: `services/<service>/` with its code, `api/` for its contract (step 4), its
-   `Dockerfile`, `deploy/`, `compose.yaml`, `ci/smoke.sh` and `AGENTS.md` (steps 8 and 10).
+1. Give each vertical one folder, `verticals/<vertical>/`, with its `AGENTS.md` (step 8) and a folder per part:
+   `service/` for the service's code, `Dockerfile`, `deploy/`, `compose.yaml` and `ci/smoke.sh` (steps 8 and 10),
+   `api/` for its contract (step 4) and `web/` for its web app, when it has one.
 2. Put deliberately reusable code in `libs/<name>/` and the shared build in `build-logic/` and `gradle/`.
-3. Let `settings.gradle.kts` find the projects by their folders, each with a flat name: a folder in `services/` is
-   the service `:orders`, its `api/` folder the contract `:orders-api`, a folder in `libs/` the library
-   `:lib-money`. The name tells the build what a project is, and step 3 relies on it. Adding a service is adding a
-   folder:
+3. Let `settings.gradle.kts` find the projects by their folders, each with a flat name: the `service/` folder of
+   `verticals/orders` is the service `:orders`, its `api/` folder the contract `:orders-api`, a folder in `libs/` the
+   library `:lib-money`. The name tells the build what a project is, and step 3 relies on it. Adding a vertical is
+   adding a folder:
 
    ```kotlin
    fun foldersWith(dir: String, buildFile: String): List<File> =
        file(dir).listFiles { f -> f.resolve(buildFile).isFile }.orEmpty().sortedBy { it.name }
 
-   for (service in foldersWith("services", "build.gradle.kts")) {
-       include(":${service.name}")
-       project(":${service.name}").projectDir = service
+   for (vertical in foldersWith("verticals", "service/build.gradle.kts")) {
+       include(":${vertical.name}")
+       project(":${vertical.name}").projectDir = vertical.resolve("service")
    }
 
-   for (service in foldersWith("services", "api/build.gradle.kts")) {
-       include(":${service.name}-api")
-       project(":${service.name}-api").projectDir = service.resolve("api")
+   for (vertical in foldersWith("verticals", "api/build.gradle.kts")) {
+       include(":${vertical.name}-api")
+       project(":${vertical.name}-api").projectDir = vertical.resolve("api")
    }
    ```
 
@@ -116,16 +130,17 @@ names stay short and every project is one you wrote.
 5. Give every folder an owner in `.github/CODEOWNERS` and turn on "Require review from Code Owners":
 
    ```text
-   /services/orders/    @acme/orders
-   /services/billing/   @acme/billing
-   /build-logic/        @acme/platform
-   /gradle/             @acme/platform
+   /verticals/orders/    @acme/orders
+   /verticals/billing/   @acme/billing
+   /build-logic/         @acme/platform
+   /gradle/              @acme/platform
    ```
 
 ### When this is not for you
 
-- A frontend in the same repository: keep it in `frontends/<app>/`, outside the Gradle build, with its own
-  toolchain (see [Next.js](nextjs.md)). It generates its client from the service's contract file.
+- A web app that serves the whole platform rather than one vertical, such as the home page and the login: give it a
+  root folder of its own. A vertical's web app stays in its `web/` folder, outside the Gradle build, with its own
+  toolchain (see [Next.js](nextjs.md)), and generates its client from the vertical's contract file.
 - Configuring the build stays slow even with the configuration cache (step 7), or several organisations share the
   repository: split it into one build per product, joined with `includeBuild`.
 
@@ -148,7 +163,7 @@ A rule in a README gets broken the first busy week. A rule in the build cannot b
 (step 5) checks every project dependency when the build starts and stops at the first one that points at another
 service.
 
-> **Diagram:** One repository, separate services: they share build rules, versions and contracts, never each other's code. A frame labelled one repository. Top row: build-logic, recommended, with one convention plugin per kind of project; the version catalog in gradle/libs.versions.toml, recommended; and libs, for reusable code only, with none to start. Below, a frame labelled services/orders holds two projects: :orders, with its code, database, image and deploy folder, and :orders-api, recommended, the contract and the code generated from it once. A frame labelled services/billing holds :billing, with its own style and database. Arrows point from the dependent to its dependency: :orders implements :orders-api, :billing uses :orders-api, both services apply the conventions from build-logic and build-logic reads the version catalog. A dotted failure arrow from :billing to :orders, marked with a cross, shows the edge the build rejects: a service never depends on another service's project.
+> **Diagram:** One repository, separate verticals: they share build rules, versions and contracts, never each other's code. A frame labelled one repository. Top row: build-logic, recommended, with one convention plugin per kind of project; the version catalog in gradle/libs.versions.toml, recommended; and libs, for reusable code only, with none to start. Below, a frame labelled verticals/orders holds two projects: :orders in service/, with its code, database, image and deploy folder, and :orders-api in api/, recommended, the contract and the code generated from it once. A frame labelled verticals/billing holds :billing in service/, with its own style and database. Arrows point from the dependent to its dependency: :orders implements :orders-api, :billing uses :orders-api, both services apply the conventions from build-logic and build-logic reads the version catalog. A dotted failure arrow from :billing to :orders, marked with a cross, shows the edge the build rejects: a service never depends on another service's project.
 
 ### Do this
 
@@ -222,8 +237,8 @@ move the consumers, then remove the old one once production no longer uses it.
 
 ### Do this
 
-1. Keep each contract in `services/<service>/api/src/main/openapi/<service>.yaml` and make the folder a project with
-   a `platform.api` convention plugin that generates the code into `<group>.api.<service>`.
+1. Keep each contract in `verticals/<vertical>/api/src/main/openapi/<vertical>.yaml` and make the folder a project
+   with a `platform.api` convention plugin that generates the code into `<group>.api.<vertical>`.
 2. Let consumers depend on the `api` project, never on the contract file or the producer's project.
 3. In CI, compare every contract with the commit the change starts from (the pull request's base, or the previous
    commit on a push to `main`) and fail on a breaking change. Use `oasdiff` for OpenAPI and `buf breaking` for
@@ -231,9 +246,9 @@ move the consumers, then remove the old one once production no longer uses it.
 
    ```sh
    git fetch --depth=1 origin "$BASE_SHA"
-   mkdir -p /tmp/base && git archive "$BASE_SHA" services/orders/api services/billing/api | tar -x -C /tmp/base
-   oasdiff breaking /tmp/base/services/orders/api/openapi.yaml services/orders/api/openapi.yaml --fail-on ERR
-   buf breaking services/billing/api --against /tmp/base/services/billing/api
+   mkdir -p /tmp/base && git archive "$BASE_SHA" verticals/orders/api verticals/billing/api | tar -x -C /tmp/base
+   oasdiff breaking /tmp/base/verticals/orders/api/openapi.yaml verticals/orders/api/openapi.yaml --fail-on ERR
+   buf breaking verticals/billing/api --against /tmp/base/verticals/billing/api
    ```
 
    A contract that does not exist in the base yet has nothing to break: skip it.
@@ -448,9 +463,9 @@ service gives its style, its commands and its owner, while the root one keeps th
 2. Put what every service needs on the laptop, such as Grafana LGTM and a mock identity provider, in one
    `platform.compose.yaml` that each service's `compose.yaml` includes. Give every Compose file the platform's
    project `name`, so services started one by one share those containers instead of fighting over their ports, and
-   set `spring.docker.compose.lifecycle-management` to `start-only`, so one service stopping leaves them running. Put each service's own dependencies in its
-   `services/<service>/compose.yaml` and prefix every Compose service, volume and network with the service's name,
-   such as `orders-postgres`.
+   set `spring.docker.compose.lifecycle-management` to `start-only`, so one service stopping leaves them running. Put
+   each service's own dependencies in its `verticals/<vertical>/service/compose.yaml` and prefix every Compose
+   service, volume and network with the vertical's name, such as `orders-postgres`.
 3. Give each service its own local ports in `bootRun`, such as 8110 and 8111 for management, so several run side by
    side.
 4. Add a root `compose.yaml` that includes them all (Docker Compose 2.20.3 or later) and check the combined result
@@ -458,8 +473,8 @@ service gives its style, its commands and its owner, while the root one keeps th
 
    ```yaml
    include:
-     - services/orders/compose.yaml
-     - services/billing/compose.yaml
+     - verticals/orders/service/compose.yaml
+     - verticals/billing/service/compose.yaml
    ```
 5. Write a root `AGENTS.md` with the layout and the rules, and an `AGENTS.md` in each service with its
    architecture style, its commands and what it must never depend on.
@@ -491,8 +506,8 @@ it can be the one required check, and every other job, the frontend's included, 
 2. Build and test every project in one job with `./gradlew build :build-logic:check`, in the pinned JDK (see
    [CI pipelines](ci-pipelines.md), step 3), and run the contract checks of step 4 in the same job. Gradle
    runs the projects in parallel and the cache skips what did not change.
-3. Call one reusable workflow per service for its manifests, image, scan and smoke test (step 10), through a
-   matrix built from the folders in `services/`, so a new service is picked up without editing the workflow.
+3. Call one reusable workflow per vertical for its manifests, image, scan and smoke test (step 10), through a
+   matrix built from the folders in `verticals/`, so a new vertical is picked up without editing the workflow.
 4. End with a gate job that runs with `if: always()`, needs every other job and fails unless all of them passed.
    Make it the only required check:
 
@@ -500,17 +515,17 @@ it can be the one required check, and every other job, the frontend's included, 
    jobs:
      build:
        # ./gradlew build :build-logic:check and the contract checks
-     images:
+     vertical:
        needs: [build]
        strategy:
          matrix:
-           service: ${{ fromJSON(needs.build.outputs.services) }}
-       uses: ./.github/workflows/service.yml
+           vertical: ${{ fromJSON(needs.build.outputs.verticals) }}
+       uses: ./.github/workflows/vertical.yml
        with:
-         service: ${{ matrix.service }}
+         vertical: ${{ matrix.vertical }}
      gate:
        if: always()
-       needs: [build, images]
+       needs: [build, vertical]
        runs-on: ubuntu-24.04
        steps:
          - env:
@@ -550,8 +565,8 @@ jars: the SBOM inside carries a new serial number and timestamp each time. An im
    named build context (`--build-context`). Give each `Dockerfile` an allow list next to it,
    `Dockerfile.dockerignore`: the shared build, the libraries, every contract and that service, so a change inside
    another service never reaches its context.
-3. Let each service own its smoke test, `services/<service>/ci/smoke.sh`, which the reusable workflow runs against
-   the new image.
+3. Let each service own its smoke test, `verticals/<vertical>/service/ci/smoke.sh`, which the reusable workflow
+   runs against the new image.
 4. Tag images with the commit, promote the same digest from one environment to the next and record the commit in
    its provenance (see [CI pipelines](ci-pipelines.md), step 6).
 5. Keep each service's Kubernetes manifests in its own `deploy/` folder (see
@@ -568,7 +583,7 @@ jars: the SBOM inside carries a new serial number and timestamp each time. An im
 ## Put it all together
 
 Everything above lands in the repository layout, the build and one CI workflow. The examples come from the
-monorepo fixture: two services, `orders` (hexagonal, PostgreSQL) and `billing` (DDD layered), exactly as
+monorepo fixture: two verticals, `orders` (hexagonal, PostgreSQL) and `billing` (DDD layered), exactly as
 start.pyahu.io generates them with the monorepo layout.
 
 ### The build
@@ -583,15 +598,15 @@ From [`settings.gradle.kts`](https://github.com/pyahu/initializer/blob/main/fixt
 fun foldersWith(dir: String, buildFile: String): List<File> =
     file(dir).listFiles { f -> f.resolve(buildFile).isFile }.orEmpty().sortedBy { it.name }
 
-for (service in foldersWith("services", "build.gradle.kts")) {
-    include(":${service.name}")
-    project(":${service.name}").projectDir = service
+for (vertical in foldersWith("verticals", "service/build.gradle.kts")) {
+    include(":${vertical.name}")
+    project(":${vertical.name}").projectDir = vertical.resolve("service")
 }
 
 // A contract is found on its own, so a vertical's image build sees the contracts it uses without their services.
-for (service in foldersWith("services", "api/build.gradle.kts")) {
-    include(":${service.name}-api")
-    project(":${service.name}-api").projectDir = service.resolve("api")
+for (vertical in foldersWith("verticals", "api/build.gradle.kts")) {
+    include(":${vertical.name}-api")
+    project(":${vertical.name}-api").projectDir = vertical.resolve("api")
 }
 
 for (library in foldersWith("libs", "build.gradle.kts")) {
@@ -605,7 +620,7 @@ org.gradle.caching=true
 org.gradle.parallel=true
 ```
 
-From [`build.gradle.kts`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/services/orders/api/build.gradle.kts):
+From [`build.gradle.kts`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/verticals/orders/api/build.gradle.kts):
 
 ```kotlin
 plugins {
@@ -621,7 +636,7 @@ stops before any task runs and names both projects.
 The convention plugins stop a dependency across services (step 3); each service's `ArchitectureTest` stops the
 code that would cross one anyway.
 
-From [`ArchitectureTest.java`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/services/billing/src/test/java/io/pyahu/fixture/billing/ArchitectureTest.java):
+From [`ArchitectureTest.java`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/verticals/billing/service/src/test/java/io/pyahu/fixture/billing/ArchitectureTest.java):
 
 ```java
 private static final String PLATFORM = "io.pyahu.fixture..";
@@ -651,7 +666,7 @@ Each service's image is built from the repository root, with an allow list that 
 libraries, every contract and that service (step 10). Each service's local dependencies start with it and include what the platform shares
 (step 8).
 
-From [`Dockerfile.dockerignore`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/services/billing/Dockerfile.dockerignore):
+From [`Dockerfile.dockerignore`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/verticals/billing/service/Dockerfile.dockerignore):
 
 ```text
 !gradlew
@@ -662,28 +677,28 @@ From [`Dockerfile.dockerignore`](https://github.com/pyahu/initializer/blob/main/
 !config/
 !.github/scripts/gradle-ci.sh
 !libs/
-!services/*/api/
-!services/billing/build.gradle.kts
-!services/billing/src/
+!verticals/*/api/
+!verticals/billing/service/build.gradle.kts
+!verticals/billing/service/src/
 ```
 
-From [`compose.yaml`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/services/orders/compose.yaml):
+From [`compose.yaml`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/verticals/orders/service/compose.yaml):
 
 ```yaml
 include:
-  - ../../platform.compose.yaml
+  - ../../../platform.compose.yaml
 services:
   # One user on the laptop; db/init-local.sh still creates the two roles of production (database guide, step 4).
   orders-postgres:
 ```
 
-**Check it:** `docker build -f services/orders/Dockerfile .` from the root builds orders' image; a change in
+**Check it:** `docker build -f verticals/orders/service/Dockerfile .` from the root builds orders' image; a change in
 billing's code leaves its build context unchanged.
 
 ### In CI
 
 One workflow builds and tests everything with the build cache of `main` and runs the conventions' tests, checks
-every contract against the base of the change, then calls one reusable workflow per folder in `services/` for the
+every contract against the base of the change, then calls one reusable workflow per folder in `verticals/` for the
 manifests, image, scan and smoke test. A gate job is the only required check (steps 4, 7, 9 and 10).
 
 From [`contracts.sh`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/.github/scripts/contracts.sh):
@@ -718,7 +733,7 @@ gate:
       run: for r in $RESULTS; do test "$r" = success; done
 ```
 
-**Check it:** remove a field from `services/orders/api/src/main/openapi/orders.yaml` in a pull request. The contract
+**Check it:** remove a field from `verticals/orders/api/src/main/openapi/orders.yaml` in a pull request. The contract
 check fails and the gate reports the failure, so the pull request cannot merge.
 
 ## Checklist
@@ -727,7 +742,7 @@ check fails and the gate reports the failure, so the pull request cannot merge.
 
 - **MONO-03** Each service owns its database and its migration history. (step 3; when layout: monorepo)
 - **MONO-04** libs/ holds only deliberately reusable code, never shared entities or service internals. (step 3; when layout: monorepo)
-- **MONO-05** Each contract lives in its service's api project (services/<service>/api), which generates the code once; consumers depend on that project. (step 4; when layout: monorepo)
+- **MONO-05** Each contract lives in its service's api project (verticals/<vertical>/api), which generates the code once; consumers depend on that project. (step 4; when layout: monorepo)
 - **MONO-07** Build logic lives in an included build-logic build, added with includeBuild inside pluginManagement; no buildSrc, allprojects, subprojects or afterEvaluate. (step 5; when layout: monorepo)
 - **MONO-09** One version catalog at gradle/libs.versions.toml, imported into build-logic; no build file or convention plugin writes a version. (step 6; when layout: monorepo)
 - **MONO-10** Each project is included by a flat name with an explicit projectDir; the root project has no sources. (step 2; when layout: monorepo)
@@ -773,4 +788,7 @@ check fails and the gate reports the failure, so the pull request cannot merge.
 - [buf: breaking change detection](https://buf.build/docs/breaking/) (n/a, not version-pinned)
 - [oasdiff: OpenAPI breaking changes](https://github.com/oasdiff/oasdiff) (n/a, not version-pinned)
 - [Docker Compose: include](https://docs.docker.com/compose/how-tos/multiple-compose-files/include/) (n/a, not version-pinned)
+- [Otto: on monoliths and microservices (vertical decomposition)](https://www.otto.de/jobs/en/blogs/techblog/on-monoliths-and-microservices_2015-09-30/) (n/a, not version-pinned): Where the term vertical comes from: a system cut into verticals that each belong entirely to one team.
+- [Self-contained systems](https://scs-architecture.org/) (n/a, not version-pinned): The same unit as a vertical: an autonomous web application with its own UI, logic and data.
+- [AWS Prescriptive Guidance: identifying micro-frontend boundaries](https://docs.aws.amazon.com/prescriptive-guidance/latest/micro-frontends-aws/micro-frontend-boundaries.html) (n/a, not version-pinned): The vertical split: one micro-frontend per business domain, delivered by the team that owns it.
 - [AGENTS.md](https://agents.md/) (n/a, not version-pinned)
