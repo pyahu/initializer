@@ -2422,7 +2422,19 @@ entries:
     area: "architecture"
     url: "https://scs-architecture.org/"
     pinned: false
-    purpose: "The same unit as a vertical: an autonomous web application with its own UI, logic and data."
+    purpose: "What a vertical with its own web app can grow into: an autonomous web application with its own UI, logic and data."
+    guides: [ "monorepo" ]
+    baselines: [ v0.1-b3 ]
+  - id: architecture-vertical-slice
+    title: "Jimmy Bogard: Vertical Slice Architecture"
+    component: null
+    docVersion: "n/a"
+    match: "none"
+    kind: "reference"
+    area: "architecture"
+    url: "https://www.jimmybogard.com/vertical-slice-architecture/"
+    pinned: false
+    purpose: "The look-alike term: the code of one application arranged by feature, not a vertical of a platform."
     guides: [ "monorepo" ]
     baselines: [ v0.1-b3 ]
   - id: frontend-micro-frontend-boundaries

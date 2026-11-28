@@ -16,14 +16,16 @@ from a build that runs.
 ## Decision
 
 - **The generator gets a second shape, a monorepo of verticals.** A vertical is one business capability that one
-  team owns end to end: Otto's term for the parts it cut its shop into, the unit self-contained systems describe
-  (own UI, logic and data) and what micro-frontends call a vertical split. Not to be confused with Vertical Slice
-  Architecture, which arranges the code inside one service. Each vertical is one folder, `verticals/<name>/`, with
-  its service in `service/`, its contract project in `api/` and, when it has one, its Next.js app in `web/`. Each
-  vertical picks its own architecture style, its database and whether it has an app. Group and the identity provider
-  are shared: one OIDC issuer for the whole platform. When any vertical has an app, a central portal owns the home
-  page, login, refresh and logout and finds the vertical apps by their folders; they are Next.js zones on the same
-  origin.
+  team owns end to end: Otto's term for the parts it cut its shop into, and what micro-frontends call a vertical
+  split. With its own web app it can grow into a self-contained system, which also asks for its own UI and for
+  working when the others are down. Not to be confused with Vertical Slice Architecture, which arranges the code
+  inside one service. Each vertical is one folder, `verticals/<name>/`, with its service in `service/` and its
+  contract project in `api/`. Each vertical picks its own architecture style and its database. Group and the
+  identity provider are shared: one OIDC issuer for the whole platform.
+- **Planned, not generated yet: the web apps.** A vertical's Next.js app goes in its `web/` folder. When any
+  vertical has one, a central portal (the application shell of micro-frontends) owns the home page, login, refresh
+  and logout and finds the vertical apps by their folders; they are Next.js zones on the same origin. Until the
+  fixture shows it, every vertical is generated without a frontend.
 - **A vertical is a folder.** `settings.gradle.kts` and CI discover `verticals/*`, so adding a vertical later means
   adding a folder; start.pyahu.io can generate one vertical for an existing monorepo.
 - **The build enforces the boundaries twice.** The service convention plugin fails the build on a project

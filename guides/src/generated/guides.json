@@ -6247,7 +6247,7 @@
           "id": "MONO-14",
           "type": "deployment-prerequisite",
           "card": "mono-layout",
-          "text": "CODEOWNERS names an owner for every service folder, build-logic and gradle/, and code owner review is required.",
+          "text": "CODEOWNERS names an owner for every vertical folder (service, contract and web app), build-logic and gradle/, and code owner review is required.",
           "tags": [
             "layout: monorepo"
           ]
@@ -6274,7 +6274,7 @@
           "id": "MONO-17",
           "type": "generated-config",
           "card": "mono-one-service",
-          "text": "Each service has its own compose.yaml and AGENTS.md; a root compose.yaml includes every service's file.",
+          "text": "Each vertical has its own AGENTS.md and its service its own compose.yaml; a root compose.yaml includes every service's file.",
           "tags": [
             "layout: monorepo"
           ]
@@ -6488,7 +6488,17 @@
           "version": "n/a",
           "docVersion": "n/a",
           "pinned": false,
-          "purpose": "The same unit as a vertical: an autonomous web application with its own UI, logic and data.",
+          "purpose": "What a vertical with its own web app can grow into: an autonomous web application with its own UI, logic and data.",
+          "later": false
+        },
+        {
+          "id": "architecture-vertical-slice",
+          "title": "Jimmy Bogard: Vertical Slice Architecture",
+          "url": "https://www.jimmybogard.com/vertical-slice-architecture/",
+          "version": "n/a",
+          "docVersion": "n/a",
+          "pinned": false,
+          "purpose": "The look-alike term: the code of one application arranged by feature, not a vertical of a platform.",
           "later": false
         },
         {

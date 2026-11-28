@@ -355,10 +355,10 @@ explains why it matters. Items with a "when" apply only to services that use tha
 - [ ] **MONO-11** One workflow that always runs builds and tests every project and ends in a gate job that is the only required check. (step 9; when layout: monorepo)
 - [ ] **MONO-12** Each service has its own image repository, built from the repository root, and its own deploy/ folder. (step 10; when layout: monorepo)
 - [ ] **MONO-13** The same image digest is promoted between environments. (step 10; when layout: monorepo)
-- [ ] **MONO-14** CODEOWNERS names an owner for every service folder, build-logic and gradle/, and code owner review is required. (step 2; when layout: monorepo)
+- [ ] **MONO-14** CODEOWNERS names an owner for every vertical folder (service, contract and web app), build-logic and gradle/, and code owner review is required. (step 2; when layout: monorepo)
 - [ ] **MONO-15** Every project, libraries and api projects included, applies one convention plugin. (step 5; when layout: monorepo)
 - [ ] **MONO-16** The configuration cache, the build cache and parallel execution are on, and only builds of main save the CI build cache. (step 7; when layout: monorepo)
-- [ ] **MONO-17** Each service has its own compose.yaml and AGENTS.md; a root compose.yaml includes every service's file. (step 8; when layout: monorepo)
+- [ ] **MONO-17** Each vertical has its own AGENTS.md and its service its own compose.yaml; a root compose.yaml includes every service's file. (step 8; when layout: monorepo)
 
 ### [Next.js next to the service](guides/nextjs.md)
 

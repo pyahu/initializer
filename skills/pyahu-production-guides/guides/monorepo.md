@@ -51,11 +51,14 @@ owned by one team, a single service with well-kept modules is simpler and faster
 This guide calls each of those parts a **vertical**: one business capability that one team owns end to end, with
 its service, its contract, its data and, when it has one, its web app. The term comes from Otto, which cut its shop
 into [verticals that each belong entirely to one team](https://www.otto.de/jobs/en/blogs/techblog/on-monoliths-and-microservices_2015-09-30/).
-[Self-contained systems](https://scs-architecture.org/) describe the same unit, with its own UI, logic and data, and
-the micro-frontend literature calls a frontend cut this way a
+The micro-frontend literature calls a frontend cut this way a
 [vertical split](https://docs.aws.amazon.com/prescriptive-guidance/latest/micro-frontends-aws/micro-frontend-boundaries.html).
-A vertical is not Vertical Slice Architecture, which arranges the code inside one service by feature: inside a
-vertical, pick an architecture style as in [Architecture](architecture.md).
+[Self-contained systems](https://scs-architecture.org/) go further: each one must have its own UI, logic and data,
+integrate with the others mostly through its web interface or asynchronously, and keep working when another is down.
+A vertical with a web app can grow into one; a vertical without one is not one yet.
+A vertical is not [Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/), which
+arranges the code inside one service by feature: inside a vertical, pick an architecture style as in
+[Architecture](architecture.md).
 
 ### Do this
 
@@ -247,7 +250,8 @@ move the consumers, then remove the old one once production no longer uses it.
    ```sh
    git fetch --depth=1 origin "$BASE_SHA"
    mkdir -p /tmp/base && git archive "$BASE_SHA" verticals/orders/api verticals/billing/api | tar -x -C /tmp/base
-   oasdiff breaking /tmp/base/verticals/orders/api/openapi.yaml verticals/orders/api/openapi.yaml --fail-on ERR
+   oasdiff breaking /tmp/base/verticals/orders/api/src/main/openapi/orders.yaml \
+     verticals/orders/api/src/main/openapi/orders.yaml --fail-on ERR
    buf breaking verticals/billing/api --against /tmp/base/verticals/billing/api
    ```
 
@@ -455,7 +459,7 @@ service's file to start the dependencies of all of them at once. The included fi
 each service prefixes what it defines.
 
 Coding agents work the same way. They read the `AGENTS.md` nearest to the file they edit, so a short one in each
-service gives its style, its commands and its owner, while the root one keeps the map and the rules of steps 2 to 6.
+vertical gives its style, its commands and its owner, while the root one keeps the map and the rules of steps 2 to 6.
 
 ### Do this
 
@@ -476,8 +480,9 @@ service gives its style, its commands and its owner, while the root one keeps th
      - verticals/orders/service/compose.yaml
      - verticals/billing/service/compose.yaml
    ```
-5. Write a root `AGENTS.md` with the layout and the rules, and an `AGENTS.md` in each service with its
-   architecture style, its commands and what it must never depend on.
+5. Write a root `AGENTS.md` with the layout and the rules, and an `AGENTS.md` at the root of each vertical,
+   `verticals/<vertical>/AGENTS.md`, with its architecture style, its commands and what it must never depend on, so
+   it covers the service, the contract and the web app alike.
 
 ### When this is not for you
 
@@ -663,8 +668,8 @@ fails and names the class.
 ### The images
 
 Each service's image is built from the repository root, with an allow list that admits the shared build, the
-libraries, every contract and that service (step 10). Each service's local dependencies start with it and include what the platform shares
-(step 8).
+libraries, every contract and that service (step 10). Each service's local dependencies start with it and include
+what the platform shares (step 8).
 
 From [`Dockerfile.dockerignore`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/verticals/billing/service/Dockerfile.dockerignore):
 
@@ -749,7 +754,7 @@ check fails and the gate reports the failure, so the pull request cannot merge.
 - **MONO-12** Each service has its own image repository, built from the repository root, and its own deploy/ folder. (step 10; when layout: monorepo)
 - **MONO-15** Every project, libraries and api projects included, applies one convention plugin. (step 5; when layout: monorepo)
 - **MONO-16** The configuration cache, the build cache and parallel execution are on, and only builds of main save the CI build cache. (step 7; when layout: monorepo)
-- **MONO-17** Each service has its own compose.yaml and AGENTS.md; a root compose.yaml includes every service's file. (step 8; when layout: monorepo)
+- **MONO-17** Each vertical has its own AGENTS.md and its service its own compose.yaml; a root compose.yaml includes every service's file. (step 8; when layout: monorepo)
 
 ### Verified behaviour
 
@@ -761,7 +766,7 @@ check fails and the gate reports the failure, so the pull request cannot merge.
 
 - **MONO-01** The decision to keep several services in one repository is recorded in an ADR with its reason and the owning teams. (step 1; when layout: monorepo)
 - **MONO-11** One workflow that always runs builds and tests every project and ends in a gate job that is the only required check. (step 9; when layout: monorepo)
-- **MONO-14** CODEOWNERS names an owner for every service folder, build-logic and gradle/, and code owner review is required. (step 2; when layout: monorepo)
+- **MONO-14** CODEOWNERS names an owner for every vertical folder (service, contract and web app), build-logic and gradle/, and code owner review is required. (step 2; when layout: monorepo)
 
 ### Recurring operator tasks
 
@@ -789,6 +794,7 @@ check fails and the gate reports the failure, so the pull request cannot merge.
 - [oasdiff: OpenAPI breaking changes](https://github.com/oasdiff/oasdiff) (n/a, not version-pinned)
 - [Docker Compose: include](https://docs.docker.com/compose/how-tos/multiple-compose-files/include/) (n/a, not version-pinned)
 - [Otto: on monoliths and microservices (vertical decomposition)](https://www.otto.de/jobs/en/blogs/techblog/on-monoliths-and-microservices_2015-09-30/) (n/a, not version-pinned): Where the term vertical comes from: a system cut into verticals that each belong entirely to one team.
-- [Self-contained systems](https://scs-architecture.org/) (n/a, not version-pinned): The same unit as a vertical: an autonomous web application with its own UI, logic and data.
+- [Self-contained systems](https://scs-architecture.org/) (n/a, not version-pinned): What a vertical with its own web app can grow into: an autonomous web application with its own UI, logic and data.
+- [Jimmy Bogard: Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/) (n/a, not version-pinned): The look-alike term: the code of one application arranged by feature, not a vertical of a platform.
 - [AWS Prescriptive Guidance: identifying micro-frontend boundaries](https://docs.aws.amazon.com/prescriptive-guidance/latest/micro-frontends-aws/micro-frontend-boundaries.html) (n/a, not version-pinned): The vertical split: one micro-frontend per business domain, delivered by the team that owns it.
 - [AGENTS.md](https://agents.md/) (n/a, not version-pinned)

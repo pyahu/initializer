@@ -36,11 +36,11 @@ several services" section of `CHECKLIST.md`.
 
 ### Guide steps that changed
 
-- [Monorepos with several services, step 2](/guides/monorepo/#mono-layout): A new step on the layout: one folder per vertical, `verticals/<name>/`, with its service in `service/`, its contract in `api/` and its web app in `web/`; flat project names and an owner for every vertical.
+- [Monorepos with several services, step 2](/guides/monorepo/#mono-layout): A new step on the layout: one folder per vertical, `verticals/<name>/`, with its service in `service/` and its contract in `api/`, and room for its web app in `web/` (not generated yet); flat project names and an owner for every vertical.
 - [Monorepos with several services, step 3](/guides/monorepo/#mono-boundaries-rule): The service convention plugin fails the build when a service depends on another service's project.
 - [Monorepos with several services, step 4](/guides/monorepo/#mono-contracts): A contract lives in its service's `api` project, generated once and checked against `main` in CI.
 - [Monorepos with several services, step 7](/guides/monorepo/#mono-fast-build): A new step on the configuration cache and a build cache that only builds of `main` save.
-- [Monorepos with several services, step 8](/guides/monorepo/#mono-one-service): Each service has its own `compose.yaml` and `AGENTS.md`.
+- [Monorepos with several services, step 8](/guides/monorepo/#mono-one-service): Each vertical has its own `AGENTS.md` and its service its own `compose.yaml`.
 - [Monorepos with several services, step 9](/guides/monorepo/#mono-ci): One workflow builds every project with the cache of `main` and runs the convention plugins' tests.
 
 ### Other changes

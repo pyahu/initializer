@@ -148,7 +148,8 @@ Official documentation for this project's versions (baseline v0.1-b3), filtered 
 | [ArchUnit user guide](https://www.archunit.org/userguide/html/000_Index.html) | 1.5.1 | not version-pinned | ArchUnit user guide. |
 | [ArchUnit release 1.5.1](https://github.com/TNG/ArchUnit/releases/tag/v1.5.1) | 1.5.1 | pinned to 1.5.1 | ArchUnit release 1.5.1. |
 | [Otto: on monoliths and microservices (vertical decomposition)](https://www.otto.de/jobs/en/blogs/techblog/on-monoliths-and-microservices_2015-09-30/) | n/a | not version-pinned | Where the term vertical comes from: a system cut into verticals that each belong entirely to one team. |
-| [Self-contained systems](https://scs-architecture.org/) | n/a | not version-pinned | The same unit as a vertical: an autonomous web application with its own UI, logic and data. |
+| [Self-contained systems](https://scs-architecture.org/) | n/a | not version-pinned | What a vertical with its own web app can grow into: an autonomous web application with its own UI, logic and data. |
+| [Jimmy Bogard: Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/) | n/a | not version-pinned | The look-alike term: the code of one application arranged by feature, not a vertical of a platform. |
 | [Alistair Cockburn: Hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/) | 2005 | pinned to 2005 | Ports and adapters as defined by its author. |
 | [Eric Evans: Domain-Driven Design Reference](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf) | 2015 | pinned to 2015 | Definitions and pattern summaries, including Layered Architecture. |
 | [Jeffrey Palermo: The Onion Architecture, part 1](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/) | 2008 | pinned to 2008 | Onion Architecture as defined by its author: all coupling toward the center. |

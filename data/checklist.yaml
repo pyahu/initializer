@@ -1299,7 +1299,7 @@
   guide: monorepo
   card: mono-layout
   type: deployment-prerequisite
-  text: "CODEOWNERS names an owner for every service folder, build-logic and gradle/, and code owner review is required."
+  text: "CODEOWNERS names an owner for every vertical folder (service, contract and web app), build-logic and gradle/, and code owner review is required."
   appliesWhen: {layout: [monorepo]}
 - id: MONO-02
   guide: monorepo
@@ -1365,7 +1365,7 @@
   guide: monorepo
   card: mono-one-service
   type: generated-config
-  text: "Each service has its own compose.yaml and AGENTS.md; a root compose.yaml includes every service's file."
+  text: "Each vertical has its own AGENTS.md and its service its own compose.yaml; a root compose.yaml includes every service's file."
   appliesWhen: {layout: [monorepo]}
 - id: MONO-11
   guide: monorepo

@@ -27,8 +27,9 @@ releases:
     guides:
       - step: monorepo#mono-layout
         text: >-
-          A new step on the layout: one folder per vertical, `verticals/<name>/`, with its service in `service/`, its
-          contract in `api/` and its web app in `web/`; flat project names and an owner for every vertical.
+          A new step on the layout: one folder per vertical, `verticals/<name>/`, with its service in `service/` and its
+          contract in `api/`, and room for its web app in `web/` (not generated yet); flat project names and an owner for
+          every vertical.
       - step: monorepo#mono-boundaries-rule
         text: The service convention plugin fails the build when a service depends on another service's project.
       - step: monorepo#mono-contracts
@@ -36,7 +37,7 @@ releases:
       - step: monorepo#mono-fast-build
         text: A new step on the configuration cache and a build cache that only builds of `main` save.
       - step: monorepo#mono-one-service
-        text: Each service has its own `compose.yaml` and `AGENTS.md`.
+        text: Each vertical has its own `AGENTS.md` and its service its own `compose.yaml`.
       - step: monorepo#mono-ci
         text: One workflow builds every project with the cache of `main` and runs the convention plugins' tests.
     changes:
