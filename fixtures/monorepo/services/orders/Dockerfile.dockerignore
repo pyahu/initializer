@@ -1,5 +1,6 @@
-# Allow list for this image, built from the repository root: the shared build and this vertical only, so a
-# change in another vertical never reaches its context (container image guide, step 5; monorepo guide, step 10).
+# Allow list for this image, built from the repository root: the shared build, the libraries, every contract and
+# this vertical, so a change inside another vertical never reaches its context (container image guide, step 5;
+# monorepo guide, step 10).
 *
 !gradlew
 !settings.gradle.kts
@@ -8,8 +9,9 @@
 !build-logic/
 !config/
 !.github/scripts/gradle-ci.sh
+!libs/
+!services/*/api/
 !services/orders/build.gradle.kts
-!services/orders/api/
 !services/orders/src/
 **/build
 **/.gradle

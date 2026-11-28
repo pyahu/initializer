@@ -1,6 +1,8 @@
 # [[name]] on the laptop: `./gradlew :[[name]]:bootRun` starts these containers and Spring Boot connects to them
 # (local development guide; monorepo guide, step 8). Names start with the vertical's, so the root compose.yaml
-# can run every vertical together. Never in production.
+# can run every vertical together. Every file names the platform's Compose project, so verticals started one by
+# one share Grafana[[#oidc]] and the identity provider[[/oidc]] instead of fighting over their ports. Never in production.
+name: [[platform]]
 include:
   - ../../platform.compose.yaml
 [[#postgres]]

@@ -82,8 +82,8 @@ jobs:
           done
           exit "$failed"
       - name: Contracts against the base of the change
-        # A breaking change fails here; the last of three pull requests that removes something on purpose carries
-        # the breaking-change label (monorepo guide, step 4).
+        # A breaking change fails here. One that is meant carries the breaking-change label on its pull request and a
+        # "Breaking-Change: <reason>" trailer in the commit that lands on main (monorepo guide, step 4).
         env:
           BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
           ALLOW_BREAKING: ${{ contains(github.event.pull_request.labels.*.name, 'breaking-change') }}

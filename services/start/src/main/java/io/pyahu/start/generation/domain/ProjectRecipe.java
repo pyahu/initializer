@@ -106,6 +106,8 @@ public final class ProjectRecipe {
             files(d, "oidc", prefix, file -> file);
             oidc(d);
         }
+        // Verticals started one by one share the platform's containers: none stops them when it stops.
+        property(d, "spring.docker.compose.lifecycle-management", "start-only");
         files(d, "vertical", prefix, file -> file.replace("_vertical_", vertical.name()));
         runtimeLauncher(d);
         d.add(new Value("verticalDependencies", verticalDependencies(d)));
@@ -225,9 +227,8 @@ public final class ProjectRecipe {
             version(d, "jmolecules", "jmolecules-bom");
             library(d, "jmolecules-bom", "org.jmolecules:jmolecules-bom", "jmolecules");
         }
-        if (request.anyPostgres()) {
-            d.add(new Value("postgresImage", image(baseline, "postgres-image")));
-        }
+        // CI keeps the PostgreSQL image ready for a vertical with a database, also one added later.
+        d.add(new Value("postgresImage", image(baseline, "postgres-image")));
         for (Vertical v : request.verticals()) {
             d.add(new PlatformVertical(
                     v.name(),

@@ -38,6 +38,9 @@ spring:
           issuer-uri: ${OIDC_ISSUER_URI:http://localhost:8090/default}
           audiences: ${OIDC_AUDIENCE:monorepo}
           jws-algorithms: RS256
+  docker:
+    compose:
+      lifecycle-management: start-only
 
 server:
   request:

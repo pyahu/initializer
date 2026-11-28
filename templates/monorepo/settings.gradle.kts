@@ -18,19 +18,21 @@ dependencyResolutionManagement {
 
 rootProject.name = "[[name]]"
 
-fun projectsIn(dir: String): List<File> =
-    file(dir).listFiles { f -> f.resolve("build.gradle.kts").isFile }.orEmpty().sortedBy { it.name }
+fun foldersWith(dir: String, buildFile: String): List<File> =
+    file(dir).listFiles { f -> f.resolve(buildFile).isFile }.orEmpty().sortedBy { it.name }
 
-for (service in projectsIn("services")) {
+for (service in foldersWith("services", "build.gradle.kts")) {
     include(":${service.name}")
     project(":${service.name}").projectDir = service
-    if (service.resolve("api/build.gradle.kts").isFile) {
-        include(":${service.name}-api")
-        project(":${service.name}-api").projectDir = service.resolve("api")
-    }
 }
 
-for (library in projectsIn("libs")) {
+// A contract is found on its own, so a vertical's image build sees the contracts it uses without their services.
+for (service in foldersWith("services", "api/build.gradle.kts")) {
+    include(":${service.name}-api")
+    project(":${service.name}-api").projectDir = service.resolve("api")
+}
+
+for (library in foldersWith("libs", "build.gradle.kts")) {
     include(":lib-${library.name}")
     project(":lib-${library.name}").projectDir = library
 }

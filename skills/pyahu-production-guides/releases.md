@@ -41,7 +41,7 @@ several services" section of `CHECKLIST.md`.
 
 ### Other changes
 
-- A monorepo option on start.pyahu.io and in the API (`layout=monorepo`, `verticals=name:architecture:database,...`), proven by fixtures/monorepo, which is what the generator produces for its options.
+- A monorepo option on start.pyahu.io and in the API (`layout=monorepo`, `verticals=name:architecture:database,...`), proven by fixtures/monorepo, which is what the generator produces for its options. Each vertical's `ArchitectureTest` names the packages it may use of the platform: itself, every contract and the libraries.
 - The quality report keeps one report per project, so a build of several projects writes one for each service. A project with one service writes the same report as before.
 
 <a id="v0-1-b3"></a>

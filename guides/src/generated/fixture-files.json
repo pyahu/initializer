@@ -1,6 +1,62 @@
 {
   "files": [
     {
+      "path": "fixtures/monorepo/.github/scripts/contracts.sh",
+      "fixture": "monorepo",
+      "baseline": "v0.1-b3",
+      "lang": "bash",
+      "sha256": "8aced26286ac72bc6a40ea25a0d1d7c80a8b737fecb3fc4d6b59187448faea30"
+    },
+    {
+      "path": "fixtures/monorepo/.github/workflows/ci.yml",
+      "fixture": "monorepo",
+      "baseline": "v0.1-b3",
+      "lang": "yaml",
+      "sha256": "930b576df0275a11c31ec1cc67c3a579103dd82d9cf68587b4d33290cea670f8"
+    },
+    {
+      "path": "fixtures/monorepo/gradle.properties",
+      "fixture": "monorepo",
+      "baseline": "v0.1-b3",
+      "lang": "properties",
+      "sha256": "24f70879c473147bbc07def43c9cb296df353f8f7c076844fa028dff4ceb6503"
+    },
+    {
+      "path": "fixtures/monorepo/services/billing/Dockerfile.dockerignore",
+      "fixture": "monorepo",
+      "baseline": "v0.1-b3",
+      "lang": "text",
+      "sha256": "7ecb8f4a3e45b38dafa802a02af7e104a0c8a0c30a53ae896cd23101f5e80d38"
+    },
+    {
+      "path": "fixtures/monorepo/services/billing/src/test/java/io/pyahu/fixture/billing/ArchitectureTest.java",
+      "fixture": "monorepo",
+      "baseline": "v0.1-b3",
+      "lang": "java",
+      "sha256": "8fd72121a7b987ebb55694f221a3c08cd7f9cf14b46278fd25cde985df759cdc"
+    },
+    {
+      "path": "fixtures/monorepo/services/orders/api/build.gradle.kts",
+      "fixture": "monorepo",
+      "baseline": "v0.1-b3",
+      "lang": "kotlin",
+      "sha256": "48e2de2cd9676f115211c3c8bb05e5dc07d455073618d4ee8a3760351d9cacc1"
+    },
+    {
+      "path": "fixtures/monorepo/services/orders/compose.yaml",
+      "fixture": "monorepo",
+      "baseline": "v0.1-b3",
+      "lang": "yaml",
+      "sha256": "f25b1cb486bdb2e625696a0faea94fe620af997f75b9430ba1086c9147fb6705"
+    },
+    {
+      "path": "fixtures/monorepo/settings.gradle.kts",
+      "fixture": "monorepo",
+      "baseline": "v0.1-b3",
+      "lang": "kotlin",
+      "sha256": "954384a2e64a79e777f3b53093dac3ced666550ccf11a916518887a76d819402"
+    },
+    {
       "path": "fixtures/single-hexagonal/Dockerfile",
       "fixture": "single-hexagonal",
       "baseline": "v0.1-b3",

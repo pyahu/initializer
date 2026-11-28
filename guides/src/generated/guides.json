@@ -5946,8 +5946,8 @@
       "title": "Monorepos with several services",
       "state": "draft",
       "baseline": "v0.1-b3",
-      "coverage": "None of its 10 steps is tested here yet",
-      "draft": true,
+      "coverage": "2 of 10 steps are tested here (3 tested claims: 3 reproduced)",
+      "draft": false,
       "sources": [],
       "questions": [
         {
@@ -6014,13 +6014,33 @@
       "cards": {
         "mono-boundaries-rule": {
           "title": "3. What may services share and what must stay apart?",
-          "coverage": "not tested here",
-          "records": []
+          "coverage": "2 tested claims: 2 reproduced",
+          "records": [
+            {
+              "id": "ev-mono-boundaries-rule-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-mono-boundaries-rule-1 · reproduced by gradle/monorepo::ConventionsTest. With the conventions of build-logic, a service that depends on another service's project, an api project that depends on its service and a library that depends on an api project each stop the build before any task runs, with a message that names both projects; a service that depends on another service's api project builds. Result: Three builds fail with ':<project> must not depend on :<other>'; the build with billing on :orders-api succeeds. Limitations: Project dependencies only. A dependency on another service's published artifact is not seen; the ArchUnit rule covers code that reaches another service's packages.",
+              "test": "gradle/monorepo::ConventionsTest"
+            },
+            {
+              "id": "ev-mono-boundaries-rule-2",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-mono-boundaries-rule-2 · reproduced by gradle/monorepo::VerticalBoundaryTest. The ArchitectureTest rule otherVerticalsOnlyThroughTheirContract fails on a billing class that uses a class in the orders packages and passes on one that uses a generated contract interface. Result: The violation names io.pyahu.fixture.orders.StandIn; the class that uses io.pyahu.fixture.api.billing.PingApi passes. Limitations: The rule reads packages, so a service whose code is not under <group>.<service> is not covered.",
+              "test": "gradle/monorepo::VerticalBoundaryTest"
+            }
+          ]
         },
         "mono-build-logic": {
           "title": "5. How do I keep the build the same in every project?",
-          "coverage": "not tested here",
-          "records": []
+          "coverage": "1 tested claim: 1 reproduced",
+          "records": [
+            {
+              "id": "ev-mono-build-logic-1",
+              "badge": "reproduced",
+              "canonical": "Evidence ev-mono-build-logic-1 · reproduced by gradle/monorepo::ConventionsTest. Applied to an empty project, platform.service gives bootJar, integrationTest, pitest, pmdMain, spotlessCheck and cyclonedxBom; platform.api gives openApiGenerate and no bootJar; platform.library gives spotlessCheck and no bootJar. Result: Seven Gradle TestKit builds against the plugins of build-logic pass. Limitations: Checks that the tasks exist, not how each is configured; the fixture's own build runs them.",
+              "test": "gradle/monorepo::ConventionsTest"
+            }
+          ]
         },
         "mono-catalog": {
           "title": "6. How do I keep versions in one place?",

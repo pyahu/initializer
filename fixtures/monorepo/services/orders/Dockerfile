@@ -20,12 +20,12 @@ COPY gradle/ gradle/
 COPY build-logic/ build-logic/
 COPY config/ config/
 COPY .github/scripts/gradle-ci.sh .github/scripts/
-COPY services/orders/build.gradle.kts services/orders/
-COPY services/orders/api/ services/orders/api/
+COPY libs/ libs/
+# This vertical with every contract it may use; its allow list, Dockerfile.dockerignore, keeps out the rest.
+COPY services/ services/
 RUN --mount=type=cache,target=/root/.gradle \
     bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :orders:dependencies > /tmp/gradle-dependencies.log 2>&1 \
     || { cat /tmp/gradle-dependencies.log; exit 1; }
-COPY services/orders/src/ services/orders/src/
 # Tests run in CI before the image build.
 RUN --mount=type=cache,target=/root/.gradle bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :orders:bootJar \
  && cp services/orders/build/libs/orders-0.1.0.jar /workspace/application.jar

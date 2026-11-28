@@ -89,16 +89,21 @@ class ArchitectureTest {
     @ArchTest
     static final ArchRule noGenericExceptions = noClasses().should(GeneralCodingRules.THROW_GENERIC_EXCEPTIONS);
 
-    /**
-     * Another vertical of the platform is reached only through its contract, generated in the api packages, and
-     * shared code only through a library (monorepo guide, step 3).
-     */
+    /** The platform's packages: its verticals, the contracts they offer and its libraries. */
+    private static final String PLATFORM = "io.pyahu.fixture..";
+
+    /** What this vertical's code may use of the platform: itself, every contract and the libraries. */
+    private static final String OWN = "io.pyahu.fixture.billing..";
+
+    private static final String CONTRACTS = "io.pyahu.fixture.api..";
+
+    private static final String LIBRARIES = "io.pyahu.fixture.lib..";
+
+    /** Another vertical is reached only through its contract, never its code (monorepo guide, step 3). */
     @ArchTest
     static final ArchRule otherVerticalsOnlyThroughTheirContract = noClasses()
             .that()
-            .resideInAPackage("io.pyahu.fixture.billing..")
+            .resideInAPackage(OWN)
             .should()
-            .dependOnClassesThat(resideInAPackage("io.pyahu.fixture..")
-                    .and(not(resideInAnyPackage(
-                            "io.pyahu.fixture.billing..", "io.pyahu.fixture.api..", "io.pyahu.fixture.lib.."))));
+            .dependOnClassesThat(resideInAPackage(PLATFORM).and(not(resideInAnyPackage(OWN, CONTRACTS, LIBRARIES))));
 }

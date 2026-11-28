@@ -308,7 +308,7 @@ Work fast locally, add services and put a frontend next to them.
 7. How do I get useful data into the local database?
 8. When is a local Kubernetes worth it?
 
-**[Monorepos with several services](guides/monorepo.md)** (Draft): Keep several Spring Boot services in one Gradle build without turning them into one distributed monolith.
+**[Monorepos with several services](guides/monorepo.md)**: Keep several Spring Boot services in one Gradle build without turning them into one distributed monolith.
 
 1. Should our services share one repository?
 2. Where does everything go?

@@ -12,21 +12,13 @@ on:
 permissions:
   contents: read
 
-[[#postgres]]
+# For the smoke tests: every vertical with a database gets this one, also a vertical added later.
 env:
   POSTGRES_IMAGE: [[postgresImage]]
 [[#oidc]]
   # A mock identity provider, for the smoke test only.
   OIDC_IMAGE: ghcr.io/navikt/mock-oauth2-server:6.0.5@sha256:5ed2f078c6503147860a5114f06414257bb7eeccc68b0e806bdf0869f2602509
 [[/oidc]]
-[[/postgres]]
-[[^postgres]]
-[[#oidc]]
-env:
-  # A mock identity provider, for the smoke test only.
-  OIDC_IMAGE: ghcr.io/navikt/mock-oauth2-server:6.0.5@sha256:5ed2f078c6503147860a5114f06414257bb7eeccc68b0e806bdf0869f2602509
-[[/oidc]]
-[[/postgres]]
 
 jobs:
   vertical:

@@ -85,10 +85,18 @@ public record MonorepoRequest(String name, String group, String description, Aut
             String database = parts.length > 2 ? parts[2] : Database.NONE.id();
             var a = Choice.of(Architecture.class, architecture);
             var db = Choice.of(Database.class, database);
-            if (RESERVED.contains(name)) {
+            String pkg = name.replace("-", "");
+            if (!name.matches(ProjectField.NAME.pattern().pattern()) || name.length() > ProjectField.NAME.maxLength()) {
+                errors.add(new FieldError(
+                        field,
+                        name + ": a name is lowercase words joined by hyphens, at most " + ProjectField.NAME.maxLength()
+                                + " characters"));
+            } else if (RESERVED.contains(name) || name.endsWith("-api") || name.startsWith("lib-")) {
+                // The build names a contract <name>-api and a library lib-<name>: a vertical cannot take those.
                 errors.add(new FieldError(field, name + ": a reserved name"));
-            } else if (!names.add(name)) {
-                errors.add(new FieldError(field, name + ": listed twice"));
+            } else if (!names.add(pkg)) {
+                // order-history and orderhistory would share one Java package.
+                errors.add(new FieldError(field, name + ": listed twice, or the same package as another"));
             } else if (a.isEmpty()) {
                 errors.add(new FieldError(field, name + ": architecture must be one of hexagonal, ddd-layered"));
             } else if (db.isEmpty()) {

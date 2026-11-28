@@ -115,17 +115,22 @@ class ArchitectureTest {
 [[/vertical]]
 [[#vertical]]
 
-    /**
-     * Another vertical of the platform is reached only through its contract, generated in the api packages, and
-     * shared code only through a library (monorepo guide, step 3).
-     */
+    /** The platform's packages: its verticals, the contracts they offer and its libraries. */
+    private static final String PLATFORM = "[[groupPackage]]..";
+
+    /** What this vertical's code may use of the platform: itself, every contract and the libraries. */
+    private static final String OWN = "[[packageName]]..";
+
+    private static final String CONTRACTS = "[[contractPackageRoot]]..";
+
+    private static final String LIBRARIES = "[[groupPackage]].lib..";
+
+    /** Another vertical is reached only through its contract, never its code (monorepo guide, step 3). */
     @ArchTest
     static final ArchRule otherVerticalsOnlyThroughTheirContract = noClasses()
             .that()
-            .resideInAPackage("[[packageName]]..")
+            .resideInAPackage(OWN)
             .should()
-            .dependOnClassesThat(resideInAPackage("[[groupPackage]]..")
-                    .and(not(resideInAnyPackage(
-                            "[[packageName]]..", "[[contractPackageRoot]]..", "[[groupPackage]].lib.."))));
+            .dependOnClassesThat(resideInAPackage(PLATFORM).and(not(resideInAnyPackage(OWN, CONTRACTS, LIBRARIES))));
 [[/vertical]]
 }

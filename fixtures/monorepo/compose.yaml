@@ -1,5 +1,6 @@
 # Every vertical's local dependencies at once: `docker compose up -d`, then run the verticals you work on. Add a
 # line here for each new vertical, and check the result with `docker compose config` (monorepo guide, step 8).
+name: monorepo
 include:
   - services/billing/compose.yaml
   - services/orders/compose.yaml

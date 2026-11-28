@@ -6,8 +6,6 @@ Keep several Spring Boot services in one Gradle build without turning them into 
 
 On the web: https://initializer.pyahu.io/guides/monorepo/. Written for baseline v0.1-b3: Java 25, Spring Boot 4.2.0.
 
-**Draft:** no step of this guide is tested here yet.
-
 Your team owns five services, so you put them in one repository. A year later, a change in billing breaks the
 orders build, every pull request waits for every test, a CI file lists forty paths nobody dares to touch and
 nobody can release orders without a billing fix going out with it. You built one big service with five
@@ -69,9 +67,8 @@ owned by one team, a single service with well-kept modules is simpler and faster
 folder and nothing in the root project.
 
 ```kotlin
-// settings.gradle.kts
-service("orders"); api("orders")
-service("billing")
+// settings.gradle.kts: every folder in services/ with a build file is a vertical
+for (service in foldersWith("services", "build.gradle.kts")) { include(":${service.name}"); project(":${service.name}").projectDir = service }
 ```
 
 ### What's going on
@@ -89,30 +86,32 @@ names stay short and every project is one you wrote.
 ### Do this
 
 1. Give each service one folder: `services/<service>/` with its code, `api/` for its contract (step 4), its
-   `Dockerfile`, `deploy/`, `compose.yaml` and `AGENTS.md` (step 8).
+   `Dockerfile`, `deploy/`, `compose.yaml`, `ci/smoke.sh` and `AGENTS.md` (steps 8 and 10).
 2. Put deliberately reusable code in `libs/<name>/` and the shared build in `build-logic/` and `gradle/`.
-3. Include every project by a flat name mapped to its folder, with three small functions at the top of
-   `settings.gradle.kts`:
+3. Let `settings.gradle.kts` find the projects by their folders, each with a flat name: a folder in `services/` is
+   the service `:orders`, its `api/` folder the contract `:orders-api`, a folder in `libs/` the library
+   `:lib-money`. The name tells the build what a project is, and step 3 relies on it. Adding a service is adding a
+   folder:
 
    ```kotlin
-   fun service(name: String) {
-       include(":$name")
-       project(":$name").projectDir = file("services/$name")
+   fun foldersWith(dir: String, buildFile: String): List<File> =
+       file(dir).listFiles { f -> f.resolve(buildFile).isFile }.orEmpty().sortedBy { it.name }
+
+   for (service in foldersWith("services", "build.gradle.kts")) {
+       include(":${service.name}")
+       project(":${service.name}").projectDir = service
    }
 
-   fun api(service: String) {
-       include(":$service-api")
-       project(":$service-api").projectDir = file("services/$service/api")
-   }
-
-   fun library(name: String) {
-       include(":lib-$name")
-       project(":lib-$name").projectDir = file("libs/$name")
+   for (service in foldersWith("services", "api/build.gradle.kts")) {
+       include(":${service.name}-api")
+       project(":${service.name}-api").projectDir = service.resolve("api")
    }
    ```
 
-   The name tells the build what a project is: `orders` is a service, `orders-api` a contract and `lib-money` a
-   library. Step 3 relies on it.
+   A contract is found on its own, so a service's image build sees every contract it uses without the services
+   behind them.
+
+   Gradle's configuration cache records the folders it read, so a new folder is seen on the next build.
 4. Keep no source code and no build configuration for other projects in the root project.
 5. Give every folder an owner in `.github/CODEOWNERS` and turn on "Require review from Code Owners":
 
@@ -156,23 +155,38 @@ service.
 1. Let a service depend only on `-api` projects and libraries. Put the check in the service convention plugin:
 
    ```kotlin
-   // build-logic/src/main/kotlin/acme.service.gradle.kts
+   // build-logic/src/main/kotlin/platform.service.gradle.kts
    // Another service is reached only through its api project (monorepo guide, step 3).
    configurations.configureEach {
        dependencies.withType<ProjectDependency>().configureEach {
            check(path == project.path || path.endsWith("-api") || path.startsWith(":lib-")) {
-               "${project.path} must not depend on $path: use its api project or a library"
+               "${project.path} must not depend on $path: use its api project or a library (monorepo guide, step 3)"
            }
        }
    }
    ```
 2. Give the `api` and library conventions the same check with a narrower rule: they depend only on libraries. An
    `api` project that depended on its service would hand that service's code to every consumer.
-3. Give each service its own database and its own migration history (see [Database](database.md)).
-4. Create a library only for code that is deliberately reusable and owned, such as a logging setup shipped as
+3. Check the code as well as the build, in each service's `ArchitectureTest`: a class may use its own service's
+   packages, the generated contracts and the libraries, nothing else of the platform. This also catches a class
+   copied from another service:
+
+   ```java
+   @ArchTest
+   static final ArchRule otherVerticalsOnlyThroughTheirContract = noClasses()
+           .that()
+           .resideInAPackage("com.acme.billing..")
+           .should()
+           .dependOnClassesThat(resideInAPackage("com.acme..")
+                   .and(not(resideInAnyPackage("com.acme.billing..", "com.acme.api..", "com.acme.lib.."))));
+   ```
+4. Give each service its own database and its own migration history (see [Database](database.md)).
+5. Share one identity provider: every service accepts the platform's audience, so one login reaches every service
+   and a call between services can pass the user's token on (see [Security hardening](security.md)).
+6. Create a library only for code that is deliberately reusable and owned, such as a logging setup shipped as
    Spring Boot auto-configuration. Never put shared entities or the internals of a service there. Start with no
    libraries.
-5. Pick an architecture style per service and test it inside the service (see
+7. Pick an architecture style per service and test it inside the service (see
    [Architecture](architecture.md)). A layering rule that only a reviewer checks is broken within months.
 
 ### When this is not for you
@@ -192,9 +206,14 @@ the generated code and nobody checks that the services running in production sti
 contract sits in the producer's folder, the producer's owners review every change to it.
 
 The `api` project holds the contract file (OpenAPI, Protocol Buffers or an event schema) and generates the code
-from it once: the interfaces and models the producer implements and the client the consumers call. A consumer
-declares `implementation(project(":orders-api"))`, so Gradle knows that a contract change affects billing, rebuilds
-it and runs its tests.
+from it once. For OpenAPI, Spring's HTTP service interfaces serve both sides: the producer's controller implements
+the interface and a consumer calls the same interface as a client. A consumer declares
+`implementation(project(":orders-api"))`, so Gradle knows that a contract change affects billing, rebuilds it and
+runs its tests.
+
+The generated code goes in a package of its own, such as `com.acme.api.orders`, outside every service's packages.
+The services' module checks never mistake it for a module of their own, and the rule of step 3 can allow
+`com.acme.api..` for all of them.
 
 Changing a contract in one pull request together with its consumers is the reason for one repository, but it does
 not make the change safe. The old billing keeps running in production while the new orders rolls out, so a removed
@@ -203,8 +222,8 @@ move the consumers, then remove the old one once production no longer uses it.
 
 ### Do this
 
-1. Keep each contract in `services/<service>/api/` and make it a project with an `acme.api` convention plugin that
-   generates the code.
+1. Keep each contract in `services/<service>/api/src/main/openapi/<service>.yaml` and make the folder a project with
+   a `platform.api` convention plugin that generates the code into `<group>.api.<service>`.
 2. Let consumers depend on the `api` project, never on the contract file or the producer's project.
 3. In CI, compare every contract with the commit the change starts from (the pull request's base, or the previous
    commit on a push to `main`) and fail on a breaking change. Use `oasdiff` for OpenAPI and `buf breaking` for
@@ -218,8 +237,10 @@ move the consumers, then remove the old one once production no longer uses it.
    ```
 
    A contract that does not exist in the base yet has nothing to break: skip it.
-4. Expect the last of the three pull requests, the removal, to fail the check. Approve that one on purpose, for
-   example with a pull request label the check honours, once production no longer uses what you remove.
+4. Expect the last of the three pull requests, the removal, to fail the check. Approve that one on purpose once
+   production no longer uses what you remove: with a label on the pull request, and with a trailer such as
+   `Breaking-Change: <reason>` in the commit that lands on `main`, where the check runs again. A contract that is
+   deleted counts as broken too.
 
 ### When this is not for you
 
@@ -253,12 +274,13 @@ one recipe that says what it is. The project's own build file then shows only wh
 ### Do this
 
 1. Create `build-logic/` as an included build, added with `includeBuild("build-logic")` inside `pluginManagement`.
-2. Start with four plugins, named with your organisation's prefix, one per kind of project:
-   - `acme.java`: toolchain, Error Prone, NullAway and formatting (see
+2. Start with four plugins, one per kind of project:
+   - `platform.java`: toolchain, the Spring Boot versions, Error Prone, NullAway and formatting (see
      [Build quality](build-quality.md)). The other three apply it.
-   - `acme.library`: a plain Java library, without the Spring Boot plugin, with the boundary check of step 3.
-   - `acme.api`: a library that generates code from its contract (step 4).
-   - `acme.service`: the Spring Boot plugin, tests, coverage, the SBOM and the boundary check of step 3.
+   - `platform.library`: a plain Java library, without the Spring Boot plugin, with the boundary check of step 3.
+   - `platform.api`: a library that generates code from its contract (step 4).
+   - `platform.service`: the Spring Boot plugin, tests, coverage, mutation testing, the quality report, the SBOM
+     and the boundary check of step 3.
 3. Keep capabilities, like a database or messaging, in the service's own build file, where a reader sees what the
    service uses. A plugin per capability hides that behind names.
 4. Never use `allprojects {}`, `subprojects {}` or `afterEvaluate {}`. Configure lazily and react to another plugin
@@ -325,7 +347,7 @@ materials (BOM), its list of compatible dependency versions, keeps aligning the 
        implementation(plugin(libs.plugins.spring.boot))
    }
    ```
-4. Import the Spring Boot BOM as a `platform` in `acme.java`, so libraries and `api` projects get the same versions
+4. Import the Spring Boot BOM as a `platform` in `platform.java`, so libraries and `api` projects get the same versions
    as the services that use them.
 5. When you must override a version the BOM manages, add a constraint with a reason.
 
@@ -423,9 +445,15 @@ service gives its style, its commands and its owner, while the root one keeps th
 ### Do this
 
 1. Give every service the same commands: `./gradlew :<service>:build`, `:<service>:test` and `:<service>:bootRun`.
-2. Put each service's local dependencies in `services/<service>/compose.yaml` and prefix every Compose service,
-   volume and network with the service's name, such as `orders-postgres`.
-3. Add a root `compose.yaml` that includes them all (Docker Compose 2.20.3 or later) and check the combined result
+2. Put what every service needs on the laptop, such as Grafana LGTM and a mock identity provider, in one
+   `platform.compose.yaml` that each service's `compose.yaml` includes. Give every Compose file the platform's
+   project `name`, so services started one by one share those containers instead of fighting over their ports, and
+   set `spring.docker.compose.lifecycle-management` to `start-only`, so one service stopping leaves them running. Put each service's own dependencies in its
+   `services/<service>/compose.yaml` and prefix every Compose service, volume and network with the service's name,
+   such as `orders-postgres`.
+3. Give each service its own local ports in `bootRun`, such as 8110 and 8111 for management, so several run side by
+   side.
+4. Add a root `compose.yaml` that includes them all (Docker Compose 2.20.3 or later) and check the combined result
    with `docker compose config`:
 
    ```yaml
@@ -433,7 +461,7 @@ service gives its style, its commands and its owner, while the root one keeps th
      - services/orders/compose.yaml
      - services/billing/compose.yaml
    ```
-4. Write a root `AGENTS.md` with the layout and the rules, and an `AGENTS.md` in each service with its
+5. Write a root `AGENTS.md` with the layout and the rules, and an `AGENTS.md` in each service with its
    architecture style, its commands and what it must never depend on.
 
 ### When this is not for you
@@ -463,7 +491,8 @@ it can be the one required check, and every other job, the frontend's included, 
 2. Build and test every project in one job with `./gradlew build :build-logic:check`, in the pinned JDK (see
    [CI pipelines](ci-pipelines.md), step 3), and run the contract checks of step 4 in the same job. Gradle
    runs the projects in parallel and the cache skips what did not change.
-3. Call one reusable workflow per service for its image, scan and smoke test (step 10), through a matrix.
+3. Call one reusable workflow per service for its manifests, image, scan and smoke test (step 10), through a
+   matrix built from the folders in `services/`, so a new service is picked up without editing the workflow.
 4. End with a gate job that runs with `if: always()`, needs every other job and fails unless all of them passed.
    Make it the only required check:
 
@@ -475,8 +504,8 @@ it can be the one required check, and every other job, the frontend's included, 
        needs: [build]
        strategy:
          matrix:
-           service: [orders, billing]
-       uses: ./.github/workflows/service-image.yml
+           service: ${{ fromJSON(needs.build.outputs.services) }}
+       uses: ./.github/workflows/service.yml
        with:
          service: ${{ matrix.service }}
      gate:
@@ -510,19 +539,24 @@ contracts or the libraries. In CI it receives the jar the build job already test
 
 Building every image on every change is simple and always right, and Gradle has already skipped the compile and
 test work. Skipping an image too is tempting, but only safe when you can prove it would come out the same. Gradle 9
-makes archives reproducible, yet a Boot jar can still carry a build time or a generated SBOM serial number, and an
-image also depends on its `Dockerfile`, the files it copies and its base image.
+makes archives reproducible, yet two clean builds of the same commit of the generated platform give different Boot
+jars: the SBOM inside carries a new serial number and timestamp each time. An image also depends on its
+`Dockerfile`, the files it copies and its base image.
 
 ### Do this
 
 1. Give each service its own image repository, such as `ghcr.io/acme/orders`.
 2. Build each image from the repository root with the service's `Dockerfile`, and pass it the tested jar through a
-   named build context (`--build-context`).
-3. Tag images with the commit, promote the same digest from one environment to the next and record the commit in
+   named build context (`--build-context`). Give each `Dockerfile` an allow list next to it,
+   `Dockerfile.dockerignore`: the shared build, the libraries, every contract and that service, so a change inside
+   another service never reaches its context.
+3. Let each service own its smoke test, `services/<service>/ci/smoke.sh`, which the reusable workflow runs against
+   the new image.
+4. Tag images with the commit, promote the same digest from one environment to the next and record the commit in
    its provenance (see [CI pipelines](ci-pipelines.md), step 6).
-4. Keep each service's Kubernetes manifests in its own `deploy/` folder (see
+5. Keep each service's Kubernetes manifests in its own `deploy/` folder (see
    [Kubernetes manifests](kubernetes-manifests.md)). Updating one service's image never touches another's.
-5. Build and smoke-test every service's image on every change until the image builds are the slow part. Then skip
+6. Build and smoke-test every service's image on every change until the image builds are the slow part. Then skip
    a service only when a hash of everything its image is made from, stored as a label on the image of `main`, is
    unchanged, and only after two clean builds of the same commit gave the same jar.
 
@@ -533,34 +567,159 @@ image also depends on its `Dockerfile`, the files it copies and its base image.
 
 ## Put it all together
 
-Everything above lands in the repository layout, the build and one CI workflow.
+Everything above lands in the repository layout, the build and one CI workflow. The examples come from the
+monorepo fixture: two services, `orders` (hexagonal, PostgreSQL) and `billing` (DDD layered), exactly as
+start.pyahu.io generates them with the monorepo layout.
 
-### The layout
+### The build
 
-- `settings.gradle.kts`: `includeBuild("build-logic")`, the `service`, `api` and `library` functions and one line
-  per project (steps 2 and 5).
-- `gradle/libs.versions.toml`: the only version catalog; `gradle.properties` with the caches on (steps 6 and 7).
-- `build-logic/`: the `acme.java`, `acme.library`, `acme.api` and `acme.service` plugins with their TestKit tests
-  (steps 3 and 5).
-- `services/<service>/`: code, `api/` with its contract, `Dockerfile`, `deploy/`, `compose.yaml` and `AGENTS.md`
-  (steps 2, 4, 8 and 10).
-- `libs/<name>/`: empty until code is deliberately reusable (step 3).
-- `.github/CODEOWNERS`, a root `AGENTS.md`, a root `compose.yaml` and `docs/adr/` with the decision to share a
-  repository (steps 1, 2 and 8).
+`settings.gradle.kts` finds every project by its folder (step 2), `gradle.properties` turns the caches on (step 7)
+and each project's build file names its kind and adds only what makes it different (step 5). A contract is a project
+with nothing else in its build file (step 4).
+
+From [`settings.gradle.kts`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/settings.gradle.kts):
+
+```kotlin
+fun foldersWith(dir: String, buildFile: String): List<File> =
+    file(dir).listFiles { f -> f.resolve(buildFile).isFile }.orEmpty().sortedBy { it.name }
+
+for (service in foldersWith("services", "build.gradle.kts")) {
+    include(":${service.name}")
+    project(":${service.name}").projectDir = service
+}
+
+// A contract is found on its own, so a vertical's image build sees the contracts it uses without their services.
+for (service in foldersWith("services", "api/build.gradle.kts")) {
+    include(":${service.name}-api")
+    project(":${service.name}-api").projectDir = service.resolve("api")
+}
+
+for (library in foldersWith("libs", "build.gradle.kts")) {
+```
+
+From [`gradle.properties`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/gradle.properties):
+
+```properties
+org.gradle.configuration-cache=true
+org.gradle.caching=true
+org.gradle.parallel=true
+```
+
+From [`build.gradle.kts`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/services/orders/api/build.gradle.kts):
+
+```kotlin
+plugins {
+    id("platform.api")
+}
+```
 
 **Check it:** add `implementation(project(":orders"))` to billing's build file and run `./gradlew help`. The build
-stops before any task runs and names the dependency.
+stops before any task runs and names both projects.
+
+### The boundaries
+
+The convention plugins stop a dependency across services (step 3); each service's `ArchitectureTest` stops the
+code that would cross one anyway.
+
+From [`ArchitectureTest.java`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/services/billing/src/test/java/io/pyahu/fixture/billing/ArchitectureTest.java):
+
+```java
+private static final String PLATFORM = "io.pyahu.fixture..";
+
+/** What this vertical's code may use of the platform: itself, every contract and the libraries. */
+private static final String OWN = "io.pyahu.fixture.billing..";
+
+private static final String CONTRACTS = "io.pyahu.fixture.api..";
+
+private static final String LIBRARIES = "io.pyahu.fixture.lib..";
+
+/** Another vertical is reached only through its contract, never its code (monorepo guide, step 3). */
+@ArchTest
+static final ArchRule otherVerticalsOnlyThroughTheirContract = noClasses()
+        .that()
+        .resideInAPackage(OWN)
+        .should()
+        .dependOnClassesThat(resideInAPackage(PLATFORM).and(not(resideInAnyPackage(OWN, CONTRACTS, LIBRARIES))));
+```
+
+**Check it:** in billing, use a class of the orders package and run `./gradlew :billing:test`. `ArchitectureTest`
+fails and names the class.
+
+### The images
+
+Each service's image is built from the repository root, with an allow list that admits the shared build, the
+libraries, every contract and that service (step 10). Each service's local dependencies start with it and include what the platform shares
+(step 8).
+
+From [`Dockerfile.dockerignore`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/services/billing/Dockerfile.dockerignore):
+
+```text
+!gradlew
+!settings.gradle.kts
+!gradle.properties
+!gradle/
+!build-logic/
+!config/
+!.github/scripts/gradle-ci.sh
+!libs/
+!services/*/api/
+!services/billing/build.gradle.kts
+!services/billing/src/
+```
+
+From [`compose.yaml`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/services/orders/compose.yaml):
+
+```yaml
+include:
+  - ../../platform.compose.yaml
+services:
+  # One user on the laptop; db/init-local.sh still creates the two roles of production (database guide, step 4).
+  orders-postgres:
+```
+
+**Check it:** `docker build -f services/orders/Dockerfile .` from the root builds orders' image; a change in
+billing's code leaves its build context unchanged.
 
 ### In CI
 
-- One workflow on every pull request, with a build job that builds and tests everything with the build cache of
-  `main`, runs the convention plugins' tests and checks every contract against the base of the change (steps 4, 5,
-  7 and 9).
-- One image job per service, built from the repository root with the tested jar (step 10).
-- A gate job that needs every other job, as the only required check (step 9).
+One workflow builds and tests everything with the build cache of `main` and runs the conventions' tests, checks
+every contract against the base of the change, then calls one reusable workflow per folder in `services/` for the
+manifests, image, scan and smoke test. A gate job is the only required check (steps 4, 7, 9 and 10).
 
-**Check it:** remove a field from `services/orders/api/openapi.yaml` in a pull request. The contract check fails
-and the gate reports the failure, so the pull request cannot merge.
+From [`contracts.sh`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/.github/scripts/contracts.sh):
+
+```bash
+for contract in $contracts; do
+  if [ ! -f "$work/$contract" ]; then
+    echo "$contract: new, nothing to break"
+    continue
+  fi
+  if [ ! -f "$contract" ]; then
+    echo "$contract: removed, which breaks every consumer"
+    failed=1
+    continue
+  fi
+  echo "$contract: compared with $base"
+  docker run --rm -v "$work:/base:ro" -v "$PWD:/head:ro" "$OASDIFF_IMAGE" \
+    breaking "/base/$contract" "/head/$contract" --fail-on ERR || failed=1
+done
+```
+
+From [`ci.yml`](https://github.com/pyahu/initializer/blob/main/fixtures/monorepo/.github/workflows/ci.yml):
+
+```yaml
+gate:
+  if: always()
+  needs: [build, vertical]
+  runs-on: ubuntu-24.04
+  steps:
+    - env:
+        RESULTS: ${{ join(needs.*.result, ' ') }}
+      run: for r in $RESULTS; do test "$r" = success; done
+```
+
+**Check it:** remove a field from `services/orders/api/src/main/openapi/orders.yaml` in a pull request. The contract
+check fails and the gate reports the failure, so the pull request cannot merge.
 
 ## Checklist
 

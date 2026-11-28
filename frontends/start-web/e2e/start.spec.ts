@@ -101,3 +101,16 @@ test('a terminal gets a monorepo with its verticals', async ({ request }) => {
   expect(zip.includes(Buffer.from('shop/services/orders/build.gradle.kts'))).toBe(true);
   expect(zip.includes(Buffer.from('shop/build-logic/src/main/kotlin/platform.service.gradle.kts'))).toBe(true);
 });
+
+test.describe('without JavaScript', () => {
+  test.use({ javaScriptEnabled: false });
+
+  test('a monorepo still downloads', async ({ page }) => {
+    await page.goto('/?layout=monorepo&name=shop&verticals=orders:hexagonal:postgres');
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: 'Generate' }).click(),
+    ]);
+    expect(download.suggestedFilename()).toBe('shop.zip');
+  });
+});

@@ -1,2 +1,22 @@
 # Tested claims of this guide. See CONTRIBUTING.md, "Evidence".
-[]
+- id: ev-mono-boundaries-rule-1
+  card: mono-boundaries-rule
+  claim: "With the conventions of build-logic, a service that depends on another service's project, an api project that depends on its service and a library that depends on an api project each stop the build before any task runs, with a message that names both projects; a service that depends on another service's api project builds."
+  badge: reproduced
+  test: gradle/monorepo::ConventionsTest
+  result: "Three builds fail with ':<project> must not depend on :<other>'; the build with billing on :orders-api succeeds."
+  limitations: "Project dependencies only. A dependency on another service's published artifact is not seen; the ArchUnit rule covers code that reaches another service's packages."
+- id: ev-mono-boundaries-rule-2
+  card: mono-boundaries-rule
+  claim: "The ArchitectureTest rule otherVerticalsOnlyThroughTheirContract fails on a billing class that uses a class in the orders packages and passes on one that uses a generated contract interface."
+  badge: reproduced
+  test: gradle/monorepo::VerticalBoundaryTest
+  result: "The violation names io.pyahu.fixture.orders.StandIn; the class that uses io.pyahu.fixture.api.billing.PingApi passes."
+  limitations: "The rule reads packages, so a service whose code is not under <group>.<service> is not covered."
+- id: ev-mono-build-logic-1
+  card: mono-build-logic
+  claim: "Applied to an empty project, platform.service gives bootJar, integrationTest, pitest, pmdMain, spotlessCheck and cyclonedxBom; platform.api gives openApiGenerate and no bootJar; platform.library gives spotlessCheck and no bootJar."
+  badge: reproduced
+  test: gradle/monorepo::ConventionsTest
+  result: "Seven Gradle TestKit builds against the plugins of build-logic pass."
+  limitations: "Checks that the tasks exist, not how each is configured; the fixture's own build runs them."

@@ -81,7 +81,8 @@ public abstract class TaskRecorder implements BuildService<TaskRecorder.Params>,
 
     /**
      * The task's path as the gates name it ({@code :test}), or null for a task of another project. A service's
-     * report also covers its contract project, {@code <service>-api}, where the contract is validated.
+     * report also covers the contract tasks of its contract project, {@code <service>-api}; that project's own
+     * compile and test tasks would otherwise take the place of the service's.
      */
     private String local(String taskPath) {
         String project = getParameters().getProjectPath().get();
@@ -90,7 +91,11 @@ public abstract class TaskRecorder implements BuildService<TaskRecorder.Params>,
         if (project.equals(":")) {
             return owner.isEmpty() ? task : null;
         }
-        return owner.equals(project) || owner.equals(project + "-api") ? task : null;
+        if (owner.equals(project)) {
+            return task;
+        }
+        boolean contract = task.equals(":openApiValidate") || task.equals(":openApiGenerate");
+        return owner.equals(project + "-api") && contract ? task : null;
     }
 
     @Override

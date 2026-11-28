@@ -24,6 +24,9 @@ const LABELS: Record<string, string> = {
   verticals: 'Verticals',
 };
 
+// The form the vertical rows belong to, which does not exist: their values reach the request through the hidden list.
+const EDITOR = 'vertical-editor';
+
 // A monorepo to start from: two verticals in different styles, one with a database.
 const FIRST_VERTICALS = 'orders:hexagonal:postgres,billing:ddd-layered:none';
 
@@ -291,6 +294,7 @@ export function Starter({
         {monorepo && (
           <fieldset className="verticals">
             <legend>Verticals</legend>
+            {/* Only the hidden list is sent; the row controls belong to no form, so a post without the script works. */}
             <input type="hidden" name="verticals" value={values.verticals ?? ''} />
             {rows.map((row, index) => (
               <div key={index} className="vertical-row" role="group" aria-label={`Vertical ${index + 1}`}>
@@ -298,6 +302,7 @@ export function Starter({
                   <label htmlFor={`vertical-${index}`}>Name</label>
                   <input
                     id={`vertical-${index}`}
+                    form={EDITOR}
                     value={row.name}
                     autoComplete="off"
                     spellCheck={false}
@@ -310,6 +315,7 @@ export function Starter({
                       <label key={choice.id} className="segment">
                         <input
                           type="radio"
+                          form={EDITOR}
                           name={`vertical-${index}-${id}`}
                           value={choice.id}
                           checked={row[id] === choice.id}
