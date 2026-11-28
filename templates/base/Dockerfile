@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1
 #
-# [[name]]: multi-stage image for Java [[javaFeature]] and Spring Boot (guides: JVM in containers, container image).
+# [[name]]: multi-stage image for Java [[javaFeature]] and Spring Boot (guides: JVM in containers, container image)[[#vertical]], built from
+# the repository root so the build sees build-logic, the catalog and the contract (monorepo guide, step 10):
+#   docker build -f services/[[name]]/Dockerfile .[[/vertical]][[^vertical]].[[/vertical]]
 #
 #   build    compiles the Boot jar (Gradle cache in a BuildKit cache mount)
 #   extract  splits the jar into layers (jarmode=tools, without --launcher)
@@ -13,6 +15,7 @@
 
 FROM [[jdkImage]] AS build
 WORKDIR /workspace
+[[^vertical]]
 COPY gradlew settings.gradle.kts build.gradle.kts ./
 COPY gradle/ gradle/
 COPY .github/scripts/gradle-ci.sh .github/scripts/
@@ -23,6 +26,23 @@ COPY src/ src/
 # Tests run in CI before the image build.
 RUN --mount=type=cache,target=/root/.gradle bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet bootJar \
  && cp build/libs/[[name]]-0.1.0.jar /workspace/application.jar
+[[/vertical]]
+[[#vertical]]
+COPY gradlew settings.gradle.kts gradle.properties ./
+COPY gradle/ gradle/
+COPY build-logic/ build-logic/
+COPY config/ config/
+COPY .github/scripts/gradle-ci.sh .github/scripts/
+COPY services/[[name]]/build.gradle.kts services/[[name]]/
+COPY services/[[name]]/api/ services/[[name]]/api/
+RUN --mount=type=cache,target=/root/.gradle \
+    bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :[[name]]:dependencies > /tmp/gradle-dependencies.log 2>&1 \
+    || { cat /tmp/gradle-dependencies.log; exit 1; }
+COPY services/[[name]]/src/ services/[[name]]/src/
+# Tests run in CI before the image build.
+RUN --mount=type=cache,target=/root/.gradle bash .github/scripts/gradle-ci.sh ./gradlew --no-daemon --quiet :[[name]]:bootJar \
+ && cp services/[[name]]/build/libs/[[name]]-0.1.0.jar /workspace/application.jar
+[[/vertical]]
 
 FROM [[jdkImage]] AS extract
 WORKDIR /extract

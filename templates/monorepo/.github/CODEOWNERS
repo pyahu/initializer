@@ -1,0 +1,8 @@
+# Every folder has an owner (monorepo guide, step 2). Turn on "Require review from Code Owners" for main. The last
+# matching line wins.
+*                 @your-org/platform
+[[#verticals]]
+/services/[[name]]/ @your-org/[[name]]
+[[/verticals]]
+/build-logic/     @your-org/platform
+/gradle/          @your-org/platform

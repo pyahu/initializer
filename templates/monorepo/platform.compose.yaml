@@ -1,0 +1,26 @@
+# What every vertical needs on the laptop (local development guide): Grafana LGTM for telemetry on
+# http://localhost:3000 (admin/admin)[[#oidc]] and one mock identity provider for the whole platform, which signs in any
+# user name you type[[/oidc]]. Each vertical's compose.yaml includes this file. Never in production.
+services:
+  otel-lgtm:
+    image: [[lgtmImage]]
+    ports:
+      - "3000:3000"
+      - "4318"
+    healthcheck:
+      test: ["CMD", "test", "-f", "/tmp/ready"]
+      interval: 5s
+      timeout: 2s
+      retries: 30
+[[#oidc]]
+  # Its tokens carry the platform's audience, which every vertical accepts (security guide, step 3).
+  oidc:
+    image: ghcr.io/navikt/mock-oauth2-server:6.0.5@sha256:5ed2f078c6503147860a5114f06414257bb7eeccc68b0e806bdf0869f2602509
+    ports:
+      - "8090:8080"
+    environment:
+      JSON_CONFIG: >-
+        {"interactiveLogin": true, "tokenCallbacks": [{"issuerId": "default", "tokenExpiry": 3600,
+        "requestMappings": [{"requestParam": "client_id", "match": "*",
+        "claims": {"aud": ["[[name]]"], "email": "developer@localhost"}}]}]}
+[[/oidc]]

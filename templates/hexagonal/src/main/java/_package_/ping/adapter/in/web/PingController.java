@@ -1,7 +1,7 @@
 package [[packageName]].ping.adapter.in.web;
 
-import [[packageName]].ping.adapter.in.web.api.PingApi;
-import [[packageName]].ping.adapter.in.web.api.model.PingResponse;
+import [[apiPackage]].PingApi;
+import [[apiPackage]].model.PingResponse;
 import [[packageName]].ping.application.port.in.Ping;
 import [[packageName]].ping.domain.Pong;
 import org.springframework.http.ResponseEntity;

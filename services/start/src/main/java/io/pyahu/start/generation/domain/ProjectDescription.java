@@ -66,6 +66,16 @@ public final class ProjectDescription {
                 .toList();
     }
 
+    /** Whether the recipe set this value. */
+    public boolean hasValue(String name) {
+        return contributions.containsKey("value " + name);
+    }
+
+    /** Whether this contribution's key is taken. */
+    public boolean has(Contribution contribution) {
+        return contributions.containsKey(contribution.key());
+    }
+
     /** A value the recipe set. */
     public String value(String name) {
         Contribution c = contributions.get("value " + name);

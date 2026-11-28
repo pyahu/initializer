@@ -1,0 +1,90 @@
+# One vertical after the build: its manifests, its image from the tested jar, the image scan and its own smoke test
+# (CI pipelines guide, steps 5 and 6; monorepo guide, step 10). ci.yml calls it once per folder in services/.
+name: Vertical
+
+on:
+  workflow_call:
+    inputs:
+      vertical:
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+[[#postgres]]
+env:
+  POSTGRES_IMAGE: [[postgresImage]]
+[[#oidc]]
+  # A mock identity provider, for the smoke test only.
+  OIDC_IMAGE: ghcr.io/navikt/mock-oauth2-server:6.0.5@sha256:5ed2f078c6503147860a5114f06414257bb7eeccc68b0e806bdf0869f2602509
+[[/oidc]]
+[[/postgres]]
+[[^postgres]]
+[[#oidc]]
+env:
+  # A mock identity provider, for the smoke test only.
+  OIDC_IMAGE: ghcr.io/navikt/mock-oauth2-server:6.0.5@sha256:5ed2f078c6503147860a5114f06414257bb7eeccc68b0e806bdf0869f2602509
+[[/oidc]]
+[[/postgres]]
+
+jobs:
+  vertical:
+    name: ${{ inputs.vertical }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      VERTICAL: ${{ inputs.vertical }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: The jar the build job tested
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: jars
+          path: services
+      - name: Manifest output directory
+        run: mkdir -p build/manifests
+      - name: Render the dev overlay
+        uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
+        with:
+          args: build services/${{ inputs.vertical }}/deploy/overlays/dev --output build/manifests/dev.yaml
+      - name: Render the prod overlay
+        uses: docker://registry.k8s.io/kustomize/kustomize:v5.8.3@sha256:429eda4a1c76a7de458d0c4ca3ded9b5d764899ff6bdaeccc1d98b1b6ee873e4
+        with:
+          args: build services/${{ inputs.vertical }}/deploy/overlays/prod --output build/manifests/prod.yaml
+      - name: Strict schemas for Kubernetes 1.36
+        uses: docker://ghcr.io/yannh/kubeconform:v0.8.0@sha256:faffaf43f95aa6425306e1ab8d6fcad72acb9049158f38e574c085ea1ec0f64e
+        with:
+          args: -strict -summary -kubernetes-version 1.36.0 build/manifests
+      - name: Strict schemas for Kubernetes 1.37
+        uses: docker://ghcr.io/yannh/kubeconform:v0.8.0@sha256:faffaf43f95aa6425306e1ab8d6fcad72acb9049158f38e574c085ea1ec0f64e
+        with:
+          args: -strict -summary -kubernetes-version 1.37.0 build/manifests
+      - name: Manifest lint
+        uses: docker://ghcr.io/stackrox/kube-linter:v0.8.3@sha256:f2bfce7879206d32f69ab6572c376f916643f54ca291ac38cf7d01ef591ff3f9
+        with:
+          args: lint build/manifests
+      - name: Manifest security
+        uses: docker://aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
+        with:
+          args: config --exit-code 1 --severity HIGH,CRITICAL build/manifests
+      - name: Deprecated or removed APIs
+        uses: docker://us-docker.pkg.dev/fairwinds-ops/oss/pluto:v5.24.5@sha256:2569f881ad57999772755a3e56eef5d35f5b4b9498f7cfb89e68ac19eba0532f
+        with:
+          args: detect-files -d build/manifests --target-versions k8s=v1.37.0
+      - name: Image
+        # From the repository root with the vertical's Dockerfile; the tested jar replaces the build stage.
+        run: |
+          artifact_context=$(mktemp -d)
+          mkdir -p "$artifact_context/workspace"
+          cp "services/$VERTICAL/build/libs/$VERTICAL-0.1.0.jar" "$artifact_context/workspace/application.jar"
+          docker buildx build --load --build-context "build=$artifact_context" \
+            -f "services/$VERTICAL/Dockerfile" -t "$VERTICAL:ci" .
+          docker save "$VERTICAL:ci" -o build/app-image.tar
+      - name: Image vulnerabilities
+        uses: docker://aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
+        with:
+          args: image --input build/app-image.tar --scanners vuln --ignore-unfixed --severity HIGH,CRITICAL --exit-code 1 --cache-dir build/trivy-cache
+      - name: Smoke
+        # Each vertical owns its smoke test, next to its code.
+        run: IMAGE="$VERTICAL:ci" bash "services/$VERTICAL/ci/smoke.sh"

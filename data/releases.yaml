@@ -8,8 +8,22 @@ releases:
     status: unreleased
     previous: v0.1-b3
     summary: >-
-      The monorepo guide is rewritten for a build that enforces its own boundaries. Generated projects get its new
-      checklist items; nothing else they contain changes.
+      start.pyahu.io generates a monorepo: a platform of verticals in one Gradle build that keeps them apart, each
+      with its own architecture, database, contract, image and deployment (ADR 0004). The monorepo guide is
+      rewritten around it. A project with one service no longer lists the monorepo checklist items.
+    actions:
+      - id: checklist-without-monorepo
+        kind: optional
+        title: A project with one service drops the monorepo checklist items
+        appliesWhen: {}
+        files:
+          - CHECKLIST.md
+        detect: "grep -q 'MONO-01' CHECKLIST.md"
+        steps: |-
+          The monorepo items (MONO-01 to MONO-13) now go only into generated monorepos. Delete the "Monorepos with
+          several services" section of `CHECKLIST.md`.
+        verify: "! grep -q 'MONO-' CHECKLIST.md"
+        guide: monorepo#mono-when
     guides:
       - step: monorepo#mono-layout
         text: A new step on the layout, with flat project names and an owner for every service folder.
@@ -25,8 +39,11 @@ releases:
         text: One workflow builds every project with the cache of `main` and runs the convention plugins' tests.
     changes:
       - >-
-        The monorepo items in `CHECKLIST.md` follow the rewritten guide, with four new ones (MONO-14 to MONO-17). A
-        project with one service can mark them not applicable.
+        A monorepo option on start.pyahu.io and in the API (`layout=monorepo`, `verticals=name:architecture:database,...`),
+        proven by fixtures/monorepo, which is what the generator produces for its options.
+      - >-
+        The quality report keeps one report per project, so a build of several projects writes one for each
+        service. A project with one service writes the same report as before.
   - id: v0.1-b3
     status: released
     date: "2026-11-27"

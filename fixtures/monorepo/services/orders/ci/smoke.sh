@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# Starts the orders image the way its pod runs (read-only root, a writable /tmp, a user that is not root) next to
-# PostgreSQL and a mock identity provider, and checks what production needs (CI pipelines guide, step 5). CI runs it
-# for this vertical's image; IMAGE, POSTGRES_IMAGE and OIDC_IMAGE come from the workflow.
+# Starts the orders image the way its pod runs: read-only root, a writable /tmp and a user that is not root.
+# PostgreSQL runs next to it with the two roles of production.
+# A mock identity provider issues the platform's tokens.
+# It checks what production needs (CI pipelines guide, step 5). CI runs it for this vertical's image, with IMAGE
+# and the other images set by the workflow.
 set -euo pipefail
 : "${IMAGE:?}" "${POSTGRES_IMAGE:?}" "${OIDC_IMAGE:?}"
 trap 'code=$?; set +e; if [ $code -ne 0 ]; then for c in app db oidc; do docker logs $c 2>&1 | tail -40; done; fi
@@ -50,9 +52,9 @@ token=$(curl -sf -H 'Host: oidc:8080' localhost:8090/default/token \
   -d grant_type=client_credentials -d client_id=ci -d client_secret=ci -d scope=monorepo \
   | tr -d '\n' | sed -E 's/.*"access_token" *: *"([^"]+)".*/\1/')
 auth=(-H "Authorization: Bearer $token")
-curl -sf "${auth[@]}" localhost:8080/ping | grep -q '"message":"pong"'
+curl -sf ${auth[@]+"${auth[@]}"} localhost:8080/ping | grep -q '"message":"pong"'
 
 # Each ping is counted by the runtime role, in the schema the migration created.
-first=$(curl -sf "${auth[@]}" localhost:8080/ping | sed -E 's/.*"count":([0-9]+).*/\1/')
-second=$(curl -sf "${auth[@]}" localhost:8080/ping | sed -E 's/.*"count":([0-9]+).*/\1/')
+first=$(curl -sf ${auth[@]+"${auth[@]}"} localhost:8080/ping | sed -E 's/.*"count":([0-9]+).*/\1/')
+second=$(curl -sf ${auth[@]+"${auth[@]}"} localhost:8080/ping | sed -E 's/.*"count":([0-9]+).*/\1/')
 test "$second" -eq $((first + 1))

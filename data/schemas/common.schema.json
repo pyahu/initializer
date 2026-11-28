@@ -15,6 +15,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "layout": {"$ref": "#/$defs/strings"},
         "architecture": {"$ref": "#/$defs/strings"},
         "api": {"$ref": "#/$defs/strings"},
         "database": {"$ref": "#/$defs/strings"},

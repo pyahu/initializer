@@ -1,0 +1,25 @@
+# [[name]] on the laptop: `./gradlew :[[name]]:bootRun` starts these containers and Spring Boot connects to them
+# (local development guide; monorepo guide, step 8). Names start with the vertical's, so the root compose.yaml
+# can run every vertical together. Never in production.
+include:
+  - ../../platform.compose.yaml
+[[#postgres]]
+services:
+  # One user on the laptop; db/init-local.sh still creates the two roles of production (database guide, step 4).
+  [[name]]-postgres:
+    image: [[postgresImage]]
+    environment:
+      POSTGRES_PASSWORD: local
+      POSTGRES_DB: [[dbName]]
+    ports:
+      - "5432"
+    # Over TCP: the server that runs the init scripts listens on a socket only, so this waits for the real one.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -d [[dbName]]"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    volumes:
+      - ./db:/db:ro
+      - ./db/init-local.sh:/docker-entrypoint-initdb.d/init-local.sh:ro
+[[/postgres]]

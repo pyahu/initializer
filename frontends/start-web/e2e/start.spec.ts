@@ -79,3 +79,25 @@ test('a terminal gets the same zip through the page', async ({ request }) => {
   expect(rejected.status()).toBe(400);
   expect((await rejected.json()).errors[0].field).toBe('nme');
 });
+
+test('a monorepo replaces the options of one service with a list of verticals', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('radio', { name: 'Monorepo of verticals' }).check();
+  await expect(page.getByRole('heading', { name: 'Generate a platform' })).toBeVisible();
+  await expect(page.getByRole('radiogroup', { name: 'Architecture', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('group', { name: 'Vertical 2' })).toBeVisible();
+  await expect(page.getByRole('treeitem', { name: 'build-logic' })).toBeVisible();
+  await page.getByRole('button', { name: 'Add a vertical' }).click();
+  await expect(page.getByRole('group', { name: 'Vertical 3' })).toBeVisible();
+  await expect(page).toHaveURL(/layout=monorepo/);
+});
+
+test('a terminal gets a monorepo with its verticals', async ({ request }) => {
+  const response = await request.post('/starter.zip', {
+    form: { layout: 'monorepo', name: 'shop', verticals: 'orders:hexagonal:postgres,billing:ddd-layered:none' },
+  });
+  expect(response.status()).toBe(200);
+  const zip = await response.body();
+  expect(zip.includes(Buffer.from('shop/services/orders/build.gradle.kts'))).toBe(true);
+  expect(zip.includes(Buffer.from('shop/build-logic/src/main/kotlin/platform.service.gradle.kts'))).toBe(true);
+});

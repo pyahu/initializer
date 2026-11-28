@@ -4,8 +4,8 @@ Status: accepted.
 
 ## Context
 
-The same team owns orders and billing, and a change often touches both: a field in a contract and the vertical
-that reads it.
+One team, or a few teams that work closely, own billing orders and often change two of them together: a field in a
+contract and the vertical that reads it.
 
 ## Decision
 

@@ -7,7 +7,7 @@ import (
 
 // OptionPaths are the option paths a filter may name, with their value type.
 var OptionPaths = map[string]string{
-	"architecture": "string", "api": "list", "database": "string", "persistence": "string",
+	"layout": "string", "architecture": "string", "api": "list", "database": "string", "persistence": "string",
 	"kafka.enabled": "bool", "kafka.outbox": "bool", "rabbitmq": "bool", "cache": "bool",
 	"auth": "bool", "frontend": "string", "pyahuCli": "bool", "sample": "bool",
 }
@@ -15,6 +15,7 @@ var OptionPaths = map[string]string{
 // OptionValues are the values the options contract allows per path (all releases), so
 // a filter cannot name a value that can never exist.
 var OptionValues = map[string][]any{
+	"layout":       {"single", "monorepo"},
 	"architecture": {"hexagonal", "ddd-layered", "layered"},
 	"api":          {"rest", "grpc"},
 	"database":     {"none", "postgres"},

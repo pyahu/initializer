@@ -21,7 +21,7 @@ configMapGenerator:
 [[/postgres]]
 [[#oidc]]
       - OIDC_ISSUER_URI=https://login.example.com/your-tenant
-      - OIDC_AUDIENCE=[[name]]
+      - OIDC_AUDIENCE=[[audience]]
 [[/oidc]]
 [[#nextjs]]
   - name: [[name]]-web-config

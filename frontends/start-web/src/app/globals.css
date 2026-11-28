@@ -106,6 +106,10 @@ details summary::-webkit-details-marker { display: none; }
 
 .choices { gap: 16px; }
 .choice-row { display: grid; gap: .4rem; }
+.verticals { display: grid; gap: 12px; }
+.vertical-row { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; }
+.vertical-row .icon-button { justify-self: start; }
+.verticals > .button { justify-self: start; }
 .choice-label { font-size: .85rem; }
 .segments { display: flex; flex-wrap: wrap; gap: 3px; padding: 3px; border: 1px solid var(--line); border-radius: 8px; background: var(--code-bg); width: fit-content; max-width: 100%; }
 .segment { position: relative; display: flex; align-items: center; height: 32px; border: 1px solid transparent; border-radius: 6px; padding: 0 .85rem; color: var(--muted); cursor: pointer; font-size: .85rem; transition: background var(--ease), color var(--ease), border-color var(--ease); }

@@ -1,5 +1,5 @@
-// orders: hexagonal, with PostgreSQL and OIDC. The conventions are in build-logic; this file adds what this
-// vertical uses (monorepo guide, step 5).
+// The orders vertical. The conventions are in build-logic; this file adds what this vertical uses (monorepo
+// guide, step 5).
 plugins {
     id("platform.service")
 }
@@ -20,8 +20,8 @@ dependencies {
     testImplementation(libs.spring.boot.starter.security.oauth2.resource.server.test)
 }
 
-// On the laptop the application migrates on start, as the one database user (database guide, steps 4 and 5), and
-// each vertical has its own port, so several run side by side (monorepo guide, step 8).
+// On the laptop each vertical has its own ports, so several run side by side (monorepo guide, step 8).
+// It also migrates on start, as the one database user (database guide, steps 4 and 5).
 tasks.bootRun {
-    args("--spring.liquibase.enabled=true", "--server.port=8081")
+    args("--spring.liquibase.enabled=true", "--server.port=8120", "--management.server.port=8121")
 }

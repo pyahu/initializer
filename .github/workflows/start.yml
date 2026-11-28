@@ -265,3 +265,72 @@ jobs:
           report="out/${{ matrix.name }}/build/reports/pyahu"
           test -s "$report/quality.html"
           jq -e '.status == "passed" and (.gates | length == 9)' "$report/quality.json"
+
+  # A monorepo other than the fixture (ADR 0004): three verticals, no identity provider, a group of three segments.
+  # The fixture proves one combination file by file; this one proves another builds, ships and starts.
+  monorepo:
+    needs: [start]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    env:
+      NAME: market
+      GROUP: org.zeta.platform
+      VERTICALS: catalog:ddd-layered:postgres,orders:hexagonal:postgres,search-index:hexagonal:none
+      POSTGRES_IMAGE: postgres:18.7@sha256:64c8b0d31e4ab6ea665e8426ea406a94bf52de3c05b3a4a8bf713704eefa9328
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: start-image
+      - name: Start the service
+        run: |
+          gunzip -c start-image.tar.gz | docker load
+          test "$(docker image inspect --format '{{.Id}}' start:ci)" = "$(cat start-image.id)"
+          docker run -d --name start -p 18080:8080 -p 18081:8081 -e MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED=false start:ci
+          for _ in $(seq 1 60); do
+            if curl -sf localhost:18081/actuator/health/readiness; then exit 0; fi
+            sleep 1
+          done
+          docker logs start
+          exit 1
+      - name: Generate, twice
+        run: |
+          mkdir -p out
+          curl -fsS localhost:18080/starter.zip -d layout=monorepo -d name="$NAME" -d group="$GROUP" \
+            -d verticals="$VERTICALS" -o out/post.zip
+          curl -fsS "localhost:18080/starter.zip?layout=monorepo&name=$NAME&group=$GROUP&verticals=$VERTICALS" -o out/get.zip
+          cmp out/post.zip out/get.zip
+          cd out && unzip -q post.zip
+          test -x "$NAME/gradlew"
+          test -x "$NAME/services/orders/ci/smoke.sh"
+      - name: Gradle dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cache/pyahu-gradle/caches/modules-2
+            ~/.cache/pyahu-gradle/wrapper/dists
+          key: ${{ runner.os }}-${{ runner.arch }}-gradle-monorepo-v1-${{ hashFiles('templates/base/gradle/libs.versions.toml', 'data/versions.yaml') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-gradle-monorepo-v1-
+      - name: Build and test every project in the pinned JDK
+        working-directory: out/market
+        run: >-
+          bash .github/scripts/gradle-ci.sh docker run --rm -v "$PWD:/w" -w /w
+          -v "$HOME/.cache/pyahu-gradle:/gradle-cache" -e GRADLE_USER_HOME=/gradle-cache
+          -v /var/run/docker.sock:/var/run/docker.sock "$JDK_IMAGE" ./gradlew --no-daemon build :build-logic:check
+      - name: Every vertical's quality report says every gate passed
+        working-directory: out/market
+        run: |
+          for report in services/*/build/reports/pyahu/quality.json; do
+            jq -e '.status == "passed" and (.gates | length == 9)' "$report"
+          done
+      - name: Every vertical's image starts and answers
+        working-directory: out/market
+        run: |
+          for dir in services/*/; do
+            vertical=$(basename "$dir")
+            context=$(mktemp -d)
+            mkdir -p "$context/workspace"
+            cp "services/$vertical/build/libs/$vertical-0.1.0.jar" "$context/workspace/application.jar"
+            docker buildx build --load --build-context "build=$context" -f "services/$vertical/Dockerfile" -t "$vertical:ci" .
+            IMAGE="$vertical:ci" bash "services/$vertical/ci/smoke.sh"
+          done

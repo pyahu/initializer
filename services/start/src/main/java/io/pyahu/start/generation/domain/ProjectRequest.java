@@ -22,7 +22,8 @@ public record ProjectRequest(
         Architecture architecture,
         Database database,
         Auth auth,
-        Frontend frontend) {
+        Frontend frontend)
+        implements GenerationRequest {
 
     private static final Set<String> JAVA_KEYWORDS = Set.of(
             "abstract",
@@ -114,6 +115,10 @@ public record ProjectRequest(
         String db = check(ProjectField.DATABASE, fields, errors);
         String auth = check(ProjectField.AUTH, fields, errors);
         String f = check(ProjectField.FRONTEND, fields, errors);
+        String verticals = fields.get(ProjectField.VERTICALS.id());
+        if (verticals != null && !verticals.isBlank()) {
+            errors.add(new FieldError(ProjectField.VERTICALS.id(), "only with layout=monorepo"));
+        }
         if (!errors.isEmpty()) {
             throw new InvalidProjectRequest(errors);
         }
@@ -137,8 +142,10 @@ public record ProjectRequest(
      * The options in the shape the guides' checklist filters on (see CONTRIBUTING.md, "Checklist"). Every project has
      * a REST API and no messaging or cache yet.
      */
+    @Override
     public Map<String, Object> options() {
         Map<String, Object> options = new LinkedHashMap<>();
+        options.put("layout", Layout.SINGLE.id());
         options.put("architecture", architecture.id());
         options.put("api", List.of("rest"));
         options.put("database", database.id());
@@ -156,11 +163,11 @@ public record ProjectRequest(
         return options;
     }
 
-    private static String check(ProjectField field, Map<String, String> fields, List<FieldError> errors) {
+    static String check(ProjectField field, Map<String, String> fields, List<FieldError> errors) {
         return check(field, fields.get(field.id()), requireNonNull(field.defaultValue(), field.id()), errors);
     }
 
-    private static String check(ProjectField field, @Nullable String value, String fallback, List<FieldError> errors) {
+    static String check(ProjectField field, @Nullable String value, String fallback, List<FieldError> errors) {
         if (value == null || value.isBlank()) {
             return fallback;
         }
@@ -181,7 +188,7 @@ public record ProjectRequest(
         return v;
     }
 
-    private static void keywords(ProjectField field, String value, List<FieldError> errors) {
+    static void keywords(ProjectField field, String value, List<FieldError> errors) {
         for (String segment : value.toLowerCase(Locale.ROOT).split("\\.", -1)) {
             if (JAVA_KEYWORDS.contains(segment)) {
                 errors.add(new FieldError(field.id(), "'" + segment + "' is a Java keyword"));

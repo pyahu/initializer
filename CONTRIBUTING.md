@@ -290,7 +290,16 @@ exceptions are tooling that Renovate updates: the generated workflow's action SH
 and lock files, its Node image (listed only, like a toolchain) and the mock identity provider of `compose.yml` and
 the smoke test. Tests keep the kustomize image on the baseline's kustomize version and each image pinned in
 several files the same in all of them. The matrix in `start.yml` generates all 16 combinations through the API and
-runs each generated workflow with `cmd/runworkflow`.
+runs each generated workflow with `cmd/runworkflow`; its `monorepo` job generates a platform of three verticals and
+builds, scans and starts each one.
+
+A monorepo (`layout=monorepo`, ADR 0004) is composed in `ProjectRecipe`: each vertical like one service, from
+`base/` (only its code, manifests and Dockerfile), its architecture and option sets and `vertical/`, under
+`services/<vertical>/`, with the `vertical` flag set; then the platform from `monorepo/` and the shared files of
+`base/`, with one catalog that holds every vertical's versions and the `monorepo` flag set. `fixtures/monorepo` is
+what the engine generates for its `fixture.yaml`: `MonorepoFixtureTest` fails when they differ, and
+`./gradlew :start:regenerateFixture` rewrites it. After changing a template a monorepo uses, regenerate it and read
+the diff.
 
 ## The Initializer's own files
 

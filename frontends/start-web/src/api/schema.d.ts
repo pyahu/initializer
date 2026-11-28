@@ -69,6 +69,8 @@ export interface components {
             database?: string;
             auth?: string;
             frontend?: string;
+            layout?: string;
+            verticals?: string;
         };
         Preview: {
             /**
@@ -173,6 +175,10 @@ export interface components {
         Auth: string;
         /** @description `none` (default) or `nextjs`. */
         Frontend: string;
+        /** @description `single` (default), one service, or `monorepo`, a platform of verticals in one Gradle build. */
+        Layout: string;
+        /** @description With `layout=monorepo`: each vertical as `name:architecture:database`, separated by commas, such as `orders:hexagonal:postgres,billing:ddd-layered:none`. Architecture and database default to `hexagonal` and `none`. */
+        Verticals: string;
     };
     requestBodies: never;
     headers: never;
@@ -219,6 +225,10 @@ export interface operations {
                 auth?: components["parameters"]["Auth"];
                 /** @description `none` (default) or `nextjs`. */
                 frontend?: components["parameters"]["Frontend"];
+                /** @description `single` (default), one service, or `monorepo`, a platform of verticals in one Gradle build. */
+                layout?: components["parameters"]["Layout"];
+                /** @description With `layout=monorepo`: each vertical as `name:architecture:database`, separated by commas, such as `orders:hexagonal:postgres,billing:ddd-layered:none`. Architecture and database default to `hexagonal` and `none`. */
+                verticals?: components["parameters"]["Verticals"];
             };
             header?: never;
             path?: never;

@@ -34,6 +34,9 @@ public abstract class TaskRecorder implements BuildService<TaskRecorder.Params>,
     private static final Logger LOG = Logging.getLogger(TaskRecorder.class);
 
     public interface Params extends BuildServiceParameters {
+        /** The project's path, such as {@code :orders}, or {@code :} for a build of one project. */
+        Property<String> getProjectPath();
+
         DirectoryProperty getProjectDirectory();
 
         DirectoryProperty getBuildDirectory();
@@ -54,7 +57,10 @@ public abstract class TaskRecorder implements BuildService<TaskRecorder.Params>,
         if (!(event instanceof TaskFinishEvent finished)) {
             return;
         }
-        String path = finished.getDescriptor().getTaskPath();
+        String path = local(finished.getDescriptor().getTaskPath());
+        if (path == null) {
+            return;
+        }
         if (!Gates.tracks(path) && !(finished.getResult() instanceof TaskFailureResult)) {
             return;
         }
@@ -71,6 +77,20 @@ public abstract class TaskRecorder implements BuildService<TaskRecorder.Params>,
             run = new TaskRun(path, TaskRun.PASSED, start, at, "", true);
         }
         runs.put(path, run);
+    }
+
+    /**
+     * The task's path as the gates name it ({@code :test}), or null for a task of another project. A service's
+     * report also covers its contract project, {@code <service>-api}, where the contract is validated.
+     */
+    private String local(String taskPath) {
+        String project = getParameters().getProjectPath().get();
+        String task = taskPath.substring(taskPath.lastIndexOf(':'));
+        String owner = taskPath.substring(0, taskPath.lastIndexOf(':'));
+        if (project.equals(":")) {
+            return owner.isEmpty() ? task : null;
+        }
+        return owner.equals(project) || owner.equals(project + "-api") ? task : null;
     }
 
     @Override

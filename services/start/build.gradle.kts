@@ -97,6 +97,18 @@ tasks.test {
 }
 
 // Writes the files drift.yaml marks same from the engine's output, after a template changes.
+tasks.register<Test>("regenerateFixture") {
+    description = "Rewrites fixtures/monorepo with what the engine generates for its options."
+    group = "build"
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    useJUnitPlatform()
+    filter { includeTestsMatching("*.MonorepoFixtureTest") }
+    systemProperty("repository.root", rootDir.absolutePath)
+    systemProperty("fixture.write", "true")
+    outputs.upToDateWhen { false }
+}
+
 tasks.register<Test>("regenerate") {
     description = "Rewrites the app's files that its own engine generates."
     group = "build"

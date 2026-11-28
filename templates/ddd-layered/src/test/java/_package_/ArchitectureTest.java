@@ -1,5 +1,10 @@
 package [[packageName]];
 
+[[#vertical]]
+import static com.tngtech.archunit.base.DescribedPredicate.not;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage;
+[[/vertical]]
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noMethods;
@@ -17,9 +22,11 @@ class ArchitectureTest {
 
     private static final String TRANSACTIONAL = "org.springframework.transaction.annotation.Transactional";
 
+[[^vertical]]
     /** The interfaces and models the build generates from the contract; the rules below are for handwritten code. */
     private static final String GENERATED = "..api..";
 
+[[/vertical]]
     @ArchTest
     static final ArchRule layers = layeredArchitecture()
             .consideringOnlyDependenciesInLayers()
@@ -80,15 +87,45 @@ class ArchitectureTest {
 
     /** Output goes through the logger, so it reaches the logs with the trace ID. */
     @ArchTest
+[[^vertical]]
     static final ArchRule noStandardStreams =
             noClasses().that().resideOutsideOfPackage(GENERATED).should(GeneralCodingRules.ACCESS_STANDARD_STREAMS);
+[[/vertical]]
+[[#vertical]]
+    static final ArchRule noStandardStreams = noClasses().should(GeneralCodingRules.ACCESS_STANDARD_STREAMS);
+[[/vertical]]
 
     @ArchTest
+[[^vertical]]
     static final ArchRule noJavaUtilLogging =
             noClasses().that().resideOutsideOfPackage(GENERATED).should(GeneralCodingRules.USE_JAVA_UTIL_LOGGING);
+[[/vertical]]
+[[#vertical]]
+    static final ArchRule noJavaUtilLogging = noClasses().should(GeneralCodingRules.USE_JAVA_UTIL_LOGGING);
+[[/vertical]]
 
     /** An exception names what went wrong; Exception or RuntimeException says nothing. */
     @ArchTest
+[[^vertical]]
     static final ArchRule noGenericExceptions =
             noClasses().that().resideOutsideOfPackage(GENERATED).should(GeneralCodingRules.THROW_GENERIC_EXCEPTIONS);
+[[/vertical]]
+[[#vertical]]
+    static final ArchRule noGenericExceptions = noClasses().should(GeneralCodingRules.THROW_GENERIC_EXCEPTIONS);
+[[/vertical]]
+[[#vertical]]
+
+    /**
+     * Another vertical of the platform is reached only through its contract, generated in the api packages, and
+     * shared code only through a library (monorepo guide, step 3).
+     */
+    @ArchTest
+    static final ArchRule otherVerticalsOnlyThroughTheirContract = noClasses()
+            .that()
+            .resideInAPackage("[[packageName]]..")
+            .should()
+            .dependOnClassesThat(resideInAPackage("[[groupPackage]]..")
+                    .and(not(resideInAnyPackage(
+                            "[[packageName]]..", "[[contractPackageRoot]]..", "[[groupPackage]].lib.."))));
+[[/vertical]]
 }

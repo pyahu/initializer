@@ -70,7 +70,8 @@ These are the steps we follow, in order.
 3. **Update the services** to the same versions: the fixtures in `fixtures/` and the Initializer's own build
    (`gradle/libs.versions.toml`, the Gradle wrapper and each Dockerfile).
 4. **Run both test tracks.** The fixture workflow runs every required test and checks every resolved pin. The
-   Start workflow builds and runs all 16 supported project combinations and the frontend browser tests.
+   Start workflow builds and runs all 16 supported project combinations, a monorepo of three verticals and the
+   frontend browser tests.
 5. **Read the guides of the components that changed.** Fix the text and the version numbers. A measured claim
    keeps the run it was measured in; measure it again if the change could move the numbers.
 6. **Check the references.** `guidekit check` fails for every entry whose documentation version no longer
@@ -119,9 +120,10 @@ and [`data/audit-exceptions.yaml`](https://github.com/pyahu/initializer/blob/mai
 ## The generator
 
 The preview generator is implemented in `services/start/` with its page in `frontends/start-web/`. It supports
-hexagonal and DDD layered services, REST, optional PostgreSQL, OIDC and Next.js. Its workflow generates all 16
-combinations and runs each generated project's CI, including strict manifest checks, vulnerability scans and smoke
-tests. Passing the matrix does not prove every operational recommendation in the guides; the tested claims say
+hexagonal and DDD layered services, REST, optional PostgreSQL, OIDC and Next.js, and a monorepo of verticals in one
+Gradle build, each with its own style and database. Its workflow generates all 16 combinations and runs each
+generated project's CI, including strict manifest checks, vulnerability scans and smoke tests, and builds and starts
+every vertical of a generated monorepo. The monorepo fixture is what the generator produces for its options. Passing the matrix does not prove every operational recommendation in the guides; the tested claims say
 what is proven.
 
 Site publication requires successful Guides and fixture workflows for the relevant source inputs, the two that

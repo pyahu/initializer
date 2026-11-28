@@ -29,12 +29,14 @@ public abstract class QualityReportPlugin implements Plugin<Project> {
     public void apply(Project project) {
         project.getTasks().withType(JavaCompile.class).configureEach(task -> task.doFirst(new CompilerOutput(
                 CompilerOutput.fileFor(project.getLayout().getBuildDirectory().get().getAsFile().toPath(), task.getName()))));
-        // The thresholds come from the gates themselves, so the report never disagrees with the build.
+        // The thresholds come from the gates themselves, so the report never disagrees with the build. One report per
+        // project: in a build of several projects, each service gets its own.
         project.afterEvaluate(evaluated -> {
             Provider<TaskRecorder> recorder = project.getGradle()
                     .getSharedServices()
-                    .registerIfAbsent("pyahuQualityReport", TaskRecorder.class, spec -> {
+                    .registerIfAbsent("pyahuQualityReport" + project.getPath(), TaskRecorder.class, spec -> {
                         TaskRecorder.Params p = spec.getParameters();
+                        p.getProjectPath().set(project.getPath());
                         p.getProjectDirectory().set(project.getLayout().getProjectDirectory());
                         p.getBuildDirectory().set(project.getLayout().getBuildDirectory());
                         p.getProjectName().set(project.getName());

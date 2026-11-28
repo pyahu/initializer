@@ -75,8 +75,22 @@ public record ProjectField(
             Frontend.NONE,
             Frontend.values());
 
+    public static final ProjectField LAYOUT = choice(
+            "layout",
+            "One service, or a monorepo of verticals in one Gradle build (monorepo guide).",
+            Layout.SINGLE,
+            Layout.values());
+
+    public static final ProjectField VERTICALS = text(
+            "verticals",
+            "For a monorepo: each vertical as name:architecture:database, separated by commas, such as"
+                    + " orders:hexagonal:postgres,billing:ddd-layered:none.",
+            null,
+            "[a-z][a-z0-9]*(-[a-z0-9]+)*(:[a-z-]+){0,2}(,[a-z][a-z0-9]*(-[a-z0-9]+)*(:[a-z-]+){0,2})*",
+            500);
+
     public static final List<ProjectField> ALL =
-            List.of(NAME, GROUP, PACKAGE, DESCRIPTION, ARCHITECTURE, DATABASE, AUTH, FRONTEND);
+            List.of(NAME, GROUP, PACKAGE, DESCRIPTION, ARCHITECTURE, DATABASE, AUTH, FRONTEND, LAYOUT, VERTICALS);
 
     private static ProjectField text(
             String id, String description, @Nullable String defaultValue, String pattern, int maxLength) {

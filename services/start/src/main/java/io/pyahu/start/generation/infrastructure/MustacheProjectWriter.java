@@ -10,11 +10,13 @@ import io.pyahu.start.generation.domain.Contribution.CatalogPlugin;
 import io.pyahu.start.generation.domain.Contribution.CatalogVersion;
 import io.pyahu.start.generation.domain.Contribution.ChecklistEntry;
 import io.pyahu.start.generation.domain.Contribution.Dependency;
+import io.pyahu.start.generation.domain.Contribution.PlatformVertical;
 import io.pyahu.start.generation.domain.Contribution.Property;
 import io.pyahu.start.generation.domain.Contribution.Section;
 import io.pyahu.start.generation.domain.Contribution.Value;
 import io.pyahu.start.generation.domain.Database;
 import io.pyahu.start.generation.domain.Frontend;
+import io.pyahu.start.generation.domain.MonorepoDescription;
 import io.pyahu.start.generation.domain.ProjectArchive;
 import io.pyahu.start.generation.domain.ProjectDescription;
 import io.pyahu.start.generation.domain.ProjectFile;
@@ -63,12 +65,30 @@ class MustacheProjectWriter implements ProjectWriter {
 
     @Override
     public ProjectArchive write(ProjectDescription description) {
-        String root = description.request().name() + "/";
-        ZipArchive zip = new ZipArchive();
-        for (ProjectFile file : files(description)) {
-            zip.add(root + file.path(), file.content(), file.executable());
+        return zip(description.request().name(), files(description));
+    }
+
+    @Override
+    public List<ProjectFile> files(MonorepoDescription description) {
+        List<ProjectFile> files = new ArrayList<>(files(description.platform()));
+        for (ProjectDescription vertical : description.verticals()) {
+            files.addAll(files(vertical));
         }
-        return new ProjectArchive(description.request().name() + ".zip", zip.toByteArray());
+        files.sort(Comparator.comparing(ProjectFile::path));
+        return files;
+    }
+
+    @Override
+    public ProjectArchive write(MonorepoDescription description) {
+        return zip(description.request().name(), files(description));
+    }
+
+    private static ProjectArchive zip(String name, List<ProjectFile> files) {
+        ZipArchive zip = new ZipArchive();
+        for (ProjectFile file : files) {
+            zip.add(name + "/" + file.path(), file.content(), file.executable());
+        }
+        return new ProjectArchive(name + ".zip", zip.toByteArray());
     }
 
     private byte[] render(Contribution.File file, Map<String, Object> model) {
@@ -99,6 +119,12 @@ class MustacheProjectWriter implements ProjectWriter {
         model.put("nextjs", r.frontend() == Frontend.NEXTJS);
         // The frontend's login: OIDC with Next.js.
         model.put("webAuth", r.auth() == Auth.OIDC && r.frontend() == Frontend.NEXTJS);
+        // A vertical of a monorepo knows its platform; the platform lists its verticals (ADR 0004).
+        boolean vertical = d.hasValue("platform");
+        List<PlatformVertical> verticals = d.all(PlatformVertical.class);
+        model.put("vertical", vertical);
+        model.put("monorepo", vertical || !verticals.isEmpty());
+        model.put("verticals", verticals);
         for (Value v : d.all(Value.class)) {
             model.put(v.name(), v.value());
         }

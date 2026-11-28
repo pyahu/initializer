@@ -25,8 +25,9 @@ unless every required test passes and every version matches. A tested claim has 
 that names one of those tests, so it holds for as long as `main` is green. A guide with no tested step carries a
 Draft label on the site.
 
-The generator is frozen at its current options while teams try it. The Start workflow builds all 16 combinations of architecture, PostgreSQL,
-OIDC and Next.js, runs their own generated CI and tests the form in a browser. These checks cover the generated
+The generator is frozen at its current options while teams try it, except for the monorepo of ADR 0004. The Start
+workflow builds all 16 combinations of architecture, PostgreSQL, OIDC and Next.js, runs their own generated CI,
+builds and starts a monorepo of three verticals and tests the form in a browser. These checks cover the generated
 paths; the tested claims and their limitations say what each guide proves.
 
 ## Layout

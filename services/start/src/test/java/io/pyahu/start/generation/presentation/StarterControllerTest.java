@@ -10,6 +10,8 @@ import io.pyahu.start.generation.application.DescribeOptions;
 import io.pyahu.start.generation.application.GenerateProject;
 import io.pyahu.start.generation.application.PreviewProject;
 import io.pyahu.start.generation.domain.Baseline;
+import io.pyahu.start.generation.domain.GenerationRequest;
+import io.pyahu.start.generation.domain.MonorepoRequest;
 import io.pyahu.start.generation.domain.Pin;
 import io.pyahu.start.generation.domain.ProjectArchive;
 import io.pyahu.start.generation.domain.ProjectField;
@@ -85,7 +87,8 @@ class StarterControllerTest {
 
     @Test
     void getGivesTheZipAsAnAttachment() {
-        given(generateProject.generate(any())).willReturn(new ProjectArchive("orders.zip", new byte[] {1, 2}));
+        given(generateProject.generate(any(GenerationRequest.class)))
+                .willReturn(new ProjectArchive("orders.zip", new byte[] {1, 2}));
         var result = mvc.get().uri("/starter.zip?name=orders").exchange();
         assertThat(result).hasStatusOk().hasContentType("application/zip");
         assertThat(result).headers().hasValue("Content-Disposition", "attachment; filename=\"orders.zip\"");
@@ -98,7 +101,8 @@ class StarterControllerTest {
 
     @Test
     void postTakesFormFieldsSoCurlDashDWorks() {
-        given(generateProject.generate(ProjectRequest.of(Map.of("name", "orders", "architecture", "ddd-layered"))))
+        given(generateProject.generate(
+                        (GenerationRequest) ProjectRequest.of(Map.of("name", "orders", "architecture", "ddd-layered"))))
                 .willReturn(new ProjectArchive("orders.zip", new byte[] {1}));
         var result = mvc.post()
                 .uri("/starter.zip")
@@ -106,6 +110,31 @@ class StarterControllerTest {
                 .content("name=orders&architecture=ddd-layered")
                 .exchange();
         assertThat(result).hasStatusOk().hasContentType("application/zip");
+    }
+
+    @Test
+    void aMonorepoListsItsVerticals() {
+        given(generateProject.generate((GenerationRequest) MonorepoRequest.of(Map.of(
+                        "layout", "monorepo", "name", "shop", "verticals", "orders:hexagonal:postgres,billing"))))
+                .willReturn(new ProjectArchive("shop.zip", new byte[] {1}));
+        var result = mvc.get()
+                .uri("/starter.zip?layout=monorepo&name=shop&verticals=orders:hexagonal:postgres,billing")
+                .exchange();
+        assertThat(result).hasStatusOk().hasContentType("application/zip");
+        assertThat(meters.get("initializer.projects.generated")
+                        .tags("layout", "monorepo", "auth", "none", "verticals", "2")
+                        .counter()
+                        .count())
+                .isPositive();
+    }
+
+    @Test
+    void aMonorepoRefusesTheOptionsOfOneService() {
+        var result = mvc.get()
+                .uri("/starter.zip?layout=monorepo&verticals=orders&architecture=hexagonal")
+                .exchange();
+        assertThat(result).hasStatus(400);
+        assertThat(result).bodyJson().extractingPath("$.errors[*].field").isEqualTo(List.of("architecture"));
     }
 
     @Test
@@ -129,7 +158,7 @@ class StarterControllerTest {
 
     @Test
     void everyOptionIsAField() {
-        given(generateProject.generate(ProjectRequest.of(
+        given(generateProject.generate((GenerationRequest) ProjectRequest.of(
                         Map.of("name", "orders", "database", "postgres", "auth", "oidc", "frontend", "nextjs"))))
                 .willReturn(new ProjectArchive("orders.zip", new byte[] {1}));
         var result = mvc.get()
@@ -193,7 +222,7 @@ class StarterControllerTest {
     void aGenerationOverTheLimitIsTurnedAwayAtOnce() throws Exception {
         CountDownLatch inside = new CountDownLatch(1);
         CountDownLatch release = new CountDownLatch(1);
-        given(generateProject.generate(any())).willAnswer(invocation -> {
+        given(generateProject.generate(any(GenerationRequest.class))).willAnswer(invocation -> {
             inside.countDown();
             release.await();
             return new ProjectArchive("demo.zip", new byte[] {1});

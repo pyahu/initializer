@@ -149,4 +149,19 @@ public sealed interface Contribution {
             return "checklist " + item.id();
         }
     }
+
+    /** A vertical of a monorepo, for the platform's files that list them all (CODEOWNERS, compose.yaml, AGENTS.md). */
+    record PlatformVertical(String name, String architecture, String architectureTitle, boolean postgres, int port)
+            implements Contribution {
+        public PlatformVertical {
+            requireNonNull(name, "name");
+            requireNonNull(architecture, "architecture");
+            requireNonNull(architectureTitle, "architectureTitle");
+        }
+
+        @Override
+        public String key() {
+            return "vertical " + name;
+        }
+    }
 }

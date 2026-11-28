@@ -5,12 +5,16 @@ import io.pyahu.start.generation.domain.Contribution.CatalogPlugin;
 import io.pyahu.start.generation.domain.Contribution.CatalogVersion;
 import io.pyahu.start.generation.domain.Contribution.ChecklistEntry;
 import io.pyahu.start.generation.domain.Contribution.Dependency;
+import io.pyahu.start.generation.domain.Contribution.PlatformVertical;
 import io.pyahu.start.generation.domain.Contribution.Property;
 import io.pyahu.start.generation.domain.Contribution.Section;
 import io.pyahu.start.generation.domain.Contribution.Value;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -59,17 +63,207 @@ public final class ProjectRecipe {
         return d;
     }
 
+    /**
+     * A monorepo (monorepo guide, ADR 0004): each vertical composed like one service, in {@code services/<name>/},
+     * then the platform around them, whose catalog holds every vertical's versions.
+     */
+    public MonorepoDescription describe(MonorepoRequest request, Baseline baseline) {
+        List<ProjectDescription> verticals = new ArrayList<>();
+        for (Vertical vertical : request.verticals()) {
+            verticals.add(vertical(request, vertical, baseline));
+        }
+        return new MonorepoDescription(request, platform(request, baseline, verticals), verticals);
+    }
+
+    private ProjectDescription vertical(MonorepoRequest platform, Vertical vertical, Baseline baseline) {
+        ProjectRequest r = platform.service(vertical);
+        ProjectDescription d = new ProjectDescription(r, baseline);
+        String architecture = r.architecture().id();
+        String prefix = "services/" + vertical.name() + "/";
+        files(d, BASE, prefix, file -> inVertical(file, vertical.name()));
+        files(d, architecture, prefix, file -> file);
+        d.add(new Value("platform", platform.name()))
+                // The contract lives in the vertical's api project, outside its own packages (monorepo guide,
+                // step 4), so another vertical can use it and the vertical's module rules never see it.
+                .add(new Value(
+                        "apiPackage",
+                        platform.group() + ".api." + vertical.name().replace("-", "")))
+                .add(new Value("contractPackageRoot", platform.group() + ".api"))
+                .add(new Value("groupPackage", platform.group()))
+                .add(new Value("port", Integer.toString(vertical.port())))
+                .add(new Value("managementPort", Integer.toString(vertical.port() + 1)));
+        base(d);
+        switch (r.architecture()) {
+            case HEXAGONAL -> hexagonal(d);
+            case DDD_LAYERED -> dddLayered(d);
+        }
+        if (r.database() == Database.POSTGRES) {
+            files(d, "postgres", prefix, file -> file);
+            files(d, architecture + "-postgres", prefix, file -> file);
+            postgres(d);
+        }
+        if (r.auth() == Auth.OIDC) {
+            files(d, "oidc", prefix, file -> file);
+            oidc(d);
+        }
+        files(d, "vertical", prefix, file -> file.replace("_vertical_", vertical.name()));
+        runtimeLauncher(d);
+        d.add(new Value("verticalDependencies", verticalDependencies(d)));
+        return d;
+    }
+
+    /**
+     * From the base set, a vertical takes its code, its manifests and its Dockerfile; its contract moves into its
+     * api project. The build, CI and documents belong to the platform.
+     */
+    private static @Nullable String inVertical(String file, String name) {
+        if (file.equals("src/main/openapi/api.yaml")) {
+            return "api/src/main/openapi/" + name + ".yaml";
+        }
+        return file.startsWith("src/") || file.startsWith("deploy/") || file.equals("Dockerfile") ? file : null;
+    }
+
+    /** What the platform takes from the base set: the wrapper, the shared settings and the catalog. */
+    private static @Nullable String atPlatformRoot(String file) {
+        if (file.startsWith("gradle/quality-report/src/")) {
+            // The quality report is part of build-logic, applied by the service convention.
+            return "build-logic/" + file.substring("gradle/quality-report/".length());
+        }
+        boolean shared = file.startsWith("gradle/wrapper/")
+                || file.startsWith("config/")
+                || List.of(
+                                "gradlew",
+                                "gradlew.bat",
+                                "gitignore",
+                                "gitattributes",
+                                "renovate.json",
+                                "CHECKLIST.md",
+                                "CLAUDE.md",
+                                "gradle/libs.versions.toml",
+                                ".github/scripts/gradle-ci.sh")
+                        .contains(file);
+        return shared ? file : null;
+    }
+
+    /**
+     * The libraries a vertical adds to what its convention plugin gives every service: its database, its security
+     * and the test support for them, as lines of its build file.
+     */
+    private static String verticalDependencies(ProjectDescription d) {
+        List<String> main = new ArrayList<>();
+        List<String> test = new ArrayList<>();
+        main.add("implementation(project(\":" + d.request().name() + "-api\"))");
+        for (Dependency dependency : d.all(Dependency.class)) {
+            if (dependency.section() == Section.PLATFORMS
+                    || dependency.section() == Section.ANALYSIS
+                    || dependency.section() == Section.DEVELOPMENT
+                    || BY_CONVENTION.contains(dependency.notation())) {
+                continue;
+            }
+            String line = dependency.configuration() + "(" + dependency.notation() + ")";
+            (dependency.section() == Section.TEST ? test : main).add(line);
+        }
+        StringBuilder lines = new StringBuilder();
+        main.forEach(l -> lines.append("    ").append(l).append('\n'));
+        if (!test.isEmpty()) {
+            lines.append('\n');
+            test.forEach(l -> lines.append("    ").append(l).append('\n'));
+        }
+        return lines.toString().stripTrailing();
+    }
+
+    /** What the service convention plugin of build-logic declares for every vertical. */
+    private static final Set<String> BY_CONVENTION = Set.of(
+            "libs.spring.boot.starter.webmvc",
+            "libs.spring.boot.starter.validation",
+            "libs.spring.boot.starter.actuator",
+            "libs.spring.boot.starter.opentelemetry",
+            "libs.opentelemetry.logback.appender",
+            "libs.jspecify",
+            "libs.spring.boot.starter.webmvc.test",
+            "libs.spring.modulith.starter.test",
+            "libs.archunit.junit5",
+            "libs.junit.platform.launcher");
+
+    private ProjectDescription platform(
+            MonorepoRequest request, Baseline baseline, List<ProjectDescription> verticals) {
+        // The platform renders with the request of one service: its name, group and flags (postgres when any
+        // vertical keeps a database, oidc for the shared identity provider).
+        ProjectRequest r = new ProjectRequest(
+                request.name(),
+                request.group(),
+                request.group(),
+                request.description(),
+                Architecture.DEFAULT,
+                request.anyPostgres() ? Database.POSTGRES : Database.NONE,
+                request.auth(),
+                Frontend.NONE);
+        ProjectDescription d = new ProjectDescription(r, baseline);
+        files(d, "monorepo", "", file -> file);
+        files(d, BASE, "", ProjectRecipe::atPlatformRoot);
+        base(d);
+        // One catalog for every project: what each vertical needs, then what the api projects and build-logic use.
+        for (ProjectDescription vertical : verticals) {
+            for (Contribution c : vertical.contributions()) {
+                if ((c instanceof CatalogVersion || c instanceof CatalogLibrary || c instanceof CatalogPlugin)
+                        && !d.has(c)) {
+                    d.add(c);
+                }
+            }
+        }
+        if (!d.has(new CatalogLibrary("junit-platform-launcher", "", null))) {
+            library(d, "junit-platform-launcher", "org.junit.platform:junit-platform-launcher", null);
+        }
+        library(d, "junit-jupiter", "org.junit.jupiter:junit-jupiter", null);
+        library(d, "spring-web", "org.springframework:spring-web", null);
+        library(d, "spring-context", "org.springframework:spring-context", null);
+        library(d, "jakarta-validation-api", "jakarta.validation:jakarta.validation-api", null);
+        library(d, "jackson-annotations", "com.fasterxml.jackson.core:jackson-annotations", null);
+        library(d, "jakarta-annotation-api", "jakarta.annotation:jakarta.annotation-api", null);
+        if (!d.has(new CatalogVersion("jmolecules", ""))) {
+            // The service convention imports the jMolecules BOM for every vertical.
+            version(d, "jmolecules", "jmolecules-bom");
+            library(d, "jmolecules-bom", "org.jmolecules:jmolecules-bom", "jmolecules");
+        }
+        if (request.anyPostgres()) {
+            d.add(new Value("postgresImage", image(baseline, "postgres-image")));
+        }
+        for (Vertical v : request.verticals()) {
+            d.add(new PlatformVertical(
+                    v.name(),
+                    v.architecture().id(),
+                    v.architecture().title(),
+                    v.database() == Database.POSTGRES,
+                    v.port()));
+        }
+        checklist(d, request.options());
+        return d;
+    }
+
     private void files(ProjectDescription d, String set) {
+        files(d, set, "", file -> file);
+    }
+
+    /**
+     * Adds a template set's files under {@code prefix}. {@code place} gives each file's path inside the prefix, or
+     * null to leave the file out.
+     */
+    private void files(ProjectDescription d, String set, String prefix, Function<String, @Nullable String> place) {
         String packagePath = d.request().packagePath();
         for (String file : templates.files(set)) {
-            String path = file.replace("_package_", packagePath);
+            String placed = place.apply(file);
+            if (placed == null) {
+                continue;
+            }
+            String path = placed.replace("_package_", packagePath);
             if (path.equals("gitignore") || path.equals("gitattributes")) {
                 path = "." + path;
             } else if (path.endsWith("/gitignore") || path.endsWith("/dockerignore")) {
                 int slash = path.lastIndexOf('/');
                 path = path.substring(0, slash + 1) + "." + path.substring(slash + 1);
             }
-            d.add(new Contribution.File(path, set + "/" + file, path.equals("gradlew") || path.endsWith(".sh")));
+            d.add(new Contribution.File(
+                    prefix + path, set + "/" + file, path.equals("gradlew") || path.endsWith(".sh")));
         }
     }
 
@@ -190,35 +384,35 @@ public final class ProjectRecipe {
         platform(d, "testImplementation", "jmolecules-bom");
         implementation(d, "jmolecules-hexagonal-architecture", "org.jmolecules:jmolecules-hexagonal-architecture");
         test(d, "jmolecules-archunit", "org.jmolecules.integrations:jmolecules-archunit", null);
-        d.add(new Value("apiPackage", p + ".ping.adapter.in.web.api"))
-                .add(new Value(
-                        "layout",
-                        rows(
-                                "src/main/java/.../ping/domain/",
-                                "The rules, plain Java.",
-                                "src/main/java/.../ping/application/port/",
-                                "What the capability offers and needs.",
-                                "src/main/java/.../ping/application/service/",
-                                "The use cases behind the ports.",
-                                "src/main/java/.../ping/adapter/",
-                                postgres ? "The web and the database." : "The web and, later, the database.")));
+        apiPackage(d, p + ".ping.adapter.in.web.api");
+        d.add(new Value(
+                "layout",
+                rows(
+                        "src/main/java/.../ping/domain/",
+                        "The rules, plain Java.",
+                        "src/main/java/.../ping/application/port/",
+                        "What the capability offers and needs.",
+                        "src/main/java/.../ping/application/service/",
+                        "The use cases behind the ports.",
+                        "src/main/java/.../ping/adapter/",
+                        postgres ? "The web and the database." : "The web and, later, the database.")));
     }
 
     private static void dddLayered(ProjectDescription d) {
         String p = d.request().packageName();
         boolean postgres = d.request().database() == Database.POSTGRES;
-        d.add(new Value("apiPackage", p + ".ping.presentation.api"))
-                .add(new Value(
-                        "layout",
-                        rows(
-                                "src/main/java/.../ping/presentation/",
-                                "The web layer.",
-                                "src/main/java/.../ping/application/",
-                                "The use cases.",
-                                "src/main/java/.../ping/domain/",
-                                "The rules, plain Java.",
-                                "src/main/java/.../ping/infrastructure/",
-                                postgres ? "The database." : "The database and clients, later.")));
+        apiPackage(d, p + ".ping.presentation.api");
+        d.add(new Value(
+                "layout",
+                rows(
+                        "src/main/java/.../ping/presentation/",
+                        "The web layer.",
+                        "src/main/java/.../ping/application/",
+                        "The use cases.",
+                        "src/main/java/.../ping/domain/",
+                        "The rules, plain Java.",
+                        "src/main/java/.../ping/infrastructure/",
+                        postgres ? "The database." : "The database and clients, later.")));
     }
 
     /**
@@ -287,7 +481,10 @@ public final class ProjectRecipe {
                 d,
                 "spring.security.oauth2.resourceserver.jwt.issuer-uri",
                 "${OIDC_ISSUER_URI:http://localhost:8090/default}");
-        property(d, "spring.security.oauth2.resourceserver.jwt.audiences", "${OIDC_AUDIENCE:" + r.name() + "}");
+        // A vertical accepts the platform's audience, so one login reaches every vertical (ADR 0004).
+        String audience = d.hasValue("platform") ? d.value("platform") : r.name();
+        d.add(new Value("audience", audience));
+        property(d, "spring.security.oauth2.resourceserver.jwt.audiences", "${OIDC_AUDIENCE:" + audience + "}");
         property(d, "spring.security.oauth2.resourceserver.jwt.jws-algorithms", "RS256");
     }
 
@@ -298,7 +495,10 @@ public final class ProjectRecipe {
     }
 
     private void checklist(ProjectDescription d) {
-        var options = d.request().options();
+        checklist(d, d.request().options());
+    }
+
+    private void checklist(ProjectDescription d, Map<String, Object> options) {
         for (ChecklistItem item : checklists.all()) {
             if (item.appliesTo(options)) {
                 d.add(new ChecklistEntry(item));
@@ -328,6 +528,13 @@ public final class ProjectRecipe {
             rows.add("| `" + pathsAndDescriptions[i] + "` | " + pathsAndDescriptions[i + 1] + " |");
         }
         return String.join("\n", rows);
+    }
+
+    /** The package of the generated contract, unless the recipe already placed it elsewhere. */
+    private static void apiPackage(ProjectDescription d, String name) {
+        if (!d.hasValue("apiPackage")) {
+            d.add(new Value("apiPackage", name));
+        }
     }
 
     private static void version(ProjectDescription d, String alias, String component) {

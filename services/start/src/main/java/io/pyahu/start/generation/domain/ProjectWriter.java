@@ -10,4 +10,10 @@ public interface ProjectWriter {
 
     /** The same files as a zip, under a folder named after the project. */
     ProjectArchive write(ProjectDescription description);
+
+    /** Every file of the platform and of each vertical, sorted by path. */
+    List<ProjectFile> files(MonorepoDescription description);
+
+    /** The same files as a zip, under a folder named after the platform. */
+    ProjectArchive write(MonorepoDescription description);
 }

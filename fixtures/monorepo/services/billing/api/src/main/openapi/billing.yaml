@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: billing
   version: 0.1.0
-  description: "Billing"
+  description: "The billing vertical of monorepo"
 tags:
   - name: ping
 paths:

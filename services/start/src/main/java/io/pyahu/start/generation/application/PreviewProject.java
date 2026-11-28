@@ -1,8 +1,7 @@
 package io.pyahu.start.generation.application;
 
+import io.pyahu.start.generation.domain.GenerationRequest;
 import io.pyahu.start.generation.domain.ProjectFile;
-import io.pyahu.start.generation.domain.ProjectRequest;
-import io.pyahu.start.generation.domain.ProjectWriter;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +18,12 @@ public class PreviewProject {
     }
 
     private final GenerateProject generateProject;
-    private final ProjectWriter writer;
 
-    PreviewProject(GenerateProject generateProject, ProjectWriter writer) {
+    PreviewProject(GenerateProject generateProject) {
         this.generateProject = generateProject;
-        this.writer = writer;
     }
 
-    public Preview preview(ProjectRequest request) {
-        return new Preview(request.name(), writer.files(generateProject.describe(request)));
+    public Preview preview(GenerationRequest request) {
+        return new Preview(request.name(), generateProject.files(request));
     }
 }

@@ -18,7 +18,21 @@ projects get.
 
 ## Unreleased, on start.pyahu.io now
 
-The monorepo guide is rewritten for a build that enforces its own boundaries. Generated projects get its new checklist items; nothing else they contain changes.
+start.pyahu.io generates a monorepo: a platform of verticals in one Gradle build that keeps them apart, each with its own architecture, database, contract, image and deployment (ADR 0004). The monorepo guide is rewritten around it. A project with one service no longer lists the monorepo checklist items.
+
+### Upgrade a project generated on v0.1-b3
+
+<a id="v0-1-b4-checklist-without-monorepo"></a>
+
+**1. A project with one service drops the monorepo checklist items** (optional)
+
+- Files: `CHECKLIST.md`
+- Needed when: `grep -q 'MONO-01' CHECKLIST.md`
+- Check: `! grep -q 'MONO-' CHECKLIST.md`
+- Why: [Monorepos with several services, step 1](/guides/monorepo/#mono-when)
+
+The monorepo items (MONO-01 to MONO-13) now go only into generated monorepos. Delete the "Monorepos with
+several services" section of `CHECKLIST.md`.
 
 ### Guide steps that changed
 
@@ -31,7 +45,8 @@ The monorepo guide is rewritten for a build that enforces its own boundaries. Ge
 
 ### Other changes
 
-- The monorepo items in `CHECKLIST.md` follow the rewritten guide, with four new ones (MONO-14 to MONO-17). A project with one service can mark them not applicable.
+- A monorepo option on start.pyahu.io and in the API (`layout=monorepo`, `verticals=name:architecture:database,...`), proven by fixtures/monorepo, which is what the generator produces for its options.
+- The quality report keeps one report per project, so a build of several projects writes one for each service. A project with one service writes the same report as before.
 
 <a id="v0-1-b3"></a>
 

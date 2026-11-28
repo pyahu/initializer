@@ -1,6 +1,7 @@
 import { connection } from 'next/server';
 import { api } from '@/api/client';
 import { preview } from './actions';
+import { requestOf } from './request';
 import { Starter } from './starter';
 
 type Query = Record<string, string | string[] | undefined>;
@@ -28,7 +29,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Que
     initial[field.id] = typeof given === 'string' ? given : (field.defaultValue ?? '');
   }
   // The files of those values come with the page, so there is something to explore before any click.
-  const first = await preview(initial);
+  const first = await preview(requestOf(initial));
   return (
     <main className="page">
       <Starter fields={data.fields} baseline={data.baseline} initial={initial} first={first} />

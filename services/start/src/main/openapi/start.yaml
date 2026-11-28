@@ -3,7 +3,7 @@ info:
   title: Pyahu Initializer
   version: 0.1.0
   description: >-
-    Generates a Spring Boot service that follows the Pyahu Initializer guides.
+    Generates a Spring Boot service, or a monorepo of verticals, that follows the Pyahu Initializer guides.
     Every error is an RFC 9457 problem detail.
 servers:
   - url: https://start.pyahu.io
@@ -38,6 +38,8 @@ paths:
         - $ref: "#/components/parameters/Database"
         - $ref: "#/components/parameters/Auth"
         - $ref: "#/components/parameters/Frontend"
+        - $ref: "#/components/parameters/Layout"
+        - $ref: "#/components/parameters/Verticals"
       responses:
         "200":
           $ref: "#/components/responses/Starter"
@@ -149,6 +151,25 @@ components:
       schema:
         type: string
         maxLength: 20
+    Layout:
+      name: layout
+      in: query
+      required: false
+      description: "`single` (default), one service, or `monorepo`, a platform of verticals in one Gradle build."
+      schema:
+        type: string
+        maxLength: 20
+    Verticals:
+      name: verticals
+      in: query
+      required: false
+      description: >-
+        With `layout=monorepo`: each vertical as `name:architecture:database`, separated by commas, such as
+        `orders:hexagonal:postgres,billing:ddd-layered:none`. Architecture and database default to `hexagonal` and
+        `none`.
+      schema:
+        type: string
+        maxLength: 500
   responses:
     Starter:
       description: The project as a zip file.
@@ -196,6 +217,12 @@ components:
         frontend:
           type: string
           maxLength: 20
+        layout:
+          type: string
+          maxLength: 20
+        verticals:
+          type: string
+          maxLength: 500
     Preview:
       type: object
       required: [root, files]

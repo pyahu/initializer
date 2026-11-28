@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Starts the billing image the way its pod runs (read-only root, a writable /tmp, a user that is not root) next to a
-# mock identity provider, and checks what production needs (CI pipelines guide, step 5). CI runs it for this
-# vertical's image; IMAGE and OIDC_IMAGE come from the workflow.
+# Starts the billing image the way its pod runs: read-only root, a writable /tmp and a user that is not root.
+# A mock identity provider issues the platform's tokens.
+# It checks what production needs (CI pipelines guide, step 5). CI runs it for this vertical's image, with IMAGE
+# and the other images set by the workflow.
 set -euo pipefail
 : "${IMAGE:?}" "${OIDC_IMAGE:?}"
 trap 'code=$?; set +e; if [ $code -ne 0 ]; then for c in app oidc; do docker logs $c 2>&1 | tail -40; done; fi
@@ -30,4 +31,4 @@ token=$(curl -sf -H 'Host: oidc:8080' localhost:8090/default/token \
   -d grant_type=client_credentials -d client_id=ci -d client_secret=ci -d scope=monorepo \
   | tr -d '\n' | sed -E 's/.*"access_token" *: *"([^"]+)".*/\1/')
 auth=(-H "Authorization: Bearer $token")
-curl -sf "${auth[@]}" localhost:8080/ping | grep -q '"message":"pong"'
+curl -sf ${auth[@]+"${auth[@]}"} localhost:8080/ping | grep -q '"message":"pong"'

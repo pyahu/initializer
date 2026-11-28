@@ -3,6 +3,7 @@
 import { type FormEvent, useEffect, useRef, useState } from 'react';
 import type { components } from '@/api/schema';
 import { preview, type PreviewResult } from './actions';
+import { requestOf } from './request';
 import { type Change, Explorer } from './explorer';
 
 type Field = components['schemas']['Field'];
@@ -19,7 +20,28 @@ const LABELS: Record<string, string> = {
   database: 'Database',
   auth: 'Authentication',
   frontend: 'Frontend',
+  layout: 'Layout',
+  verticals: 'Verticals',
 };
+
+// A monorepo to start from: two verticals in different styles, one with a database.
+const FIRST_VERTICALS = 'orders:hexagonal:postgres,billing:ddd-layered:none';
+
+type VerticalRow = { name: string; architecture: string; database: string };
+
+function parseVerticals(list: string): VerticalRow[] {
+  return list
+    .split(',')
+    .filter((entry) => entry.length > 0)
+    .map((entry) => {
+      const [name = '', architecture = 'hexagonal', database = 'none'] = entry.split(':');
+      return { name, architecture, database };
+    });
+}
+
+function joinVerticals(rows: VerticalRow[]) {
+  return rows.map((r) => `${r.name}:${r.architecture}:${r.database}`).join(',');
+}
 
 // Name and group shape every path; package and description are rarely changed, so they wait under More.
 const MAIN = ['name', 'group'];
@@ -59,12 +81,20 @@ export function Starter({
   const shown = useRef(files);
   const [mod, setMod] = useState('Ctrl');
 
-  const text = fields.filter((f) => !f.choices?.length);
+  const monorepo = values.layout === 'monorepo';
+  const request = requestOf(values);
+  const visible = fields.filter((f) => f.id in request && f.id !== 'verticals');
+  const text = visible.filter((f) => !f.choices?.length);
   const main = text.filter((f) => MAIN.includes(f.id));
   const more = text.filter((f) => !MAIN.includes(f.id));
-  const choices = fields.filter((f) => f.choices?.length);
+  // The layout decides which other options there are, so it comes first.
+  const choices = visible
+    .filter((f) => f.choices?.length)
+    .sort((a, b) => Number(b.id === 'layout') - Number(a.id === 'layout'));
+  const byId = (id: string) => fields.find((f) => f.id === id);
   const derivedPackage = `${values.group || 'com.example'}.${(values.name || 'demo').replaceAll('-', '')}`;
-  const differs = fields.filter((f) => values[f.id] && values[f.id] !== (f.defaultValue ?? ''));
+  const differs = fields.filter((f) => f.id in request && values[f.id] && values[f.id] !== (f.defaultValue ?? ''));
+  const rows = parseVerticals(values.verticals ?? '');
 
   // Every change asks for the files again once typing settles; an older answer that arrives late is dropped.
   useEffect(() => {
@@ -76,7 +106,7 @@ export function Starter({
     const ask = ++asked.current;
     setUpdating(true);
     const timer = setTimeout(async () => {
-      const result = await preview(values).catch((): PreviewResult => ({ unavailable: true }));
+      const result = await preview(requestOf(values)).catch((): PreviewResult => ({ unavailable: true }));
       if (ask !== asked.current) {
         return;
       }
@@ -100,7 +130,18 @@ export function Starter({
 
   function change(id: string, value: string) {
     touched.current = true;
-    setValues((v) => ({ ...v, [id]: value }));
+    setValues((v) => {
+      const next = { ...v, [id]: value };
+      // A monorepo needs a vertical to show anything; start from two.
+      if (id === 'layout' && value === 'monorepo' && !next.verticals) {
+        next.verticals = FIRST_VERTICALS;
+      }
+      return next;
+    });
+  }
+
+  function changeVertical(index: number, part: Partial<VerticalRow>) {
+    change('verticals', joinVerticals(rows.map((row, i) => (i === index ? { ...row, ...part } : row))));
   }
 
   function rejected(id: string) {
@@ -112,7 +153,7 @@ export function Starter({
     setGenerating(true);
     setNotice(undefined);
     try {
-      const response = await fetch('/starter.zip', { method: 'POST', body: new URLSearchParams(values) });
+      const response = await fetch('/starter.zip', { method: 'POST', body: new URLSearchParams(requestOf(values)) });
       if (response.ok) {
         const disposition = response.headers.get('content-disposition') ?? '';
         const name = /filename="?([^";]+)"?/.exec(disposition)?.[1] ?? 'project.zip';
@@ -193,10 +234,15 @@ export function Starter({
 
       <form id="starter" className="options" action="/starter.zip" method="post" onSubmit={generate} noValidate>
         <div className="intro">
-          <h1>Generate a service</h1>
+          <h1>{monorepo ? 'Generate a platform' : 'Generate a service'}</h1>
           <p className="lead">
-            Spring Boot with build, contract, telemetry, image, manifests and CI, as the{' '}
-            <a href="https://initializer.pyahu.io/guides/">guides</a> do it.
+            {monorepo
+              ? 'Spring Boot verticals in one Gradle build that keeps them apart, with build-logic, contracts, images and CI, as the '
+              : 'Spring Boot with build, contract, telemetry, image, manifests and CI, as the '}
+            <a href={monorepo ? 'https://initializer.pyahu.io/guides/monorepo/' : 'https://initializer.pyahu.io/guides/'}>
+              {monorepo ? 'monorepo guide' : 'guides'}
+            </a>{' '}
+            do it.
           </p>
         </div>
 
@@ -206,9 +252,11 @@ export function Starter({
           <details open={more.some((f) => rejected(f.id).length > 0 || values[f.id] !== (f.defaultValue ?? '')) || undefined}>
             <summary>
               <span>More</span>
-              <span className="derived">
-                package <code>{values.package || derivedPackage}</code>
-              </span>
+              {!monorepo && (
+                <span className="derived">
+                  package <code>{values.package || derivedPackage}</code>
+                </span>
+              )}
             </summary>
             <div className="more">{more.map(input)}</div>
           </details>
@@ -239,6 +287,61 @@ export function Starter({
             </div>
           ))}
         </fieldset>
+
+        {monorepo && (
+          <fieldset className="verticals">
+            <legend>Verticals</legend>
+            <input type="hidden" name="verticals" value={values.verticals ?? ''} />
+            {rows.map((row, index) => (
+              <div key={index} className="vertical-row" role="group" aria-label={`Vertical ${index + 1}`}>
+                <div className="text">
+                  <label htmlFor={`vertical-${index}`}>Name</label>
+                  <input
+                    id={`vertical-${index}`}
+                    value={row.name}
+                    autoComplete="off"
+                    spellCheck={false}
+                    onChange={(e) => changeVertical(index, { name: e.target.value })}
+                  />
+                </div>
+                {(['architecture', 'database'] as const).map((id) => (
+                  <div key={id} className="segments" role="radiogroup" aria-label={`${label(byId(id)!)} of vertical ${index + 1}`}>
+                    {byId(id)?.choices?.map((choice) => (
+                      <label key={choice.id} className="segment">
+                        <input
+                          type="radio"
+                          name={`vertical-${index}-${id}`}
+                          value={choice.id}
+                          checked={row[id] === choice.id}
+                          onChange={() => changeVertical(index, { [id]: choice.id })}
+                        />
+                        <span>{choice.title}</span>
+                      </label>
+                    ))}
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  className="icon-button"
+                  disabled={rows.length === 1}
+                  onClick={() => change('verticals', joinVerticals(rows.filter((_, i) => i !== index)))}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="button quiet"
+              onClick={() =>
+                change('verticals', joinVerticals([...rows, { name: `vertical${rows.length + 1}`, architecture: 'hexagonal', database: 'none' }]))
+              }
+            >
+              Add a vertical
+            </button>
+            <small>{rejected('verticals').join('; ') || byId('verticals')?.description}</small>
+          </fieldset>
+        )}
 
         <details className="terminal">
           <summary>From a terminal</summary>

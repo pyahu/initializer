@@ -2,8 +2,8 @@ package [[packageName]].ping.presentation;
 
 import [[packageName]].ping.application.AnswerPing;
 import [[packageName]].ping.domain.Pong;
-import [[packageName]].ping.presentation.api.PingApi;
-import [[packageName]].ping.presentation.api.model.PingResponse;
+import [[apiPackage]].PingApi;
+import [[apiPackage]].model.PingResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 

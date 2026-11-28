@@ -5,7 +5,9 @@ import io.pyahu.start.generation.application.DescribeOptions;
 import io.pyahu.start.generation.application.GenerateProject;
 import io.pyahu.start.generation.application.PreviewProject;
 import io.pyahu.start.generation.domain.FieldError;
+import io.pyahu.start.generation.domain.GenerationRequest;
 import io.pyahu.start.generation.domain.InvalidProjectRequest;
+import io.pyahu.start.generation.domain.MonorepoRequest;
 import io.pyahu.start.generation.domain.ProjectArchive;
 import io.pyahu.start.generation.domain.ProjectField;
 import io.pyahu.start.generation.domain.ProjectRequest;
@@ -97,7 +99,9 @@ class StarterController implements StarterApi {
             @Nullable String architecture,
             @Nullable String database,
             @Nullable String auth,
-            @Nullable String frontend) {
+            @Nullable String frontend,
+            @Nullable String layout,
+            @Nullable String verticals) {
         return starter();
     }
 
@@ -110,7 +114,9 @@ class StarterController implements StarterApi {
             @Nullable String architecture,
             @Nullable String database,
             @Nullable String auth,
-            @Nullable String frontend) {
+            @Nullable String frontend,
+            @Nullable String layout,
+            @Nullable String verticals) {
         return starter();
     }
 
@@ -123,8 +129,10 @@ class StarterController implements StarterApi {
             @Nullable String architecture,
             @Nullable String database,
             @Nullable String auth,
-            @Nullable String frontend) {
-        ProjectRequest request = ProjectRequest.of(fields(http.getParameterMap()));
+            @Nullable String frontend,
+            @Nullable String layout,
+            @Nullable String verticals) {
+        GenerationRequest request = GenerationRequest.of(fields(http.getParameterMap()));
         PreviewProject.Preview preview = limit.run(() -> previewProject.preview(request));
         count("initializer.projects.previewed", request);
         List<PreviewFile> files = preview.files().stream()
@@ -135,7 +143,7 @@ class StarterController implements StarterApi {
     }
 
     private ResponseEntity<Resource> starter() {
-        ProjectRequest request = ProjectRequest.of(fields(http.getParameterMap()));
+        GenerationRequest request = GenerationRequest.of(fields(http.getParameterMap()));
         ProjectArchive archive = limit.run(() -> generateProject.generate(request));
         count("initializer.projects.generated", request);
         return ResponseEntity.ok()
@@ -149,8 +157,21 @@ class StarterController implements StarterApi {
                 .body(new ByteArrayResource(archive.content()));
     }
 
-    /** By option only: nothing about who asked. */
-    private void count(String metric, ProjectRequest request) {
+    /** By option only: nothing about who asked. A monorepo counts its layout and how many verticals it has. */
+    private void count(String metric, GenerationRequest generation) {
+        if (generation instanceof MonorepoRequest monorepo) {
+            meters.counter(
+                            metric,
+                            "layout",
+                            "monorepo",
+                            "auth",
+                            monorepo.auth().id(),
+                            "verticals",
+                            Integer.toString(monorepo.verticals().size()))
+                    .increment();
+            return;
+        }
+        ProjectRequest request = (ProjectRequest) generation;
         meters.counter(
                         metric,
                         "architecture",

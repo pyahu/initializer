@@ -28,11 +28,6 @@ spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-
 spring-boot-starter-opentelemetry = { module = "org.springframework.boot:spring-boot-starter-opentelemetry" }
 opentelemetry-logback-appender = { module = "io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0", version.ref = "opentelemetry-logback-appender" }
 jspecify = { module = "org.jspecify:jspecify" }
-spring-web = { module = "org.springframework:spring-web" }
-spring-context = { module = "org.springframework:spring-context" }
-jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api" }
-jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations" }
-jakarta-annotation-api = { module = "jakarta.annotation:jakarta.annotation-api" }
 spring-boot-docker-compose = { module = "org.springframework.boot:spring-boot-docker-compose" }
 spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 error-prone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "error-prone" }
@@ -40,6 +35,9 @@ nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "nullaway" }
 spring-boot-starter-webmvc-test = { module = "org.springframework.boot:spring-boot-starter-webmvc-test" }
 spring-modulith-starter-test = { module = "org.springframework.modulith:spring-modulith-starter-test" }
 archunit-junit5 = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunit" }
+spring-boot-starter-security-oauth2-resource-server = { module = "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server" }
+spring-boot-starter-security-oauth2-resource-server-test = { module = "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 jmolecules-bom = { module = "org.jmolecules:jmolecules-bom", version.ref = "jmolecules" }
 jmolecules-hexagonal-architecture = { module = "org.jmolecules:jmolecules-hexagonal-architecture" }
 jmolecules-archunit = { module = "org.jmolecules.integrations:jmolecules-archunit" }
@@ -50,10 +48,12 @@ postgresql = { module = "org.postgresql:postgresql" }
 spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-junit-jupiter" }
 testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql" }
-spring-boot-starter-security-oauth2-resource-server = { module = "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server" }
-spring-boot-starter-security-oauth2-resource-server-test = { module = "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test" }
-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+spring-web = { module = "org.springframework:spring-web" }
+spring-context = { module = "org.springframework:spring-context" }
+jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api" }
+jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations" }
+jakarta-annotation-api = { module = "jakarta.annotation:jakarta.annotation-api" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
